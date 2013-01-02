@@ -1,87 +1,69 @@
 import os
 import re
-import subprocess
 
 from ajenti.com import *
 from ajenti.utils import *
 from ajenti import apis
 
-def _new_service(name, mgr):
-  service = apis.services.Service()
-  service.name = name
-  service.mgr = mgr
-  return service
-
-class ArchSysVServiceManagerBackend:
-    def list_all(self):
-        services = []
-        for service_name in os.listdir('/etc/rc.d'):
-            services.append(_new_service(service_name, self))
-        return sorted(services, key=lambda service: service.name)
-
-    def get_status(self, name):
-        running = os.listdir('/var/run/daemons')
-        return 'running' if name in running else 'stopped'
-
-    def start(self, name):
-        shell('/etc/rc.d/' + name + ' start')
-
-    def stop(self, name):
-        shell('/etc/rc.d/' + name + ' stop')
-
-    def restart(self, name):
-        shell('/etc/rc.d/' + name + ' restart')
-
-class ArchSystemdServiceManagerBackend:
-    def list_all(self):
-        systemd_command = 'systemctl --all --full --type=service ' + \
-                          '--no-legend --no-pager list-units'
-        service_pattern = re.compile('^(?P<name>.+)\.service.*$')
-
-        services = []
-        for line in shell(systemd_command).splitlines():
-            name = service_pattern.match(line).group('name')
-            services.append(_new_service(name, self))
-        return sorted(services, key=lambda service: service.name)
-
-    def get_status(self, name):
-        systemd_command = 'systemctl --property=ActiveState ' + \
-                          'show %s.service' % name
-        status_pattern = re.compile('^ActiveState=(?P<status>.+)$')
-        status = status_pattern.match(shell(systemd_command)).group('status')
-        return 'running' if 'active' == status else 'stopped'
-
-    def start(self, name):
-        shell('systemctl start %s.service' % name)
-
-    def stop(self, name):
-        shell('systemctl stop %s.service' % name)
-
-    def restart(self, name):
-        shell('systemctl restart %s.service' % name)
 
 class ArchServiceManager(Plugin):
     implements(apis.services.IServiceManager)
     platform = ['arch']
 
     def __init__(self):
-        systemd_disabled = subprocess.call('systemctl')
-        if systemd_disabled:
-            self._backend = ArchSysVServiceManagerBackend()
-        else:
-            self._backend = ArchSystemdServiceManagerBackend()
+        self.use_systemd = os.path.realpath("/proc/1/exe").endswith("/systemd")
 
     def list_all(self):
-        return self._backend.list_all()
+        services = []
+
+        if self.use_systemd:
+            service = re.compile("^([^\s]+)\.service\W")
+
+            for unit in shell("systemctl --no-ask-password --full -t service list-unit-files --all").splitlines():
+                match = service.match(unit)
+                if match:
+                    services.append(match.group(1))
+        else:
+            services = os.listdir('/etc/rc.d')
+
+        r = []
+        for s in services:
+            svc = apis.services.Service()
+            svc.name = s
+            svc.mgr = self
+            r.append(svc)
+
+        return sorted(r, key=lambda s: s.name)
 
     def get_status(self, name):
-        return self._backend.get_status(name)
+        if self.use_systemd:
+            re_status = re.compile("^\s+Active: ([^\s]+)", re.M)
+
+            status = shell("systemctl --no-ask-password status {}.service".format(name))
+            match = re_status.search(status)
+
+            if not match or match.group(1) != "active":
+                return 'stopped'
+            else:
+                return 'running'
+        else:
+            s = shell('/etc/rc.d/{} status'.format(name))
+            return 'running' if 'running' in s else 'stopped'
 
     def start(self, name):
-        self._backend.start(name)
+        if self.use_systemd:
+            shell("systemctl --no-ask-password start {}.service".format(name))
+        else:
+            shell('/etc/rc.d/{} start'.format(name))
 
     def stop(self, name):
-        self._backend.stop(name)
+        if self.use_systemd:
+            shell("systemctl --no-ask-password stop {}.service".format(name))
+        else:
+            shell('/etc/rc.d/{} stop'.format(name))
 
     def restart(self, name):
-        self._backend.restart(name)
+        if self.use_systemd:
+            shell("systemctl --no-ask-password reload-or-restart {}.service".format(name))
+        else:
+            shell('/etc/rc.d/{} restart'.format(name))
