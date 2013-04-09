@@ -1,4 +1,4 @@
-from ajenti.api import ModuleConfig
+from genesis.api import ModuleConfig
 from main import *
 
 

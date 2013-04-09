@@ -1,6 +1,6 @@
-ajenti.plugmgr
+genesis.plugmgr
 **************
 
-.. automodule:: ajenti.plugmgr
+.. automodule:: genesis.plugmgr
    :members:
    :undoc-members:

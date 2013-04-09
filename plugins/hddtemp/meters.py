@@ -1,7 +1,7 @@
 #coding: utf-8
 
-from ajenti.api import *
-from ajenti.utils import shell
+from genesis.api import *
+from genesis.utils import shell
 import os
 import re
 

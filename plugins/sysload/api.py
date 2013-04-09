@@ -1,5 +1,5 @@
-from ajenti.apis import API
-from ajenti.com import Interface
+from genesis.apis import API
+from genesis.com import Interface
 
 
 class SysStat(API):

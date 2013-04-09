@@ -1,5 +1,5 @@
-from ajenti.api import *
-from ajenti.com import *
+from genesis.api import *
+from genesis.com import *
 
 
 class ServiceGroups (Plugin):

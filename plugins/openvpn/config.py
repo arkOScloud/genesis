@@ -1,6 +1,6 @@
 # coding=utf-8
 """OpenVPN plugin configuration backend"""
-from ajenti.api import ModuleConfig
+from genesis.api import ModuleConfig
 from backend import OpenVPNBackend
 
 class OpenVPNConfig(ModuleConfig):

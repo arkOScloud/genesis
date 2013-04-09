@@ -1,8 +1,8 @@
 # coding: utf-8
-from ajenti.ui import *
-from ajenti.api import *
-from ajenti.plugins.core.api import *
-from ajenti.utils import *
+from genesis.ui import *
+from genesis.api import *
+from genesis.plugins.core.api import *
+from genesis.utils import *
 import os
 from base64 import b64encode, b64decode
 from stat import ST_UID, ST_GID, ST_MODE, ST_SIZE

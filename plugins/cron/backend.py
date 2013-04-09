@@ -2,9 +2,9 @@
 This module provide an interface for working with crontab.
 It's using shell command 'crontab' and donn't change file manualy
 """
-from ajenti.api import IConfigurable
-from ajenti.com import Plugin, implements
-from ajenti.utils import shell, shell_stdin
+from genesis.api import IConfigurable
+from genesis.com import Plugin, implements
+from genesis.utils import shell, shell_stdin
 
 
 class Task():

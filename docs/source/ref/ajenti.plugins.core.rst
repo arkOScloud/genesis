@@ -1,5 +1,5 @@
-ajenti.plugins.core
+genesis.plugins.core
 *******************
 
-.. automodule:: ajenti.plugins.core.api
+.. automodule:: genesis.plugins.core.api
    :members:

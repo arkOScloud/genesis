@@ -1,9 +1,9 @@
 import os
 import subprocess
 
-from ajenti.com import *
-from ajenti import utils
-from ajenti import apis
+from genesis.com import *
+from genesis import utils
+from genesis import apis
 
 
 class YumPackageManager(Plugin):
@@ -25,7 +25,7 @@ class YumPackageManager(Plugin):
 
         st.pending = {}
         try:
-            ss = open('/tmp/ajenti-yum-pending.list', 'r').read().splitlines()
+            ss = open('/tmp/genesis-yum-pending.list', 'r').read().splitlines()
             for s in ss:
                 s = s.split()
                 try:
@@ -38,7 +38,7 @@ class YumPackageManager(Plugin):
         st.full = a
 
     def get_lists(self):
-        utils.shell_bg('yum check-update', output='/tmp/ajenti-yum-output', deleteout=True)
+        utils.shell_bg('yum check-update', output='/tmp/genesis-yum-output', deleteout=True)
 
     def search(self, q, st):
         ss = utils.shell('yum -q -C -d0 -e0 search %s' % q).splitlines()
@@ -77,15 +77,15 @@ class YumPackageManager(Plugin):
         cmd = 'yum -y install '
         for x in st.pending:
             cmd += x + (' ' if st.pending[x] == 'install' else ' ')
-        utils.shell_bg(cmd, output='/tmp/ajenti-yum-output', deleteout=True)
+        utils.shell_bg(cmd, output='/tmp/genesis-yum-output', deleteout=True)
 
     def is_busy(self):
         if utils.shell_status('ps ax | grep \"/usr/bin/python /usr/bin/yum\" | grep -v \"grep /usr/bin/python /usr/bin/yum\" | awk \'{print $1}\'') != 0: return False
-        return os.path.exists('/tmp/ajenti-yum-output')
+        return os.path.exists('/tmp/genesis-yum-output')
 
     def get_busy_status(self):
         try:
-            return open('/tmp/ajenti-yum-output', 'r').read().splitlines()[-1]
+            return open('/tmp/genesis-yum-output', 'r').read().splitlines()[-1]
         except:
             return ''
 
@@ -94,7 +94,7 @@ class YumPackageManager(Plugin):
 
     def abort(self):
         utils.shell('killall -9 yum')
-        utils.shell('rm /tmp/ajenti-yum-output')
+        utils.shell('rm /tmp/genesis-yum-output')
 
     def get_info(self, pkg):
         i = apis.pkgman.PackageInfo()
@@ -142,7 +142,7 @@ class YumPackageManager(Plugin):
         return None
 
     def _save_pending(self, p):
-        f = open('/tmp/ajenti-yum-pending.list', 'w')
+        f = open('/tmp/genesis-yum-pending.list', 'w')
         for x in p:
             f.write('%s %s\n' % (p[x], x))
         f.close()

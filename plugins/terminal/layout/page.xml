@@ -6,7 +6,7 @@
     <link href='http://fonts.googleapis.com/css?family=OpenSans:400,700' rel='stylesheet' type='text/css' />
     <link rel="shortcut icon" href="/dl/terminal/icon.png" />
     <script src="/dl/core/_jquery.min.js"></script>
-    <script src="/dl/core/ajenti.js"></script>
+    <script src="/dl/core/genesis.js"></script>
     <script src="/dl/core/base64.js"></script>
     <script src="/dl/terminal/term.js"></script>
     <script src="/dl/terminal/jsxcompressor.js"></script>

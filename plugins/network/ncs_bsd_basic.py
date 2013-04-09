@@ -1,4 +1,4 @@
-from ajenti.ui import *
+from genesis.ui import *
 
 from api import *
 

@@ -4,7 +4,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 setup(
-    name='ajenti',
+    name='genesis',
     version='0.6.3',
     install_requires=[
         'pyOpenSSL',
@@ -13,15 +13,15 @@ setup(
     ],
     description='The server administration panel',
     author='Eugeny Pankov',
-    author_email='e@ajenti.org',
-    url='http://ajenti.org/',
+    author_email='e@genesis.org',
+    url='http://genesis.org/',
     packages = find_packages(),
     package_data={'': ['files/*.*', 'files/*/*.*', 'files/*/*/*.*', 'templates/*.*', 'widgets/*.*', 'layout/*.*']},
-    scripts=['ajenti-panel', 'ajenti-pkg'],
+    scripts=['genesis-panel', 'genesis-pkg'],
     data_files=[
-        ('/etc/ajenti', ['packaging/files/ajenti.conf']),
-        ('/etc/ajenti/users', ['packaging/files/admin.conf']),
-        ('/etc/init.d', ['packaging/files/ajenti']),
-        ('/var/lib/ajenti/plugins', ['packaging/files/.placeholder']),
+        ('/etc/genesis', ['packaging/files/genesis.conf']),
+        ('/etc/genesis/users', ['packaging/files/admin.conf']),
+        ('/etc/init.d', ['packaging/files/genesis']),
+        ('/var/lib/genesis/plugins', ['packaging/files/.placeholder']),
     ],
 )

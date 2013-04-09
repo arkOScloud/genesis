@@ -29,5 +29,5 @@ PLATFORMS = ['arch', 'centos', 'debian', 'fedora', 'freebsd', 'mandriva']
 DESCRIPTION = 'Network interfaces management'
 VERSION = '3'
 GENERATION = 1
-AUTHOR = 'Ajenti team'
-HOMEPAGE = 'http://ajenti.org'
+AUTHOR = 'Genesis team'
+HOMEPAGE = 'http://genesis.org'

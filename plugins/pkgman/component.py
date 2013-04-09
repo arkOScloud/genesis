@@ -1,5 +1,5 @@
-from ajenti.api import *
-from ajenti import apis
+from genesis.api import *
+from genesis import apis
 
 import time
 

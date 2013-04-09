@@ -1,8 +1,8 @@
 # coding=utf-8
 """OpenVPN widget"""
-from ajenti.com import implements, Plugin
-from ajenti import apis
-from ajenti.utils import str_fsize
+from genesis.com import implements, Plugin
+from genesis import apis
+from genesis.utils import str_fsize
 from backend import OpenVPNBackend
 
 #noinspection PyUnusedLocal

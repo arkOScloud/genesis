@@ -1,0 +1,11 @@
+[Unit]
+Description=Genesis - Interactive server frontend for arkOS
+
+[Service]
+ExecStart=/usr/bin/genesis-panel -d
+ExecStop=/usr/bin/genesis-panel -s
+Type=forking
+PIDFile=/var/run/genesis.pid
+
+[Install]
+WantedBy=multi-user.target

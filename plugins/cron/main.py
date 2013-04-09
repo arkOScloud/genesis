@@ -1,6 +1,6 @@
-from ajenti.ui import UI
-from ajenti.api import event, helpers, ConfManager
-from ajenti.utils import shell
+from genesis.ui import UI
+from genesis.api import event, helpers, ConfManager
+from genesis.utils import shell
 
 import backend
 

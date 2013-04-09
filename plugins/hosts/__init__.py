@@ -11,5 +11,5 @@ PLATFORMS = ['any']
 DESCRIPTION = 'Edit hosts file'
 VERSION = '4'
 GENERATION = 1
-AUTHOR = 'Ajenti team'
-HOMEPAGE = 'http://ajenti.org'
+AUTHOR = 'Genesis team'
+HOMEPAGE = 'http://genesis.org'

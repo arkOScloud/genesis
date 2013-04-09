@@ -1,7 +1,7 @@
-from ajenti.com import implements
-from ajenti.api import *
-from ajenti.ui import *
-from ajenti import apis
+from genesis.com import implements
+from genesis.api import *
+from genesis.ui import *
+from genesis import apis
 
 from groups import *
 

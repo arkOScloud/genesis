@@ -11,18 +11,18 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   ref/ajenti
-   ref/ajenti.api
-   ref/ajenti.config
-   ref/ajenti.com
-   ref/ajenti.core
-   ref/ajenti.feedback
-   ref/ajenti.plugmgr
-   ref/ajenti.ui
-   ref/ajenti.utils
+   ref/genesis
+   ref/genesis.api
+   ref/genesis.config
+   ref/genesis.com
+   ref/genesis.core
+   ref/genesis.feedback
+   ref/genesis.plugmgr
+   ref/genesis.ui
+   ref/genesis.utils
 
-   ref/ajenti.plugins.core
-   ref/ajenti.plugins.dashboard
+   ref/genesis.plugins.core
+   ref/genesis.plugins.dashboard
 
 Indices and tables
 ==================

@@ -1,11 +1,11 @@
-recursive-include ajenti * *.*
-recursive-exclude ajenti *~ *.pyc
+recursive-include genesis * *.*
+recursive-exclude genesis *~ *.pyc
 recursive-exclude packaging * *.*
 include README
 include COPYRIGHT
 include LICENSE
 include Makefile
-include packaging/files/ajenti.conf
+include packaging/files/genesis.conf
 include packaging/files/admin.conf
-include packaging/files/ajenti
+include packaging/files/genesis
 include packaging/files/.placeholder

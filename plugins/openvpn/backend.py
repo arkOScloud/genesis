@@ -1,7 +1,7 @@
 # coding=utf-8
 """OpenVPN plugin backend"""
-from ajenti.com import Plugin
-from ajenti.utils.error import ConfigurationError
+from genesis.com import Plugin
+from genesis.utils.error import ConfigurationError
 import manager
 
 class OpenVPNBackend(Plugin):

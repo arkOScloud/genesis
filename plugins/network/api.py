@@ -1,5 +1,5 @@
-from ajenti.com import *
-from ajenti.api import *
+from genesis.com import *
+from genesis.api import *
 
 
 class INetworkConfig(Interface):

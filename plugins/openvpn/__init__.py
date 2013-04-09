@@ -1,5 +1,5 @@
 # coding=utf-8
-"""OpenVPN Plugin for Ajenti"""
+"""OpenVPN Plugin for Genesis"""
 MODULES = ['main', 'widget', 'config', 'backend', ]
 
 DEPS = [

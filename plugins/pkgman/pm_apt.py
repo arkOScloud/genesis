@@ -1,9 +1,9 @@
 import os
 import subprocess
 
-from ajenti.com import *
-from ajenti import utils
-from ajenti import apis
+from genesis.com import *
+from genesis import utils
+from genesis import apis
 
 
 class APTPackageManager(Plugin):
@@ -25,7 +25,7 @@ class APTPackageManager(Plugin):
 
         st.pending = {}
         try:
-            ss = open('/tmp/ajenti-apt-pending.list', 'r').read().splitlines()
+            ss = open('/tmp/genesis-apt-pending.list', 'r').read().splitlines()
             for s in ss:
                 s = s.split()
                 try:
@@ -38,7 +38,7 @@ class APTPackageManager(Plugin):
         st.full = a
 
     def get_lists(self):
-        utils.shell_bg('apt-get update', output='/tmp/ajenti-apt-output', deleteout=True)
+        utils.shell_bg('apt-get update', output='/tmp/genesis-apt-output', deleteout=True)
 
     def search(self, q, st):
         ss = utils.shell('apt-cache search %s' % q).splitlines()
@@ -74,15 +74,15 @@ class APTPackageManager(Plugin):
         cmd = 'apt-get -y --force-yes install '
         for x in st.pending:
             cmd += x + ('+ ' if st.pending[x] == 'install' else '- ')
-        utils.shell_bg(cmd, output='/tmp/ajenti-apt-output', deleteout=True)
+        utils.shell_bg(cmd, output='/tmp/genesis-apt-output', deleteout=True)
 
     def is_busy(self):
         if utils.shell_status('pgrep apt-get') != 0: return False
-        return os.path.exists('/tmp/ajenti-apt-output')
+        return os.path.exists('/tmp/genesis-apt-output')
 
     def get_busy_status(self):
         try:
-            return open('/tmp/ajenti-apt-output', 'r').read().splitlines()[-1]
+            return open('/tmp/genesis-apt-output', 'r').read().splitlines()[-1]
         except:
             return ''
 
@@ -100,7 +100,7 @@ class APTPackageManager(Plugin):
 
     def abort(self):
         utils.shell('pkill apt')
-        utils.shell('rm /tmp/ajenti-apt-output')
+        utils.shell('rm /tmp/genesis-apt-output')
 
     def get_info(self, pkg):
         i = apis.pkgman.PackageInfo()
@@ -121,7 +121,7 @@ class APTPackageManager(Plugin):
         return None
         
     def _save_pending(self, p):
-        f = open('/tmp/ajenti-apt-pending.list', 'w')
+        f = open('/tmp/genesis-apt-pending.list', 'w')
         for x in p:
             f.write('%s %s\n' % (p[x], x))
         f.close()

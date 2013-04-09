@@ -1,8 +1,8 @@
 import os
 
-from ajenti.com import *
-from ajenti.utils import *
-from ajenti import apis
+from genesis.com import *
+from genesis.utils import *
+from genesis import apis
 
 
 class BSDServiceManager(Plugin):

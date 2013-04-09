@@ -1,11 +1,11 @@
 import os
 
-from ajenti.ui import *
-from ajenti.com import implements
-from ajenti.api import *
-from ajenti.utils import shell, enquote, BackgroundProcess
-from ajenti.plugins.core.api import *
-from ajenti.utils import *
+from genesis.ui import *
+from genesis.com import implements
+from genesis.api import *
+from genesis.utils import shell, enquote, BackgroundProcess
+from genesis.plugins.core.api import *
+from genesis.utils import *
 
 
 class NotepadPlugin(CategoryPlugin):

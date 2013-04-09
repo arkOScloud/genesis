@@ -12,5 +12,5 @@ PLATFORMS = ['any']
 DESCRIPTION = 'Common infrastructure for webserver control plugins'
 VERSION = '0'
 GENERATION = 1
-AUTHOR = 'Ajenti team'
-HOMEPAGE = 'http://ajenti.org'
+AUTHOR = 'Genesis team'
+HOMEPAGE = 'http://genesis.org'

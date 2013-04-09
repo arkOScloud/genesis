@@ -1,6 +1,6 @@
-from ajenti.api import *
-from ajenti.utils import *
-from ajenti.ui import *
+from genesis.api import *
+from genesis.utils import *
+from genesis.ui import *
 
 import os
 import sys

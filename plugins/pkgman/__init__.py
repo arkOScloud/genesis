@@ -28,5 +28,5 @@ PLATFORMS = ['debian', 'arch', 'freebsd', 'centos', 'fedora', 'gentoo']
 DESCRIPTION = 'Manage software packages'
 VERSION = '2'
 GENERATION = 1
-AUTHOR = 'Ajenti team'
-HOMEPAGE = 'http://ajenti.org'
+AUTHOR = 'Genesis team'
+HOMEPAGE = 'http://genesis.org'

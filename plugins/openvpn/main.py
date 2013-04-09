@@ -1,8 +1,8 @@
 # coding=utf-8
 """OpenVPN plugin"""
-from ajenti.api import event, CategoryPlugin
-from ajenti.ui import UI
-from ajenti.utils import str_fsize
+from genesis.api import event, CategoryPlugin
+from genesis.ui import UI
+from genesis.utils import str_fsize
 from time import ctime, sleep
 from backend import OpenVPNBackend
 

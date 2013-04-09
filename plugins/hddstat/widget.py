@@ -1,9 +1,9 @@
-from ajenti.ui import *
-from ajenti import apis
-from ajenti.com import implements, Plugin
-from ajenti.api import *
-from ajenti.utils import *
-from ajenti import apis
+from genesis.ui import *
+from genesis import apis
+from genesis.com import implements, Plugin
+from genesis.api import *
+from genesis.utils import *
+from genesis import apis
 from usage import DiskUsageMeter
 
 class DiskUsageWidget(Plugin):

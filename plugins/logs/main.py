@@ -2,10 +2,10 @@ import gzip
 import bz2
 import os
 
-from ajenti.ui import *
-from ajenti.com import implements
-from ajenti.api import *
-from ajenti.utils import *
+from genesis.ui import *
+from genesis.com import implements
+from genesis.api import *
+from genesis.utils import *
 
 
 class LogsPlugin(CategoryPlugin):

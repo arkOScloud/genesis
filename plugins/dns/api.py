@@ -1,4 +1,4 @@
-from ajenti.com import *
+from genesis.com import *
 
 
 class IDNSConfig(Interface):

@@ -1,5 +1,5 @@
-ajenti.plugins.dashboard
+genesis.plugins.dashboard
 ************************
 
-.. automodule:: ajenti.plugins.dashboard.api
+.. automodule:: genesis.plugins.dashboard.api
    :members:

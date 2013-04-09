@@ -1,6 +1,6 @@
-ajenti.core
+genesis.core
 ***********
 
-.. automodule:: ajenti.core
+.. automodule:: genesis.core
    :members:
    :undoc-members:

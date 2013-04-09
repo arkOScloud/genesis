@@ -1,6 +1,6 @@
-ajenti.feedback
+genesis.feedback
 ***************
 
-.. automodule:: ajenti.feedback
+.. automodule:: genesis.feedback
    :members:
    :undoc-members:

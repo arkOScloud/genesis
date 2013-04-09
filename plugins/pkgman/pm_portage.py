@@ -2,9 +2,9 @@ import os
 import subprocess
 import lxml.etree
 
-from ajenti.com import *
-from ajenti.utils import shell, shell_bg
-from ajenti import apis
+from genesis.com import *
+from genesis.utils import shell, shell_bg
+from genesis import apis
 
 
 class PortagePackageManager(Plugin):
@@ -18,7 +18,7 @@ class PortagePackageManager(Plugin):
         st.pending = self._pending
 
     def get_lists(self):
-        shell_bg('emerge --sync', output='/tmp/ajenti-portage-output', deleteout=True)
+        shell_bg('emerge --sync', output='/tmp/genesis-portage-output', deleteout=True)
 
     def search(self, q, st):
         return self.eix_parse(shell('eix --xml \'%s\''%q))
@@ -43,14 +43,14 @@ class PortagePackageManager(Plugin):
                 cmd += ' ' + x
             else:
                 cmd2 += ' ' + x
-        shell_bg('%s; %s'%(cmd,cmd2), output='/tmp/ajenti-portage-output', deleteout=True)
+        shell_bg('%s; %s'%(cmd,cmd2), output='/tmp/genesis-portage-output', deleteout=True)
 
     def is_busy(self):
-        return os.path.exists('/tmp/ajenti-portage-output')
+        return os.path.exists('/tmp/genesis-portage-output')
 
     def get_busy_status(self):
         try:
-            return open('/tmp/ajenti-portage-output', 'r').read().splitlines()[-1]
+            return open('/tmp/genesis-portage-output', 'r').read().splitlines()[-1]
         except:
             return ''
 
@@ -59,7 +59,7 @@ class PortagePackageManager(Plugin):
 
     def abort(self):
         shell('pkill emerge')
-        shell('rm /tmp/ajenti-portage-output')
+        shell('rm /tmp/genesis-portage-output')
 
     def get_info(self, pkg):
         return self.eix_parse(shell('eix \'-I*\' --xml'))[pkg]

@@ -1,6 +1,6 @@
-ajenti.utils
+genesis.utils
 ************
 
-.. automodule:: ajenti.utils
+.. automodule:: genesis.utils
    :members:
    :undoc-members:

@@ -1,6 +1,6 @@
-ajenti.ui
+genesis.ui
 *********
 
-.. automodule:: ajenti.ui
+.. automodule:: genesis.ui
    :members:
    :undoc-members:

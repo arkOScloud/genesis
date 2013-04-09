@@ -13,5 +13,5 @@ PLATFORMS = ['any']
 DESCRIPTION = 'Control Samba server'
 VERSION = '2'
 GENERATION = 1
-AUTHOR = 'Ajenti team'
-HOMEPAGE = 'http://ajenti.org'
+AUTHOR = 'Genesis team'
+HOMEPAGE = 'http://genesis.org'

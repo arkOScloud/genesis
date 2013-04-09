@@ -1,8 +1,8 @@
 import time
 
-from ajenti.com import *
-from ajenti.ui import *
-from ajenti.utils import shell, str_fsize
+from genesis.com import *
+from genesis.ui import *
+from genesis.utils import shell, str_fsize
 
 
 class BSDIfconfig(Plugin):

@@ -1,8 +1,8 @@
 # TODO: Reconfigure for use with netcfg
 
-from ajenti.com import *
-from ajenti.utils import *
-from ajenti import apis
+from genesis.com import *
+from genesis.utils import *
+from genesis import apis
 
 from api import *
 from nctp_ip import *

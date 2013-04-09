@@ -1,9 +1,9 @@
 import os
 
-from ajenti.com import *
-from ajenti.utils import *
-from ajenti import apis
-from ajenti.api import *
+from genesis.com import *
+from genesis.utils import *
+from genesis import apis
+from genesis.api import *
 
     
 class GentooServiceManager(Plugin):

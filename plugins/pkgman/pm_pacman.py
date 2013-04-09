@@ -1,9 +1,9 @@
 import os
 import subprocess
 
-from ajenti.com import *
-from ajenti import utils
-from ajenti import apis
+from genesis.com import *
+from genesis import utils
+from genesis import apis
 
 
 class PacmanPackageManager(Plugin):
@@ -18,7 +18,7 @@ class PacmanPackageManager(Plugin):
 
         st.pending = {}
         try:
-            ss = open('/tmp/ajenti-pacman-pending.list', 'r').read().splitlines()
+            ss = open('/tmp/genesis-pacman-pending.list', 'r').read().splitlines()
             for s in ss:
                 s = s.split()
                 try:
@@ -31,7 +31,7 @@ class PacmanPackageManager(Plugin):
         st.full = a
 
     def get_lists(self):
-        utils.shell_bg('pacman -Sy', output='/tmp/ajenti-pacman-output', deleteout=True)
+        utils.shell_bg('pacman -Sy', output='/tmp/genesis-pacman-output', deleteout=True)
 
     def search(self, q, st):
         return self._parse_pm(utils.shell('pacman -Ss %s' % q).splitlines())
@@ -75,15 +75,15 @@ class PacmanPackageManager(Plugin):
         if a:
             fcmd += cmd
         
-        utils.shell_bg(fcmd, output='/tmp/ajenti-pacman-output', deleteout=True)
+        utils.shell_bg(fcmd, output='/tmp/genesis-pacman-output', deleteout=True)
 
     def is_busy(self):
         if utils.shell_status('pgrep pacman') != 0: return False
-        return os.path.exists('/tmp/ajenti-pacman-output')
+        return os.path.exists('/tmp/genesis-pacman-output')
 
     def get_busy_status(self):
         try:
-            return open('/tmp/ajenti-pacman-output', 'r').read().splitlines()[-1]
+            return open('/tmp/genesis-pacman-output', 'r').read().splitlines()[-1]
         except:
             return ''
 
@@ -114,7 +114,7 @@ class PacmanPackageManager(Plugin):
 
     def abort(self):
         utils.shell('pkill pacman')
-        utils.shell('rm /tmp/ajenti-pacman-output')
+        utils.shell('rm /tmp/genesis-pacman-output')
 
     def get_info(self, pkg):
         i = apis.pkgman.PackageInfo()
@@ -131,7 +131,7 @@ class PacmanPackageManager(Plugin):
         pass
                
     def _save_pending(self, p):
-        f = open('/tmp/ajenti-pacman-pending.list', 'w')
+        f = open('/tmp/genesis-pacman-pending.list', 'w')
         for x in p:
             f.write('%s %s\n' % (p[x], x))
         f.close()

@@ -1,10 +1,10 @@
 import re
 import os
 
-from ajenti.api import *
-from ajenti.utils import *
-from ajenti.com import *
-from ajenti import apis
+from genesis.api import *
+from genesis.utils import *
+from genesis.com import *
+from genesis import apis
 
 
 class Host:

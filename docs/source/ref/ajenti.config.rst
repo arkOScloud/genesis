@@ -1,6 +1,6 @@
-ajenti.config
+genesis.config
 *************
 
-.. automodule:: ajenti.config
+.. automodule:: genesis.config
    :members:
    :undoc-members:

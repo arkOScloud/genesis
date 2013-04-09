@@ -1,6 +1,6 @@
-from ajenti import apis
-from ajenti.utils import shell
-from ajenti.com import *
+from genesis import apis
+from genesis.utils import shell
+from genesis.com import *
 
 
 class BSDSysStat(Plugin):

@@ -1,8 +1,8 @@
 #coding: utf-8
-from ajenti.ui import *
-from ajenti.com import implements, Plugin
-from ajenti.api import *
-from ajenti import apis
+from genesis.ui import *
+from genesis.com import implements, Plugin
+from genesis.api import *
+from genesis import apis
 from meters import HDDTempMeter
 
 

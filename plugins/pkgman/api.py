@@ -1,6 +1,6 @@
-from ajenti.com import *
-from ajenti.api import *
-from ajenti.apis import API
+from genesis.com import *
+from genesis.api import *
+from genesis.apis import API
 
 
 class PkgMan(API):

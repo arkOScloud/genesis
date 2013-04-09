@@ -1,4 +1,4 @@
-from ajenti.utils import *
+from genesis.utils import *
 
 def get_acls(f):
     ss = shell('getfacl -cp -- "%s"' % f).split('\n')

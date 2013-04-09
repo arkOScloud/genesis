@@ -1,9 +1,9 @@
 import os
 import subprocess
 
-from ajenti.com import *
-from ajenti import utils
-from ajenti import apis
+from genesis.com import *
+from genesis import utils
+from genesis import apis
 
 
 class PortsPackageManager(Plugin):
@@ -26,7 +26,7 @@ class PortsPackageManager(Plugin):
                 
         st.pending = {}
         try:
-            ss = open('/tmp/ajenti-ports-pending.list', 'r').read().splitlines()
+            ss = open('/tmp/genesis-ports-pending.list', 'r').read().splitlines()
             for s in ss:
                 s = s.split()
                 try:
@@ -39,7 +39,7 @@ class PortsPackageManager(Plugin):
         st.full = a
 
     def get_lists(self):
-        utils.shell_bg('portsnap fetch', output='/tmp/ajenti-ports-output', deleteout=True)
+        utils.shell_bg('portsnap fetch', output='/tmp/genesis-ports-output', deleteout=True)
 
     def search(self, q, st):
         ss = utils.shell('cd /usr/ports; make search name=%s' % q).splitlines()
@@ -82,14 +82,14 @@ class PortsPackageManager(Plugin):
                 cmd += ' ' + x
             else:
                 cmd2 += ' ' + x
-        utils.shell_bg('%s; %s'%(cmd,cmd2), output='/tmp/ajenti-ports-output', deleteout=True)
+        utils.shell_bg('%s; %s'%(cmd,cmd2), output='/tmp/genesis-ports-output', deleteout=True)
 
     def is_busy(self):
-        return os.path.exists('/tmp/ajenti-ports-output')
+        return os.path.exists('/tmp/genesis-ports-output')
 
     def get_busy_status(self):
         try:
-            return open('/tmp/ajenti-ports-output', 'r').read().splitlines()[-1]
+            return open('/tmp/genesis-ports-output', 'r').read().splitlines()[-1]
         except:
             return ''
 
@@ -117,7 +117,7 @@ class PortsPackageManager(Plugin):
 
     def abort(self):
         utils.shell('pkill make')
-        utils.shell('rm /tmp/ajenti-ports-output')
+        utils.shell('rm /tmp/genesis-ports-output')
         
     def get_info(self, pkg):
         i = apis.pkgman.PackageInfo()
@@ -134,7 +134,7 @@ class PortsPackageManager(Plugin):
         return None
 
     def _save_pending(self, p):
-        f = open('/tmp/ajenti-ports-pending.list', 'w')
+        f = open('/tmp/genesis-ports-pending.list', 'w')
         for x in p:
             f.write('%s %s\n' % (p[x], x))
         f.close()

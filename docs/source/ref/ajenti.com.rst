@@ -1,6 +1,6 @@
-ajenti.com
+genesis.com
 **********
 
-.. automodule:: ajenti.com
+.. automodule:: genesis.com
    :members:
    :undoc-members:

@@ -1,6 +1,6 @@
-from ajenti.com import *
-from ajenti.utils import *
-from ajenti.ui import *
+from genesis.com import *
+from genesis.utils import *
+from genesis.ui import *
 
 from api import *
 from nctp_linux import *

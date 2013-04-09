@@ -12,5 +12,5 @@ PLATFORMS = ['debian', 'arch', 'freebsd', 'centos', 'fedora', 'gentoo', 'mandriv
 DESCRIPTION = 'Control system services'
 VERSION = '3'
 GENERATION = 1
-AUTHOR = 'Ajenti team'
-HOMEPAGE = 'http://ajenti.org'
+AUTHOR = 'Genesis team'
+HOMEPAGE = 'http://genesis.org'

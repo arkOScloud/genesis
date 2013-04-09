@@ -1,7 +1,7 @@
 PYTHON=`which python`
 DESTDIR=/
-BUILDIR=$(CURDIR)/debian/ajenti
-PROJECT=ajenti
+BUILDIR=$(CURDIR)/debian/genesis
+PROJECT=genesis
 VERSION=0.6.3
 PREFIX=/usr
 
@@ -31,8 +31,8 @@ install:
 rpm:
 	rm -rf dist/*.rpm
 	$(PYTHON) setup.py sdist 
-	#$(PYTHON) setup.py bdist_rpm --spec-file dist/ajenti.spec #--post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
-	rpmbuild -bb dist/ajenti.spec
+	#$(PYTHON) setup.py bdist_rpm --spec-file dist/genesis.spec #--post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
+	rpmbuild -bb dist/genesis.spec
 	mv ~/rpmbuild/RPMS/noarch/$(PROJECT)*.rpm dist
 
 deb:

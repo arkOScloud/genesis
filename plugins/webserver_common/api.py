@@ -1,8 +1,8 @@
-from ajenti.com import *
-from ajenti.apis import API
-from ajenti.api import CategoryPlugin, event
-from ajenti.ui import UI
-from ajenti import apis
+from genesis.com import *
+from genesis.apis import API
+from genesis.api import CategoryPlugin, event
+from genesis.ui import UI
+from genesis import apis
 
 
 class Webserver(API):

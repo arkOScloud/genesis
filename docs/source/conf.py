@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Ajenti documentation build configuration file, created by
+# Genesis documentation build configuration file, created by
 # sphinx-quickstart on Mon Aug 15 15:18:35 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Ajenti'
+project = u'Genesis'
 copyright = u'2011, Eugeny Pankov'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -164,7 +164,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Ajentidoc'
+htmlhelp_basename = 'Genesisdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -178,7 +178,7 @@ htmlhelp_basename = 'Ajentidoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Ajenti.tex', u'Ajenti Documentation',
+  ('index', 'Genesis.tex', u'Genesis Documentation',
    u'Eugeny Pankov', 'manual'),
 ]
 
@@ -211,7 +211,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'ajenti', u'Ajenti Documentation',
+    ('index', 'genesis', u'Genesis Documentation',
      [u'Eugeny Pankov'], 1)
 ]
 
@@ -219,7 +219,7 @@ man_pages = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'Ajenti'
+epub_title = u'Genesis'
 epub_author = u'Eugeny Pankov'
 epub_publisher = u'Eugeny Pankov'
 epub_copyright = u'2011, Eugeny Pankov'

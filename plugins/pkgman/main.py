@@ -1,10 +1,10 @@
 import time
 
-from ajenti.ui import *
-from ajenti.com import implements
-from ajenti.api import *
-from ajenti.plugins.core.api import *
-from ajenti import apis
+from genesis.ui import *
+from genesis.com import implements
+from genesis.api import *
+from genesis.plugins.core.api import *
+from genesis import apis
 
 
 class PackageManagerPlugin(CategoryPlugin):

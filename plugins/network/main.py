@@ -1,5 +1,5 @@
-from ajenti.ui import *
-from ajenti.api import CategoryPlugin, event
+from genesis.ui import *
+from genesis.api import CategoryPlugin, event
 
 from api import *
 

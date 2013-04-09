@@ -1,6 +1,6 @@
-ajenti.api
+genesis.api
 **********
 
-.. automodule:: ajenti.api
+.. automodule:: genesis.api
    :members:
    :undoc-members:

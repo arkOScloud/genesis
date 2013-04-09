@@ -1,0 +1,6 @@
+<xml>
+    <div class="freetext">
+        <ul id="list" />
+    </div>
+    <outlinklabel text="All news" url="http://twitter.com/genesis" />
+</xml>

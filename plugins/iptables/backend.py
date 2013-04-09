@@ -1,10 +1,10 @@
 import os
 import getopt
 
-from ajenti.ui import UI
-from ajenti.utils import shell
-from ajenti.api import *
-from ajenti.com import *
+from genesis.ui import UI
+from genesis.utils import shell
+from genesis.api import *
+from genesis.com import *
 
 
 class Rule:

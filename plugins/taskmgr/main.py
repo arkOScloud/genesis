@@ -1,9 +1,9 @@
 #coding: utf-8
-from ajenti.ui import *
-from ajenti.com import implements
-from ajenti.api import *
-from ajenti.utils import *
-from ajenti import apis
+from genesis.ui import *
+from genesis.com import implements
+from genesis.api import *
+from genesis.utils import *
+from genesis import apis
 
 import psutil
 import signal

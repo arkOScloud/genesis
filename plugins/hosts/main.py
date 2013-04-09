@@ -1,5 +1,5 @@
-from ajenti.ui import *
-from ajenti.api import *
+from genesis.ui import *
+from genesis.api import *
 
 import backend
 
