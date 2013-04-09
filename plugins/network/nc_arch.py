@@ -65,3 +65,4 @@ class ArchNetworkConfig(LinuxIp):
         #        if iface.addressing == 'dhcp':
         #            value = ''
         #        self.rcconf.set_param(key, value, near='interface')
+        return
