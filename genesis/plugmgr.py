@@ -444,7 +444,6 @@ class RepositoryManager:
         from genesis import generation, version
         if not os.path.exists('/var/lib/genesis'):
             os.mkdir('/var/lib/genesis')
-        send_stats(self.server, PluginLoader.list_plugins().keys())
         data = download('http://%s/api/plugins?pl=%s&gen=%i' % (self.server,detect_platform(),generation))
         try:
             open('/var/lib/genesis/plugins.list', 'w').write(data)
@@ -462,7 +461,6 @@ class RepositoryManager:
         :type   id:     str
         """
         dir = self.config.get('genesis', 'plugins')
-        send_stats(self.server, PluginLoader.list_plugins().keys(), delplugin=id)
         shell('rm -r %s/%s' % (dir, id))
 
         if id in PluginLoader.list_plugins():
@@ -513,8 +511,6 @@ class RepositoryManager:
 
         shell('cd %s; tar xf plugin.tar.gz' % dir)
         shell('rm %s/plugin.tar.gz' % dir)
-
-        send_stats(self.server, PluginLoader.list_plugins().keys(), addplugin=id)
 
         if load:
             PluginLoader.load(id)
