@@ -6,7 +6,6 @@ import os.path
 import logging
 
 from genesis.daemon import Daemon
-from genesis.feedback import check_uid
 
 
 class GenesisDaemon(Daemon):
@@ -69,8 +68,6 @@ if __name__ == '__main__':
         elif os.path.isfile(os.path.join(sys.path[0], 'genesis.conf')):
             # Try local config file
             config_file = os.path.join(sys.path[0], 'genesis.conf')
-
-    check_uid()
     
     if action == 'run':
         from genesis.standalone import run_server
