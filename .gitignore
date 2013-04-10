@@ -1,27 +1,8 @@
 *.pyc
-packaging/meta
-docs/build/*
-ajenti.conf
+genesis.conf
 users/*.conf
 *~
 
-debian/ajenti*
-dist/*.rpm
-dist/*.deb
-dist/*.gz
-*.egg*
-build/*
-debian/files
-debian/*stamp*
-
-.idea/
-.pydevproject
-*.sublime-workspace
-
 .~lock.*
-
-plugins/uzuri
-plugins/uzuri/*
-plugins/uzuri/*/*
 
 repo
