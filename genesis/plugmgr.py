@@ -444,7 +444,7 @@ class RepositoryManager:
         from genesis import generation, version
         if not os.path.exists('/var/lib/genesis'):
             os.mkdir('/var/lib/genesis')
-        data = download('http://%s/api/plugins?pl=%s&gen=%i' % (self.server,detect_platform(),generation))
+        data = download('http://%s/genesis/plugins.list' % self.server)
         try:
             open('/var/lib/genesis/plugins.list', 'w').write(data)
         except:
@@ -481,7 +481,7 @@ class RepositoryManager:
         from genesis import generation, version
         dir = self.config.get('genesis', 'plugins')
 
-        download('http://%s/plugins/%i/%s/plugin.tar.gz' % (self.server, generation, id),
+        download('http://%s/genesis/%s/plugin.tar.gz' % (self.server, id),
             file='%s/plugin.tar.gz'%dir, crit=True)
 
         self.remove(id)
