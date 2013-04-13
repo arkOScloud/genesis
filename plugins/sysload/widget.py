@@ -80,3 +80,24 @@ class SwapWidget(Plugin):
 
     def process_config(self, vars):
         pass
+
+
+class UptimeWidget(Plugin):
+    implements(apis.dashboard.IWidget)
+    title = 'Uptime'
+    icon = '/dl/core/ui/stock/server.png'
+    name = 'Uptime'
+    style = 'linear'
+    
+    def get_ui(self, cfg, id=None):
+        stat = self.app.get_backend(apis.sysstat.ISysStat)
+        return UI.Label(text=stat.get_uptime())
+        
+    def handle(self, event, params, cfg, vars=None):
+        pass
+    
+    def get_config_dialog(self):
+        return None
+        
+    def process_config(self, vars):
+        pass

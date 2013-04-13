@@ -1,3 +1,6 @@
+import re
+import os
+
 from genesis import apis
 from genesis.utils import shell
 from genesis.com import *
@@ -22,3 +25,34 @@ class LinuxSysStat(Plugin):
     def get_swap(self):
         s = shell('free -b | grep Swap').split()[1:]
         return (int(s[1]), int(s[0]))
+
+    def get_uptime(self):
+        minute = 60
+        hour = minute * 60
+        day = hour * 24
+
+        d = h = m = 0
+
+        try:
+            s = int(open('/proc/uptime').read().split('.')[0])
+
+            d = s / day
+            s -= d * day
+            h = s / hour
+            s -= h * hour
+            m = s / minute
+            s -= m * minute
+        except IOError:
+            # Try use 'uptime' command
+            up = os.popen('uptime').read()
+            if up:
+                uptime = re.search('up\s+(.*?),\s+[0-9]+ user',up).group(1)
+                return uptime
+
+        uptime = ""
+        if d > 1:
+            uptime = "%d days, "%d
+        elif d == 1:
+            uptime = "1 day, "
+
+        return uptime + "%d:%02d:%02d"%(h,m,s)

@@ -71,6 +71,10 @@ class ConfigPlugin(CategoryPlugin):
             self._config = params[1]
         if params[0] == 'restart':
             self.app.restart()
+        if params[0] == 'shutdown':
+            shell('shutdown -P now')
+        if params[0] == 'reboot':
+            shell('reboot')
 
     @event('form/submit')
     @event('dialog/submit')
