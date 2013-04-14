@@ -2,8 +2,8 @@
   <pad>
     <img style="float:left;display:inline-block;padding:0 20px;" src="/dl/core/ui/bug.png" />
     <div style="float:left;display:inline-block;width: 400px;">
-        <label size="4" text="Boom"/>
-        <label size="1" text="Genesis has crashed"/><br/>
+        <label size="4" text="Boom!"/>
+        <label size="1" text="Genesis has experienced an error"/><br/>
         <br/>
         <label size="3" text="So what do I do now?" /><br/>
         <ul>
@@ -16,14 +16,13 @@
             </li>
             <li>
                 Or if you believe you did nothing wrong and this is a bug, please let us know about the problem by
-                <outlinklabel url="https://bugs.launchpad.net/genesis/+filebug" text="filing this bug to Launchpad" />
+                <outlinklabel url="https://github.com/cznweb/genesis/issues" text="filing this bug to our tracker" />
                 and attaching the crash report.<br/>
-                <button onclick="$('#report').fadeIn();$(this).hide();return false;" text="Show me the report" />
+                <button onclick="$('#report').fadeIn();$(this).hide();return false;" text="Show crash report" />
                 <div id="report" style="display:none"/><br/><br/>
             </li>
             <li>
-                One may try to solve the problem by looking at the stacktrace.<br/>
-                <button onclick="$('#trace').fadeIn();$(this).hide();return false;" text="Yup, that's me" />
+                <button onclick="$('#trace').fadeIn();$(this).hide();return false;" text="View stacktrace" />
                 <div id="trace" style="display:none"/><br/>
             </li>
         </ul>              

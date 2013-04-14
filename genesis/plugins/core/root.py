@@ -157,7 +157,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         templ.insertText('cat-username', self.app.auth.user)
         templ.appendAll('links', 
                 UI.LinkLabel(text='About', id='about'),
-                UI.OutLinkLabel(text='License', url='http://www.gnu.org/licenses/lgpl.html')
+                UI.OutLinkLabel(text='License', url='http://www.gnu.org/licenses/gpl.html')
             )
 
         return templ.render()

@@ -8,12 +8,12 @@
                 <label text="Genesis" size="4" />
             </tooltip>
             <br/>
-            <label text="Web administration toolset" />
+            <label text="arkOS server management software" />
         </div>
         <div style="clear:both" />
         <br/>
-        <button text="Home" onclick="window.open('http://genesis.org')" icon="/dl/core/ui/stock/home.png" />
-        <button text="Bug tracker" url="window.open('https://launchpad.net/genesis/+bugs')" icon="/dl/core/ui/stock/bug.png" />
-        <button text="Wiki" onclick="window.open('http://wiki.genesis.org')" icon="/dl/core/ui/stock/book.png" />
+        <button text="Home" onclick="window.open('http://ark-os.org')" icon="/dl/core/ui/stock/home.png" />
+        <button text="Bugtracker" onclick="window.open('https://github.com/cznweb/genesis/issues')" icon="/dl/core/ui/stock/git.png" />
+        <button text="Support" onclick="window.open('http://bbs.ark-os.org')" icon="/dl/core/ui/stock/user.png" />
     </dialogbox>
 </xml>

@@ -5,16 +5,16 @@ from setuptools import find_packages
 
 setup(
     name='genesis',
-    version='0.6.3',
+    version='0.1',
     install_requires=[
         'pyOpenSSL',
         'gevent',
         'lxml>=2.2.4',
     ],
-    description='The server administration panel',
-    author='Eugeny Pankov',
-    author_email='e@genesis.org',
-    url='http://genesis.org/',
+    description='arkOS node management program',
+    author='Jacob Cook',
+    author_email='jacob@jcook.cc',
+    url='http://ark-os.org/',
     packages = find_packages(),
     package_data={'': ['files/*.*', 'files/*/*.*', 'files/*/*/*.*', 'templates/*.*', 'widgets/*.*', 'layout/*.*']},
     scripts=['genesis-panel', 'genesis-pkg'],

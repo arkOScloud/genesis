@@ -2,7 +2,6 @@ from genesis.ui import *
 from genesis.com import implements, Plugin
 from genesis.api import *
 from genesis import apis
-from updater import Updater
 
 # We want apis.dashboard already!
 import genesis.plugins.dashboard.api
@@ -16,12 +15,7 @@ class NewsWidget(Plugin):
     style = 'normal'
 
     def get_ui(self, cfg, id=None):
-        ui = self.app.inflate('core:news')
-        feed = Updater.get().get_feed()
-        if feed is not None:
-            for i in feed[:3]:
-                ui.append('list', UI.CustomHTML(html='<li>%s</li>'%i['text']))
-        return ui
+        pass
 
     def handle(self, event, params, cfg, vars=None):
         pass
