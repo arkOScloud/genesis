@@ -5,8 +5,8 @@ import json
 
 
 
-class HealthMonitor (Component):
-    name = 'health-monitor'
+class SysAlertsMonitor (Component):
+    name = 'sysalerts-monitor'
 
     def on_starting(self):
         self._cond_refresh = threading.Condition()
@@ -95,11 +95,11 @@ class MetersExporter (Plugin, URLHandler):
 
 
 
-class HealthExporter (Plugin, URLHandler):
+class SysAlertsExporter (Plugin, URLHandler):
 
-    @url('^/api/health$')
+    @url('^/api/alerts$')
     def export(self, req, sr):
-        mon = ComponentManager.get().find('health-monitor')
+        mon = ComponentManager.get().find('sysalerts-monitor')
         data = json.loads(self.app.gconfig.get('meters', 'config', '{}'))
         nd = {}
         mon.refresh()

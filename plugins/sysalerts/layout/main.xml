@@ -2,7 +2,7 @@
     <toolbar>
         <button id="btnRefresh" text="Refresh" icon="/dl/core/ui/stock/refresh.png" />
         <button id="btnSettings" text="Configure" icon="/dl/core/ui/stock/settings.png" />
-        <button text="Help" icon="/dl/core/ui/stock/info.png" onclick="window.open('http://wiki.genesis.org/users:health');return false" />
+        <button text="Help" icon="/dl/core/ui/stock/info.png" onclick="window.open('http://bbs.ark-os.org');return false" />
     </toolbar>
 
     <pad id="main">

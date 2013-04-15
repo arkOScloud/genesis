@@ -4,25 +4,25 @@ from backend import Backend
 import trans
 
 
-class HealthPlugin(CategoryPlugin):
-    text = 'Health'
-    icon = '/dl/health/icon.png'
-    folder = 'top'
+class SysAlertsPlugin(CategoryPlugin):
+    text = 'System Alerts'
+    icon = '/dl/sysalerts/icon.png'
+    folder = 'system'
 
     def on_init(self):
         self.backend = Backend(self.app)
-        self.mon = ComponentManager.get().find('health-monitor')
+        self.mon = ComponentManager.get().find('sysalerts-monitor')
 
     def on_session_start(self):
         self._settings = False
         self._configuring = None
 
     def get_counter(self):
-        lst = ComponentManager.get().find('health-monitor').get()
+        lst = ComponentManager.get().find('sysalerts-monitor').get()
         return len(filter(lambda x:x!='good', lst.values())) or None
 
     def get_ui(self):
-        ui = self.app.inflate('health:main')
+        ui = self.app.inflate('sysalerts:main')
 
         ostat = 'good'
 
@@ -62,7 +62,7 @@ class HealthPlugin(CategoryPlugin):
         return ui
 
     def get_ui_settings(self):
-        ui = self.app.inflate('health:settings')
+        ui = self.app.inflate('sysalerts:settings')
 
         for m in self.backend.list_meters():
             for v in self.backend.list_variated(m):
@@ -112,21 +112,21 @@ class HealthPlugin(CategoryPlugin):
             self._configuring = None
 
     def get_ui_cfg_binary(self, cls):
-        ui = self.app.inflate('health:cfg-binary')
+        ui = self.app.inflate('sysalerts:cfg-binary')
         t = self.backend.get_cfg(cls.plugin_id, cls.variant).setdefault('good_state', True)
         ui.find('r-true').set('checked', t)
         ui.find('r-false').set('checked', not t)
         return ui
 
     def get_ui_cfg_decimal(self, cls):
-        ui = self.app.inflate('health:cfg-decimal')
+        ui = self.app.inflate('sysalerts:cfg-decimal')
         c = self.backend.get_cfg(cls.plugin_id, cls.variant)
         ui.find('limit_susp').set('value', str(c.setdefault('limit_susp', 33.0)))
         ui.find('limit_dang').set('value', str(c.setdefault('limit_dang', 66.0)))
         return ui
 
     def get_ui_cfg_linear(self, cls):
-        ui = self.app.inflate('health:cfg-linear')
+        ui = self.app.inflate('sysalerts:cfg-linear')
         c = self.backend.get_cfg(cls.plugin_id, cls.variant)
         ui.find('limit_susp').set('value', str(c.setdefault('limit_susp', 33.0)))
         ui.find('limit_dang').set('value', str(c.setdefault('limit_dang', 66.0)))

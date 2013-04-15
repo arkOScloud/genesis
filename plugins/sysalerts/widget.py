@@ -4,15 +4,15 @@ from genesis.com import implements, Plugin
 from genesis.api import *
 
 
-class HealthWidget(Plugin):
+class SysAlertsWidget(Plugin):
     implements(apis.dashboard.IWidget)
-    title = 'Health'
-    icon = '/dl/health/icon.png'
-    name = 'Health monitor'
+    title = 'Alerts'
+    icon = '/dl/sysalerts/icon.png'
+    name = 'System alerts'
     style = 'linear'
 
     def get_ui(self, cfg, id=None):
-        self.mon = ComponentManager.get().find('health-monitor')
+        self.mon = ComponentManager.get().find('sysalerts-monitor')
         text = { 'good': 'GOOD', 'susp': 'WARNING', 'dang': 'DANGER' }
         stat = { 'good': 'info', 'susp': 'warn', 'dang': 'err' }
         ostat = 'good'
@@ -23,7 +23,7 @@ class HealthWidget(Plugin):
             if st == 'dang':
                 ostat = st
 
-        ui = self.app.inflate('health:widget')
+        ui = self.app.inflate('sysalerts:widget')
         ui.find('overall').text = text[ostat]
         ui.find('overall')['class'] = 'status-cell-%s'%stat[ostat]
         return ui
