@@ -8,8 +8,8 @@ from genesis import apis
 
 
 class Dashboard(CategoryPlugin):
-    text = 'Dashboard'
-    icon = '/dl/dashboard/icon.png'
+    text = 'System Monitor'
+    icon = '/dl/sysmon/dash.png'
     folder = 'top'
 
     def on_session_start(self):
@@ -38,7 +38,7 @@ class Dashboard(CategoryPlugin):
                 raise
 
     def get_ui(self):
-        ui = self.app.inflate('dashboard:main')
+        ui = self.app.inflate('sysmon:main')
         self._mgr.refresh()
 
         self.fill('l', self._mgr.list_left(), ui, 'cleft')
@@ -46,10 +46,10 @@ class Dashboard(CategoryPlugin):
 
         ui.insertText('host', platform.node())
         ui.insertText('distro', detect_distro())
-        ui.find('icon').set('src', '/dl/dashboard/distributor-logo-%s.png'%detect_platform(mapping=False))
+        ui.find('icon').set('src', '/dl/sysmon/distributor-logo-%s.png'%detect_platform(mapping=False))
 
         if self._adding_widget == True:
-            dlg = self.app.inflate('dashboard:add-widget')
+            dlg = self.app.inflate('sysmon:add-widget')
             idx = 0
             for prov in sorted(self.app.grab_plugins(apis.dashboard.IWidget)):
                 if hasattr(prov, 'hidden'):
@@ -80,7 +80,7 @@ class Dashboard(CategoryPlugin):
         else:
             self._adding_widget = id
 
-    @event('dashboard/save')
+    @event('sysmon/save')
     def on_save(self, event, params, vars):
         l = params[0]
         r = params[1]
