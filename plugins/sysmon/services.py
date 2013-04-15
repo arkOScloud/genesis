@@ -8,7 +8,7 @@ from groups import *
 
 class ServicesPlugin(CategoryPlugin):
     text = 'Services'
-    icon = '/dl/services/icon.png'
+    icon = '/dl/core/ui/stock/services.png'
     folder = 'system'
 
     def on_init(self):
@@ -19,7 +19,7 @@ class ServicesPlugin(CategoryPlugin):
         self._editing = None
 
     def get_ui(self):
-        ui = self.app.inflate('services:main')
+        ui = self.app.inflate('sysmon:services')
         ts = ui.find('list')
 
         lst = sorted(self.svc_mgr.list_all(), key=lambda x: x.status)
@@ -28,7 +28,7 @@ class ServicesPlugin(CategoryPlugin):
             ts.append(row)
 
         for g in sorted(self.groupmgr.groups.keys()):
-            gui = self.app.inflate('services:group')
+            gui = self.app.inflate('sysmon:group')
             gui.find('edit').set('id', 'edit/'+g)
             gui.find('delete').set('id', 'delete/'+g)
             gui.find('name').set('text', g)
@@ -58,7 +58,7 @@ class ServicesPlugin(CategoryPlugin):
 
         if self._editing is not None:
             has = self._editing in self.groupmgr.groups.keys()
-            eui = self.app.inflate('services:edit')
+            eui = self.app.inflate('sysmon:edit')
             eui.find('name').set('value', self._editing)
             for svc in self.svc_mgr.list_all():
                 eui.append('services', UI.Checkbox(

@@ -1,5 +1,5 @@
 from genesis.api import ModuleConfig
-from main import *
+from logs import *
 
 
 class GeneralConfig(ModuleConfig):

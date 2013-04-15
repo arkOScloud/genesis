@@ -10,7 +10,7 @@ from genesis.utils import *
 
 class LogsPlugin(CategoryPlugin):
     text = 'Logs'
-    icon = '/dl/logs/icon.png'
+    icon = '/dl/core/ui/stock/logs.png'
     folder = 'system'
 
     def on_session_start(self):
@@ -18,7 +18,7 @@ class LogsPlugin(CategoryPlugin):
         self._tree = TreeManager()
 
     def get_ui(self):
-        ui = self.app.inflate('logs:main')
+        ui = self.app.inflate('sysmon:logs')
         data = None
         try:
             if self._log != '':
@@ -35,7 +35,7 @@ class LogsPlugin(CategoryPlugin):
         return ui
 
     def get_ui_tree(self):
-        root = UI.TreeContainer(text='Logs', id='/')
+        root = UI.TreeContainer(text='System Logs', id='/')
 
         try:
             self.scan_logs(self.app.get_config(self).dir, root, '/')

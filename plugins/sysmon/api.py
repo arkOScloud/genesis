@@ -2,7 +2,18 @@ from genesis.com import *
 from genesis.apis import API
 from genesis.api import CategoryPlugin, event
 from genesis.ui import UI
-from genesis import apis
+
+
+class SysStat(API):
+    class ISysStat(Interface):
+        def get_load(self):
+            pass
+        
+        def get_ram(self):
+            pass
+            
+        def get_swap(self):
+            pass
 
 
 class Services(API):
