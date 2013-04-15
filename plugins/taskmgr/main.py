@@ -11,9 +11,9 @@ import os
 
 
 class TaskManagerPlugin(CategoryPlugin):
-    text = 'Task manager'
+    text = 'Task Monitor'
     icon = '/dl/taskmgr/icon.png'
-    folder = 'system'
+    folder = 'advanced'
 
     rev_sort = [
         'get_cpu_percent',

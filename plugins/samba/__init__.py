@@ -8,10 +8,10 @@ DEPS =  [
      ])
 ]
 
-NAME = 'Samba'
+NAME = 'File Shares (Windows)'
 PLATFORMS = ['any']
-DESCRIPTION = 'Control Samba server'
+DESCRIPTION = 'Add, remove and manage Samba (SMB/CIFS) shares'
 VERSION = '2'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

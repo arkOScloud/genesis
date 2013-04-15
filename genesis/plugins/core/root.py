@@ -19,11 +19,12 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         'apps': 'APPLICATIONS',
         'servers': 'SERVERS',
         'tools': 'TOOLS',
+        'advanced': 'ADVANCED',
         'other': 'OTHER',
     }
 
     # Folder order
-    folder_ids = ['cluster', 'system', 'apps', 'hardware', 'tools', 'servers', 'other']
+    folder_ids = ['cluster', 'apps', 'servers', 'system', 'hardware', 'tools', 'advanced', 'other']
 
     def on_session_start(self):
         self._cat_selected = 'firstrun' if self.is_firstrun() else 'dashboard'

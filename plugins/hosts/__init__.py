@@ -6,10 +6,10 @@ DEPS = [(['freebsd', 'centos', 'gentoo', 'mandriva'],
          ]
        )]
 
-NAME = 'Hosts'
+NAME = 'Hosts/Aliases'
 PLATFORMS = ['any']
-DESCRIPTION = 'Edit hosts file'
+DESCRIPTION = 'Manually edit host records'
 VERSION = '4'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

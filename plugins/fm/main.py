@@ -13,7 +13,7 @@ from acl import *
 
 
 class FMPlugin(CategoryPlugin):
-    text = 'File manager'
+    text = 'File Manager'
     icon = '/dl/fm/icon.png'
     folder = 'tools'
 

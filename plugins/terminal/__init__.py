@@ -4,8 +4,8 @@ DEPS =  []
 
 NAME = 'Terminal'
 PLATFORMS = ['any']
-DESCRIPTION = 'VT100 terminal'
+DESCRIPTION = 'Remote VT100 command line from your browser window'
 VERSION = '2'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

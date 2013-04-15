@@ -9,7 +9,7 @@ import backend
 class FSPlugin(CategoryPlugin):
     text = 'Filesystems'
     icon = '/dl/filesystems/icon.png'
-    folder = 'system'
+    folder = 'advanced'
 
     def on_init(self):
         self.fstab = backend.read()

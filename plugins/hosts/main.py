@@ -5,9 +5,9 @@ import backend
 
 
 class HostsPlugin(CategoryPlugin):
-    text = 'Hosts'
+    text = 'Hosts/Aliases'
     icon = '/dl/hosts/icon.png'
-    folder = 'system'
+    folder = 'advanced'
 
     def on_init(self):
         be = backend.Config(self.app)

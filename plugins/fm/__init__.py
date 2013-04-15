@@ -2,10 +2,10 @@ MODULES = ['main', 'config']
 
 DEPS =  []
 
-NAME = 'File manager'
+NAME = 'File Manager'
 PLATFORMS = ['any']
 DESCRIPTION = 'Simple remote file manager'
 VERSION = '1'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

@@ -23,10 +23,10 @@ DEPS =  [
      ]),
 ]
 
-NAME = 'Package manager'
+NAME = 'Package Manager'
 PLATFORMS = ['debian', 'arch', 'freebsd', 'centos', 'fedora', 'gentoo']
-DESCRIPTION = 'Manage software packages'
+DESCRIPTION = 'Install, update and remove applications on your system'
 VERSION = '2'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

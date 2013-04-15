@@ -7,7 +7,7 @@ from genesis.plugins.core.api import *
 import time
 
 class ShellPlugin(CategoryPlugin):
-    text = 'Shell'
+    text = 'Execute'
     icon = '/dl/shell/icon.png'
     folder = 'tools'
 

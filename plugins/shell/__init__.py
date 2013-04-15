@@ -2,10 +2,10 @@ MODULES = ['main']
 
 DEPS =  []
 
-NAME = 'Shell'
+NAME = 'Execute'
 PLATFORMS = ['any']
-DESCRIPTION = 'Remote command execution'
+DESCRIPTION = 'Execute commands remotely'
 VERSION = '0'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

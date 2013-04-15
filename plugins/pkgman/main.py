@@ -10,7 +10,7 @@ from genesis import apis
 class PackageManagerPlugin(CategoryPlugin):
     text = 'Packages'
     icon = '/dl/pkgman/icon.png'
-    folder = 'system'
+    folder = 'advanced'
 
     def on_init(self):
         self.mgr = ComponentManager.get().find('pkgman')

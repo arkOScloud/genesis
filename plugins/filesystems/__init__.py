@@ -4,8 +4,8 @@ DEPS =  []
 
 NAME = 'Filesystems'
 PLATFORMS = ['any']
-DESCRIPTION = 'Edit fstab'
+DESCRIPTION = 'Edit file system record'
 VERSION = '0'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

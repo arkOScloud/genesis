@@ -7,10 +7,10 @@ DEPS =  [
      ])
 ]
 
-NAME = 'Cron'
+NAME = 'Scheduled Tasks'
 PLATFORMS = ['any']
-DESCRIPTION = 'Edit crontabs easily'
+DESCRIPTION = 'Manage scheduled tasks and system automation'
 VERSION = '0'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

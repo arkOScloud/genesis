@@ -24,10 +24,10 @@ DEPS =  [(['freebsd'],
         ('plugin', 'lib_rcconf'),
      ])]
 
-NAME = 'Network'
+NAME = 'Network Connections'
 PLATFORMS = ['arch', 'centos', 'debian', 'fedora', 'freebsd', 'mandriva']
-DESCRIPTION = 'Network interfaces management'
+DESCRIPTION = 'Manage ethernet/wireless connections and interfaces'
 VERSION = '3'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

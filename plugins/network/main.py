@@ -5,9 +5,9 @@ from api import *
 
 
 class NetworkPlugin(CategoryPlugin):
-    text = 'Network'
+    text = 'Networks'
     icon = '/dl/network/icon.png'
-    folder = 'hardware'
+    folder = 'system'
 
     def on_init(self):
         self.net_config = self.app.get_backend(INetworkConfig)

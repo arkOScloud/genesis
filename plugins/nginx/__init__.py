@@ -8,10 +8,10 @@ DEPS =  [
      ])
 ]
 
-NAME = 'nginx'
+NAME = 'Web Server (nginx)'
 PLATFORMS = ['debian', 'arch', 'freebsd', 'gentoo', 'centos', 'mandriva']
-DESCRIPTION = 'nginx webserver control plugin'
+DESCRIPTION = 'Controls the nginx webserver'
 VERSION = '1'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

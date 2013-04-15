@@ -7,10 +7,10 @@ DEPS =  [
      ])
 ]
 
-NAME = 'IP tables'
+NAME = 'Firewall (iptables)'
 PLATFORMS = ['debian', 'arch', 'centos', 'fedora', 'gentoo']
-DESCRIPTION = 'Netfilter rules control plugin'
+DESCRIPTION = 'Rules creation/management for the iptables Firewall'
 VERSION = '1'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

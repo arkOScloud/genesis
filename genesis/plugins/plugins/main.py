@@ -4,7 +4,7 @@ from genesis.plugmgr import PluginLoader, RepositoryManager
 
 
 class PluginManager(CategoryPlugin, URLHandler):
-    text = 'Plugins'
+    text = 'Applications'
     icon = '/dl/plugins/icon.png'
     folder = 'bottom'
 

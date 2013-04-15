@@ -5,7 +5,7 @@ from genesis.plugins.recovery.api import *
 
 
 class ConfigPlugin(CategoryPlugin):
-    text = 'Configure'
+    text = 'Settings'
     icon = '/dl/config/icon.png'
     folder = 'bottom'
 

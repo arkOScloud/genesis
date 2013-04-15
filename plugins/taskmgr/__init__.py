@@ -7,10 +7,10 @@ DEPS =  [
      ])
 ]
 
-NAME = 'Task manager'
+NAME = 'Task Monitor'
 PLATFORMS = ['any']
-DESCRIPTION = 'View and control processes'
+DESCRIPTION = 'View and/or kill running processes'
 VERSION = '1'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'

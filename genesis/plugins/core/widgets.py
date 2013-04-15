@@ -4,7 +4,7 @@ from genesis.api import *
 from genesis import apis
 
 # We want apis.dashboard already!
-import genesis.plugins.dashboard.api
+import genesis.plugins.sysmon.api
 
 
 class NewsWidget(Plugin):

@@ -5,7 +5,7 @@ from genesis.utils import shell
 import backend
 
 class CronPlugin(helpers.CategoryPlugin):
-    text = 'Cron'
+    text = 'Scheduled Tasks'
     icon = '/dl/cron/icon.png'
     folder = 'system'
 

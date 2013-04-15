@@ -1,6 +1,6 @@
 from genesis.plugins.resources import *
 from genesis.plugins.core import *
-from genesis.plugins.dashboard import *
+from genesis.plugins.home import *
 from genesis.plugins.config import *
 from genesis.plugins.firstrun import *
 from genesis.plugins.plugins import *

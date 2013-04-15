@@ -4,8 +4,8 @@ DEPS =  []
 
 NAME = 'Notepad'
 PLATFORMS = ['any']
-DESCRIPTION = 'Configuration files editor'
+DESCRIPTION = 'Note creator and config files editor'
 VERSION = '0'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://ark-os.org'
