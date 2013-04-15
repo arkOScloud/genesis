@@ -5,9 +5,9 @@ import trans
 
 
 class SysAlertsPlugin(CategoryPlugin):
-    text = 'System Alerts'
+    text = 'Alerts'
     icon = '/dl/sysalerts/icon.png'
-    folder = 'system'
+    folder = 'bottom'
 
     def on_init(self):
         self.backend = Backend(self.app)

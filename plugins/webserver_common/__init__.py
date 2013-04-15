@@ -3,7 +3,7 @@ MODULES = ['api']
 DEPS =  [
     (['any'],
      [
-        ('plugin', 'services'),
+        ('plugin'),
      ])
 ]
 

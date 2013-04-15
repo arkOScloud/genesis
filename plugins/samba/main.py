@@ -7,7 +7,7 @@ import backend
 
 
 class SambaPlugin(apis.services.ServiceControlPlugin):
-    text = 'File Shares (Windows)'
+    text = 'Shares (Win)'
     icon = '/dl/samba/icon.png'
     folder = 'servers'
     service_name = 'smbd'

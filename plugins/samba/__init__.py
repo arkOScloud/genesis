@@ -4,7 +4,7 @@ DEPS =  [
     (['any'],
      [
     	('app', 'Samba', 'smbd'),
-        ('plugin', 'services'),
+        ('plugin'),
      ])
 ]
 

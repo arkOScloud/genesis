@@ -7,7 +7,7 @@ from backend import *
 
 
 class FirewallPlugin(CategoryPlugin):
-    text = 'Firewall (iptables)'
+    text = 'Firewall Tables'
     icon = '/dl/iptables/icon.png'
     folder = 'advanced'
 
