@@ -10,7 +10,6 @@ class ConfigPlugin(CategoryPlugin):
     folder = 'bottom'
 
     def on_session_start(self):
-        self._adding_user = False
         self._config = None
         self._restart = False
 
@@ -27,17 +26,6 @@ class ConfigPlugin(CategoryPlugin):
 
         # Security
         ui.find('httpauth').set('checked', self.app.gconfig.get('genesis','auth_enabled')=='1')
-        tbl = ui.find('accounts')
-        for s in self.app.gconfig.options('users'):
-            tbl.append(
-                    UI.DTR(
-                        UI.Label(text=s),
-                        UI.TipIcon(text='Delete', icon='/dl/core/ui/stock/delete.png', id='deluser/'+s),
-                    )
-                )
-
-        if not self._adding_user:
-            ui.remove('dlgAddUser')
 
         # Configs
         cfgs = sorted(self.app.grab_plugins(IModuleConfig))
@@ -62,11 +50,6 @@ class ConfigPlugin(CategoryPlugin):
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
-        if params[0] == 'adduser':
-            self._adding_user = True
-        if params[0] == 'deluser':
-            self.app.gconfig.remove_option('users', params[1])
-            self.app.gconfig.save()
         if params[0] == 'editconfig':
             self._config = params[1]
         if params[0] == 'restart':
@@ -79,11 +62,6 @@ class ConfigPlugin(CategoryPlugin):
     @event('form/submit')
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):
-        if params[0] == 'dlgAddUser':
-            if vars.getvalue('action', '') == 'OK':
-                self.app.gconfig.set('users', vars.getvalue('login', ''), hashpw(vars.getvalue('password', '')))
-                self.app.gconfig.save()
-            self._adding_user = False
         if params[0] == 'frmGeneral':
             if vars.getvalue('action', '') == 'OK':
                 if self.app.gconfig.get('genesis', 'bind_host', '') != vars.getvalue('bind_host', ''):

@@ -6,10 +6,10 @@ from genesis.utils import *
 from backend import *
 
 
-class UsersPlugin(CategoryPlugin):
-    text = 'Users'
+class SysUsersPlugin(CategoryPlugin):
+    text = 'System Users'
     icon = '/dl/users/icon.png'
-    folder = 'system'
+    folder = 'advanced'
 
     params = {
             'login': 'Login',
@@ -32,7 +32,7 @@ class UsersPlugin(CategoryPlugin):
         }
 
     def on_init(self):
-        self.backend = UsersBackend(self.app)
+        self.backend = SysUsersBackend(self.app)
         self.users = self.backend.get_all_users()
         self.groups = self.backend.get_all_groups()
         self.backend.map_groups(self.users, self.groups)
@@ -53,7 +53,7 @@ class UsersPlugin(CategoryPlugin):
 
     def get_ui(self):
         self.reload_data()
-        ui = self.app.inflate('users:main')
+        ui = self.app.inflate('advusers:main')
         ui.find('tabs').set('active', self._tab)
 
         if self._editing != '':
@@ -137,6 +137,11 @@ class UsersPlugin(CategoryPlugin):
         if params[0] == 'deluser':
             self._tab = 0
             self.backend.del_user(self._selected_user)
+            try:
+                self.app.gconfig.remove_option('users', self._selected_user)
+                self.app.gconfig.save()
+            except:
+                pass
             self._selected_user = ''
         if params[0] == 'delgroup':
             self._tab = 1
@@ -156,6 +161,8 @@ class UsersPlugin(CategoryPlugin):
                             self.put_message('err', 'Duplicate name')
                             self._editing = ''
                             return
+                    self.app.gconfig.set('users', v, '')
+                    self.app.gconfig.save()
                     self.backend.add_user(v)
                     self._selected_user = v
                 elif self._editing == 'addgrp':
@@ -177,8 +184,12 @@ class UsersPlugin(CategoryPlugin):
             v = vars.getvalue('value', '')
             if editing == 'password':
                 self.backend.change_user_password(self._selected_user, v)
+                self.app.gconfig.set('users', self._selected_user, hashpw(v))
             elif editing == 'login':
                 self.backend.change_user_param(self._selected_user, editing, v)
+                pw = self.app.gconfig.get('users', self._selected_user, '')
+                self.app.gconfig.remove_option('users', self._selected_user)
+                self.app.gconfig.set('users', v, pw)
                 self._selected_user = v
             elif editing in self.params:
                 self.backend.change_user_param(self._selected_user, editing, v)

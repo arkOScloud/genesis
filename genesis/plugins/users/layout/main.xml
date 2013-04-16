@@ -1,0 +1,40 @@
+<xml>
+    <toolbar>
+        <button id="adduser" text="Add user" icon="/dl/core/ui/stock/add.png" />
+    </toolbar>
+
+    <pad>
+    <dt id="userlist" width="100%">
+        <dtr header="True">
+            <dth width="1" />
+            <dth>
+                <label text="Login" />
+            </dth>
+            <dth>
+                <label text="User ID" />
+            </dth>
+            <dth>
+                <label text="Home Folder" />
+            </dth>
+            <dth width="1" />
+        </dtr>
+    </dt>
+
+    <dialogbox id="dlgEditUser" hidecancel="True">
+        <formline text="Login">
+            <editable id="elogin" />
+        </formline>
+        <formline text="Password">
+            <editable id="epassword" value="Click to change" />
+        </formline>
+        <formline text="Home">
+            <editable id="ehome" />
+        </formline>
+        <formline>
+            <button id="deluser" design="danger" text="Delete user" />
+        </formline>
+    </dialogbox>
+
+    <inputbox id="dlgEdit" />
+    </pad>
+</xml>

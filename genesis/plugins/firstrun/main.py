@@ -3,6 +3,8 @@ from genesis.ui import *
 from genesis.utils import *
 from genesis.plugmgr import RepositoryManager
 
+from genesis.plugins.users.backend import *
+
 class FirstRun(CategoryPlugin, URLHandler):
     text = 'First run wizard'
     icon = None
@@ -44,13 +46,24 @@ class FirstRun(CategoryPlugin, URLHandler):
     @event('form/submit')
     def on_event(self, event, params, vars=None):
         if params[0] == 'frmChangePassword':
-            login = vars.getvalue('login', '')
+            username = vars.getvalue('login', '')
             password = vars.getvalue('password', '')
-            if login == '' or password == '':
+            if username == '' or password == '':
                 self.put_message('err', 'Enter valid login and password')
             else:
+                # add Unix user
+                users = self.backend.get_all_users()
+                for u in users:
+                    if u.login == username:
+                        self.put_message('err', 'Duplicate name, please choose another')
+                        self._editing = ''
+                        return
+                self.backend.add_user(username)
+                self.backend.change_user_password(username, password)
+
+                # add user to Genesis config
                 self.app.gconfig.remove_option('users', 'admin')
-                self.app.gconfig.set('users', login, hashpw(password))
+                self.app.gconfig.set('users', username, hashpw(password))
                 self.app.gconfig.save()
                 self._step = 2
         if params[0] == 'frmPlugins':

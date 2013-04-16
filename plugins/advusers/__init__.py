@@ -2,9 +2,9 @@ MODULES = ['backend', 'main']
 
 DEPS =  []
 
-NAME = 'Users'
+NAME = 'System Users'
 PLATFORMS = ['any']
-DESCRIPTION = 'Add, remove and manage user accounts'
+DESCRIPTION = 'Modify Unix system user accounts'
 VERSION = '2'
 GENERATION = 1
 AUTHOR = 'arkOS'
