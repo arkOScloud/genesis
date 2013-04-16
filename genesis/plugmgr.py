@@ -340,9 +340,37 @@ class PluginLoader:
         """
         Verifies that given plugin dependency is satisfied. Returns bool
         """
+        platform = PluginLoader.platform
+
         if dep[0] == 'app':
             if shell_status('which '+dep[2]) != 0:
-                raise SoftwareRequirementError(*dep[1:])
+                if platform == 'arch':
+                    try:
+                        shell('pacman -S --noconfirm '+dep[2])
+                    except:
+                        raise SoftwareRequirementError(*dep[1:])
+                if platform == 'debian':
+                    try:
+                        shell('apt-get -y --force-yes install '+dep[2])
+                    except:
+                        raise SoftwareRequirementError(*dep[1:])
+                if platform == 'gentoo':
+                    try:
+                        shell('emerge '+dep[2])
+                    except:
+                        raise SoftwareRequirementError(*dep[1:])
+                if platform == 'freebsd':
+                    try:
+                        shell('portupgrade -R '+dep[2])
+                    except:
+                        raise SoftwareRequirementError(*dep[1:])
+                if platform == 'centos' or platform == 'fedora':
+                    try:
+                        shell('yum -y install  '+dep[2])
+                    except:
+                        raise SoftwareRequirementError(*dep[1:])
+                else:
+                    raise SoftwareRequirementError(*dep[1:])
         if dep[0] == 'plugin':
             if not dep[1] in PluginLoader.list_plugins() or \
                     PluginLoader.__plugins[dep[1]].problem:
