@@ -1,9 +1,28 @@
 <xml>
-    <label text="Network interfaces" size="5" />
-    
-    <pad id="main">
-        <dt id="list" width="100%">
+    <label text="Network Connections" size="5" />
+    <pad id="conn">
+        <dt id="connlist" width="100%">
             <dtr header="True">
+                <dth width="1" />
+                <dth>
+                    <label text="Network" />
+                </dth>
+                <dth>
+                    <label text="Type" />
+                </dth>
+                <dth>
+                    <label text="Addressing" />
+                </dth>
+                <dth width="1" />
+            </dtr>
+        </dt>
+    </pad>
+
+    <label text="Network Interfaces" size="5" />
+    <pad id="dev">
+        <dt id="devlist" width="100%">
+            <dtr header="True">
+                <dth width="1" />
                 <dth>
                     <label text="Interface" />
                 </dth>
@@ -12,9 +31,6 @@
                 </dth>
                 <dth>
                     <label text="Address" />
-                </dth>
-                <dth>
-                    <label text="Status" />
                 </dth>
                 <dth width="1" />
             </dtr>

@@ -30,7 +30,14 @@ class INetworkConfig(Interface):
     def detect_dev_class(self, iface):
         pass
 
-"""        
+"""
+
+class IConnConfig(Interface):
+    connections = None
+
+    def save(self):
+        pass
+
     
 class INetworkConfigBit(Interface):
     def get_ui(self):
@@ -94,5 +101,36 @@ class NetworkInterface(object):
                 self.bits.append(b)
             except:
                 pass
+
+
+class NetworkConnection(object):
+    def __init__(self):
+        self.up = False
+        self.auto = False
+        self.name = ''
+        self.devclass = ''
+        self.addressing = 'static'
+        self.bits = []
+        self.params = {'address': '0.0.0.0'}
+        self.type = ''
+        self.editable = True
         
+    def __getitem__(self, idx):
+        if self.params.has_key(idx):
+            return self.params[idx]
+        else:
+            return ''
+
+    def __setitem__(self, idx, val):
+        self.params[idx] = val
+        
+    def get_bits(self, app, bits):
+        for x in bits:
+            try:
+                b = app.grab_plugins(INetworkConfigBit,\
+                        lambda p: p.cls == x)[0]
+                b.iface = self
+                self.bits.append(b)
+            except:
+                pass        
     

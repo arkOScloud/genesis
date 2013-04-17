@@ -1,13 +1,9 @@
-# TODO: Reconfigure for use with netcfg
-
 from genesis.com import *
 from genesis.utils import *
 from genesis import apis
 
 from api import *
 from nctp_ip import *
-
-# rc_net_keys = ('address', 'netmask', 'broadcast', 'gateway')
 
 class ArchNetworkConfig(LinuxIp):
     implements(INetworkConfig)
@@ -16,34 +12,12 @@ class ArchNetworkConfig(LinuxIp):
     interfaces = None
     
     def __init__(self):
-        # self.rcconf = apis.rcconf.RCConf(self.app)
         self.rescan()
     
     def rescan(self):
         self.interfaces = {}
-        name = 'eth0'
-        # name = 'self.rcconf.get_param('interface')'
-        
-        if name == '':
-            return
-        
-        iface = NetworkInterface()
-        iface.name = name
-        iface.type = 'inet'
-        iface.auto = True
-        self.interfaces[name] = iface
-        
-        # if self.rcconf.has_param('INTERFACES'):
-        #    for key in rc_net_keys:
-        #        value = self.rcconf.get_param(key)
-        #        if key == 'address':
-        #            iface.addressing = 'dhcp' if value == '' else 'static'
-        #            iface.params[key] = value
-        #
-        #            iface.devclass = self.detect_dev_class(iface)
-        #            iface.up = shell_status('ifconfig ' + iface.name + '|grep UP') == 0
-        #            iface.get_bits(self.app, self.detect_iface_bits(iface))
-        #else:
+        name = ''
+
         s = shell('ip -o link list')
         for line in s.split('\n'):
             line = line.strip()
@@ -57,6 +31,66 @@ class ArchNetworkConfig(LinuxIp):
                 iface.get_bits(self.app, self.detect_iface_bits(iface))
                 iface.editable = False
    
+
+    def save(self):
+        # for iface in self.interfaces.values():
+        #    for key in rc_net_keys:
+        #        value = iface.params[key]
+        #        if iface.addressing == 'dhcp':
+        #            value = ''
+        #        self.rcconf.set_param(key, value, near='interface')
+        return
+
+
+class ArchConnConfig(LinuxIp):
+    implements(IConnConfig)
+    platform = ['Arch']
+    
+    connections = None
+    
+    def __init__(self):
+        self.rescan()
+    
+    def rescan(self):
+        self.connections = {}
+        name = ''
+
+        netctl = shell('netctl list')
+        for line in netctl.split('\n'):
+            if line != '':
+                status = 0
+                if line.startswith('*'):
+                    line = line[2:]
+                    status = 1
+                else:
+                    line = line[2:]
+                conn = NetworkConnection()
+                conn.name = line
+                self.connections[line] = conn
+                data = self.read_config('/etc/netctl/' + line)
+                conn.devclass = data.Connection
+                conn.interface = data.Interface
+                if data.IP == 'dhcp':
+                    conn.addressing = 'dhcp'
+                else:
+                    conn.addressing = 'static'
+                conn.up = status
+                try:
+                    conn.description = data.Description
+                except NameError:
+                    conn.description = ''
+                if conn.interface[:-1] in ['wlan', 'ra', 'wifi', 'ath']:
+                    conn.essid = data.ESSID
+                    conn.security = data.Security
+                conn.editable = False
+
+    def read_config(self, location):
+        # Read a plugin's configuration file
+        import imp
+        f = open(location)
+        data = imp.load_source('data', '', f)
+        f.close()
+        return data
 
     def save(self):
         # for iface in self.interfaces.values():
