@@ -156,4 +156,19 @@ class LinuxIp(Plugin):
     def down(self, iface):
         shell('ip link set dev %s down' % iface.name)
         time.sleep(1)
-        
+    
+    def connup(self, conn):
+        shell('netctl start %s' % conn.name)
+        time.sleep(1)
+
+    def conndown(self, conn):
+        shell('netctl stop %s' % conn.name)
+        time.sleep(1)
+
+    def connenable(self, conn):
+        shell('netctl enable %s' % conn.name)
+        time.sleep(1)
+
+    def conndisable(self, conn):
+        shell('netctl disable %s' % conn.name)
+        time.sleep(1)

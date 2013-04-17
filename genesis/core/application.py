@@ -42,6 +42,7 @@ class Application (PluginManager, Plugin):
         """
         self.template_path = []
         self.less_styles = []
+        self.woff_fonts = []
         self.template_styles = []
         self.template_scripts = []
         self.layouts = {}
@@ -70,6 +71,11 @@ class Application (PluginManager, Plugin):
                     '/dl/'+c+'/'+s
                     for s in os.listdir(fp)
                     if s.endswith('.less')
+                ])
+                self.woff_fonts.extend([
+                    '/dl/'+c+'/'+s
+                    for s in os.listdir(fp)
+                    if s.endswith('.woff')
                 ])
                 self.template_scripts.extend([
                     '/dl/'+c+'/'+s

@@ -38,8 +38,8 @@ class NetworkPlugin(CategoryPlugin):
                                     text='Edit', id='editiface/' + i.name),
                                 UI.TipIcon(icon='/dl/core/ui/stock/service-%s.png'%('run' if not i.up else 'stop'), 
                                     text=('Down' if i.up else 'Up'), 
-                                    id=('if' + ('down' if i.up else 'up') + '/' + i.name), 
-                                    warning='Bring %s interface %s' % (('Down' if i.up else 'Up'), i.name)
+                                    id=('conn' + ('down' if i.up else 'up') + '/' + i.name), 
+                                    warning='Bring %s connection %s? This may interrupt your session.' % (('Down' if i.up else 'Up'), i.name)
                                 )
                             ),
                            ))
@@ -63,7 +63,7 @@ class NetworkPlugin(CategoryPlugin):
                                 UI.TipIcon(icon='/dl/core/ui/stock/service-%s.png'%('run' if not i.up else 'stop'), 
                                     text=('Down' if i.up else 'Up'), 
                                     id=('if' + ('down' if i.up else 'up') + '/' + i.name), 
-                                    warning='Bring %s interface %s' % (('Down' if i.up else 'Up'), i.name)
+                                    warning='Bring %s interface %s? This may interrupt your session.' % (('Down' if i.up else 'Up'), i.name)
                                 )
                             ),
                            ))
@@ -111,7 +111,15 @@ class NetworkPlugin(CategoryPlugin):
             self.net_config.up(self.net_config.interfaces[params[1]])
         if params[0] == 'ifdown':
             self.net_config.down(self.net_config.interfaces[params[1]])
- 
+        if params[0] == 'connup':
+            self.conn_config.connup(self.conn_config.connections[params[1]])
+        if params[0] == 'conndown':
+            self.conn_config.conndown(self.conn_config.connections[params[1]])
+        if params[0] == 'connenable':
+            self.conn_config.connenable(self.conn_config.connections[params[1]])
+        if params[0] == 'conndisable':
+            self.conn_config.conndisable(self.conn_config.connections[params[1]])
+
     @event('dialog/submit')
     def on_dlg_submit(self, event, params, vars=None):
         if params[0] == 'dlgEditIface':

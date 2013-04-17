@@ -6,7 +6,7 @@
     <headstylesheets/>
     <link rel="stylesheet/less" href="/core/styles.less" />
     <headscripts/>
-    <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700' rel='stylesheet' type='text/css' />
+    <link href='/core/webfonts.css' rel='stylesheet' type='text/css' />
     <link rel="shortcut icon" href="/dl/core/ui/favicon.png" />
 </head>
 

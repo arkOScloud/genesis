@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="/dl/terminal/term.css" />
-    <link href='http://fonts.googleapis.com/css?family=OpenSans:400,700' rel='stylesheet' type='text/css' />
+    <link href='/core/webfonts.css' type='text/css' />
     <link rel="shortcut icon" href="/dl/terminal/icon.png" />
     <script src="/dl/core/_jquery.min.js"></script>
     <script src="/dl/core/genesis.js"></script>
