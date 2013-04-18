@@ -4,6 +4,7 @@ from genesis import apis
 
 from api import *
 from nctp_ip import *
+import os
 
 class ArchNetworkConfig(LinuxIp):
     implements(INetworkConfig)
@@ -29,6 +30,10 @@ class ArchNetworkConfig(LinuxIp):
                 iface.devclass = self.detect_dev_class(iface)
                 iface.up = (line.find('state UP') != -1)
                 iface.get_bits(self.app, self.detect_iface_bits(iface))
+                if os.path.exists('/etc/systemd/system/multi-user.target.wants/netctl-auto@' + iface.name + '.service'):
+                    iface.enabled = True
+                else:
+                    iface.enabled = False
                 iface.editable = False
    
 
@@ -86,6 +91,10 @@ class ArchConnConfig(LinuxIp):
                     conn.description = data.Description
                 except NameError:
                     conn.description = ''
+                if os.path.exists('/etc/systemd/system/multi-user.target.wants/netctl@' + conn.name + '.service'):
+                    conn.enabled = True
+                else:
+                    conn.enabled = False
                 if conn.interface[:-1] in ['wlan', 'ra', 'wifi', 'ath']:
                     conn.essid = data.ESSID
                     conn.security = data.Security

@@ -156,6 +156,14 @@ class LinuxIp(Plugin):
     def down(self, iface):
         shell('ip link set dev %s down' % iface.name)
         time.sleep(1)
+
+    def enable(self, iface):
+        shell('systemctl enable netctl-auto@%s.service' % iface.name)
+        time.sleep(1)
+
+    def disable(self, iface):
+        shell('systemctl disable netctl-auto@%s.service' % iface.name)
+        time.sleep(1)
     
     def connup(self, conn):
         shell('netctl start %s' % conn.name)

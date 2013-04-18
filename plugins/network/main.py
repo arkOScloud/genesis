@@ -29,7 +29,9 @@ class NetworkPlugin(CategoryPlugin):
             i = self.conn_config.connections[x]
             cl.append(UI.DTR(
                             UI.HContainer(
-                                UI.Image(file=('/dl/core/ui/stock/dialog-ok.png' if i.up else '')),
+                                UI.Icon(icon=('/dl/network/up.png' if i.up else ''),
+                                    text=('Connected' if i.up else ''),
+                                ),
                             ),
                             UI.Label(text=i.name),
                             UI.Label(text=i.devclass),
@@ -43,6 +45,9 @@ class NetworkPlugin(CategoryPlugin):
                                     text=('Disconnect' if i.up else 'Connect'), 
                                     id=('conn' + ('down' if i.up else 'up') + '/' + i.name), 
                                     warning='Bring %s connection %s? This may interrupt your session.' % (('Down' if i.up else 'Up'), i.name)),
+                                UI.TipIcon(icon='/dl/core/ui/stock/status-%s.png'%('enabled' if not i.enabled else 'disabled'), 
+                                    text=('Disable' if i.enabled else 'Enable'), 
+                                    id=('conn' + ('disable' if i.enabled else 'enable') + '/' + i.name)),
                                 UI.TipIcon(icon='/dl/core/ui/stock/delete.png', 
                                     text='Delete', 
                                     id=('delconn/' + i.name), 
@@ -56,7 +61,9 @@ class NetworkPlugin(CategoryPlugin):
             i = self.net_config.interfaces[x]
             nl.append(UI.DTR(
                             UI.HContainer(
-                                UI.Image(file='/dl/network/%s.png'%('up' if i.up else 'down')),
+                                UI.Icon(icon='/dl/network/%s.png'%('up' if i.up else 'down'),
+                                    text=('Up' if i.up else 'Down')
+                                ),
                             ),
                             UI.Label(text=i.name),
                             UI.Label(text=i.devclass),
@@ -68,7 +75,10 @@ class NetworkPlugin(CategoryPlugin):
                                     text=('Down' if i.up else 'Up'), 
                                     id=('if' + ('down' if i.up else 'up') + '/' + i.name), 
                                     warning='Bring %s interface %s? This may interrupt your session.' % (('Down' if i.up else 'Up'), i.name)
-                                )
+                                ),
+                                UI.TipIcon(icon='/dl/core/ui/stock/status-%s.png'%('enabled' if not i.enabled else 'disabled'), 
+                                    text=('Disable' if i.enabled else 'Enable'), 
+                                    id=('if' + ('disable' if i.enabled else 'enable') + '/' + i.name))
                             ),
                            ))
             self.ifacelist.extend(i.name)
@@ -120,16 +130,26 @@ class NetworkPlugin(CategoryPlugin):
             self._conninfo = params[1]
         if params[0] == 'ifup':
             self.net_config.up(self.net_config.interfaces[params[1]])
+            self.net_config.rescan()
         if params[0] == 'ifdown':
             self.net_config.down(self.net_config.interfaces[params[1]])
+            self.net_config.rescan()
+        if params[0] == 'ifenable':
+            self.net_config.enable(self.net_config.interfaces[params[1]])
+            self.net_config.rescan()
+        if params[0] == 'ifdisable':
+            self.net_config.disable(self.net_config.interfaces[params[1]])
+            self.net_config.rescan()
         if params[0] == 'connup':
             self.conn_config.connup(self.conn_config.connections[params[1]])
         if params[0] == 'conndown':
             self.conn_config.conndown(self.conn_config.connections[params[1]])
         if params[0] == 'connenable':
             self.conn_config.connenable(self.conn_config.connections[params[1]])
+            self.conn_config.rescan()
         if params[0] == 'conndisable':
             self.conn_config.conndisable(self.conn_config.connections[params[1]])
+            self.conn_config.rescan()
         if params[0] == 'addconn':
             self._editing_conn = True
         if params[0] == 'delconn':
