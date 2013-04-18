@@ -14,18 +14,25 @@ class NetworkWidget(Plugin):
 
     def __init__(self):
         self.iface = None
+        self.connection = "None"
         
     def get_ui(self, cfg, id=None):
         self.iface = cfg
         self.title = 'Network interface: %s' % cfg
         be = self.app.get_backend(INetworkConfig)
+        bc = self.app.get_backend(IConnConfig)
         if not cfg in be.interfaces:
             return UI.Label(text='Interface not found')
         i = be.interfaces[cfg]
+        for x in bc.connections:
+            c = bc.connections[x]
+            if cfg in c.interface and c.up:
+                self.connection = c.name
         self.icon = '/dl/network-arch/%s.png'%('up' if i.up else 'down')
         
         ui = self.app.inflate('network-arch:widget')
-        ui.find('ip').set('text', be.get_ip(i))
+        ui.find('connection').set('text', 'Connected to: ' + self.connection)
+        ui.find('ip').set('text', be.get_ip(i.name))
         ui.find('in').set('text', str_fsize(be.get_rx(i)))
         ui.find('out').set('text', str_fsize(be.get_tx(i)))
         return ui

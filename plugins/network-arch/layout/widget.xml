@@ -1,21 +1,28 @@
 <xml>
     <lt width="90%">
         <ltr>
+            <ltd width="100%" spacing="0">
+                <label id="connection" />
+            </ltd>
+        </ltr>
+    </lt>
+    <lt width="90%">
+        <ltr>
             <ltd width="40%" spacing="0">
                 <hcontainer>
-                    <image file="/dl/network/ip.png" />
+                    <image file="/dl/network-arch/ip.png" />
                     <label id="ip" />
                 </hcontainer>
             </ltd>
             <ltd width="30%" spacing="0">
                 <hcontainer>
-                    <image file="/dl/network/in.png" />
+                    <image file="/dl/network-arch/in.png" />
                     <label id="in" />
                 </hcontainer>
             </ltd>
             <ltd width="30%" spacing="0">
                 <hcontainer>
-                    <image file="/dl/network/out.png" />
+                    <image file="/dl/network-arch/out.png" />
                     <label id="out" />
                 </hcontainer>
             </ltd>

@@ -44,7 +44,7 @@ class NetworkPlugin(CategoryPlugin):
                                 UI.TipIcon(icon='/dl/core/ui/stock/service-%s.png'%('run' if not i.up else 'stop'), 
                                     text=('Disconnect' if i.up else 'Connect'), 
                                     id=('conn' + ('down' if i.up else 'up') + '/' + i.name), 
-                                    warning='Bring %s connection %s? This may interrupt your session.' % (('Down' if i.up else 'Up'), i.name)),
+                                    warning='%s %s? This may interrupt your session.' % (('Disconnect' if i.up else 'Connect to'), i.name)),
                                 UI.TipIcon(icon='/dl/core/ui/stock/status-%s.png'%('enabled' if not i.enabled else 'disabled'), 
                                     text=('Disable' if i.enabled else 'Enable'), 
                                     id=('conn' + ('disable' if i.enabled else 'enable') + '/' + i.name)),
