@@ -1,5 +1,6 @@
 from genesis.ui import *
 from genesis.api import CategoryPlugin, event
+from genesis.utils import *
 
 from api import *
 
@@ -39,10 +40,13 @@ class NetworkPlugin(CategoryPlugin):
                                 UI.TipIcon(icon='/dl/core/ui/stock/edit.png',
                                     text='Edit', id='editconn/' + i.name),
                                 UI.TipIcon(icon='/dl/core/ui/stock/service-%s.png'%('run' if not i.up else 'stop'), 
-                                    text=('Down' if i.up else 'Up'), 
+                                    text=('Disconnect' if i.up else 'Connect'), 
                                     id=('conn' + ('down' if i.up else 'up') + '/' + i.name), 
-                                    warning='Bring %s connection %s? This may interrupt your session.' % (('Down' if i.up else 'Up'), i.name)
-                                )
+                                    warning='Bring %s connection %s? This may interrupt your session.' % (('Down' if i.up else 'Up'), i.name)),
+                                UI.TipIcon(icon='/dl/core/ui/stock/delete.png', 
+                                    text='Delete', 
+                                    id=('delconn/' + i.name), 
+                                    warning='Delete %s? This is permanent and may interrupt your session.' % (i.name))
                             ),
                            ))
 
@@ -88,17 +92,20 @@ class NetworkPlugin(CategoryPlugin):
                 ))
 
         if self._editing_conn is not None:
-            ce = self._editing_conn
-            ui.find('name').set('value', ce.name)
-            ui.find('devclass').set('value', ce.devclass)
-            ui.find('interface').set('value', ce.interface)
-            ui.find('description').set('value', ce.description)
-            ui.find('addressing').set('value', ce.addressing)
-            ui.find('address').set('value', ce.address)
-            ui.find('gateway').set('value', ce.gateway)
-            ui.find('security').set('value', ce.security)
-            ui.find('essid').set('value', ce.essid)
-            ui.find('key').set('value', ce.key)
+            if self._editing_conn is not True:
+                ce = self._editing_conn
+                ui.find('name').set('value', ce.name)
+                ui.find('name').set('disabled', 'true')
+                ui.find('devclass').set('value', ce.devclass)
+                ui.find('interface').set('value', ce.interface)
+                ui.find('description').set('value', ce.description)
+                ui.find('addressing').set('value', ce.addressing)
+                ui.find('address').set('value', ce.address)
+                ui.find('gateway').set('value', ce.gateway)
+                if ce.devclass == 'wireless':
+                    ui.find('security').set('value', ce.security)
+                    ui.find('essid').set('value', ce.essid)
+                    ui.find('key').set('value', ce.key)   
         else:
             ui.remove('dlgEditConn')
 
@@ -123,6 +130,11 @@ class NetworkPlugin(CategoryPlugin):
             self.conn_config.connenable(self.conn_config.connections[params[1]])
         if params[0] == 'conndisable':
             self.conn_config.conndisable(self.conn_config.connections[params[1]])
+        if params[0] == 'addconn':
+            self._editing_conn = True
+        if params[0] == 'delconn':
+            shell('rm /etc/netctl/' + params[1])
+            self.conn_config.rescan()
         if params[0] == 'editconn':
             self._editing_conn = self.conn_config.connections[params[1]]
         if params[0] == 'refresh':
@@ -173,8 +185,9 @@ class NetworkPlugin(CategoryPlugin):
                 key = vars.getvalue('key', '')
                 if key and devclass == 'wireless':
                     f.write('Key=\"' + key + '\"\n')
-                    
+
                 f.close()
+                self.conn_config.rescan()
             self._editing_conn = None
         if params[0] == 'dlgInfo':
             self._info = None
