@@ -7,7 +7,7 @@ from api import *
         
 class NetworkWidget(Plugin):
     implements(apis.dashboard.IWidget)
-    icon = '/dl/network/down.png'
+    icon = '/dl/network-arch/down.png'
     name = 'Network monitor'
     title = None
     style = 'normal'
@@ -22,9 +22,9 @@ class NetworkWidget(Plugin):
         if not cfg in be.interfaces:
             return UI.Label(text='Interface not found')
         i = be.interfaces[cfg]
-        self.icon = '/dl/network/%s.png'%('up' if i.up else 'down')
+        self.icon = '/dl/network-arch/%s.png'%('up' if i.up else 'down')
         
-        ui = self.app.inflate('network:widget')
+        ui = self.app.inflate('network-arch:widget')
         ui.find('ip').set('text', be.get_ip(i))
         ui.find('in').set('text', str_fsize(be.get_rx(i)))
         ui.find('out').set('text', str_fsize(be.get_tx(i)))
@@ -35,7 +35,7 @@ class NetworkWidget(Plugin):
     
     def get_config_dialog(self):
         be = self.app.get_backend(INetworkConfig)
-        dlg = self.app.inflate('network:widget-config')
+        dlg = self.app.inflate('network-arch:widget-config')
         for i in be.interfaces:
             dlg.append('list', UI.Radio(
                 value=i,

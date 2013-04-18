@@ -7,7 +7,7 @@ from api import *
 
 class NetworkPlugin(CategoryPlugin):
     text = 'Networks'
-    icon = '/dl/network/icon.png'
+    icon = '/dl/network-arch/icon.png'
     folder = 'system'
 
     def on_init(self):
@@ -22,14 +22,14 @@ class NetworkPlugin(CategoryPlugin):
         
     def get_ui(self):
         self.ifacelist = []
-        ui = self.app.inflate('network:main')
+        ui = self.app.inflate('network-arch:main')
         cl = ui.find('connlist')
 
         for x in self.conn_config.connections:
             i = self.conn_config.connections[x]
             cl.append(UI.DTR(
                             UI.HContainer(
-                                UI.Icon(icon=('/dl/network/up.png' if i.up else ''),
+                                UI.Icon(icon=('/dl/network-arch/up.png' if i.up else ''),
                                     text=('Connected' if i.up else ''),
                                 ),
                             ),
@@ -61,7 +61,7 @@ class NetworkPlugin(CategoryPlugin):
             i = self.net_config.interfaces[x]
             nl.append(UI.DTR(
                             UI.HContainer(
-                                UI.Icon(icon='/dl/network/%s.png'%('up' if i.up else 'down'),
+                                UI.Icon(icon='/dl/network-arch/%s.png'%('up' if i.up else 'down'),
                                     text=('Up' if i.up else 'Down')
                                 ),
                             ),

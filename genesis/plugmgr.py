@@ -472,7 +472,7 @@ class RepositoryManager:
         from genesis import generation, version
         if not os.path.exists('/var/lib/genesis'):
             os.mkdir('/var/lib/genesis')
-        data = download('http://%s/genesis/list' % self.server)
+        data = download('http://%s/genesis/list/%s' % (self.server, PluginLoader.platform))
         try:
             open('/var/lib/genesis/plugins.list', 'w').write(data)
         except:
