@@ -72,8 +72,15 @@ class ArchConnConfig(LinuxIp):
                 conn.interface = data.Interface
                 if data.IP == 'dhcp':
                     conn.addressing = 'dhcp'
+                    conn.address = ''
+                    conn.gateway = ''
                 else:
                     conn.addressing = 'static'
+                    conn.address = data.Address
+                    try:
+                        conn.gateway = data.Gateway
+                    except NameError:
+                        conn.gateway = ''
                 conn.up = status
                 try:
                     conn.description = data.Description
@@ -82,6 +89,8 @@ class ArchConnConfig(LinuxIp):
                 if conn.interface[:-1] in ['wlan', 'ra', 'wifi', 'ath']:
                     conn.essid = data.ESSID
                     conn.security = data.Security
+                    if conn.security != 'none':
+                        conn.key = data.Key
                 conn.editable = False
 
     def read_config(self, location):
@@ -93,10 +102,4 @@ class ArchConnConfig(LinuxIp):
         return data
 
     def save(self):
-        # for iface in self.interfaces.values():
-        #    for key in rc_net_keys:
-        #        value = iface.params[key]
-        #        if iface.addressing == 'dhcp':
-        #            value = ''
-        #        self.rcconf.set_param(key, value, near='interface')
         return

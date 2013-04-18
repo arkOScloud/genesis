@@ -1,6 +1,12 @@
 <xml>
     <label text="Network Connections" size="5" />
     <pad id="conn">
+        <toolbar id="path">
+            <button id="addwiredconn" text="Add Connection (Wired)" icon="/dl/core/ui/stock/add.png" />
+            <button id="addwirelessconn" text="Add Connection (Wireless)" icon="/dl/core/ui/stock/add.png" />
+            <button id="refresh" text="Refresh List" icon="/dl/core/ui/stock/refresh.png" />
+        </toolbar>
+        <br />
         <dt id="connlist" width="100%">
             <dtr header="True">
                 <dth width="1" />
@@ -17,6 +23,39 @@
             </dtr>
         </dt>
     </pad>
+
+    <dialogbox id="dlgEditConn">
+        <formline text="Connection Name">
+            <textinput id="name" name="name" />
+        </formline>
+        <formline text="Connection Type">
+            <textinput id="devclass" name="devclass" />
+        </formline>
+        <formline text="Interface">
+            <textinput id="interface" name="interface" />
+        </formline>
+        <formline text="Description">
+            <textinput id="description" name="description" />
+        </formline>
+        <formline text="Addressing">
+            <textinput id="addressing" name="addressing" />
+        </formline>
+        <formline text="Address/Netmask (Static Only)">
+            <textinput id="address" name="address" />
+        </formline>
+        <formline text="Gateway (Static Only)">
+            <textinput id="gateway" name="gateway" />
+        </formline>
+        <formline text="Security (Wireless Only)">
+            <textinput id="security" name="security" />
+        </formline>
+        <formline text="ESSID (Wireless Only)">
+            <textinput id="essid" name="essid" />
+        </formline>
+        <formline text="Key (Wireless Only)">
+            <textinput id="key" name="key" password="True" />
+        </formline>
+    </dialogbox>
 
     <label text="Network Interfaces" size="5" />
     <pad id="dev">
