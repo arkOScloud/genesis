@@ -11,7 +11,7 @@ setup(
         'gevent',
         'lxml>=2.2.4',
     ],
-    description='arkOS node management program',
+    description='arkOS node management app',
     author='Jacob Cook',
     author_email='jacob@jcook.cc',
     url='http://ark-os.org/',
@@ -21,7 +21,7 @@ setup(
     data_files=[
         ('/etc/genesis', ['packaging/files/genesis.conf']),
         ('/etc/genesis/users', ['packaging/files/admin.conf']),
-        ('/etc/init.d', ['packaging/files/genesis']),
+        ('/usr/lib/systemd/system', ['packaging/files/genesis.service']),
         ('/var/lib/genesis/plugins', ['packaging/files/.placeholder']),
     ],
 )

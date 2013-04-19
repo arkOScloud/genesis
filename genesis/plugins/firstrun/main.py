@@ -52,6 +52,7 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self.put_message('err', 'Enter valid login and password')
             else:
                 # add Unix user
+                self.backend = UsersBackend(self.app)
                 users = self.backend.get_all_users()
                 for u in users:
                     if u.login == username:

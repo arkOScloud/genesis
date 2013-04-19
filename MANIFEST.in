@@ -7,5 +7,5 @@ include LICENSE
 include Makefile
 include packaging/files/genesis.conf
 include packaging/files/admin.conf
-include packaging/files/genesis
+include packaging/files/genesis.service
 include packaging/files/.placeholder

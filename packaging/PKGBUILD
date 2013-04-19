@@ -1,0 +1,41 @@
+# Maintainer: Jacob Cook <jacob at jcook dot cc>
+
+pkgname=genesis
+pkgver=0.1
+pkgrel=1
+pkgdesc="Easy, modular server management app"
+
+arch=('any')
+url="http://ark-os.org/genesis"
+license=('GPLv3')
+depends=('python2' 'python2-lxml' 'python2-pyopenssl' 'python2-feedparser' 'python2-gevent')
+makedepends=('python2' 'python2-distribute')
+optdepends=('python2-psutil: Task Manager plugin'
+            'python2-beautifulsoup3: Munin plugin')
+provides=('genesis')
+conflicts=('genesis-git')
+source=("$pkgname-$pkgver.tar.gz"::"http://uspx.ark-os.org/$pkgname-$pkgver.tar.gz")
+md5sums=('f1f657e070faffc9501411fd61c0989e')
+backup=('etc/genesis/genesis.conf' 'etc/genesis/users/admin.conf')
+
+build() {
+  cd "$srcdir"
+  tar xvzf "$pkgname-$pkgver.tar.gz"
+
+  msg2 'Replacing python shebang by python2 shebang...'
+  find . -type f -exec sed -i \
+    -e'1s|^#!/usr/bin/env python$|#!/usr/bin/env python2|' \
+    -e '1s|^#!/usr/bin/python$|#!/usr/bin/env python2|' \
+    "{}" \;
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
+
+  msg2 'Fixing config file permissions...'
+  chmod o-rwx "$pkgdir/etc/genesis/genesis.conf"
+  mkdir -p $pkgdir/etc/systemd/system/multi-user.target.wants
+  ln -s /usr/lib/systemd/system/genesis.service $pkgdir/etc/systemd/system/multi-user.target.wants/genesis.service
+  msg2 'Genesis install complete. Running on port 8000'
+}

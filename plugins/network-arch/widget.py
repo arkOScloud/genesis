@@ -26,7 +26,7 @@ class NetworkWidget(Plugin):
         i = be.interfaces[cfg]
         for x in bc.connections:
             c = bc.connections[x]
-            if cfg in c.interface and c.up:
+            if c.interface in cfg and c.up:
                 self.connection = c.name
         self.icon = '/dl/network-arch/%s.png'%('up' if i.up else 'down')
         
