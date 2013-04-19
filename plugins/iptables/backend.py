@@ -426,7 +426,7 @@ class DebianConfig(Plugin):
 
 class ArchConfig(Plugin):
     implements(IConfig)
-    platform = ['arch']
+    platform = ['arch', 'arkos']
     path = '/etc/systemd/system/multi-user.target.wants/iptables.service'
 
     @property

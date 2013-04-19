@@ -5,7 +5,7 @@ from main_single import *
 
 class GeneralConfig(ModuleConfig):
     target = NginxBackend
-    platform = ['debian', 'arch']
+    platform = ['debian', 'arch', 'arkos']
     
     labels = {
         'cfg_dir': 'Configuration directory'

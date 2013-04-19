@@ -8,7 +8,7 @@ from genesis import apis
 
 class ArchServiceManager(Plugin):
     implements(apis.services.IServiceManager)
-    platform = ['arch']
+    platform = ['arch', 'arkos']
 
     def __init__(self):
         self.use_systemd = os.path.realpath("/proc/1/exe").endswith("/systemd")

@@ -104,7 +104,7 @@ class SysUsersBackend(Plugin):
 
 class LinuxConfig(ModuleConfig):
     target = SysUsersBackend
-    platform = ['debian', 'arch', 'fedora', 'centos', 'gentoo', 'mandriva']
+    platform = ['debian', 'arch', 'arkos', 'fedora', 'centos', 'gentoo', 'mandriva']
 
     cmd_add = 'useradd {0}'
     cmd_del = 'userdel {0}'

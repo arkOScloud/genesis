@@ -8,7 +8,7 @@ from genesis import apis
 
 class PacmanPackageManager(Plugin):
     implements(apis.pkgman.IPackageManager)
-    platform = ['arch']
+    platform = ['arch', 'arkos']
 
     _pending = {}
 

@@ -9,7 +9,7 @@ DEPS =  [
 ]
 
 NAME = 'Web Server (nginx)'
-PLATFORMS = ['debian', 'arch', 'freebsd', 'gentoo', 'centos', 'mandriva']
+PLATFORMS = ['debian', 'arch', 'arkos', 'freebsd', 'gentoo', 'centos', 'mandriva']
 DESCRIPTION = 'Controls the nginx webserver'
 VERSION = '1'
 GENERATION = 1

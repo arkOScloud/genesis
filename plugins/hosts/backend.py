@@ -82,7 +82,7 @@ class LinuxGenericHostnameManager(Plugin):
 
 class ArchHostnameManager(Plugin):
     implements(IHostnameManager)
-    platform = ['arch']
+    platform = ['arch', 'arkos']
 
     def gethostname(self):
         return open('/etc/hostname').read()

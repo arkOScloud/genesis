@@ -5,7 +5,7 @@ DEPS =  [
      [
         ('app', 'dpkg', 'dpkg')
      ]),
-    (['arch'],
+    (['arch', 'arkos'],
      [
         ('app', 'pacman', 'pacman')
      ]),
@@ -24,7 +24,7 @@ DEPS =  [
 ]
 
 NAME = 'Package Manager'
-PLATFORMS = ['debian', 'arch', 'freebsd', 'centos', 'fedora', 'gentoo']
+PLATFORMS = ['debian', 'arch', 'arkos', 'freebsd', 'centos', 'fedora', 'gentoo']
 DESCRIPTION = 'Install, update and remove applications on your system'
 VERSION = '2'
 GENERATION = 1

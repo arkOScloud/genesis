@@ -7,7 +7,7 @@ from api import *
 
 class ResolvConfDNSConfig(Plugin):
     implements(IDNSConfig)
-    platform = ['debian', 'arch', 'freebsd', 'centos', 'fedora', 'gentoo', 'mandriva']
+    platform = ['debian', 'arch', 'arkos', 'freebsd', 'centos', 'fedora', 'gentoo', 'mandriva']
     name = 'DNS'
     id = 'dns'
     

@@ -22,7 +22,7 @@ MODULES = [
 DEPS =  ['netctl']
 
 NAME = 'Network Connections'
-PLATFORMS = ['arch']
+PLATFORMS = ['arch', 'arkos']
 DESCRIPTION = 'Manage ethernet/wireless connections and interfaces (arkOS)'
 VERSION = '3'
 GENERATION = 1
