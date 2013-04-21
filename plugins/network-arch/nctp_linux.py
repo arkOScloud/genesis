@@ -6,7 +6,7 @@ from genesis.utils import shell, str_fsize
 
 
 class LinuxIfconfig(Plugin):
-    platform = ['Debian', 'Ubuntu', 'Arch', 'openSUSE']
+    platform = ['Debian', 'Ubuntu', 'Arch', 'arkos', 'openSUSE']
     
     def get_info(self, iface):
         ui = UI.Container( 

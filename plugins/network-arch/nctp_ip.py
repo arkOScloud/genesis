@@ -6,7 +6,7 @@ from genesis.utils import shell, str_fsize
 
 
 class LinuxIp(Plugin):
-    platform = ['Arch']
+    platform = ['Arch', 'arkos']
 
     def get_info(self, iface):
         ui = UI.Container( 

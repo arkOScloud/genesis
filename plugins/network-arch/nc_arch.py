@@ -8,7 +8,7 @@ import os
 
 class ArchNetworkConfig(LinuxIp):
     implements(INetworkConfig)
-    platform = ['Arch']
+    platform = ['Arch', 'arkos']
     
     interfaces = None
     
@@ -49,7 +49,7 @@ class ArchNetworkConfig(LinuxIp):
 
 class ArchConnConfig(LinuxIp):
     implements(IConnConfig)
-    platform = ['Arch']
+    platform = ['Arch', 'arkos']
     
     connections = None
     
@@ -84,12 +84,12 @@ class ArchConnConfig(LinuxIp):
                     conn.address = data.Address
                     try:
                         conn.gateway = data.Gateway
-                    except NameError:
+                    except:
                         conn.gateway = ''
                 conn.up = status
                 try:
                     conn.description = data.Description
-                except NameError:
+                except:
                     conn.description = ''
                 if os.path.exists('/etc/systemd/system/multi-user.target.wants/netctl@' + conn.name + '.service'):
                     conn.enabled = True
