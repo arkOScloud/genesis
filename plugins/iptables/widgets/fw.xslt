@@ -4,7 +4,7 @@
             <xsl:when test="@id = ''" />
             <xsl:otherwise>
                 <xsl:attribute name="onclick">
-                    Ajenti.query('/handle/fwrule/click/<xsl:value-of select="@id"/>')
+                    Genesis.query('/handle/fwrule/click/<xsl:value-of select="@id"/>')
                 </xsl:attribute>
             </xsl:otherwise>
         </xsl:choose>
