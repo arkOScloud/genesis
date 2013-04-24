@@ -2,5 +2,5 @@
     <div class="freetext">
         <ul id="list" />
     </div>
-    <outlinklabel text="See our Twitter feed" url="http://twitter.com/cznweb" />
+    <outlinklabel text="See our Project Blog" url="http://ark-os.org/blog" />
 </xml>

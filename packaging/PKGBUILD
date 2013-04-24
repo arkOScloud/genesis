@@ -38,3 +38,4 @@ package() {
   mkdir -p $pkgdir/etc/systemd/system/multi-user.target.wants
   ln -s /usr/lib/systemd/system/genesis.service $pkgdir/etc/systemd/system/multi-user.target.wants/genesis.service
 }
+md5sums=('37c9f96ee5444a3ef1c345683d92499b')
