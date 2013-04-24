@@ -19,6 +19,6 @@ function dashboardSave() {
         r += $(e).attr('id') + ',';
     });
 
-    Ajenti.query('/handle/dashboard/save/'+l+'/'+r);
+    Genesis.query('/handle/sysmon/save/'+l+'/'+r);
     return false;
 }
