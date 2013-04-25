@@ -1,0 +1,14 @@
+<xml>
+    <label size="5" text="Choose plugins to be downloaded" />
+    <label size="1" text="Please note that an internet connection is required to install plugins." />
+    <pad>
+    <simpleform id="frmPlugins">
+        <dt id="list" width="100%" />
+        <tooltip text="Download and installation may take a few minutes">
+            <button form="frmPlugins" onclick="form" action="OK" text="Download and install" />
+        </tooltip>
+        <br/>
+        <br/>
+    </simpleform>
+    </pad>
+</xml>

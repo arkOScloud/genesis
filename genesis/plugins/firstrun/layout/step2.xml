@@ -1,13 +1,15 @@
 <xml>
-    <label size="5" text="Choose plugins to be downloaded" />
+    <label size="4" text="Welcome to Genesis" />
     <pad>
-    <simpleform id="frmPlugins">
-        <dt id="list" width="100%" />
-        <tooltip text="Download and installation may take a few minutes">
-            <button form="frmPlugins" onclick="form" action="OK" text="Download and install" />
-        </tooltip>
-        <br/>
-        <br/>
-    </simpleform>
+    <formbox hidecancel="True" id="frmChangePassword">
+        <label size="3" text="Please change your username and password. This will be the username and password you use to connect to Genesis or manage your arkOS node via SSH." />
+        <spacer height="20" />
+        <formline text="New username:">
+            <textinput name="login" value="admin" />
+        </formline>
+        <formline text="Password:">
+            <textinput name="password" password="True" />
+        </formline>
+    </formbox>
     </pad>
 </xml>

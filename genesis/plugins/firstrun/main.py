@@ -1,8 +1,11 @@
+import os
+
 from genesis.api import *
 from genesis.ui import *
 from genesis.utils import *
 from genesis.plugmgr import RepositoryManager
 
+import zonelist
 from genesis.plugins.users.backend import *
 
 class FirstRun(CategoryPlugin, URLHandler):
@@ -12,13 +15,21 @@ class FirstRun(CategoryPlugin, URLHandler):
 
     def on_session_start(self):
         self._step = 1
+        self._tree = TreeManager()
+        self._reboot = True
 
     def get_ui(self):
         ui = self.app.inflate('firstrun:main')
         step = self.app.inflate('firstrun:step%i'%self._step)
         ui.append('content', step)
 
-        if self._step == 2:
+        if self._step == 3:
+            tz_sel = [UI.SelectOption(text = x, value = x,
+                        selected = False)
+                        for x in zonelist.zones]
+            ui.appendAll('zoneselect', *tz_sel)
+
+        if self._step == 4:
             self._mgr = RepositoryManager(self.app.config)
             self._mgr.update_list()
 
@@ -43,8 +54,18 @@ class FirstRun(CategoryPlugin, URLHandler):
 
         return ui
 
+    def resize(self):
+        shell_stdin('fdisk /dev/mmcblk0', 'd\n2\nn\np\n2\n\n\nw\n')
+        shell('resize2fs /dev/mmcblk0p2')
+        shell('e2fsck -fy /dev/mmcblk0p2')
+        self.app.gconfig.set('genesis', 'restartmsg', 'yes')
+        self.app.gconfig.save()
+
     @event('form/submit')
     def on_event(self, event, params, vars=None):
+        reboot = False
+        if params[0] == 'splash':
+            self._step = 2
         if params[0] == 'frmChangePassword':
             username = vars.getvalue('login', '')
             password = vars.getvalue('password', '')
@@ -66,7 +87,28 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self.app.gconfig.remove_option('users', 'admin')
                 self.app.gconfig.set('users', username, hashpw(password))
                 self.app.gconfig.save()
-                self._step = 2
+                self._step = 3
+        if params[0] == 'frmSettings':
+            hostname = vars.getvalue('hostname', '')
+            zone = vars.getvalue('zoneselect', 'UTC')
+            resize = vars.getvalue('resize', 'False')
+            ssh = vars.getvalue('ssh', 'False')
+            if resize:
+                reboot = self.resize()
+                self.put_message('info', 'Remember to restart your arkOS node after this wizard. To do this, click "Settings > Reboot".')
+            if not ssh:
+                shell('sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config')
+            if hostname:
+                shell('echo "' + hostname + '" > /etc/hostname')
+            zone = zone.split('/')
+            try:
+                zonepath = os.path.join('/usr/share/zoneinfo', zone[0], zone[1])
+            except IndexError:
+                zonepath = os.path.join('/usr/share/zoneinfo', zone[0])
+            if os.path.exists('/etc/localtime'):
+                os.remove('/etc/localtime')
+            os.symlink(zonepath, '/etc/localtime')
+            self._step = 4
         if params[0] == 'frmPlugins':
             lst = self._mgr.available
 
@@ -81,5 +123,5 @@ class FirstRun(CategoryPlugin, URLHandler):
 
             self.app.gconfig.set('genesis', 'firstrun', 'no')
             self.app.gconfig.save()
-            self.put_message('info', 'Setup complete')
-            self._step = 3
+            self.put_message('info', 'Setup complete!')
+            self._step = 5
