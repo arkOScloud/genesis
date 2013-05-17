@@ -112,10 +112,11 @@ class NetworkPlugin(CategoryPlugin):
                 ui.find('addressing').set('value', ce.addressing)
                 ui.find('address').set('value', ce.address)
                 ui.find('gateway').set('value', ce.gateway)
-                if ce.devclass == 'wireless':
+                if ce.interface[:-1] in ['wlan', 'ra', 'wifi', 'ath']:
                     ui.find('security').set('value', ce.security)
                     ui.find('essid').set('value', ce.essid)
-                    ui.find('key').set('value', ce.key)   
+                    if ce.security != 'none' and ce.security != 'wpa-configsection':
+                        ui.find('key').set('value', ce.key)
         else:
             ui.remove('dlgEditConn')
 

@@ -38,12 +38,6 @@ class ArchNetworkConfig(LinuxIp):
    
 
     def save(self):
-        # for iface in self.interfaces.values():
-        #    for key in rc_net_keys:
-        #        value = iface.params[key]
-        #        if iface.addressing == 'dhcp':
-        #            value = ''
-        #        self.rcconf.set_param(key, value, near='interface')
         return
 
 
@@ -60,35 +54,52 @@ class ArchConnConfig(LinuxIp):
         self.connections = {}
         name = ''
 
+        # List connections in /etc/netctl
+
         netctl = shell('netctl list')
         for line in netctl.split('\n'):
+            data = {}
             if line != '':
                 status = 0
+
+                # Check if the connection is active
                 if line.startswith('*'):
                     line = line[2:]
                     status = 1
                 else:
                     line = line[2:]
+
                 conn = NetworkConnection()
                 conn.name = line
                 self.connections[line] = conn
-                data = self.read_config('/etc/netctl/' + line)
-                conn.devclass = data.Connection
-                conn.interface = data.Interface
-                if data.IP == 'dhcp':
+                cxnfile = open('/etc/netctl/' + line)
+
+                # Read the options from connection configs to variable
+                for thing in cxnfile.readlines():
+                    if thing.startswith('#'):
+                        continue
+                    parse = thing.split('=')
+                    parse[1] = parse[1].rstrip('\n')
+                    parse[1] = parse[1].translate(None, '\"\'')
+                    data[parse[0]] = parse[1]
+
+                # Send options one-by-one to the configuration
+                conn.devclass = data['Connection']
+                conn.interface = data['Interface']
+                if 'dhcp' in data['IP']:
                     conn.addressing = 'dhcp'
                     conn.address = ''
                     conn.gateway = ''
                 else:
                     conn.addressing = 'static'
-                    conn.address = data.Address
+                    conn.address = data['Address']
                     try:
-                        conn.gateway = data.Gateway
+                        conn.gateway = data['Gateway']
                     except:
                         conn.gateway = ''
                 conn.up = status
                 try:
-                    conn.description = data.Description
+                    conn.description = data['Description']
                 except:
                     conn.description = ''
                 if os.path.exists('/etc/systemd/system/multi-user.target.wants/netctl@' + conn.name + '.service'):
@@ -96,19 +107,11 @@ class ArchConnConfig(LinuxIp):
                 else:
                     conn.enabled = False
                 if conn.interface[:-1] in ['wlan', 'ra', 'wifi', 'ath']:
-                    conn.essid = data.ESSID
-                    conn.security = data.Security
-                    if conn.security != 'none':
-                        conn.key = data.Key
-                conn.editable = False
-
-    def read_config(self, location):
-        # Read a plugin's configuration file
-        import imp
-        f = open(location)
-        data = imp.load_source('data', '', f)
-        f.close()
-        return data
+                    conn.essid = data['ESSID']
+                    conn.security = data['Security']
+                    if conn.security != 'none' and conn.security != 'wpa-configsection':
+                        conn.key = data['Key']
+                cxnfile.close()
 
     def save(self):
         return
