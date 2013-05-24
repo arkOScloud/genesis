@@ -10,7 +10,7 @@ from genesis.plugins.users.backend import *
 
 class FirstRun(CategoryPlugin, URLHandler):
     text = 'First run wizard'
-    icon = None
+    iconfont = None
     folder = None
 
     def on_session_start(self):

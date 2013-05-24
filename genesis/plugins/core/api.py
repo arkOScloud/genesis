@@ -5,10 +5,10 @@ class IProgressBoxProvider(Interface):
     """
     Allows your plugin to show a background progress dialog 
 
-    - ``icon`` - `str`, icon URI
+    - ``iconfont`` - `str`, iconfont class
     - ``title`` - `str`, text describing current activity
     """
-    icon = ""
+    iconfont = ""
     title = ""
     
     def has_progress(self):

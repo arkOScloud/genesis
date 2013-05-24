@@ -7,8 +7,8 @@ from api import *
 
 class NetworkPlugin(CategoryPlugin):
     text = 'Networks'
-    icon = '/dl/network-arch/icon.png'
-    folder = 'system'
+    iconfont = 'gen-network'
+    folder = None
 
     def on_init(self):
         self.net_config = self.app.get_backend(INetworkConfig)
@@ -22,14 +22,14 @@ class NetworkPlugin(CategoryPlugin):
         
     def get_ui(self):
         self.ifacelist = []
-        ui = self.app.inflate('network-arch:main')
+        ui = self.app.inflate('network:main')
         cl = ui.find('connlist')
 
         for x in self.conn_config.connections:
             i = self.conn_config.connections[x]
             cl.append(UI.DTR(
                             UI.HContainer(
-                                UI.Icon(icon=('/dl/network-arch/up.png' if i.up else ''),
+                                UI.IconFont(iconfont=('gen-checkmark-circle' if i.up else ''),
                                     text=('Connected' if i.up else ''),
                                 ),
                             ),
@@ -37,18 +37,18 @@ class NetworkPlugin(CategoryPlugin):
                             UI.Label(text=i.devclass),
                             UI.Label(text=i.addressing),
                             UI.HContainer(
-                                UI.TipIcon(icon='/dl/core/ui/stock/info.png',
+                                UI.TipIcon(iconfont='gen-info',
                                     text='Info', id='conninfo/' + i.name),
-                                UI.TipIcon(icon='/dl/core/ui/stock/edit.png',
+                                UI.TipIcon(iconfont='gen-pencil-2',
                                     text='Edit', id='editconn/' + i.name),
-                                UI.TipIcon(icon='/dl/core/ui/stock/service-%s.png'%('run' if not i.up else 'stop'), 
+                                UI.TipIcon(iconfont='gen-%s'%('checkmark-circle' if not i.up else 'minus-circle'), 
                                     text=('Disconnect' if i.up else 'Connect'), 
                                     id=('conn' + ('down' if i.up else 'up') + '/' + i.name), 
                                     warning='%s %s? This may interrupt your session.' % (('Disconnect' if i.up else 'Connect to'), i.name)),
-                                UI.TipIcon(icon='/dl/core/ui/stock/status-%s.png'%('enabled' if not i.enabled else 'disabled'), 
+                                UI.TipIcon(iconfont='gen-%s'%('link' if not i.enabled else 'link-2'), 
                                     text=('Disable' if i.enabled else 'Enable'), 
                                     id=('conn' + ('disable' if i.enabled else 'enable') + '/' + i.name)),
-                                UI.TipIcon(icon='/dl/core/ui/stock/delete.png', 
+                                UI.TipIcon(iconfont='gen-cancel-circle', 
                                     text='Delete', 
                                     id=('delconn/' + i.name), 
                                     warning='Delete %s? This is permanent and may interrupt your session.' % (i.name))
@@ -61,22 +61,22 @@ class NetworkPlugin(CategoryPlugin):
             i = self.net_config.interfaces[x]
             nl.append(UI.DTR(
                             UI.HContainer(
-                                UI.Icon(icon='/dl/network-arch/%s.png'%('up' if i.up else 'down'),
-                                    text=('Up' if i.up else 'Down')
+                                UI.IconFont(iconfont='gen-%s'%('checkmark-circle' if i.up else ''),
+                                    text=('Up' if i.up else '')
                                 ),
                             ),
                             UI.Label(text=i.name),
                             UI.Label(text=i.devclass),
                             UI.Label(text=self.net_config.get_ip(i.name)),
                             UI.HContainer(
-                                UI.TipIcon(icon='/dl/core/ui/stock/info.png',
+                                UI.TipIcon(iconfont='gen-info',
                                     text='Info', id='intinfo/' + i.name),
-                                UI.TipIcon(icon='/dl/core/ui/stock/service-%s.png'%('run' if not i.up else 'stop'), 
+                                UI.TipIcon(iconfont='gen-%s'%('checkmark-circle' if not i.up else 'cancel-circle'), 
                                     text=('Down' if i.up else 'Up'), 
                                     id=('if' + ('down' if i.up else 'up') + '/' + i.name), 
                                     warning='Bring %s interface %s? This may interrupt your session.' % (('Down' if i.up else 'Up'), i.name)
                                 ),
-                                UI.TipIcon(icon='/dl/core/ui/stock/status-%s.png'%('enabled' if not i.enabled else 'disabled'), 
+                                UI.TipIcon(iconfont='gen-%s'%('link' if not i.enabled else 'link-2'), 
                                     text=('Disable' if i.enabled else 'Enable'), 
                                     id=('if' + ('disable' if i.enabled else 'enable') + '/' + i.name))
                             ),

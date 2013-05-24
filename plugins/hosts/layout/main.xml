@@ -1,7 +1,7 @@
 <xml>
     <toolbar>
-        <button id="add" text="Add host" icon="/dl/core/ui/stock/add.png" />
-        <button id="hostname" text="Change hostname" icon="/dl/core/ui/stock/server.png" />
+        <button id="add" text="Add host" iconfont="gen-plus-circle" />
+        <button id="hostname" text="Change hostname" iconfont="gen-tag-2" />
     </toolbar>
 
     <label text="Hosts" size="5" />

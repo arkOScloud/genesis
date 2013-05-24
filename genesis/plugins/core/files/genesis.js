@@ -120,6 +120,7 @@ Genesis = {
         $('.ui-el-category').removeClass('selected');
         $('.ui-el-top-category').removeClass('selected');
         $('#'+id).addClass('selected');
+        Genesis.UI.closePopovers();
         Genesis.query('/handle/category/click/' + id);
         return false;
     },
@@ -167,6 +168,25 @@ Genesis = {
                 });
             $('#'+id+'-backdrop').fadeTo(500, 0, function () {
                 if (remove) $(this).remove(); else $(this).hide();
+            });
+        },
+
+        prepPopover: function (id) {
+            $('#'+id).toggleClass('selected');
+            Genesis.UI.closeOtherPopovers(id);
+        },
+
+        closePopovers: function () {
+            $('.pop-trigger').popover('hide');
+            $('.pop-trigger').removeClass('selected');
+        },
+
+        closeOtherPopovers: function (id) {
+            $('.pop-trigger').each(function (i) {
+                if ( this.id != id ) {
+                    $('#'+this.id).popover('hide');
+                    $('#'+this.id).removeClass('selected');
+                }
             });
         },
 

@@ -14,14 +14,14 @@ class Dashboard (API):
         """
         Interface for a dashboard widget
 
-        - ``icon`` - `str`, icon URI
+        - ``iconfont`` - `str`, iconfont class
         - ``title`` - `str`, short title text
         - ``name`` - `str`, name shown in 'choose widget' dialog
         - ``style`` - `str`, 'normal' and 'linear' now supported
         """
         title = ''
         name = ''
-        icon = ''
+        iconfont = ''
         style = 'normal'
 
         def get_ui(self, cfg, id=None):

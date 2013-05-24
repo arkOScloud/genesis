@@ -11,7 +11,7 @@ import genesis.plugins.sysmon.api
 class NewsWidget(Plugin):
     implements(apis.dashboard.IWidget)
     title = 'Project news'
-    icon = '/dl/core/ui/stock/news.png'
+    iconfont = 'gen-bullhorn'
     name = 'Project news'
     style = 'normal'
 

@@ -129,7 +129,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
                     if c == self.selected_category:
                         exp = True
                     cat_vc.append(UI.Category(
-                        icon=c.icon,
+                        iconfont=c.iconfont,
                         name=c.text,
                         id=c.plugin_id,
                         counter=c.get_counter(),
@@ -146,7 +146,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
                     UI.TopCategory(
                         text=c.text,
                         id=c.plugin_id,
-                        icon=c.icon,
+                        iconfont=c.iconfont,
                         counter=c.get_counter(),
                         selected=c==self.selected_category
                     )
@@ -157,8 +157,8 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         templ.append('version', UI.Label(text='Genesis '+version(), size=2))
         templ.insertText('cat-username', self.app.auth.user)
         templ.appendAll('links', 
-                UI.LinkLabel(text='About', id='about'),
-                UI.OutLinkLabel(text='License', url='http://www.gnu.org/licenses/gpl.html')
+                UI.LinkLabel(iconfont='gen-info', text='About', id='about'),
+                UI.OutLinkLabel(iconfont='gen-certificate', text='License', url='http://www.gnu.org/licenses/gpl.html')
             )
 
         return templ.render()
@@ -196,6 +196,12 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
             for p in self.app.grab_plugins(IProgressBoxProvider):
                 if p.plugin_id == params[1] and p.has_progress():
                     p.abort()
+        if params[0] == 'gen_reload':
+            self.app.restart()
+        if params[0] == 'gen_shutdown':
+            shell('shutdown -P now')
+        if params[0] == 'gen_reboot':
+            shell('reboot')
 
     @event('dialog/submit')
     def handle_dlg(self, event, params, vars=None):

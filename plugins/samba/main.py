@@ -8,7 +8,7 @@ import backend
 
 class SambaPlugin(apis.services.ServiceControlPlugin):
     text = 'Shares (Win)'
-    icon = '/dl/samba/icon.png'
+    iconfont = 'gen-upload-2'
     folder = 'servers'
     service_name = 'smbd'
     
@@ -28,14 +28,14 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
         # Shares
         for h in self._cfg.get_shares():
             r = UI.DTR(
-                    UI.Image(file='/dl/core/ui/stock/folder.png'),
+                    UI.IconFont(iconfont='gen-folder'),
                     UI.Label(text=h),
                     UI.Label(text=self._cfg.shares[h]['path']),
                     UI.HContainer(
-                        UI.TipIcon(icon='/dl/core/ui/stock/edit.png',
+                        UI.TipIcon(iconfont='gen-pencil-2',
                             text='Edit', id='editshare/' + h),
                         UI.TipIcon(
-                            icon='/dl/core/ui/stock/delete.png',
+                            iconfont='gen-close',
                             text='Delete', id='delshare/' + h, warning='Delete share %s'%h)
                     ),
                 )
@@ -53,13 +53,13 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
         # Users
         for h in sorted(self._cfg.users.keys()):
             r = UI.DTR(
-                    UI.Image(file='/dl/core/ui/stock/user.png'),
+                    UI.IconFont(iconfont='gen-user'),
                     UI.Label(text=h),
                     UI.HContainer(
-                        UI.TipIcon(icon='/dl/core/ui/stock/edit.png',
+                        UI.TipIcon(iconfont='gen-pencil-2',
                             text='Edit', id='edituser/' + h),
                         UI.TipIcon(
-                            icon='/dl/core/ui/stock/delete.png',
+                            iconfont='gen-close',
                             text='Delete', id='deluser/' + h, warning='Delete user %s'%h)
                     ),
                 )

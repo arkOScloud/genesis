@@ -58,23 +58,25 @@ class Webserver(API):
             hosts = self._backend.get_hosts()
             for x in sorted(hosts.keys()):
                 tbl.append(UI.DTR(
-                            UI.Image(file='/dl/core/ui/stock/status-%sabled.png'%(
-                                'en' if hosts[x].enabled else 'dis')),
+                            UI.TipIcon(iconfont='gen-%s'%(
+                                'checkmark-circle' if hosts[x].enabled else 'minus-circle'),
+                                text=('Enabled' if hosts[x].enabled else 'Disabled')
+                            ),
                             UI.Label(text=x),
                             UI.DTD(
                                 UI.HContainer(
                                     UI.TipIcon(
-                                        icon='/dl/core/ui/stock/edit.png',
+                                        iconfont='gen-pencil-2',
                                         id='edithost/'+x, 
                                         text='Edit'
                                     ),
                                     UI.TipIcon(
-                                        icon='/dl/core/ui/stock/'+ ('dis' if hosts[x].enabled else 'en') + 'able.png',
+                                        iconfont='gen-'+ ('minus-circle' if hosts[x].enabled else 'checkmark-circle'),
                                         id='togglehost/'+x, 
                                         text='Disable' if hosts[x].enabled else 'Enable'
                                     ),
                                     UI.TipIcon(
-                                        icon='/dl/core/ui/stock/delete.png',
+                                        iconfont='gen-close',
                                         id='deletehost/'+x, 
                                         text='Delete',
                                         warning='Delete host %s'%x

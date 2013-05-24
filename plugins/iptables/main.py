@@ -8,7 +8,7 @@ from backend import *
 
 class FirewallPlugin(CategoryPlugin):
     text = 'Firewall Tables'
-    icon = '/dl/iptables/icon.png'
+    iconfont = 'gen-fire'
     folder = 'advanced'
 
     defactions = ['ACCEPT', 'DROP', 'REJECT', 'LOG', 'EXIT', 'MASQUERADE']
@@ -57,7 +57,7 @@ class FirewallPlugin(CategoryPlugin):
                         ))
                     idx += 1
                 vc.append(uic)
-            vc.append(UI.Button(icon='/dl/core/ui/stock/add.png', text='Add new chain to '+t.name, id='addchain/'+t.name))
+            vc.append(UI.Button(iconfont='gen-plus-circle', text='Add new chain to '+t.name, id='addchain/'+t.name))
             tc.add(t.name, vc)
 
         if self._error is not None and len(self._error) > 0:

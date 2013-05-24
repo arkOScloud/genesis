@@ -9,5 +9,6 @@ from genesis.plugins.advancedcontrols import *
 from genesis.plugins.sysmon import *
 from genesis.plugins.sysalerts import *
 from genesis.plugins.users import *
+from genesis.plugins.network import *
 
-plist = ['resources', 'core', 'advancedcontrols', 'dashboard', 'firstrun', 'config', 'plugins', 'recovery', 'sysmon', 'sysalerts', 'users']
+plist = ['resources', 'core', 'advancedcontrols', 'dashboard', 'firstrun', 'config', 'plugins', 'network', 'recovery', 'sysmon', 'sysalerts', 'users']

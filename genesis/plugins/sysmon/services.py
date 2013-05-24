@@ -8,7 +8,7 @@ from groups import *
 
 class ServicesPlugin(CategoryPlugin):
     text = 'Services'
-    icon = '/dl/core/ui/stock/services.png'
+    iconfont = 'gen-atom'
     folder = 'system'
 
     def on_init(self):
@@ -46,12 +46,12 @@ class ServicesPlugin(CategoryPlugin):
                     pass
             if show_stop:
                 gui.appendAll('btns',
-                    UI.TipIcon(text='Stop all', icon='/dl/core/ui/stock/service-stop.png', id='gstop/' + g),
-                    UI.TipIcon(text='Restart all', icon='/dl/core/ui/stock/service-restart.png', id='grestart/' + g)
+                    UI.TipIcon(text='Stop all', iconfont='gen-stop', id='gstop/' + g),
+                    UI.TipIcon(text='Restart all', iconfont='gen-loop-2', id='grestart/' + g)
                   )
             if show_run:
                 gui.append('btns',
-                    UI.TipIcon(text='Start all', icon='/dl/core/ui/stock/service-run.png', id='gstart/' + g)
+                    UI.TipIcon(text='Start all', iconfont='gen-play-2', id='gstart/' + g)
                 )
         
             ui.append('groups', gui)
@@ -73,14 +73,14 @@ class ServicesPlugin(CategoryPlugin):
     def get_row(self, svc):
         if svc.status == 'running':
             ctl = UI.HContainer(
-                      UI.TipIcon(text='Stop', icon='/dl/core/ui/stock/service-stop.png', id='stop/' + svc.name),
-                      UI.TipIcon(text='Restart', icon='/dl/core/ui/stock/service-restart.png', id='restart/' + svc.name)
+                      UI.TipIcon(text='Stop', iconfont='gen-stop', id='stop/' + svc.name),
+                      UI.TipIcon(text='Restart', iconfont='gen-loop-2', id='restart/' + svc.name)
                   )
         else:
-            ctl = UI.TipIcon(text='Start', icon='/dl/core/ui/stock/service-run.png', id='start/' + svc.name)
-        fn = '/dl/core/ui/stock/service-' + ('run.png' if svc.status == 'running' else 'stop.png')
+            ctl = UI.TipIcon(text='Start', iconfont='gen-play-2', id='start/' + svc.name)
+        fn = 'gen-' + ('play-2' if svc.status == 'running' else 'stop')
         row = UI.DTR(
-                UI.Image(file=fn),
+                UI.IconFont(iconfont=fn),
                 UI.Label(text=svc.name),
                 ctl
               )

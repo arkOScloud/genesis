@@ -1,6 +1,6 @@
 <xml>
     <toolbar spacing="0">
-        <toolbutton id="btnRefresh" text="Reload" icon="/dl/core/ui/stock/refresh.png" />
+        <toolbutton id="btnRefresh" text="Reload" iconfont="gen-loop-2" />
     </toolbar>
 
     <pad id="main">

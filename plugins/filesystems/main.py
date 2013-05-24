@@ -8,7 +8,7 @@ import backend
 
 class FSPlugin(CategoryPlugin):
     text = 'Filesystems'
-    icon = '/dl/filesystems/icon.png'
+    iconfont = 'gen-storage'
     folder = 'advanced'
 
     def on_init(self):
@@ -31,8 +31,8 @@ class FSPlugin(CategoryPlugin):
                     UI.Label(text=str(u.dump_p)),
                     UI.Label(text=str(u.fsck_p)),
                     UI.HContainer(
-                        UI.TipIcon(icon='/dl/core/ui/stock/edit.png', id='edit/'+str(self.fstab.index(u)), text='Edit'),
-                        UI.TipIcon(icon='/dl/core/ui/stock/delete.png', id='del/'+str(self.fstab.index(u)), text='Delete', warning='Remove %s from fstab'%u.src)
+                        UI.TipIcon(iconfont='gen-pencil-2', id='edit/'+str(self.fstab.index(u)), text='Edit'),
+                        UI.TipIcon(iconfont='gen-cancel-circle', id='del/'+str(self.fstab.index(u)), text='Delete', warning='Remove %s from fstab'%u.src)
                     ),
                 ))
 

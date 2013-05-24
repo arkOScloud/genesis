@@ -10,19 +10,19 @@
         <ltr>
             <ltd width="40%" spacing="0">
                 <hcontainer>
-                    <image file="/dl/network-arch/ip.png" />
+                    <iconfont iconfont="gen-globe" />
                     <label id="ip" />
                 </hcontainer>
             </ltd>
             <ltd width="30%" spacing="0">
                 <hcontainer>
-                    <image file="/dl/network-arch/in.png" />
+                    <iconfont iconfont="gen-download" />
                     <label id="in" />
                 </hcontainer>
             </ltd>
             <ltd width="30%" spacing="0">
                 <hcontainer>
-                    <image file="/dl/network-arch/out.png" />
+                    <iconfont iconfont="gen-upload" />
                     <label id="out" />
                 </hcontainer>
             </ltd>

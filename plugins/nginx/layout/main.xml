@@ -1,6 +1,6 @@
 <xml>
     <toolbar id="toolbar">
-        <button id="addhost" text="Add host" icon="/dl/core/ui/stock/add.png" />
+        <button id="addhost" text="Add host" iconfont="gen-plus-circle" />
     </toolbar>
     <pad id="main">
     </pad>

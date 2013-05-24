@@ -6,7 +6,7 @@ import backend
 
 class HostsPlugin(CategoryPlugin):
     text = 'Hosts/Aliases'
-    icon = '/dl/hosts/icon.png'
+    iconfont = 'gen-screen'
     folder = 'advanced'
 
     def on_init(self):
@@ -29,12 +29,12 @@ class HostsPlugin(CategoryPlugin):
                 UI.Label(text=h.aliases),
                 UI.HContainer(
                     UI.TipIcon(
-                        icon='/dl/core/ui/stock/edit.png',
+                        iconfont='gen-pencil-2',
                         id='edit/' + str(self.hosts.index(h)),
                         text='Edit'
                     ),
                     UI.TipIcon(
-                        icon='/dl/core/ui/stock/delete.png',
+                        iconfont='gen-cancel-circle',
                         id='del/' + str(self.hosts.index(h)),
                         text='Delete',
                         warning='Remove %s from hosts'%h.ip

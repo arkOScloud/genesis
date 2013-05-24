@@ -9,7 +9,7 @@ from genesis import apis
 
 class Dashboard(CategoryPlugin):
     text = 'System Monitor'
-    icon = '/dl/sysmon/dash.png'
+    iconfont = 'gen-chart'
     folder = 'top'
 
     def on_session_start(self):
@@ -28,7 +28,7 @@ class Dashboard(CategoryPlugin):
                     UI.Widget(
                         w.get_ui(self._mgr.get_widget_config(x), id=str(x)),
                         pos=side,
-                        icon=w.icon,
+                        iconfont=w.iconfont,
                         style=w.style,
                         title=w.title,
                         id=str(x),
@@ -56,7 +56,7 @@ class Dashboard(CategoryPlugin):
                     continue
                 dlg.append('list', UI.ListItem(
                     UI.HContainer(
-                        UI.Image(file=prov.icon),
+                        UI.IconFont(iconfont=prov.iconfont),
                         UI.Label(text=prov.name),
                     ),
                     id=prov.plugin_id,

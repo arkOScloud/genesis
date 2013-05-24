@@ -1,21 +1,6 @@
 <xml>
-    <toolbar>
-        <hcontainer>
-            <lt>
-                <ltr>
-                    <ltd>
-                        <button text="Restart Genesis" id="restart" icon="/dl/core/ui/stock/refresh.png" />
-                    </ltd>
-                    <ltd float="right">
-                        <button id="shutdown" text="Shutdown" warning="Shutdown Node" icon="/dl/core/ui/stock/service-failed.png"/>
-                        <button id="reboot" text="Reboot" warning="Reboot Node" icon="/dl/core/ui/stock/refresh.png"/>
-                    </ltd>
-                </ltr>
-            </lt>
-        </hcontainer>
-    </toolbar>
-    <label size="5" text="General" />
-
+    <label size="5" text="General Settings" />
+    <br />
         <simpleform id="frmGeneral">
             <formline text="Host">
                 <textinput name="bind_host" id="bind_host"/>

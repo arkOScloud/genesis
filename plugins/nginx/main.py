@@ -12,7 +12,7 @@ class NginxBackend(Plugin):
     config_dir = ''
     name = 'nginx'
     id = 'nginx'
-    icon = '/dl/nginx/icon.png'
+    iconfont = 'gen-earth'
     
     def __init__(self):
         self.config_dir = self.app.get_config(self).cfg_dir
@@ -70,10 +70,10 @@ server {
 class NginxPlugin(apis.webserver.WebserverPlugin):
     platform = ['debian', 'arch', 'arkos']
     text = 'Web Server'
-    icon = '/dl/nginx/icon.png'
+    iconfont = 'gen-earth'
     folder = 'servers'
     ws_service = 'nginx'
     ws_name = 'nginx'
-    ws_icon = '/dl/nginx/icon.png'
+    ws_iconfont = 'gen-globe'
     ws_title = 'nginx'
     ws_backend = NginxBackend

@@ -6,8 +6,8 @@ from genesis.plugins.recovery.api import *
 
 class ConfigPlugin(CategoryPlugin):
     text = 'Settings'
-    icon = '/dl/config/icon.png'
-    folder = 'bottom'
+    iconfont = 'gen-cog'
+    folder = False
 
     def on_session_start(self):
         self._config = None
@@ -33,9 +33,9 @@ class ConfigPlugin(CategoryPlugin):
         for c in cfgs:
             if c.target:
                 t.append(UI.DTR(
-                UI.Image(file=(None if not hasattr(c.target, 'icon') else c.target.icon)),
+                UI.IconFont(iconfont=(None if not hasattr(c.target, 'iconfont') else c.target.iconfont)),
                 UI.Label(text=(c.target.__name__ if not hasattr(c.target, 'text') else c.target.text)),
-                UI.TipIcon(text='Edit', icon='/dl/core/ui/stock/edit.png', id='editconfig/'+c.target.__name__),
+                UI.TipIcon(text='Edit', iconfont="gen-pencil-2", id='editconfig/'+c.target.__name__),
             ))
 
         if self._config:
@@ -90,7 +90,7 @@ class ConfigPlugin(CategoryPlugin):
 class GenesisConfig (Plugin):
     implements (IConfigurable)
     name = 'Genesis'
-    icon = '/dl/core/ui/favicon.png'
+    iconfont = 'gen-arkos-round'
     id = 'genesis'
 
     def list_files(self):

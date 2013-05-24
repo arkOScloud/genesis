@@ -7,8 +7,8 @@
             </dth>
             <dth width="1">
                 <hcontainer id="btns">
-                    <tipicon text="Edit" id="edit" icon="/dl/core/ui/stock/edit.png" />
-                    <tipicon text="Delete" warning="Delete group" id="delete" icon="/dl/core/ui/stock/delete.png" />
+                    <tipicon text="Edit" id="edit" iconfont="gen-pencil-2" />
+                    <tipicon text="Delete" warning="Delete group" id="delete" iconfont="gen-cancel-circle" />
                 </hcontainer>
             </dth>
         </dtr>

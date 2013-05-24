@@ -1,7 +1,7 @@
 <xsl:template match="topcategory">
     <a class="ui-el-top-category{x:iif(@selected, ' selected', '')}" href="#" onclick="return Genesis.selectCategory('{@id}');" id="{@id}">
-        <img src="{@icon}" class="icon" />
-        <xsl:value-of select="@text"/>
+        <i class="{@iconfont}"></i>
+        &#160;<xsl:value-of select="@text"/>
             <xsl:if test="@counter != 'None'">
                 <div class="counter">
                     <xsl:value-of select="@counter"/>
@@ -13,8 +13,8 @@
 <xsl:template match="category">
     <a href="#" onclick="return Genesis.selectCategory('{@id}');">
 	    <div id="{@id}" class="ui-el-category {x:iif(@selected, 'selected', '')}">
-            <img src="{@icon}" class="icon" />
-            <span class="text">
+            <i class="{@iconfont}"></i>
+            &#160;<span class="text">
                 <xsl:value-of select="@name"/>
             </span>
             <xsl:if test="@counter != 'None'">

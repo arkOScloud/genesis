@@ -10,7 +10,7 @@ from genesis.utils import *
 
 class NotepadPlugin(CategoryPlugin):
     text = 'Notepad'
-    icon = '/dl/notepad/icon.png'
+    iconfont = 'gen-file-2'
     folder = 'tools'
 
     def on_session_start(self):
@@ -50,7 +50,7 @@ class NotepadPlugin(CategoryPlugin):
                 files.append(
                     UI.ListItem(
                         UI.HContainer(
-                            UI.Image(file='/dl/core/ui/stock/bookmark.png'),
+                            UI.IconFont(iconfont='gen-bookmark-2'),
                             UI.Label(text=f),
                         ),
                         id='*'+str(self._favs.index(f))+'/%i'%idx,
@@ -62,7 +62,7 @@ class NotepadPlugin(CategoryPlugin):
                 files.append(
                     UI.ListItem(
                         UI.HContainer(
-                            UI.Image(file='/dl/core/ui/stock/folder.png'),
+                            UI.IconFont(iconfont='gen-folder'),
                             UI.Label(text='..'),
                         ),
                         id='<back>/%i'%idx,
@@ -76,7 +76,7 @@ class NotepadPlugin(CategoryPlugin):
                     files.append(
                         UI.ListItem(
                             UI.HContainer(
-                                UI.Image(file='/dl/core/ui/stock/folder.png'),
+                                UI.IconFont(iconfont='gen-folder'),
                                 UI.Label(text=p),
                             ),
                             id=p+'/%i'%idx
@@ -88,7 +88,7 @@ class NotepadPlugin(CategoryPlugin):
                 if not os.path.isdir(path):
                     files.append(
                         UI.ListItem(
-                            UI.Image(file='/dl/core/ui/stock/file.png'),
+                            UI.IconFont(iconfont='gen-file'),
                             UI.Label(text=p),
                             id=p+'/%i'%idx,
                             active=path==file
@@ -107,11 +107,11 @@ class NotepadPlugin(CategoryPlugin):
                 if not file in self._favs:
                     fbtn.set('text', 'Bookmark')
                     fbtn.set('action', 'fav/%i'%idx)
-                    fbtn.set('icon', '/dl/core/ui/stock/bookmark-add.png')
+                    fbtn.set('iconfont', 'gen-bubble-plus')
                 else:
                     fbtn.set('text', 'Unbookmark')
                     fbtn.set('action', 'unfav/%i'%idx)
-                    fbtn.set('icon', '/dl/core/ui/stock/bookmark-remove.png')
+                    fbtn.set('iconfont', 'gen-bubble-minus')
             else:
                 ui.remove('btnSave')
                 ui.remove('btnFav')

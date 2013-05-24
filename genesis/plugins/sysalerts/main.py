@@ -6,7 +6,7 @@ import trans
 
 class SysAlertsPlugin(CategoryPlugin):
     text = 'Alerts'
-    icon = '/dl/sysalerts/icon.png'
+    iconfont = 'gen-warning'
     folder = 'bottom'
 
     def on_init(self):
@@ -46,7 +46,7 @@ class SysAlertsPlugin(CategoryPlugin):
                 ),
                 UI.DTD(
                     UI.TipIcon(
-                        icon='/dl/core/ui/stock/edit.png',
+                        iconfont="gen-pencil-2",
                         id='config/%s/%s'%(m.plugin_id,m.variant),
                         text='Configure',
                     ),
@@ -73,12 +73,12 @@ class SysAlertsPlugin(CategoryPlugin):
                     ),
                     UI.DTD(
                         UI.TipIcon(
-                            icon='/dl/core/ui/stock/edit.png',
+                            iconfont="gen-pencil-2",
                             id='config/%s/%s'%(m.plugin_id,v.variant),
                             text='Configure',
                         ),
                         UI.TipIcon(
-                            icon='/dl/core/ui/stock/delete.png',
+                            iconfont="gen-cancel-circle",
                             id='disable/%s/%s'%(m.plugin_id,v.variant),
                             text='Disable',
                         ) if self.backend.has_cfg(m.plugin_id,v.variant) else None,

@@ -1,8 +1,8 @@
 <xml>
     <toolbar>
         <hcontainer>
-            <button id="add_task" text="Add task" icon="/dl/cron/add-task.png" />
-            <button id="add_oth" text="Add non-task string" icon="/dl/core/ui/stock/add.png" />
+            <button id="add_task" text="Add task" iconfont="gen-plus-circle" />
+            <button id="add_oth" text="Add non-task string" iconfont="gen-plus-circle" />
             <div style="padding: 0 5px">
             <simpleform id="frmUser">
                 <hcontainer spacing="5">

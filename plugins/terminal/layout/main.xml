@@ -1,6 +1,6 @@
 <xml>
     <toolbar>
-        <button id="add" text="New terminal" icon="/dl/core/ui/stock/add.png" />
+        <button id="add" text="New terminal" iconfont="gen-plus-circle" />
     </toolbar>
 
 <pad id="main">

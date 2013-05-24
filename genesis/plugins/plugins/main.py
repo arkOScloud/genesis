@@ -5,8 +5,8 @@ from genesis.plugmgr import PluginLoader, RepositoryManager
 
 class PluginManager(CategoryPlugin, URLHandler):
     text = 'Applications'
-    icon = '/dl/plugins/icon.png'
-    folder = 'bottom'
+    iconfont = 'gen-box-add'
+    folder = None
 
     def on_session_start(self):
         self._mgr = RepositoryManager(self.app.config)
@@ -27,22 +27,24 @@ class PluginManager(CategoryPlugin, URLHandler):
             desc = '<span class="ui-el-label-1" style="padding-left: 5px;">%s</span>'%k.desc
             row.find('name').set('text', k.name)
             row.find('desc').set('text', k.desc)
-            row.find('icon').set('file', k.icon)
+            row.find('icon').set('class', k.iconfont)
             row.find('version').set('text', k.version)
             row.find('author').set('text', k.author)
             row.find('author').set('url', k.homepage)
             row.append('buttons', UI.TipIcon(
-                        icon='/dl/core/ui/stock/delete.png',
+                        iconfont="gen-cancel-circle",
                         text='Uninstall',
                         id='remove/'+k.id,
                         warning='Completely remove plugin "%s"'%k.name,
                     ))
 
             if k.problem:
-                row.find('status').set('file', '/dl/plugins/broken.png')
-                row.append('reqs', UI.Icon(icon='/dl/core/ui/stock/warning.png', text=k.problem))
+                row.find('status').set('iconfont', 'gen-close-2')
+                row.find('status').set('text', 'Error')
+                row.append('reqs', UI.IconFont(iconfont="gen-warning", text=k.problem))
             else:
-                row.find('status').set('file', '/dl/plugins/good.png')
+                row.find('status').set('iconfont', 'gen-checkmark')
+                row.find('status').set('text', 'Installed and Enabled')
             ui.append('list', row)
 
 
@@ -56,15 +58,15 @@ class PluginManager(CategoryPlugin, URLHandler):
             row = self.app.inflate('plugins:item')
             row.find('name').set('text', k.name)
             row.find('desc').set('text', k.description)
-            row.find('icon').set('file', k.icon)
+            row.find('icon').set('class', k.icon)
             row.find('version').set('text', k.version)
             row.find('author').set('text', k.author)
             row.find('author').set('url', k.homepage)
 
-            row.find('status').set('file', '/dl/plugins/none.png')
             for p in inst:
                 if k.id == p.id and not p.problem:
-                    row.find('status').set('file', '/dl/plugins/upgrade.png')
+                    row.find('status').set('iconfont', 'gen-arrow-up-2')
+                    row.find('status').set('text', 'Upgrade Available')
 
             reqs = k.str_req()
 
@@ -75,12 +77,12 @@ class PluginManager(CategoryPlugin, URLHandler):
 
             if reqs == '':
                 row.append('buttons', UI.TipIcon(
-                        icon='/dl/core/ui/stock/download.png',
+                        iconfont="gen-box-add",
                         text='Download and install',
                         id='install/'+k.id,
                     ))
             else:
-                row.append('reqs', UI.Icon(icon='/dl/core/ui/stock/warning.png', text=reqs))
+                row.append('reqs', UI.Icon(iconfont="gen-warning", text=reqs))
 
             ui.append('avail', row)
 

@@ -8,7 +8,7 @@ import time
 
 class ShellPlugin(CategoryPlugin):
     text = 'Execute'
-    icon = '/dl/shell/icon.png'
+    iconfont = 'gen-target'
     folder = 'tools'
 
     def on_session_start(self):
@@ -56,7 +56,7 @@ class ShellPlugin(CategoryPlugin):
 class ShellProgress(Plugin):
     implements(IProgressBoxProvider)
     title = 'Shell'
-    icon = '/dl/shell/icon.png'
+    iconfont = 'gen-target'
     can_abort = True
     
     def __init__(self):

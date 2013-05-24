@@ -6,8 +6,8 @@ from api import Manager
 
 class RecoveryPlugin(CategoryPlugin):
     text = 'Recovery'
-    icon = '/dl/recovery/icon.png'
-    folder = 'bottom'
+    iconfont = 'gen-history'
+    folder = None
 
     def on_init(self):
         self.manager = Manager(self.app)
@@ -42,7 +42,7 @@ class RecoveryPlugin(CategoryPlugin):
                         UI.HContainer(
                             UI.TipIcon(
                                 text='Recover',
-                                icon='/dl/recovery/rev-restore.png',
+                                iconfont="gen-folder-upload",
                                 id='restore/%s/%s'%(self._current,rev.revision),
                                 warning='Restore configuration of %s as of %s (rev %s)'%(
                                         self._current,
@@ -52,7 +52,7 @@ class RecoveryPlugin(CategoryPlugin):
                             ),
                             UI.TipIcon(
                                 text='Drop',
-                                icon='/dl/recovery/rev-delete.png',
+                                iconfont='gen-folder-minus',
                                 id='drop/%s/%s'%(self._current,rev.revision),
                                 warning='Delete backed up configuration of %s as of %s (rev %s)'%(
                                         self._current,

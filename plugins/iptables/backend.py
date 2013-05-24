@@ -312,7 +312,7 @@ class Table:
 class Config(Plugin):
     implements(IConfigurable)
     name = 'iptables'
-    icon = '/dl/iptables/icon.png'
+    iconfile = 'gen-fire'
     id = 'iptables'
     tables = {}
     apply_shell = 'cat /etc/iptables.up.rules | iptables-restore'

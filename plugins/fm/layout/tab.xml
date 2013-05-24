@@ -1,8 +1,8 @@
 <xml>
     <toolbar id="path">
-        <button id="paste" text="Paste here" icon="/dl/core/ui/stock/paste.png" />
-        <button id="newfld" text="New folder" icon="/dl/fm/newfolder.png" />
-        <button id="close" text="Close tab" icon="/dl/core/ui/stock/dialog-cancel.png" />
+        <button id="paste" text="Paste here" iconfont="gen-paste" />
+        <button id="newfld" text="New folder" iconfont="gen-folder-plus" />
+        <button id="close" text="Close tab" iconfont="gen-cancel-circle" />
     </toolbar>
 
     <spacer height="10" />

@@ -22,7 +22,7 @@ class Group:
 
 
 class UsersBackend(Plugin):
-    icon = '/dl/users/icon.png'
+    iconfont = 'gen-users'
 
     def __init__(self):
         self.cfg = self.app.get_config(self)

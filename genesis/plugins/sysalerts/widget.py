@@ -7,7 +7,7 @@ from genesis.api import *
 class SysAlertsWidget(Plugin):
     implements(apis.dashboard.IWidget)
     title = 'Alerts'
-    icon = '/dl/sysalerts/icon.png'
+    iconfont = 'gen-warning'
     name = 'System alerts'
     style = 'linear'
 

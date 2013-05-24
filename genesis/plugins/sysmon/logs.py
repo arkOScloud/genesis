@@ -10,7 +10,7 @@ from genesis.utils import *
 
 class LogsPlugin(CategoryPlugin):
     text = 'Logs'
-    icon = '/dl/core/ui/stock/logs.png'
+    iconfont = 'gen-file-2'
     folder = 'system'
 
     def on_session_start(self):

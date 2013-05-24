@@ -9,9 +9,10 @@ DEPS =  [
 ]
 
 NAME = 'File Shares (Windows)'
+ICON = 'gen-upload-2'
 PLATFORMS = ['any']
 DESCRIPTION = 'Add, remove and manage Samba (SMB/CIFS) shares'
-VERSION = '3'
+VERSION = '4'
 GENERATION = 1
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://ark-os.org'

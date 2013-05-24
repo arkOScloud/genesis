@@ -7,7 +7,7 @@ from api import *
         
 class NetworkWidget(Plugin):
     implements(apis.dashboard.IWidget)
-    icon = '/dl/network-arch/down.png'
+    iconfont = 'gen-network'
     name = 'Network monitor'
     title = None
     style = 'normal'
@@ -28,9 +28,9 @@ class NetworkWidget(Plugin):
             c = bc.connections[x]
             if c.interface in cfg and c.up:
                 self.connection = c.name
-        self.icon = '/dl/network-arch/%s.png'%('up' if i.up else 'down')
+        self.icon = 'gen-%s'%('checkmark' if i.up else 'close-2')
         
-        ui = self.app.inflate('network-arch:widget')
+        ui = self.app.inflate('network:widget')
         ui.find('connection').set('text', 'Connected to: ' + self.connection)
         ui.find('ip').set('text', be.get_ip(i.name))
         ui.find('in').set('text', str_fsize(be.get_rx(i)))

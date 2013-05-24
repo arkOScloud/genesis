@@ -2,8 +2,8 @@
     <div class="ui-el-widget" id="{@id}">
         <div class="handle" />
         <div class="icon">
-            <xsl:if test="@icon">
-                <img src="{@icon}" />
+            <xsl:if test="@iconfont">
+                <i class="{@iconfont}" />
             </xsl:if>
         </div>
         <div class="title">

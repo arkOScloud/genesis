@@ -1,9 +1,11 @@
 <xml>
-    <toolbar>
-        <button id="btnRefresh" text="Refresh" icon="/dl/core/ui/stock/refresh.png" />
-        <button id="btnSettings" text="Configure" icon="/dl/core/ui/stock/settings.png" />
-        <button text="Help" icon="/dl/core/ui/stock/info.png" onclick="window.open('http://bbs.ark-os.org');return false" />
-    </toolbar>
+    <label text="System Alerts" size="5" />
+    <pad id="toolbar">
+        <toolbar>
+            <button id="btnRefresh" text="Refresh" iconfont="gen-loop-2" />
+            <button id="btnSettings" text="Configure" iconfont="gen-cog" />
+        </toolbar>
+    </pad>
 
     <pad id="main">
         <dt id="list" width="100%">

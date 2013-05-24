@@ -208,7 +208,7 @@ class PluginLoader:
         try:
             # Save info
             info.id = plugin
-            info.icon = '/dl/%s/icon.png'%plugin
+            info.iconfont = mod.ICON
             info.name, info.desc, info.version = mod.NAME, mod.DESCRIPTION, mod.VERSION
             info.author, info.homepage = mod.AUTHOR, mod.HOMEPAGE
             info.deps = []

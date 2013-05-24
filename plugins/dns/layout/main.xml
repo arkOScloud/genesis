@@ -1,7 +1,7 @@
 <xml>
 
     <toolbar>
-        <button text="Add option" id="addns" icon="/dl/core/ui/stock/add.png" />
+        <button text="Add option" id="addns" iconfont="gen-plus-circle" />
     </toolbar>
 
     <label text="DNS servers and options" size="5" />

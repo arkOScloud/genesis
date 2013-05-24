@@ -1,3 +1,7 @@
+body {
+    color: #2C3E50;
+}
+
 .custom-button-mixin {
     margin-right: 3px;
     cursor: default;
@@ -9,25 +13,58 @@
 }
 
 .defbtn () {
-    .gradientBar(#f5f5f5, #eeeeee);
-    color: #555;
-    text-shadow: 0 1px 0 white;
+    background-image: none;
+    text-shadow: none;
 
     &:hover {
-        .gradientBar(#ffffff, #f0f0f0);
-        background-position: 0 0;
-        text-shadow: 0 1px 0 white;
+        background-color: #D0D5D9;
+        text-shadow: none;
     }
 }
 
 
 .btn {
-    line-height: 25px;
-    padding: 0 10px;
-    img {
-        float: left;
-        padding: 4px 6px 0 0;
-    }
+	padding: 0 10px;
+	border: none;
+	background-image: none;
+	background-color: #BFC6CB;
+	color: #FFFFFF;
+	text-decoration: none;
+	text-shadow: none;
+	.box-shadow(none);
+	line-height: 25px;
+    	img {
+        	float: left;
+        	padding: 4px 6px 0 0;
+    	}
+
+	&:hover,
+	&:focus {
+		color: white;
+	}
+
+	&:active,
+	&.active {
+		.box-shadow(none);
+		color: rgba(255, 255, 255, 0.75);
+	}
+
+	&.disabled,
+	&[disabled] {
+		color: white;
+	}
+
+	&-large {
+		padding: 18px 36px;
+	}
+
+	&-small {
+		padding: 2px 12px;
+	}
+
+	&-mini {
+		padding: 1px 8px;
+	}
 }
 
 .btn.default {
@@ -39,11 +76,35 @@
     padding: 3px 5px;
 }
 
+.btn.primary {
+    background-color: #33485D;
+    background-image: none;
+    text-shadow: none;
+
+    &:hover {
+        background-color: #3E5771;
+        text-shadow: none;
+    }
+}
+
+.btn.danger {
+    background-color: #E95D4E;
+    background-image: none;
+    text-shadow: none;
+
+    &:hover {
+        background-color: #ED7669;
+        text-shadow: none;
+    }
+}
+
 .btn.tipicon {
     margin: 2px;
     background: none !important;
     padding: 0 !important;
     border: 0 !important;
+    line-height: 0;
+    color: #2C3E50;
 }
 
 .ui-el-toolbar {
@@ -56,13 +117,16 @@
         .custom-button-mixin();
         .defbtn();
         margin: 0 2px;
-        .border-radius(2px);
+        .border-radius(3px);
     }
 }
 
-
+label {
+    color: #2C3E50;
+}
 
 .ui-el-label-1 {
+    color: #2C3E50;
     font-size: 12px;
     line-height: 26px;
     display: inline-block;
@@ -70,6 +134,7 @@
 }
 
 .ui-el-label-2 {
+    color: #2C3E50;
     font-size: 12px;
     line-height: 20px;
     display: inline-block;
@@ -80,6 +145,7 @@
 }
 
 .ui-el-label-3 {
+    color: #2C3E50;
     font-size: 14px;
     display: inline-block;
     padding: 1px 2px;
@@ -89,16 +155,16 @@
 }
 
 .ui-el-label-4 {
+    color: #2C3E50;
     font-size: 16px;
     font-weight: bold;
-    color: #555;
     display: block;
 }
 
 .ui-el-label-5 {
+    color: #2C3E50;
     font-size: 16px;
     font-weight: bold;
-    color: #555;
     margin: 10px 0 0 15px;
     display: block;
 }
@@ -162,8 +228,8 @@
     font-size: 12px;
     display: inline-block;
 
-    color: #888;
-    border-bottom: 1px dotted #888;
+    color: #1ABC9C;
+    border-bottom: 1px dotted #1ABC9C;
 }
 
 .freetext p {
@@ -210,11 +276,11 @@
 }
 
 .ui-el-progressbar-active {
-    .gradientBar(#79bd17,  #558511);
+    background-color: #3498DB;
 
     height: 16px;
     margin: 0 0 -1px;
-    border-top: 1px solid #a0d05c;
+    border-top: 1px solid #3498DB;
     float: left;
 
     .border-radius(3px 0 0 3px);
@@ -227,10 +293,8 @@
 }
 
 .ui-el-progressbar-wrapper {
-    .gradientBar(#ddd,  #eee);
-    border: 1px solid #ccc;
-    border-top: none;
-    .border-radius(3px);
+    background-color: #ECF0F1;
+    .border-radius(32px);
     overflow: hidden;
     margin: 2px 2px;
     display: inline-block;

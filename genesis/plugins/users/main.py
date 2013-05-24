@@ -8,7 +8,7 @@ from backend import *
 
 class UsersPlugin(CategoryPlugin):
     text = 'Users'
-    icon = '/dl/users/icon.png'
+    iconfont = 'gen-users'
     folder = 'system'
 
     params = {
@@ -41,7 +41,8 @@ class UsersPlugin(CategoryPlugin):
         ui = self.app.inflate('users:main')
 
         if self._editing != '':
-            ui.find('dlgEdit').set('text', self.params[self._editing])
+            if self._editing in self.params:
+                ui.find('dlgEdit').set('text', self.params[self._editing])
         else:
             ui.remove('dlgEdit')
 
@@ -51,11 +52,11 @@ class UsersPlugin(CategoryPlugin):
         for u in self.users:
             if u.uid == 0 or u.uid >= 1000:
                 t.append(UI.DTR(
-                        UI.Image(file='/dl/core/ui/stock/user.png'),
+                        UI.IconFont(iconfont='gen-user'),
                         UI.Label(text=u.login, bold=True),
                         UI.Label(text=u.uid, bold=True),
                         UI.Label(text=u.home),
-                        UI.TipIcon(icon='/dl/core/ui/stock/edit.png', id='edit/'+u.login, text='Edit'),
+                        UI.TipIcon(iconfont='gen-pencil-2', id='edit/'+u.login, text='Edit'),
                     ))
 
         if self._selected_user != '':
@@ -112,18 +113,17 @@ class UsersPlugin(CategoryPlugin):
                     self._selected_user = v
             self._editing = ''
         if params[0].startswith('e'):
-            editing = params[0][1:]
             v = vars.getvalue('value', '')
-            if editing == 'password':
+            if params[0] == 'epassword':
                 self.backend.change_user_password(self._selected_user, v)
                 self.app.gconfig.set('users', self._selected_user, hashpw(v))
-            elif editing == 'login':
+            elif params[0] == 'elogin':
                 self.backend.change_user_param(self._selected_user, editing, v)
                 pw = self.app.gconfig.get('users', self._selected_user, '')
                 self.app.gconfig.remove_option('users', self._selected_user)
                 self.app.gconfig.set('users', v, pw)
                 self._selected_user = v
-            elif editing in self.params:
+            elif params[0] in self.params:
                 self.backend.change_user_param(self._selected_user, editing, v)
             self._editing = None
         if params[0] == 'dlgEditUser':

@@ -8,7 +8,7 @@ from backend import *
 
 class SysUsersPlugin(CategoryPlugin):
     text = 'System Users'
-    icon = '/dl/users/icon.png'
+    iconfont = 'gen-users'
     folder = 'advanced'
 
     params = {
@@ -69,12 +69,12 @@ class SysUsersPlugin(CategoryPlugin):
 
         for u in self.users:
             t.append(UI.DTR(
-                    UI.Image(file='/dl/core/ui/stock/user.png'),
+                    UI.IconFont(iconfont='gen-user'),
                     UI.Label(text=u.login, bold=True),
                     UI.Label(text=u.uid, bold=(u.uid>=1000)),
                     UI.Label(text=u.home),
                     UI.Label(text=u.shell),
-                    UI.TipIcon(icon='/dl/core/ui/stock/edit.png', id='edit/'+u.login, text='Edit'),
+                    UI.TipIcon(iconfont='gen-pencil-2', id='edit/'+u.login, text='Edit'),
                 ))
 
         if self._selected_user != '':
@@ -97,11 +97,11 @@ class SysUsersPlugin(CategoryPlugin):
 
         for u in self.groups:
             t.append(UI.DTR(
-                    UI.Image(file='/dl/core/ui/stock/group.png'),
+                    UI.IconFont(iconfont='gen-users'),
                     UI.Label(text=u.name, bold=True),
                     UI.Label(text=u.gid, bold=(u.gid>=1000)),
                     UI.Label(text=', '.join(u.users)),
-                    UI.TipIcon(icon='/dl/core/ui/stock/edit.png', id='gedit/'+u.name, text='Edit'),
+                    UI.TipIcon(iconfont='gen-pencil-2', id='gedit/'+u.name, text='Edit'),
                 ))
 
         if self._selected_group != '':

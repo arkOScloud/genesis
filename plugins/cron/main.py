@@ -6,7 +6,7 @@ import backend
 
 class CronPlugin(helpers.CategoryPlugin):
     text = 'Scheduled Tasks'
-    icon = '/dl/cron/icon.png'
+    iconfont = 'gen-alarm'
     folder = 'system'
 
     def on_init(self):
@@ -43,9 +43,9 @@ class CronPlugin(helpers.CategoryPlugin):
                     UI.Label(text=oth_str),
                     UI.DTD(
                         UI.HContainer(
-                            UI.TipIcon(icon='/dl/core/ui/stock/edit.png', id='edit_oth/' + str(i),
+                            UI.TipIcon(iconfont='gen-pencil-2', id='edit_oth/' + str(i),
                                 text='Edit'),
-                            UI.TipIcon(icon='/dl/core/ui/stock/delete.png', id='del_oth/' + str(i),
+                            UI.TipIcon(iconfont='gen-cancel-circle', id='del_oth/' + str(i),
                                 text='Delete', warning='Delete a string')
                         ),
                         hidden=True)
@@ -61,9 +61,9 @@ class CronPlugin(helpers.CategoryPlugin):
                     UI.Label(text=t.command),
                     UI.DTD(
                         UI.HContainer(
-                            UI.TipIcon(icon='/dl/core/ui/stock/edit.png', id='edit_task/' + str(i),
+                            UI.TipIcon(iconfont='gen-pencil-2', id='edit_task/' + str(i),
                                 text='Edit'),
-                            UI.TipIcon(icon='/dl/core/ui/stock/delete.png', id='del_task/' + str(i),
+                            UI.TipIcon(iconfont='gen-cancel-circle', id='del_task/' + str(i),
                                 text='Delete', warning='Delete a task')
                         ),
                     )))

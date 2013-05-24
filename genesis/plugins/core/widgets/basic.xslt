@@ -54,10 +54,17 @@
     </xsl:variable>
 
     <a href="{@href}" onclick="{$onclickjs}" class="ui-el-button btn {$design}">
-        <xsl:if test="@icon">
-            <img src="{@icon}" />
-        </xsl:if>
-        <xsl:value-of select="@text" />
+        <xsl:choose>
+            <xsl:when test="@iconfont != ''">
+                <i class="{@iconfont}"></i>
+                <xsl:if test="@text">
+                    &#160;<xsl:value-of select="@text" />
+                </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="@text" />
+            </xsl:otherwise>
+        </xsl:choose>
     </a>
 </xsl:template>
 
@@ -67,12 +74,18 @@
 
 <xsl:template match="linklabel">
     <a href="#" onclick="javascript:return Genesis.query('/handle/linklabel/click/{@id}');" class="ui-el-link" style="{x:iif(@bold, 'font-weight: bold;', '')}">
+        <xsl:if test="@iconfont">
+            <i class="{@iconfont}"></i>&#160;
+        </xsl:if>
         <xsl:value-of select="@text" />
     </a>
 </xsl:template>
 
 <xsl:template match="outlinklabel">
     <a href="{@url}" target="blank" class="ui-el-link">
+        <xsl:if test="@iconfont">
+            <i class="{@iconfont}"></i>&#160;
+        </xsl:if>
         <xsl:value-of select="@text" />
     </a>
 </xsl:template>
@@ -115,11 +128,38 @@
     </script>
 </xsl:template>
 
+<xsl:template match="popover">
+    <xsl:variable name="id" select="x:id(@id)" />
+    <a id="{$id}" style="display:inline-block; {@styles}" class="pop-trigger {@class}" onclick="Genesis.UI.prepPopover('{@id}');{@onclick}">
+        <xsl:apply-templates />
+    </a>
+    <script>
+        $('#<xsl:value-of select="$id" />').popover({
+            animation: true,
+            placement: '<xsl:value-of select="x:attr(@placement, 'right')" />',
+            html: true,
+            delayIn: <xsl:value-of select="x:attr(@delay, '0')" />,
+            offset: <xsl:value-of select="x:attr(@offset, '0')" />,
+            title: function() {
+              return $("#<xsl:value-of select="$id" />-head").html();
+            },
+            content: function() {
+              return $("#<xsl:value-of select="$id" />-content").html();
+            },
+            trigger: '<xsl:value-of select="x:attr(@trigger, 'click')" />',
+        });
+    </script>
+</xsl:template>
+
 
 <xsl:template match="icon">
     <tooltip placement="above" text="{@text}"><image id="{@id}" file="{@icon}"/></tooltip>
 </xsl:template>
 
+<xsl:template match="iconfont">
+    <tooltip placement="above" text="{@text}"><i class="{@iconfont}"></i></tooltip>
+</xsl:template>
+
 <xsl:template match="tipicon">
-    <tooltip placement="above" text="{@text}"><button id="{@id}" design="tipicon" onclick="{@onclick}" warning="{@warning}" icon="{@icon}"/></tooltip>
+    <tooltip placement="above" text="{@text}"><button id="{@id}" design="tipicon" onclick="{@onclick}" warning="{@warning}" iconfont="{@iconfont}"/></tooltip>
 </xsl:template>

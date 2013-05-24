@@ -1,9 +1,9 @@
     <dtr>
         <dtd>
-            <image id="status" />
+            <tipicon id="status" />
         </dtd>
         <dtd>
-            <image id="icon" />
+            <i id="icon" />
         </dtd>
         <dtd>
             <span id="reqs" style="float:left" />

@@ -17,7 +17,7 @@ class Host:
 class Config(Plugin):
     implements(IConfigurable)
     name = 'Hosts'
-    icon = '/dl/hosts/icon.png'
+    iconfont = 'gen-screen'
     id = 'hosts'
 
     def list_files(self):

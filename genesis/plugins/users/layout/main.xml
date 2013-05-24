@@ -1,6 +1,6 @@
 <xml>
     <toolbar>
-        <button id="adduser" text="Add user" icon="/dl/core/ui/stock/add.png" />
+        <button id="adduser" text="Add user" iconfont="gen-user-plus" />
     </toolbar>
 
     <pad>

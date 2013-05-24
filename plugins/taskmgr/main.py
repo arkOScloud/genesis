@@ -12,7 +12,7 @@ import os
 
 class TaskManagerPlugin(CategoryPlugin):
     text = 'Task Monitor'
-    icon = '/dl/taskmgr/icon.png'
+    iconfont = 'gen-enter'
     folder = 'advanced'
 
     rev_sort = [
@@ -38,14 +38,14 @@ class TaskManagerPlugin(CategoryPlugin):
         for x in l:
             try:
                 ui.append('list', UI.DTR(
-                    UI.Image(file='/dl/core/ui/stock/service-%s.png'%('run' if x.is_running() else 'stop')),
+                    UI.IconFont(iconfont='gen-%s'%('play-2' if x.is_running() else 'stop')),
                     UI.Label(text=str(x.pid)),
                     UI.Label(text=str(int(x.get_cpu_percent()))),
                     UI.Label(text=str(int(x.get_memory_percent()))),
                     UI.Label(text=x.username),
                     UI.Label(text=x.name),
                     UI.TipIcon(
-                        icon='/dl/core/ui/stock/info.png',
+                        iconfont='gen-info',
                         id='info/%i'%x.pid,
                         text='Info'
                     )

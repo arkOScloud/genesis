@@ -6,7 +6,7 @@ from api import *
 
 class DNSPlugin(CategoryPlugin):
     text = 'DNS '
-    icon = '/dl/dns/icon.png'
+    iconfont = 'gen-address-book'
     folder = 'system'
 
     def on_init(self):
@@ -25,8 +25,8 @@ class DNSPlugin(CategoryPlugin):
                 UI.Label(text=i.cls),
                 UI.Label(text=i.address),
                 UI.HContainer(
-                    UI.TipIcon(icon='/dl/core/ui/stock/edit.png', text='Edit', id='editns/' + str(x)),
-                    UI.TipIcon(icon='/dl/core/ui/stock/delete.png', text='Remove', id='delns/' + str(x))
+                    UI.TipIcon(iconfont='gen-pencil-2', text='Edit', id='editns/' + str(x)),
+                    UI.TipIcon(iconfont='gen-close', text='Remove', id='delns/' + str(x))
                 ),
             ))
 

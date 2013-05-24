@@ -14,7 +14,7 @@ from acl import *
 
 class FMPlugin(CategoryPlugin):
     text = 'File Manager'
-    icon = '/dl/fm/icon.png'
+    iconfont = 'gen-files'
     folder = 'tools'
 
     def on_init(self):
@@ -44,13 +44,12 @@ class FMPlugin(CategoryPlugin):
         for f in self._clipboard:
             ui.append('clipboard', UI.DTR(
                 UI.HContainer(
-                    UI.Image(file='/dl/fm/'+
-                        ('folder' if os.path.isdir(f) else 'file')
-                        +'.png'),
+                    UI.IconFont(iconfont='gen-'+
+                        ('folder' if os.path.isdir(f) else 'file')),
                     UI.Label(text=f),
                 ),
                 UI.TipIcon(
-                    icon='/dl/core/ui/stock/delete.png',
+                    iconfont='gen-cancel-circle',
                     text='Remove from clipboard',
                     id='rmClipboard/%i'%idx
                 ),
@@ -76,7 +75,7 @@ class FMPlugin(CategoryPlugin):
                     UI.Editable(id='edAclSubject/%i'%idx, value=acl[0]),
                     UI.Editable(id='edAclPerm/%i'%idx, value=acl[1]),
                     UI.TipIcon(
-                        icon='/dl/core/ui/stock/delete.png',
+                        iconfont='gen-cancel-circle',
                         text='Delete',
                         id='delAcl/%i'%idx
                     )
@@ -130,10 +129,10 @@ class FMPlugin(CategoryPlugin):
             islink = os.path.islink(np)
             ismount = os.path.ismount(np)
 
-            icon = 'file'
-            if isdir: icon = 'folder'
-            if islink: icon ='link'
-            if ismount: icon = 'mount'
+            iconfont = 'gen-file'
+            if isdir: iconfont = 'gen-folder'
+            if islink: iconfont ='gen-link'
+            if ismount: iconfont = 'gen-storage'
 
             try:
                 stat = os.stat(np)
@@ -161,7 +160,7 @@ class FMPlugin(CategoryPlugin):
                         tidx,
                         self.enc_file(np)
                     )),
-                    UI.Image(file='/dl/fm/%s.png'%icon),
+                    UI.IconFont(iconfont=iconfont),
                 ),
                 UI.HContainer(
                     UI.Label(text=name) if not isdir else
@@ -181,7 +180,7 @@ class FMPlugin(CategoryPlugin):
                 UI.Label(text=self.mode_string(mode), monospace=True),
                 UI.HContainer(
                     UI.TipIcon(
-                        icon='/dl/core/ui/stock/lock.png',
+                        iconfont='gen-lock',
                         text='ACLs',
                         id='acls/%i/%s'%(
                             tidx,
@@ -189,7 +188,7 @@ class FMPlugin(CategoryPlugin):
                         ),
                     ) if self._has_acls else None,
                     UI.TipIcon(
-                        icon='/dl/core/ui/stock/delete.png',
+                        iconfont='gen-cancel-circle',
                         text='Delete',
                         warning='Delete %s'%np,
                         id='delete/%i/%s'%(
@@ -356,7 +355,7 @@ class FMWorker(BackgroundWorker):
 class FMProgress(Plugin):
     implements(IProgressBoxProvider)
     title = 'File manager'
-    icon = '/dl/fm/icon.png'
+    iconfont = 'gen-files'
     can_abort = True
 
     def get_worker(self):

@@ -163,7 +163,7 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
     A base class for plugins providing sidebar entry
 
     - ``text`` - `str`, sidebar entry text
-    - ``icon`` - `str`, sidebar icon URL
+    - ``iconfont`` - `str`, sidebar iconfont class
     - ``folder`` - `str`, sidebar section name (lowercase)
     """
     abstract = True
@@ -171,7 +171,7 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
     implements(ICategoryProvider)
 
     text = 'Caption'
-    icon = '/dl/core/ui/catfolders/other.png'
+    iconfont = 'gen-question'
     folder = 'other'
 
     def on_init(self):

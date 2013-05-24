@@ -9,7 +9,7 @@ from genesis import apis
 
 class PackageManagerPlugin(CategoryPlugin):
     text = 'Packages'
-    icon = '/dl/pkgman/icon.png'
+    iconfont = 'gen-cube'
     folder = 'advanced'
 
     def on_init(self):
@@ -42,23 +42,22 @@ class PackageManagerPlugin(CategoryPlugin):
             return str(c)
 
     def _get_icon(self, p):
-        r = '/dl/pkgman/package-'
+        r = 'gen-'
         if p in self._status.pending.keys():
             if self._status.pending[p] == 'install':
-                r += 'upgrade'
+                r += 'arrow-up-2'
             else:
-                r += 'remove'
+                r += 'minus-circle'
         else:
             if p in self._status.full.keys():
                 if self._status.full[p].state == 'broken':
-                    r += 'broken'
+                    r += 'notification'
                 elif p in self._status.upgradeable.keys():
-                    r += 'outdated'
+                    r += 'arrow-down-2'
                 else:
-                    r += 'installed'
+                    r += 'checkmark-circle'
             else:
-                r += 'available'
-        r += '.png'
+                r += 'cube'
         return r
 
     def get_ui(self):
@@ -78,10 +77,10 @@ class PackageManagerPlugin(CategoryPlugin):
             if self._confirm_apply:
                 r = self.mgr.get_expected_result(self._status)
                 for x in r:
-                    i = '/dl/pkgman/package-'
-                    i += 'upgrade' if r[x] == 'install' else 'remove'
+                    i = 'gen-'
+                    i += 'arrow-up-2' if r[x] == 'install' else 'minus-circle'
                     t = UI.DTR(
-                            UI.Image(file=i+'.png'),
+                            UI.IconFont(iconfont=i),
                             UI.Label(text=x)
                         )
                     res.append(t)
@@ -100,16 +99,17 @@ class PackageManagerPlugin(CategoryPlugin):
         if self._current == 'upgrades':
             for p in sorted(self._status.upgradeable.keys()):
                 p = self._status.upgradeable[p]
+                stat = self._get_icon(p.name)
                 r = UI.DTR(
-                        UI.Image(file=self._get_icon(p.name)),
+                        UI.IconFont(iconfont=stat),
                         UI.Label(text=p.name),
                         UI.Label(text=p.version),
                         UI.Label(text=p.description),
                             UI.HContainer(
-                                UI.TipIcon(icon='/dl/core/ui/stock/info.png', text='Info', id='info/'+p.name),
-                                UI.TipIcon(icon='/dl/pkgman/package-available.png', text='Deselect', id='cancel/'+p.name)
+                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p.name),
+                                UI.TipIcon(iconfont='gen-minus', text='Deselect', id='cancel/'+p.name)
                                     if p.name in self._status.pending else
-                                UI.TipIcon(icon='/dl/pkgman/package-upgrade.png', text='Select', id='upgrade/'+p.name),
+                                UI.TipIcon(iconfont='gen-checkmark-circle', text='Select', id='upgrade/'+p.name),
                                 spacing=0
                             ),
                     )
@@ -119,15 +119,16 @@ class PackageManagerPlugin(CategoryPlugin):
             for p in sorted(self._status.full.keys()):
                 p = self._status.full[p]
                 if p.state != 'broken': continue
+                stat = self._get_icon(p.name)
                 r = UI.DTR(
-                        UI.Image(file=self._get_icon(p.name)),
+                        UI.IconFont(iconfont=stat),
                         UI.Label(text=p.name),
                         UI.Label(text=p.version),
                         UI.Label(text=p.description),
                             UI.HContainer(
-                                UI.TipIcon(icon='/dl/core/ui/stock/info.png', text='Info', id='info/'+p.name),
-                                UI.TipIcon(icon='/dl/pkgman/package-install.png', text='Reinstall', id='install/'+p.name),
-                                UI.TipIcon(icon='/dl/pkgman/package-remove.png', text='Remove', id='remove/'+p.name),
+                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p.name),
+                                UI.TipIcon(iconfont='gen-loop-2', text='Reinstall', id='install/'+p.name),
+                                UI.TipIcon(iconfont='gen-minus', text='Remove', id='remove/'+p.name),
                                 spacing=0
                             ),
                     )
@@ -135,15 +136,16 @@ class PackageManagerPlugin(CategoryPlugin):
 
         if self._current == 'search':
             for p in self._search.keys()[:50]:
+                stat = self._get_icon(p)
                 r = UI.DTR(
-                        UI.Image(file=self._get_icon(p)),
+                        UI.IconFont(iconfont=stat),
                         UI.Label(text=p),
                         UI.Label(text=self._search[p].version),
                         UI.Label(text=self._search[p].description),
                             UI.HContainer(
-                                UI.TipIcon(icon='/dl/core/ui/stock/info.png', text='Info', id='info/'+p),
-                                UI.TipIcon(icon='/dl/pkgman/package-install.png', text='Install', id='install/'+p) if self._search[p].state == 'removed' else
-                                UI.TipIcon(icon='/dl/pkgman/package-remove.png', text='Remove', id='remove/'+p),
+                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p),
+                                UI.TipIcon(iconfont='gen-checkmark', text='Install', id='install/'+p) if self._search[p].state == 'removed' else
+                                UI.TipIcon(iconfont='gen-minus', text='Remove', id='remove/'+p),
                                 spacing=0
                             ),
                 )
@@ -158,14 +160,15 @@ class PackageManagerPlugin(CategoryPlugin):
 
         if self._current == 'pending':
             for p in sorted(self._status.pending.keys()):
+                stat = self._get_icon(p)
                 r = UI.DTR(
-                        UI.Image(file=self._get_icon(p)),
+                        UI.IconFont(iconfont=stat),
                         UI.Label(text=p),
                         UI.Label(),
                         UI.Label(),
                             UI.HContainer(
-                                UI.TipIcon(icon='/dl/core/ui/stock/info.png', text='Info', id='info/'+p),
-                                UI.TipIcon(icon='/dl/core/ui/stock/delete.png', text='Cancel', id='cancel/'+p),
+                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p),
+                                UI.TipIcon(iconfont='gen-cancel-circle', text='Cancel', id='cancel/'+p),
                                 spacing=0
                             ),
                     )
@@ -180,7 +183,7 @@ class PackageManagerPlugin(CategoryPlugin):
         ui = UI.LT(
                 UI.LTR(
                     UI.LTD(
-                        UI.Image(file='/dl/pkgman/icon.png'),
+                        UI.IconFont(iconfont='gen-cube'),
                         rowspan=6
                     ),
                     UI.Label(text='Package:', bold=True),
@@ -272,7 +275,7 @@ class PackageManagerPlugin(CategoryPlugin):
 class PackageManagerProgress(Plugin):
     implements(IProgressBoxProvider)
     title = 'Packages'
-    icon = '/dl/pkgman/icon.png'
+    iconfont = 'gen-cube'
     can_abort = True
 
     def __init__(self):

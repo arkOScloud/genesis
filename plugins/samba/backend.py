@@ -9,6 +9,7 @@ class SambaConfig(Plugin):
     implements(IConfigurable)
     name = 'Samba'
     id = 'samba'
+    iconfont = 'gen-upload-2'
     shares = {}
     general = {}
     users = {}

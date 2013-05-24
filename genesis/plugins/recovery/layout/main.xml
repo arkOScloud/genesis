@@ -1,7 +1,7 @@
 <xml>
     <toolbar>
-        <button id="btnBackup" icon="/dl/recovery/backup.png" />
-        <button id="backupall" icon="/dl/recovery/backup-all.png" text="Backup everything" />
+        <button id="btnBackup" iconfont="gen-folder-download" />
+        <button id="backupall" iconfont="gen-folder-download" text="Backup everything" />
     </toolbar>
     <pad>
         <hcontainer>

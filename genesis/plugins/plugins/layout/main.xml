@@ -1,12 +1,10 @@
 <xml>
-    <toolbar>
-        <hcontainer>
-            <button text="Update plugin list" id="update" icon="/dl/plugins/update-lists.png" />
-            <button text="Restart Genesis" id="restart" icon="/dl/core/ui/stock/refresh.png" />
-        </hcontainer>
-    </toolbar>
-
-    <label size="5" text="Installed" />
+    <div style="padding: 2px 0px;">
+        <div style="float:right;">
+            <button text="Update plugin list" id="update" iconfont="gen-loop-2" />
+        </div>
+        <label size="5" text="Installed Applications" />
+    </div>
 
     <pad id="main">
         <dt width="100%" id="list">
@@ -30,7 +28,7 @@
         </dt>
     </pad>
 
-    <label size="5" text="Available" />
+    <label size="5" text="Available Applications" />
 
     <pad>
         <dt width="100%" id="avail">
@@ -54,7 +52,7 @@
         </dt>
 
         <spacer height="5" />
-        <label size="1" text="If any required Python modules are missing, Genesis restart is required to rediscover them after being installed." />
+        <label size="1" text="If any required Python modules are missing, a Genesis restart is required to rediscover them after being installed." />
         <spacer height="10" />
         <label size="2" text="Upload plugin package" />
         <spacer height="5" />

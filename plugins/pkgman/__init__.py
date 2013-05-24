@@ -24,9 +24,10 @@ DEPS =  [
 ]
 
 NAME = 'Package Manager'
+ICON = 'gen-cube'
 PLATFORMS = ['debian', 'arch', 'arkos', 'freebsd', 'centos', 'fedora', 'gentoo']
 DESCRIPTION = 'Install, update and remove applications on your system'
-VERSION = '3'
+VERSION = '4'
 GENERATION = 1
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://ark-os.org'

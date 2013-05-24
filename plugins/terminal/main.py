@@ -27,7 +27,7 @@ TERM_H = 40
 
 class TerminalPlugin(CategoryPlugin, URLHandler):
     text = 'Terminal'
-    icon = '/dl/terminal/icon.png'
+    iconfont = 'gen-console'
     folder = 'advanced'
 
     def on_session_start(self):

@@ -9,7 +9,7 @@ from meters import DiskUsageMeter, CpuMeter
 class LoadWidget(Plugin):
     implements(apis.dashboard.IWidget)
     title = 'System load'
-    icon = '/dl/sysmon/widget.png'
+    iconfont = 'gen-meter'
     name = 'System load'
     style = 'linear'
 
@@ -35,7 +35,7 @@ class LoadWidget(Plugin):
 class RamWidget(Plugin):
     implements(apis.dashboard.IWidget)
     title = 'RAM'
-    icon = '/dl/sysmon/widget_mem.png'
+    iconfont = 'gen-database'
     name = 'Memory'
     style = 'normal'
 
@@ -60,7 +60,7 @@ class RamWidget(Plugin):
 class SwapWidget(Plugin):
     implements(apis.dashboard.IWidget)
     title = 'Swap'
-    icon = '/dl/sysmon/widget_swap.png'
+    iconfont = 'gen-storage'
     name = 'Swap'
     style = 'normal'
 
@@ -85,7 +85,7 @@ class SwapWidget(Plugin):
 class UptimeWidget(Plugin):
     implements(apis.dashboard.IWidget)
     title = 'Uptime'
-    icon = '/dl/core/ui/stock/server.png'
+    iconfont = 'gen-clock'
     name = 'Uptime'
     style = 'linear'
     
@@ -106,7 +106,7 @@ class UptimeWidget(Plugin):
 class DiskUsageWidget(Plugin):
     implements(apis.dashboard.IWidget)
     title = 'Disk Usage'
-    icon = '/dl/core/ui/stock/disk.png'
+    iconfont = 'gen-storage'
     name = 'Disk Usage'
     style = 'normal'
 
@@ -140,7 +140,7 @@ class DiskUsageWidget(Plugin):
 class CpuWidget(Plugin):
     implements(apis.dashboard.IWidget)
     title = 'CPU Usage'
-    icon = '/dl/core/ui/stock/cpu.png'
+    iconfont = 'gen-busy'
     name = 'CPU Usage'
     style = 'normal'
 
@@ -163,7 +163,7 @@ class CpuWidget(Plugin):
 
 class ServiceWidget(Plugin):
     implements(apis.dashboard.IWidget)
-    icon = '/dl/core/ui/stock/services.png'
+    iconfont = 'gen-atom'
     name = 'Service control'
     title = None
     style = 'linear'
@@ -175,7 +175,7 @@ class ServiceWidget(Plugin):
         mgr = self.app.get_backend(apis.services.IServiceManager)
         running = mgr.get_status(cfg) == 'running'
         self.title = cfg
-        self.icon = '/dl/core/ui/stock/service-' + ('run.png' if running else 'stop.png')
+        self.iconfont = 'gen-' + ('play-2' if running else 'stop')
 
         ui = self.app.inflate('sysmon:services-widget')
         if running:

@@ -8,9 +8,10 @@ DEPS =  [
 ]
 
 NAME = 'Task Monitor'
+ICON = 'gen-enter'
 PLATFORMS = ['any']
 DESCRIPTION = 'View and/or kill running processes'
-VERSION = '1'
+VERSION = '2'
 GENERATION = 1
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://ark-os.org'

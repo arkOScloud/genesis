@@ -1,40 +1,23 @@
 <xsl:template match="tabheader">
     <li class="ui-el-tab-header {x:iif(@active or (../@active = @id), 'active', '')}">
-        <xsl:if test="../@live = 'True' or @live = 'True'">
-            <xsl:attribute name="onclick">
-                <xsl:if test="@form">
-                    return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@id" />');
-                </xsl:if>
-                <xsl:if test="not(@form)">
-                    return Genesis.query('/handle/tab/click/<xsl:value-of select="@id" />');
-                </xsl:if>
-            </xsl:attribute>
-        </xsl:if>
-        <a href="#{@id}">
+        <a href="#{@id}" data-toggle="tab">
             <xsl:value-of select="@text" />
         </a>
     </li>
 </xsl:template>
 
 <xsl:template match="tabbody">
-    <div id="{@id}" class="{x:iif(@active or (../@active = @id), 'active', '')}">
+    <div id="{@id}" class="tab-pane {x:iif(@active or (../@active = @id), 'active', '')}">
         <xsl:apply-templates />
     </div>
 </xsl:template>
 
 <xsl:template match="tabcontrol">
-    <div>
-        <ul id="{@id}" class="tabs">
-            <xsl:apply-templates select="./tabheader" />
-        </ul>
-        <div class="tab-content">
-            <xsl:apply-templates select="./tabbody" />
-        </div>
-        <script>
-            <xsl:if test="not(@live)">
-                $('#<xsl:value-of select="@id"/>').pills();
-            </xsl:if>
-        </script>
+    <ul id="{@id}" class="tabs">
+        <xsl:apply-templates select="./tabheader" />
+    </ul>
+    <div class="tab-content">
+        <xsl:apply-templates select="./tabbody" />
     </div>
 </xsl:template>
 

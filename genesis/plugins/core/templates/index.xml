@@ -18,14 +18,44 @@
 
     <div id="topbar2">
         <div class="container">
-            <span id="topplaceholder-top"/>
-            <span id="topplaceholder-bottom"/>
-            <a class="ui-el-top-category" style="float:right" href="/logout">
-                <img src="/dl/core/ui/stock/dialog-cancel.png" class="ui-el-category-icon" />
-            </a>
-            <a class="ui-el-top-category ui-el-top-category-nohover" style="float:right" href="#" id="cat-username">
-                <img src="/dl/core/ui/stock/user.png" class="ui-el-category-icon" />
-            </a>
+            <div class="dropdown">
+                <span id="topplaceholder-top"/>
+                <span id="topplaceholder-bottom"/>
+                <popover id="power-pop" placement="bottom" styles="float:right;" class="ui-el-top-category gen-switch"></popover>
+                <div class="popover bottom">
+                  <div id="power-pop-content" class="popover-inner">
+                    <ul>
+                        <li><a class="danger top-link" onclick="Genesis.showWarning('Reload Genesis', 'gen_reload');"><i class="gen-arkos-round"></i> Reload</a></li>
+                        <li><a class="danger" onclick="Genesis.showWarning('Shutdown arkOS', 'gen_shutdown');"><i class="gen-switch"></i> Shutdown</a></li>
+                        <li><a class="danger bottom-link" onclick="Genesis.showWarning('Reboot arkOS', 'gen_reboot');"><i class="gen-loop-2"></i> Reboot</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <popover id="user-pop" placement="bottom" styles="float:right;" class="ui-el-top-category gen-user"></popover>
+                <div class="popover bottom">
+                  <div id="user-pop-content" class="popover-inner">
+                    <div class="popover-lead">
+                        <p>Logged in as:</p>
+                        <h3 id="cat-username"></h3>
+                    </div>
+                    <ul>
+                        <li><a class="default" onclick="return Genesis.selectCategory('usersplugin');"><i class="gen-users"></i> Settings</a></li>
+                        <li><a class="danger bottom-link" href="/logout"><i class="gen-close"></i> Logout</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <popover id="settings-pop" placement="bottom" styles="float:right;" class="ui-el-top-category gen-settings"></popover>
+                <div class="popover bottom">
+                  <div id="settings-pop-content" class="popover-inner">
+                    <ul>
+                        <li><a class="default top-link" onclick="return Genesis.selectCategory('configplugin');"><i class="gen-arkos-round"></i> Genesis Settings</a></li>
+                        <li><a class="default" onclick="return Genesis.selectCategory('networkplugin');"><i class="gen-network"></i> Network Settings</a></li>
+                        <li><a class="default" onclick="return Genesis.selectCategory('pluginmanager');"><i class="gen-box-add"></i> Applications</a></li>
+                        <li><a class="default bottom-link" onclick="return Genesis.selectCategory('recoveryplugin');"><i class="gen-history"></i> Recovery</a></li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -41,14 +71,14 @@
         <div class="container">
             <div id="version" />
             <div id="links">
-                <a href="http://bbs.ark-os.org/" id="feedback-link" target="_blank">Community</a>
+                <a href="http://bbs.ark-os.org/" id="feedback-link" target="_blank"><i class="gen-users"></i> Community</a>
             </div>
         </div>
     </div>
 
     <div class="fade modal" id="warningbox" style="display:none">
         <div class="modal-header">
-            <h3>Dangerous action</h3>
+            <h3><i class="gen-warning"></i> Warning!</h3>
         </div>
         <div class="modal-body">
             You are about to:

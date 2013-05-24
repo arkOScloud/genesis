@@ -3,9 +3,10 @@ MODULES = ['main', 'config']
 DEPS =  []
 
 NAME = 'File Manager'
+ICON = 'gen-files'
 PLATFORMS = ['any']
 DESCRIPTION = 'Simple remote file manager'
-VERSION = '1'
+VERSION = '2'
 GENERATION = 1
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://ark-os.org'

@@ -2,8 +2,8 @@
 
 <div class="ui-dashboard-banner">
     <div style="float:right">
-        <button id="btnAddWidget" text="Add widget" icon="/dl/core/ui/stock/add.png" />
-        <button text="Refresh" icon="/dl/core/ui/stock/refresh.png" />
+        <button id="btnAddWidget" text="Add widget" iconfont="gen-plus-circle" />
+        <button text="Refresh" iconfont="gen-loop-2" />
     </div>
     <img id="icon" />
     <span id="host" />
