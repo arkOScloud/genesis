@@ -203,6 +203,17 @@ Genesis = {
             }
         },
 
+        wipeOut: function (visible) {
+            if (visible) {
+                $('#whiteout').show().fadeTo(200, 1);
+                $('body').css('cursor', 'wait !important');
+            }
+            else {
+                $('#whiteout').stop().fadeTo(250, 0, function () { $(this).hide() });
+                $('body').css('cursor', '');
+            }
+        },
+
         toggleTreeNode: function (id) {
             $('*[id=\''+id+'\']').toggle();
             Genesis.query('/handle/treecontainer/click/'+id, null, true);

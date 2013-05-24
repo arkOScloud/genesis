@@ -1,19 +1,102 @@
-.auth-body, .auth-html {
-    width: 100%;
+.auth-page {
+  background-color: #1abc9c;
+  height: 100%;
+}
+
+.auth-ct {
+  padding: 200px 0;
+  margin: 0px auto;
+  width: 490px;
+}
+ 
+.login {
+  float: right;
+  background-color: #eceff1;
+  position: relative;
+  width: 310px;
+  border-radius: 6px;
+  padding: 24px 23px 10px;
+}
+
+.login .login-field {
+    border-color: transparent;
+    font-size: 17px;
+    padding-bottom: 11px;
+    padding-top: 11px;
+    text-indent: 3px;
+    width: 293px;
     height: 100%;
-    background: #fff;
 }
 
-.auth-body {
-    padding: 50px 0;
+.login .login-field:focus + .login-field-icon {
+    color: #1abc9c;
 }
 
-#auth-dialog {
-    margin: 0 !important;
-    width: 420px;
+.login .login-field-icon {
+    color: #bfc9ca;
+    font-size: 16px;
+    position: absolute;
+    -webkit-transition: 0.25s;
+    -moz-transition: 0.25s;
+    -o-transition: 0.25s;
+    transition: 0.25s;
+    -webkit-backface-visibility: hidden;
+}
 
-    form {
-        padding: 0;
-        margin: 0;
+.login-field-uicon {
+    right: 30px;
+    top: 30px;
+}
+
+.login-field-picon {
+    right: 28px;
+    top: 83px;
+}
+
+.login-icon {
+    float: left;
+    width: 96px; }
+    .login-icon > img {
+    display: block;
+    margin-bottom: 6px;
+    width: 100%; }
+    .login-icon > h4 {
+    text-align: center;
+    width: 100%;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 34px;
+    opacity: 0.95; }
+    .login-icon > h4 small {
+      color: inherit;
+      display: block;
+      font-size: inherit;
+      font-weight: 700; }
+
+
+.login:before {
+    content: "";
+    border-style: solid;
+    border-width: 12px 12px 12px 0;
+    border-color: transparent #eceff1 transparent transparent;
+    height: 0px;
+    position: absolute;
+    left: -12px;
+    top: 35px;
+    width: 0;
+    -webkit-transform: rotate(360deg); }
+
+.login-button {
+    background-color: #1abc9c;
+    line-height: 40px;
+    font-size: 16px;
+
+    &:hover {
+        background-color: #48C9B0;
     }
+}
+
+.disabled {
+    background-color: #BDC3C7;
 }
