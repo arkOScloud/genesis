@@ -12,15 +12,15 @@
 
 <body id="main">
 <div id="whiteout" style="display:none;opacity:0" />
-<img id="ajax-loader" src="/dl/core/ui/ajax.gif" style="display:none;opacity:0" />
 <div class="auth-page">
     <div class="auth-ct">
+      <p id="auth-error"><strong>Error: </strong>Login failed. Check username and password.</p>
       <div class="login-icon">
           <img src="/dl/core/ui/auth-logo.png" />
           <h4>Welcome to<small>Genesis</small></h4>
       </div>
       <div class="login">
-        <form id="form" action="/auth-redirect" method="POST">
+        <form id="form" method="POST">
             <p><input type="text" id="username" name="username" class="login-field" placeholder="Enter your username" /><i class="login-field-icon login-field-uicon gen-user"></i></p>
             <p><input type="password" id="password" name="password" class="login-field" placeholder="Enter your password" /><i class="login-field-icon login-field-picon gen-lock"></i></p>
             <a class="btn btn-block login-button" id="login" onclick="$('#form').submit();">Login</a>
@@ -39,6 +39,7 @@ $('#password').bind('keyup', function(event) {
 $('#form').submit(function (e) {
     e.preventDefault();
     $('#login').addClass('disabled');
+    $('#auth-error').css('display', 'none');
     Genesis.UI.wipeOut('visible'); 
     $.ajax({
         url: '/auth',
@@ -51,6 +52,11 @@ $('#form').submit(function (e) {
             $('#form').unbind('submit');
             $('#password').val('');
             $('#login').click();
+        },
+        error: function() {
+            Genesis.UI.wipeOut();
+            $('#login').removeClass('disabled');
+            $('#auth-error').css('display', 'block');
         }
     });
 });

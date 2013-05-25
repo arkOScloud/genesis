@@ -88,7 +88,7 @@ class AuthManager(object):
             syslog.syslog('login failed for user %s from %s' % (user, environ['REMOTE_ADDR']))
             time.sleep(4)
 
-            start_response('200 OK', [
+            start_response('403 Login Failed', [
                 ('Content-type','text/plain'),
                 ('X-Genesis-Auth', 'fail'),
             ])
