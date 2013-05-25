@@ -488,10 +488,19 @@ class RepositoryManager:
         :param  id:     Plugin id
         :type   id:     str
         """
+
         dir = self.config.get('genesis', 'plugins')
         shell('rm -r %s/%s' % (dir, id))
 
         if id in PluginLoader.list_plugins():
+            try:
+                pdata = PluginLoader.list_plugins()[id].deps
+                for thing in pdata:
+                    if 'app' in thing[0]:
+                        shell('systemctl stop ' + thing[2])
+                        shell('systemctl disable ' + thing[2])
+            except KeyError:
+                pass
             PluginLoader.unload(id)
 
         self.update_installed()
