@@ -185,6 +185,7 @@ Genesis = {
             $('.pop-trigger').each(function (i) {
                 if ( this.id != id ) {
                     $('#'+this.id).popover('hide');
+                    $('.popover').css('display', 'none');
                     $('#'+this.id).removeClass('selected');
                 }
             });
