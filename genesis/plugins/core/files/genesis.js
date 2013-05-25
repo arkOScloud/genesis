@@ -179,6 +179,7 @@ Genesis = {
         closePopovers: function () {
             $('.pop-trigger').popover('hide');
             $('.pop-trigger').removeClass('selected');
+            $('.popover').css('display', 'none');
         },
 
         closeOtherPopovers: function (id) {
