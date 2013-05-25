@@ -180,21 +180,21 @@ class SysUsersPlugin(CategoryPlugin):
                     self.backend.remove_from_group(self._selected_user, v)
             self._editing = ''
         if params[0].startswith('e'):
-            editing = params[0][1:]
             v = vars.getvalue('value', '')
-            if editing == 'password':
+            if params[0] == 'epassword':
                 self.backend.change_user_password(self._selected_user, v)
                 self.app.gconfig.set('users', self._selected_user, hashpw(v))
-            elif editing == 'login':
-                self.backend.change_user_param(self._selected_user, editing, v)
+            elif params[0] == 'elogin':
+                self.backend.change_user_param(self._selected_user, 'login', v)
                 pw = self.app.gconfig.get('users', self._selected_user, '')
                 self.app.gconfig.remove_option('users', self._selected_user)
                 self.app.gconfig.set('users', v, pw)
                 self._selected_user = v
-            elif editing in self.params:
-                self.backend.change_user_param(self._selected_user, editing, v)
-            elif editing in self.gparams:
-                self.backend.change_group_param(self._selected_group, editing, v)
+            elif params[0] in self.params:
+                self.backend.change_user_param(self._selected_user, params[0][:1], v)
+            elif params[0] in self.gparams:
+                self.backend.change_group_param(self._selected_group, params[0][:1], v)
+            self.app.gconfig.save()
             self._editing = None
         if params[0] == 'dlgEditUser':
             self._selected_user = ''
