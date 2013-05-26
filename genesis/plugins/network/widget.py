@@ -42,7 +42,7 @@ class NetworkWidget(Plugin):
     
     def get_config_dialog(self):
         be = self.app.get_backend(INetworkConfig)
-        dlg = self.app.inflate('network-arch:widget-config')
+        dlg = self.app.inflate('network:widget-config')
         for i in be.interfaces:
             dlg.append('list', UI.Radio(
                 value=i,
