@@ -39,7 +39,7 @@ class FirstRun(CategoryPlugin, URLHandler):
                 row = self.app.inflate('firstrun:item')
                 row.find('name').set('text', k.name)
                 row.find('desc').set('text', k.description)
-                row.find('icon').set('file', k.icon)
+                row.find('icon').set('class', k.icon)
                 row.find('version').set('text', k.version)
                 row.find('author').set('text', k.author)
                 row.find('author').set('url', k.homepage)

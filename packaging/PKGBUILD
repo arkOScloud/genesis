@@ -15,7 +15,7 @@ optdepends=('python2-psutil: Task Manager plugin'
 provides=('genesis')
 conflicts=('genesis-git')
 source=("$pkgname-$pkgver.tar.gz"::"http://uspx.ark-os.org/$pkgname-$pkgver.tar.gz")
-md5sums=('aec57d3043e000b4b49958374952fd75')
+md5sums=('a23004008838c2c266cd75076e28f63f')
 backup=('etc/genesis/genesis.conf' 'etc/genesis/users/admin.conf')
 
 build() {

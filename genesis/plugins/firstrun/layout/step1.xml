@@ -3,5 +3,7 @@
     <pad>
     <label size="1" text="This wizard will walk you through the steps needed to set up your new arkOS node. This process may take a few minutes as the different settings are modified by the system. Please do not turn off or restart your arkOS node until you have successfully completed this wizard." />
     <label size="1" text="When you are ready, click OK to begin." />
+    <formbox hidecancel="True" id="splash">
+    </formbox>
     </pad>
 </xml>

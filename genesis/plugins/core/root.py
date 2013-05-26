@@ -6,7 +6,7 @@ from genesis.com import *
 from genesis import version
 from genesis.api import ICategoryProvider, EventProcessor, SessionPlugin, event, URLHandler, url, get_environment_vars
 from genesis.ui import BasicTemplate
-from genesis.utils import ConfigurationError
+from genesis.utils import ConfigurationError, shell
 from api import IProgressBoxProvider
 
 

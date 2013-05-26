@@ -3,7 +3,7 @@
             <checkbox id="check" />
         </dtd>
         <dtd>
-            <image id="icon" />
+            <i id="icon" />
         </dtd>
         <dtd id="reqs">
             <label id="name" />
