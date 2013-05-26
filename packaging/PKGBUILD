@@ -1,7 +1,7 @@
 # Maintainer: Jacob Cook <jacob at jcook dot cc>
 
 pkgname=genesis
-pkgver=0.1.1
+pkgver=0.2
 pkgrel=1
 pkgdesc="Easy, modular server management app"
 
@@ -15,7 +15,7 @@ optdepends=('python2-psutil: Task Manager plugin'
 provides=('genesis')
 conflicts=('genesis-git')
 source=("$pkgname-$pkgver.tar.gz"::"http://uspx.ark-os.org/$pkgname-$pkgver.tar.gz")
-md5sums=('44446f46acd114ee2122fc2acb5bd03b')
+md5sums=('aec57d3043e000b4b49958374952fd75')
 backup=('etc/genesis/genesis.conf' 'etc/genesis/users/admin.conf')
 
 build() {

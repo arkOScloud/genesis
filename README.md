@@ -8,7 +8,7 @@ For end-users: Genesis is already downloaded and installed on your arkOS node, r
 
 For more information see the [Getting Started](http://ark-os.org/doc/getting-started/) page.
 
-Running Genesis from this Github repo is advised ONLY for development purposes. See "Running outside of arkOS" below as well.
+Running Genesis from this Github repo is advised ONLY for development purposes.
 
 
 ## Writing Plugins
@@ -20,14 +20,6 @@ For information on developing plugins for use with Genesis, see the development 
 * [API Reference](http://ark-os.org/dev/genesis/api) - The big book of all classes and functions
 
 Once you have a plugin, feel free to let @jacook know and testing can be arranged. If the plugin works well and contributes to arkOS' mission, it may then be included in the central plugin repository.
-
-
-## Running outside of arkOS
-Genesis can be run on non-arkOS distributions, but there are a few caveats to be aware of.
-
-* The "first run" wizard should not activate if you run from the Github repo, as it is configured for an anonymous test user. Even so, if for some reason you see the "first run" wizard, do NOT enable the "Expand disk image" feature, as you may suffer data loss as a result.
-* The Network plugin is configured for use with arkOS or Arch Linux platforms that use `netctl` for handling network connections. This plugin will crash on other platforms.
-* All development is happening with arkOS in mind first. If support for certain plugins/core features is to be expanded to other platforms, that will occur after the fact, and packages may be made available for those platforms at that time.
 
 
 ## Acknowledgments

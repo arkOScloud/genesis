@@ -349,6 +349,8 @@ class PluginLoader:
                         shell('pacman -S --noconfirm '+dep[2])
                     except:
                         raise SoftwareRequirementError(*dep[1:])
+                    else:
+                        shell('systemctl enable '+dep[2])
                 if platform == 'debian':
                     try:
                         shell('apt-get -y --force-yes install '+dep[2])
