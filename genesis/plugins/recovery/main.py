@@ -85,10 +85,6 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
         f = open(filename, 'rb')
         size = path.getsize(filename)
 
-        fw = open('/home/jacob/test', 'r+')
-        fw.write("Test")
-        fw.close()
-
         start_response('200 OK', [
             ('Content-type', 'application/gzip'),
             ('Content-length', str(size)),
