@@ -1,0 +1,43 @@
+<xml>
+    <toolbar>
+        <button id="add" text="Add public key" iconfont="gen-plus-circle" />
+    </toolbar>
+
+    <label text="Public Keys" size="5" />
+
+    <pad>
+        <dt id="list" width="100%">
+            <dtr header="True">
+                <dth>
+                    <label text="Type" />
+                </dth>
+                <dth>
+                    <label text="Name" />
+                </dth>
+                <dth width="1" />
+            </dtr>
+        </dt>
+    </pad>
+
+    <label text="SSH Options" size="5" />
+
+    <pad>
+        <formbox hidecancel="True" id="frmSSH">
+            <formline text="Permit Root Login">
+                <checkbox id='root' name='root' />
+            </formline>
+            <formline text="Allow Public Keys">
+                <checkbox id='pkey' name='pkey' /> 
+            </formline>
+            <formline text="Allow Passwords">
+                <checkbox id='passwd' name='passwd' /> 
+            </formline>
+            <formline text="Allow Empty Passwords">
+                <checkbox id='epasswd' name='epasswd' /> 
+            </formline>
+        </formbox>
+    </pad>
+
+    <inputbox id="dlgEdit" extra="area" text="Paste key here" />
+
+</xml>
