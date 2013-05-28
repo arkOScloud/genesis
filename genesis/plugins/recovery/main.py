@@ -2,9 +2,10 @@ from genesis.api import *
 from genesis.ui import *
 
 from api import Manager
+from os import path
 
 
-class RecoveryPlugin(CategoryPlugin):
+class RecoveryPlugin(CategoryPlugin, URLHandler):
     text = 'Recovery'
     iconfont = 'gen-history'
     folder = None
@@ -51,6 +52,12 @@ class RecoveryPlugin(CategoryPlugin):
                                     )
                             ),
                             UI.TipIcon(
+                                text='Download',
+                                iconfont="gen-download",
+                                onclick="window.open('/recovery/%s/%s', '_blank')" % (self._current,rev.revision),
+                                id='download'
+                            ),
+                            UI.TipIcon(
                                 text='Drop',
                                 iconfont='gen-folder-minus',
                                 id='drop/%s/%s'%(self._current,rev.revision),
@@ -70,6 +77,24 @@ class RecoveryPlugin(CategoryPlugin):
         ui.find('btnBackup').set('text', 'Backup %s'%self._current_name)
         ui.find('btnBackup').set('id', 'backup/%s'%self._current)
         return ui
+
+    @url('^/recovery/.*$')
+    def get_backup(self, req, start_response):
+        params = req['PATH_INFO'].split('/')[1:] + ['']
+        filename = '/var/backups/genesis/' + params[1] + '/' + params[2] + '.tar.gz'
+        f = open(filename, 'rb')
+        size = path.getsize(filename)
+
+        fw = open('/home/jacob/test', 'r+')
+        fw.write("Test")
+        fw.close()
+
+        start_response('200 OK', [
+            ('Content-type', 'application/gzip'),
+            ('Content-length', str(size)),
+            ('Content-Disposition', 'attachment; filename=' + params[1] + '-' + params[2] + '.tar.gz')
+        ])
+        return f.read()
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
