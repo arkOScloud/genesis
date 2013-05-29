@@ -2,6 +2,7 @@
     <toolbar>
         <button id="btnBackup" iconfont="gen-folder-download" />
         <button id="backupall" iconfont="gen-folder-download" text="Backup everything" />
+        <button id="downloadall" iconfont="gen-download" text="Download all backups" onclick="window.open('/recovery/all', '_blank')" />
     </toolbar>
     <pad>
         <hcontainer>

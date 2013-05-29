@@ -1,5 +1,6 @@
 from genesis.api import *
 from genesis.ui import *
+from genesis.utils import shell
 
 from api import Manager
 from os import path
@@ -54,7 +55,7 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
                             UI.TipIcon(
                                 text='Download',
                                 iconfont="gen-download",
-                                onclick="window.open('/recovery/%s/%s', '_blank')" % (self._current,rev.revision),
+                                onclick="window.open('/recovery/single/%s/%s', '_blank')" % (self._current,rev.revision),
                                 id='download'
                             ),
                             UI.TipIcon(
@@ -78,7 +79,7 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
         ui.find('btnBackup').set('id', 'backup/%s'%self._current)
         return ui
 
-    @url('^/recovery/.*$')
+    @url('^/recovery/single/.*$')
     def get_backup(self, req, start_response):
         params = req['PATH_INFO'].split('/')[1:] + ['']
         filename = '/var/backups/genesis/' + params[1] + '/' + params[2] + '.tar.gz'
@@ -91,6 +92,24 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
             ('Content-Disposition', 'attachment; filename=' + params[1] + '-' + params[2] + '.tar.gz')
         ])
         return f.read()
+
+    @url('^/recovery/all$')
+    def get_backups(self, req, start_response):
+        params = req['PATH_INFO'].split('/')[1:] + ['']
+        tempfile = '/tmp/backup-all.tar.gz'
+        shell('tar czf ' + tempfile + ' -C /var/backups/ genesis')
+        size = path.getsize(tempfile)
+        f = open(tempfile, 'rb')
+        arch = f.read()
+        f.close()
+        shell('rm ' + tempfile)
+
+        start_response('200 OK', [
+            ('Content-type', 'application/gzip'),
+            ('Content-length', str(size)),
+            ('Content-Disposition', 'attachment; filename=backup-all.tar.gz')
+        ])
+        return arch
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
