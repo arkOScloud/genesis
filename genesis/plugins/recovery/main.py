@@ -2,8 +2,10 @@ from genesis.api import *
 from genesis.ui import *
 from genesis.utils import shell
 
-from api import Manager
 from os import path
+from tempfile import mkdtemp
+
+from api import Manager
 
 
 class RecoveryPlugin(CategoryPlugin, URLHandler):
@@ -81,28 +83,29 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
 
     @url('^/recovery/single/.*$')
     def get_backup(self, req, start_response):
-        params = req['PATH_INFO'].split('/')[1:] + ['']
-        filename = '/var/backups/genesis/' + params[1] + '/' + params[2] + '.tar.gz'
+        params = req['PATH_INFO'].split('/')[3:] + ['']
+        filename = '/var/backups/genesis/' + params[0] + '/' + params[1] + '.tar.gz'
         f = open(filename, 'rb')
         size = path.getsize(filename)
 
         start_response('200 OK', [
             ('Content-type', 'application/gzip'),
             ('Content-length', str(size)),
-            ('Content-Disposition', 'attachment; filename=' + params[1] + '-' + params[2] + '.tar.gz')
+            ('Content-Disposition', 'attachment; filename=' + params[0] + '-' + params[1] + '.tar.gz')
         ])
         return f.read()
 
     @url('^/recovery/all$')
     def get_backups(self, req, start_response):
-        params = req['PATH_INFO'].split('/')[1:] + ['']
-        tempfile = '/tmp/backup-all.tar.gz'
+        dir = tempfile.mkdtemp()
+        tempfile = path.join(dir, 'backup-all.tar.gz')
         shell('tar czf ' + tempfile + ' -C /var/backups/ genesis')
         size = path.getsize(tempfile)
+
         f = open(tempfile, 'rb')
         arch = f.read()
         f.close()
-        shell('rm ' + tempfile)
+        shell('rm -r ' + dir)
 
         start_response('200 OK', [
             ('Content-type', 'application/gzip'),
@@ -110,6 +113,49 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
             ('Content-Disposition', 'attachment; filename=backup-all.tar.gz')
         ])
         return arch
+
+    @url('^/recovery/upload$')
+    def upload(self, req, start_response):
+        vars = get_environment_vars(req)
+        dir = '/var/backups/genesis/'
+
+        # Get the backup then read its metadata
+        f = vars.getvalue('file', None)
+        tempdir = tempfile.mkdtemp()
+        tempfile = path.join(tempdir, 'backup.tar.gz')
+        open(tempfile, 'w').write(f)
+
+        shell('tar xzf ' + tempfile + '-C ' + tempdir)
+        initfile = path.join(tempdir, '.backup')
+        bfile = open(initfile, 'r')
+        data = bfile.readlines()
+
+        for line in data:
+            line = line.split('=')
+            if 'CONFIG' in line[0]:
+                config = line[1]
+            elif 'DATE' in line[0]:
+                date = line[1]
+            elif 'VERSION' in line[0]:
+                version = line[1]
+
+        # Make sure the appropriate plugin is installed
+        if not path.exists('/var/backups/genesis/' + config):
+            self.put_message('err', 'Failed to restore - no corresponding plugin installed')
+            shell('rm -r ' + tempdir)
+
+        # Name the file and do some work
+        priors = listdir('/var/backups/genesis/' + config)
+        thinglist = []
+        for thing in priors.split('.'):
+            thinglist.append(thing[0])
+        newver = max(int(thinglist)) + 1
+
+        shell('cp %s %s' % (tempfile, '/var/backups/genesis/' + config + '/' + newver + '.tar.gz'))
+        shell('rm -r ' + tempdir)
+
+        self.put_message('info', 'Upload successful.')
+        return ''
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
