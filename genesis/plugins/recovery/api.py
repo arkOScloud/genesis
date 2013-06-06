@@ -101,7 +101,7 @@ class Manager(Plugin):
         for f in provider.list_files():
             for x in glob.glob(f):
                 os.unlink(x)
-        if shell_status('cd %s; tar xf backup.tar.gz -C / --exclude .backup'%dir) != 0:
+        if shell_status('cd %s; tar xf backup.tar.gz -C / --exclude genesis-backup'%dir) != 0:
             raise Exception()
         os.unlink('%s/backup.tar.gz'%dir)
         shutil.rmtree(dir)
