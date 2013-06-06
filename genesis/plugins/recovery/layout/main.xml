@@ -2,7 +2,8 @@
     <toolbar>
         <button id="btnBackup" iconfont="gen-folder-download" />
         <button id="backupall" iconfont="gen-folder-download" text="Backup everything" />
-        <button id="downloadall" iconfont="gen-download" text="Download all backups" onclick="window.open('/recovery/all', '_blank')" />
+        <button id="upload" iconfont="gen-upload" text="Upload Backup" design="default pull-right" />
+        <button id="downloadall" iconfont="gen-download" text="Download All" design="default pull-right" onclick="window.open('/recovery/all', '_blank')" />
     </toolbar>
     <pad>
         <hcontainer>
@@ -22,4 +23,6 @@
             </scrollcontainer>
         </hcontainer>
     </pad>
+
+    <uploadbox id="dlgUpload" url="/recovery/upload" />
 </xml>

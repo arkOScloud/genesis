@@ -88,3 +88,31 @@
     </script>
 </div>
 </xsl:template>
+
+<xsl:template match="uploadbox">
+<div>
+    <div id="{@id}" class="modal fade">
+        <form id="{@id}-form" action="{@url}" method="POST" enctype="multipart/form-data" style="margin-bottom: 0px;">
+            <input id="{@id}-url" type="hidden" name="__url" value="{@url}"/>
+            <div class="modal-body">
+                <input type="file" name="file"/>
+            </div>
+
+            <div class="modal-footer">
+                <xsl:if test="not(@hideok = 'True')">
+                    <input type="submit" class="ui-el-button btn primary" value="{x:attr(@text, 'Upload')}" style="padding: 5px 10px;" />
+                </xsl:if>
+                <xsl:if test="not(@hidecancel = 'True')">
+                    <button text="Cancel" onclick="form" action="Cancel" form="{@id}-form"/>
+                </xsl:if>
+                <xsl:if test="@miscbtn">
+                    <button text="{@miscbtn}" id="{@miscbtnid}"/>
+                </xsl:if>
+            </div>
+        </form>
+    </div>
+    <script>
+        Genesis.UI.showAsModal('<xsl:value-of select="@id"/>');
+    </script>
+</div>
+</xsl:template>

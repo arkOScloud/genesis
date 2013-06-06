@@ -8,6 +8,9 @@ from genesis.com import *
 from genesis.api import *
 from genesis.utils import shell, shell_status
 
+from tempfile import mkdtemp
+from os import path, listdir
+
 
 class BackupRevision:
     def __init__(self, rev, date):
@@ -70,6 +73,10 @@ class Manager(Plugin):
                     shell('mkdir -p \'%s\'' % xdir)
                     shell('cp -r \'%s\' \'%s\'' % (x, xdir))
 
+            metafile = open(dir + '/genesis-backup', 'w')
+            metafile.write(provider.id)
+            metafile.close()
+
             if shell_status('cd %s; tar czf backup.tar.gz *'%dir) != 0:
                 raise Exception()
             
@@ -94,10 +101,42 @@ class Manager(Plugin):
         for f in provider.list_files():
             for x in glob.glob(f):
                 os.unlink(x)
-        if shell_status('cd %s; tar xf backup.tar.gz -C /'%dir) != 0:
+        if shell_status('cd %s; tar xf backup.tar.gz -C / --exclude .backup'%dir) != 0:
             raise Exception()
         os.unlink('%s/backup.tar.gz'%dir)
         shutil.rmtree(dir)
+
+    def upload(self, file):
+        dir = '/var/backups/genesis/'
+
+        # Get the backup then read its metadata
+        tempdir = mkdtemp()
+        temparch = path.join(tempdir, 'backup.tar.gz')
+        open(temparch, 'wb').write(file)
+
+        shell('tar xzf ' + temparch + ' -C ' + tempdir)
+        bfile = open(path.join(tempdir, 'genesis-backup'), 'r')
+        name = bfile.readline()
+        bfile.close()
+
+        # Make sure the appropriate plugin is installed
+        if not path.exists(dir + name):
+            shell('rm -r ' + tempdir)
+            raise Exception()
+
+        # Name the file and do some work
+        priors = listdir(dir + name)
+        testfile = open('/home/jacob/test', 'r+')
+        testfile.write(str(priors))
+        testfile.close()
+        thinglist = []
+        for thing in priors:
+            thing = thing.split('.')
+            thinglist.append(thing[0])
+        newver = int(max(thinglist)) + 1
+
+        shell('cp %s %s' % (temparch, dir + name + '/' + str(newver) + '.tar.gz'))
+        shell('rm -r ' + tempdir)
 
 class RecoveryHook (ConfMgrHook):
     def finished(self, cfg):

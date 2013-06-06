@@ -2,11 +2,8 @@ from genesis.api import *
 from genesis.ui import *
 from genesis.utils import shell
 
-from os import path
-from tempfile import mkdtemp
-
 from api import Manager
-
+from os import path
 
 class RecoveryPlugin(CategoryPlugin, URLHandler):
     text = 'Recovery'
@@ -20,6 +17,9 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
         if not self._current:
             self._current = self.providers[0].id
             self._current_name = self.providers[0].name
+
+    def on_session_start(self):
+        self._uploader = None
 
     def get_ui(self):
         ui = self.app.inflate('recovery:main')
@@ -79,6 +79,12 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
 
         ui.find('btnBackup').set('text', 'Backup %s'%self._current_name)
         ui.find('btnBackup').set('id', 'backup/%s'%self._current)
+
+        if self._uploader:
+            pass
+        else:
+            ui.remove('dlgUpload')
+
         return ui
 
     @url('^/recovery/single/.*$')
@@ -97,12 +103,12 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
 
     @url('^/recovery/all$')
     def get_backups(self, req, start_response):
-        dir = tempfile.mkdtemp()
-        tempfile = path.join(dir, 'backup-all.tar.gz')
-        shell('tar czf ' + tempfile + ' -C /var/backups/ genesis')
-        size = path.getsize(tempfile)
+        dir = mkdtemp()
+        temparch = path.join(dir, 'backup-all.tar.gz')
+        shell('tar czf ' + temparch + ' -C /var/backups/ genesis')
+        size = path.getsize(temparch)
 
-        f = open(tempfile, 'rb')
+        f = open(temparch, 'rb')
         arch = f.read()
         f.close()
         shell('rm -r ' + dir)
@@ -115,46 +121,17 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
         return arch
 
     @url('^/recovery/upload$')
-    def upload(self, req, start_response):
+    def send_upload(self, req, start_response):
+        self.manager = Manager(self.app)
         vars = get_environment_vars(req)
-        dir = '/var/backups/genesis/'
-
-        # Get the backup then read its metadata
         f = vars.getvalue('file', None)
-        tempdir = tempfile.mkdtemp()
-        tempfile = path.join(tempdir, 'backup.tar.gz')
-        open(tempfile, 'w').write(f)
-
-        shell('tar xzf ' + tempfile + '-C ' + tempdir)
-        initfile = path.join(tempdir, '.backup')
-        bfile = open(initfile, 'r')
-        data = bfile.readlines()
-
-        for line in data:
-            line = line.split('=')
-            if 'CONFIG' in line[0]:
-                config = line[1]
-            elif 'DATE' in line[0]:
-                date = line[1]
-            elif 'VERSION' in line[0]:
-                version = line[1]
-
-        # Make sure the appropriate plugin is installed
-        if not path.exists('/var/backups/genesis/' + config):
-            self.put_message('err', 'Failed to restore - no corresponding plugin installed')
-            shell('rm -r ' + tempdir)
-
-        # Name the file and do some work
-        priors = listdir('/var/backups/genesis/' + config)
-        thinglist = []
-        for thing in priors.split('.'):
-            thinglist.append(thing[0])
-        newver = max(int(thinglist)) + 1
-
-        shell('cp %s %s' % (tempfile, '/var/backups/genesis/' + config + '/' + newver + '.tar.gz'))
-        shell('rm -r ' + tempdir)
-
-        self.put_message('info', 'Upload successful.')
+        try:
+            self.manager.upload(f)
+            self.put_message('info', 'Upload successful.')
+        except:
+            self.put_message('err', 'Failed to upload. Make sure the plugin is installed.')
+        self._uploader = None
+        start_response('200 OK', [('Refresh', '0; URL=/')])
         return ''
 
     @event('button/click')
@@ -185,6 +162,8 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
                 self.put_message('info', 'Deleted backup rev %s for %s.' % (params[2], params[1]))
             except:
                 self.put_message('err', 'Failed to delete backup rev %s for %s.' % (params[2], params[1]))
+        if params[0] == 'upload':
+            self._uploader = True
 
     @event('listitem/click')
     def on_list_click(self, event, params, vars=None):
