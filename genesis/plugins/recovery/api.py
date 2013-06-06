@@ -126,9 +126,6 @@ class Manager(Plugin):
 
         # Name the file and do some work
         priors = listdir(dir + name)
-        testfile = open('/home/jacob/test', 'r+')
-        testfile.write(str(priors))
-        testfile.close()
         thinglist = []
         for thing in priors:
             thing = thing.split('.')
