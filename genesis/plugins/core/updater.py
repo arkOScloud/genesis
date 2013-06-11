@@ -17,7 +17,7 @@ class Updater (Component):
 
     def run(self):
         rm = RepositoryManager(self.app.config)
-        feed_url = feedparser.parse('http://ark-os.org/feed')
+        feed_url = feedparser.parse('http://arkos.io/feed')
 
         while True:
             try:

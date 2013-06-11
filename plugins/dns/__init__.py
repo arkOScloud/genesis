@@ -8,5 +8,5 @@ PLATFORMS = ['any']
 DESCRIPTION = 'Edit nameserver options'
 VERSION = '3'
 GENERATION = 1
-AUTHOR = 'Genesis team'
-HOMEPAGE = 'http://genesis.org'
+AUTHOR = 'arkOS'
+HOMEPAGE = 'http://arkos.io'

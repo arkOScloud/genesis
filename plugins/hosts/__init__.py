@@ -13,4 +13,4 @@ DESCRIPTION = 'Manually edit host records'
 VERSION = '6'
 GENERATION = 1
 AUTHOR = 'arkOS'
-HOMEPAGE = 'http://ark-os.org'
+HOMEPAGE = 'http://arkos.io'

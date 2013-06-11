@@ -15,4 +15,4 @@ DESCRIPTION = 'Add, remove and manage Samba (SMB/CIFS) shares'
 VERSION = '4'
 GENERATION = 1
 AUTHOR = 'arkOS'
-HOMEPAGE = 'http://ark-os.org'
+HOMEPAGE = 'http://arkos.io'

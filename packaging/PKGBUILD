@@ -1,4 +1,4 @@
-# Maintainer: Jacob Cook <jacob at jcook dot cc>
+# Maintainer: Jacob Cook <jacob at citizenweb dot is>
 
 pkgname=genesis
 pkgver=0.2
@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="Easy, modular server management app"
 
 arch=('any')
-url="http://ark-os.org/genesis"
+url="http://arkos.io/genesis"
 license=('GPLv3')
 depends=('python2' 'python2-lxml' 'python2-passlib' 'python2-pyopenssl' 'python2-feedparser' 'python2-gevent')
 makedepends=('python2' 'python2-distribute' 'python2-passlib')
@@ -14,7 +14,7 @@ optdepends=('python2-psutil: Task Manager plugin'
             'python2-beautifulsoup3: Munin plugin')
 provides=('genesis')
 conflicts=('genesis-git')
-source=("$pkgname-$pkgver.tar.gz"::"http://uspx.ark-os.org/$pkgname-$pkgver.tar.gz")
+source=("$pkgname-$pkgver.tar.gz"::"http://pkg.arkos.io/$pkgname-$pkgver.tar.gz")
 md5sums=('06dc2bdcb40a14f0a68bcac8f5071232')
 backup=('etc/genesis/genesis.conf' 'etc/genesis/users/admin.conf')
 

@@ -9,4 +9,4 @@ DESCRIPTION = 'Edit file system record'
 VERSION = '1'
 GENERATION = 1
 AUTHOR = 'arkOS'
-HOMEPAGE = 'http://ark-os.org'
+HOMEPAGE = 'http://arkos.io'

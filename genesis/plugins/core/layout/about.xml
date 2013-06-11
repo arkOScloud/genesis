@@ -12,9 +12,9 @@
         </div>
         <div style="clear:both" />
         <br/>
-        <button text="Home" onclick="window.open('http://ark-os.org')" iconfont="gen-home" />
-        <button text="Changelog" onclick="window.open('https://ark-os.org/dev/changelogs/#genesis')" iconfont="gen-list" />
+        <button text="Home" onclick="window.open('http://arkos.io')" iconfont="gen-home" />
+        <button text="Changelog" onclick="window.open('https://arkos.io/dev/changelogs/#genesis')" iconfont="gen-list" />
         <button text="Bugtracker" onclick="window.open('https://github.com/cznweb/genesis/issues')" iconfont="gen-bug" />
-        <button text="Support" onclick="window.open('http://bbs.ark-os.org')" iconfont="gen-support" />
+        <button text="Support" onclick="window.open('http://bbs.arkos.io')" iconfont="gen-support" />
     </dialogbox>
 </xml>

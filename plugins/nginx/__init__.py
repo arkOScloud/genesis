@@ -14,4 +14,4 @@ DESCRIPTION = 'Controls the nginx webserver'
 VERSION = '4'
 GENERATION = 1
 AUTHOR = 'arkOS'
-HOMEPAGE = 'http://ark-os.org'
+HOMEPAGE = 'http://arkos.io'

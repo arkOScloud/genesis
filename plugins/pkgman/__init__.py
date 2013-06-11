@@ -30,4 +30,4 @@ DESCRIPTION = 'Install, update and remove applications on your system'
 VERSION = '4'
 GENERATION = 1
 AUTHOR = 'arkOS'
-HOMEPAGE = 'http://ark-os.org'
+HOMEPAGE = 'http://arkos.io'
