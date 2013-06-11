@@ -1,5 +1,4 @@
 *.pyc
-genesis.conf
 users/*.conf
 dist/*
 genesis.egg-info/*
