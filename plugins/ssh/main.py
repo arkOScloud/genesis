@@ -1,13 +1,15 @@
 from genesis.ui import *
 from genesis.api import *
+from genesis import apis
 
 import backend
 
 
-class SSHPlugin(CategoryPlugin):
+class SSHPlugin(apis.services.ServiceControlPlugin):
     text = 'SSH'
     iconfont = 'gen-console'
     folder = 'advanced'
+    service_name = 'sshd'
 
     def on_init(self):
         ss = backend.SSHConfig(self.app)
@@ -18,7 +20,7 @@ class SSHPlugin(CategoryPlugin):
     def on_session_start(self):
         self._editing = None
 
-    def get_ui(self):
+    def get_main_ui(self):
         ui = self.app.inflate('ssh:main')
         t = ui.find('list')
 

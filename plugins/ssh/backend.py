@@ -96,7 +96,7 @@ class PKeysConfig(Plugin):
             if not path.exists('/home/' + user + '/.ssh'):
                 makedirs('/home/' + user + '/.ssh')
             if not path.exists('/home/' + user + '/.ssh/authorized_keys'):
-                f = open('authorized_keys', 'w')
+                f = open('/home/' + user + '/.ssh/authorized_keys', 'w')
                 f.write('')
                 f.close()
 
