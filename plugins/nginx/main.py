@@ -17,7 +17,8 @@ class NginxBackend(Plugin):
     def __init__(self):
         self.config_dir = self.app.get_config(self).cfg_dir
         if not os.path.exists(self.config_dir):
-            raise ConfigurationError('Config directory does not exist') 
+            os.makedirs(os.path.join(self.config_dir, 'sites-available'))
+            os.makedirs(os.path.join(self.config_dir, 'sites-enabled'))
 
     def list_files(self):
         return [self.config_dir+'/*',self.config_dir+'/*/*']

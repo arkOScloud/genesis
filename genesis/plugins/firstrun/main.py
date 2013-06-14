@@ -17,6 +17,8 @@ class FirstRun(CategoryPlugin, URLHandler):
         self._step = 1
         self._tree = TreeManager()
         self._reboot = True
+        self._username = ''
+        self._password = ''
 
     def get_ui(self):
         ui = self.app.inflate('firstrun:main')
@@ -67,26 +69,19 @@ class FirstRun(CategoryPlugin, URLHandler):
         if params[0] == 'splash':
             self._step = 2
         if params[0] == 'frmChangePassword':
-            username = vars.getvalue('login', '')
-            password = vars.getvalue('password', '')
-            if username == '' or password == '':
+            self._username = vars.getvalue('login', '')
+            self._password = vars.getvalue('password', '')
+            if self._username == '' or self._password == '':
                 self.put_message('err', 'Enter valid login and password')
             else:
                 # add Unix user
                 self.backend = UsersBackend(self.app)
                 users = self.backend.get_all_users()
                 for u in users:
-                    if u.login == username:
+                    if u.login == self._username:
                         self.put_message('err', 'Duplicate name, please choose another')
                         self._editing = ''
                         return
-                self.backend.add_user(username)
-                self.backend.change_user_password(username, password)
-
-                # add user to Genesis config
-                self.app.gconfig.remove_option('users', 'admin')
-                self.app.gconfig.set('users', username, hashpw(password))
-                self.app.gconfig.save()
                 self._step = 3
         if params[0] == 'frmSettings':
             hostname = vars.getvalue('hostname', '')
@@ -124,4 +119,14 @@ class FirstRun(CategoryPlugin, URLHandler):
             self.app.gconfig.set('genesis', 'firstrun', 'no')
             self.app.gconfig.save()
             self.put_message('info', 'Setup complete!')
+
+            # add Unix user
+            self.backend = UsersBackend(self.app)
+            self.backend.add_user(self._username)
+            self.backend.change_user_password(self._username, self._password)
+
+            # add user to Genesis config
+            self.app.gconfig.remove_option('users', 'admin')
+            self.app.gconfig.set('users', self._username, hashpw(self._password))
+            self.app.gconfig.save()
             self._step = 5
