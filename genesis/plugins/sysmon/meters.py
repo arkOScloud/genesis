@@ -2,7 +2,7 @@ import os
 import re
 
 from genesis.api import *
-from genesis.utils import shell
+from genesis.utils import shell, detect_platform
 from genesis import apis
 
 
@@ -57,9 +57,13 @@ class DiskUsageMeter(LinearMeter):
     category = 'System'
     transform = 'percent'
 
+    _platform = detect_platform()
     _partstatformat = re.compile('(/dev/)?(?P<dev>\w+)\s+\d+\s+\d+\s+\d+\s+' +
                                        '(?P<usage>\d+)%\s+(?P<mountpoint>\S+)$')
-    _totalformat = re.compile('(?P<dev>total)\s+\d+\s+\d+\s+\d+\s+(?P<usage>\d+)%$')
+    if 'arkos' in _platform or 'arch' in _platform:
+        _totalformat = re.compile('(?P<dev>total)\s+\d+\s+\d+\s+\d+\s+(?P<usage>\d+)%+\s+\-$')
+    else:
+        _totalformat = re.compile('(?P<dev>total)\s+\d+\s+\d+\s+\d+\s+(?P<usage>\d+)%$')
 
     def init(self):
         if self.variant == 'total':
