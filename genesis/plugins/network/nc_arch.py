@@ -78,6 +78,8 @@ class ArchConnConfig(LinuxIp):
                 for thing in cxnfile.readlines():
                     if thing.startswith('#'):
                         continue
+                    if not thing.strip():
+                        continue
                     parse = thing.split('=')
                     parse[1] = parse[1].rstrip('\n')
                     parse[1] = parse[1].translate(None, '\"\'')
