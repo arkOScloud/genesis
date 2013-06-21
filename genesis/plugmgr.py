@@ -346,27 +346,26 @@ class PluginLoader:
             if shell_status('which '+dep[2]) != 0:
                 if platform == 'arch' or platform == 'arkos':
                     try:
-                        shell('pacman -S --noconfirm '+dep[2])
+                        shell('pacman -S --noconfirm '+dep[1])
+                        shell('systemctl enable '+dep[2])
                     except:
                         raise SoftwareRequirementError(*dep[1:])
-                    else:
-                        shell('systemctl enable '+dep[2])
-                if platform == 'debian':
+                elif platform == 'debian':
                     try:
                         shell('apt-get -y --force-yes install '+dep[2])
                     except:
                         raise SoftwareRequirementError(*dep[1:])
-                if platform == 'gentoo':
+                elif platform == 'gentoo':
                     try:
                         shell('emerge '+dep[2])
                     except:
                         raise SoftwareRequirementError(*dep[1:])
-                if platform == 'freebsd':
+                elif platform == 'freebsd':
                     try:
                         shell('portupgrade -R '+dep[2])
                     except:
                         raise SoftwareRequirementError(*dep[1:])
-                if platform == 'centos' or platform == 'fedora':
+                elif platform == 'centos' or platform == 'fedora':
                     try:
                         shell('yum -y install  '+dep[2])
                     except:
@@ -501,6 +500,7 @@ class RepositoryManager:
                     if 'app' in thing[0]:
                         shell('systemctl stop ' + thing[2])
                         shell('systemctl disable ' + thing[2])
+                        shell('pacman -Rn --noconfirm ' + thing[1])
             except KeyError:
                 pass
             PluginLoader.unload(id)

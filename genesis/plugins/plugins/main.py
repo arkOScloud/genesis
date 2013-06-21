@@ -35,7 +35,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                         iconfont="gen-cancel-circle",
                         text='Uninstall',
                         id='remove/'+k.id,
-                        warning='Completely remove plugin "%s"'%k.name,
+                        warning='Completely remove plugin "%s" and its data?'%k.name,
                     ))
 
             if k.problem:

@@ -28,7 +28,8 @@ class ConfigPlugin(CategoryPlugin):
         ui.find('httpauth').set('checked', self.app.gconfig.get('genesis','auth_enabled')=='1')
 
         # Configs
-        cfgs = sorted(self.app.grab_plugins(IModuleConfig))
+        cfgs = self.app.grab_plugins(IModuleConfig)
+        cfgs = sorted(cfgs, key=lambda config: config.target.__name__ if not hasattr(config.target, 'text') else config.target.text)
         t = ui.find('configs')
         for c in cfgs:
             if c.target:
