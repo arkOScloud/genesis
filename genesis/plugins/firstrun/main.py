@@ -120,10 +120,19 @@ class FirstRun(CategoryPlugin, URLHandler):
             self.app.gconfig.save()
             self.put_message('info', 'Setup complete!')
 
-            # add Unix user
+            # add Unix user and allow sudo use
             self.backend = UsersBackend(self.app)
             self.backend.add_user(self._username)
             self.backend.change_user_password(self._username, self._password)
+            sudofile = open('/etc/sudoers', 'r+')
+            filedata = sudofile.readlines()
+            filedata = ["%sudo ALL=(ALL) ALL\n" if "# %sudo" in line else line for line in filedata]
+            sudofile.close()
+            sudofile = open('/etc/sudoers', 'w')
+            for thing in filedata:
+                sudofile.write(thing)
+            sudofile.close()
+            shell('usermod -a -G sudo ' + self._username)
 
             # add user to Genesis config
             self.app.gconfig.remove_option('users', 'admin')
