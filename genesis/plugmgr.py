@@ -490,6 +490,11 @@ class RepositoryManager:
         :type   id:     str
         """
 
+        try:
+            self.purge = self.config.get('genesis', 'purge')
+        except:
+            self.purge = '1'
+
         dir = self.config.get('genesis', 'plugins')
         shell('rm -r %s/%s' % (dir, id))
 
@@ -500,7 +505,7 @@ class RepositoryManager:
                     if 'app' in thing[0]:
                         shell('systemctl stop ' + thing[2])
                         shell('systemctl disable ' + thing[2])
-                        shell('pacman -Rn --noconfirm ' + thing[1])
+                        shell('pacman -%s --noconfirm ' %('Rn' if self.purge is '1' else 'R') + thing[1])
             except KeyError:
                 pass
             PluginLoader.unload(id)

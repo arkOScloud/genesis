@@ -23,6 +23,7 @@ class ConfigPlugin(CategoryPlugin):
         ui.find('cert_file').set('value', self.app.gconfig.get('genesis', 'cert_file', ''))
         ui.find('cert_key').set('value', self.app.gconfig.get('genesis', 'cert_key', ''))
         ui.find('nofx').set('checked', self.app.gconfig.get('genesis', 'nofx', '')=='1')
+        ui.find('purge').set('checked', self.app.gconfig.get('genesis', 'purge', '')=='1')
 
         # Security
         ui.find('httpauth').set('checked', self.app.gconfig.get('genesis','auth_enabled')=='1')
@@ -78,6 +79,7 @@ class ConfigPlugin(CategoryPlugin):
                 self.app.gconfig.set('genesis', 'cert_key', vars.getvalue('cert_key', ''))
                 self.app.gconfig.set('genesis', 'auth_enabled', vars.getvalue('httpauth', '0'))
                 self.app.gconfig.set('genesis', 'nofx', vars.getvalue('nofx', '0'))
+                self.app.gconfig.set('genesis', 'purge', vars.getvalue('purge', '0'))
                 self.app.gconfig.save()
                 self.put_message('info', 'Saved')
         if params[0] == 'dlgEditModuleConfig':

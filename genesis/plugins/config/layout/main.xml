@@ -23,6 +23,9 @@
             <formline text="Visual effects" help="Smooth transitions and others">
                 <checkbox id="nofx" name="nofx" text="Disable" />
             </formline>
+            <formline text="Wipe configuration on plugin removal" help="When you remove a plugin from the Applications list, its associated configurations will also be purged">
+                <checkbox id="purge" name="purge" text="Yes" />
+            </formline>
             <formline>
                 <button onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
             </formline>
