@@ -1,0 +1,23 @@
+<xml>
+    <toolbar id="toolbar">
+        <button id="newdb" text="Add database" iconfont="gen-plus-circle" />
+    </toolbar>
+    
+    <label text="Databases" size="5" />
+
+    <pad>
+        <dt id="list" width="100%">
+            <dtr header="True">
+                <dth width="1" />
+                <dth>
+                    <label text="Name" />
+                </dth>
+                <dth>
+                    <label text="Type" />
+                </dth>
+                <dth width="1" />
+            </dtr>
+        </dt>
+    </pad>
+
+</xml>
