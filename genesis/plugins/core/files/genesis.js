@@ -130,6 +130,7 @@ Genesis = {
         $('#warning-text').html(text);
         $('#warningbox').addClass('modal');
         warning_button_id = btnid;
+        $('.warning-button').unbind('click');
         $('.warning-button').click(Genesis.acceptWarning);
         $('#warning-cancel-button').click(Genesis.cancelWarning);
         return false;
@@ -148,6 +149,9 @@ Genesis = {
 
     UI: {
         showAsModal: function (id) {
+            $('#'+id+'-backdrop').fadeTo(500, 0, function () {
+                $(this).remove();
+            });
             var backdrop = $('<div class="modal-backdrop" />')
                 .css('opacity', 0)
                 .appendTo(document.body)
