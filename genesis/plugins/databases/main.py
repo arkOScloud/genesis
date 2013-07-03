@@ -2,8 +2,6 @@ from genesis.api import *
 from genesis.ui import *
 from genesis import apis
 
-from backend import *
-
 
 class DatabasesPlugin(CategoryPlugin):
 	text = 'Databases'
@@ -11,7 +9,7 @@ class DatabasesPlugin(CategoryPlugin):
 	folder = 'system'
 
 	def on_init(self):
-		self.dbops = DBOps(self.app)
+		self.dbops = apis.dbops(self.app)
 		self.dbs = sorted(self.dbops.get_databases(), key=lambda db: db['name'])
 
 	def on_session_start(self):
@@ -71,10 +69,8 @@ class DatabasesPlugin(CategoryPlugin):
 			self._input = None
 			self._output = None
 		if params[0] == 'drop':
-			self.app.log.error('Dropping ' + params[1])
 			try:
 				dt = self.dbs[int(params[1])]
-				self.app.log.error('Dropping dict ' + str(dt))
 				self.dbops.get_dbcls(dt['type']).remove(dt['name'])
 			except Exception, e:
 				self.put_message('err', 'Database drop failed: ' + str(e))
