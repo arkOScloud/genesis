@@ -11,16 +11,23 @@ class MariaDB(Plugin):
     icon = 'gen-database'
 
     def add(self, dbname):
-        shell('mysql -e "CREATE DATABASE %s;"' % dbname)
+        status = shell_cs('mysql -e "CREATE DATABASE %s;"' % dbname, stderr=True)
+        if status[0] >= 1:
+            raise Exception(status[1])
 
     def remove(self, dbname):
-        shell('mysql -e "DROP DATABASE %s;"' % dbname)
+        status = shell_cs('mysql -e "DROP DATABASE %s;"' % dbname, stderr=True)
+        if status[0] >= 1:
+            raise Exception(status[1])
 
     def adduser(self):
         pass
 
     def deluser(self):
         pass
+
+    def execute(self, dbname, command):
+        return shell('mysql -e "%s" %s' % (command, dbname), stderr=True)
 
     def get_dbs(self):
         dblist = []

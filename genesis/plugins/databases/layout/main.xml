@@ -5,7 +5,7 @@
     
     <label text="Databases" size="5" />
 
-    <pad>
+    <pad id="main">
         <dt id="list" width="100%">
             <dtr header="True">
                 <dth width="1" />
@@ -28,9 +28,6 @@
         <formline text="Name">
             <textinput name="name" id="name" />
         </formline>
-    </dialogbox>
-
-    <dialogbox id="dlgExec">
     </dialogbox>
 
 </xml>

@@ -1,0 +1,10 @@
+<xml>
+	<dialogbox id="dlgExec">
+	    <formline text="Input">
+	        <textinputarea name="input" id="input" value="" />
+	    </formline>
+	    <formline text="Output">
+	        <textinputarea name="output" id="output" value="" disabled="True" />
+	    </formline>
+	</dialogbox>
+</xml>

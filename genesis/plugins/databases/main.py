@@ -21,6 +21,8 @@ class DatabasesPlugin(CategoryPlugin):
 	def on_session_start(self):
 	    self._add = None
 	    self._exec = None
+	    self._input = None
+	    self._output = None
 
 	def get_ui(self):
 		ui = self.app.inflate('databases:main')
@@ -54,11 +56,14 @@ class DatabasesPlugin(CategoryPlugin):
 			ui.remove('dlgAdd')
 
 		if self._exec is not None:
-			# TODO
-			pass
-		else:
-			ui.remove('dlgExec')
-
+			edlg = self.app.inflate('databases:execute')
+			if self._input is not None:
+				elem = edlg.find('input')
+				elem.set('value', self._input)
+			if self._output is not None:
+				elem = edlg.find('output')
+				elem.set('value', self._output)
+			ui.append('main', edlg)
 		return ui
 
 	@event('button/click')
@@ -66,9 +71,9 @@ class DatabasesPlugin(CategoryPlugin):
 		if params[0] == 'add':
 			self._add = len(self.dbs)
 		if params[0] == 'exec':
-			cmds = ''
-			dt = self.dbs[int(params[1])]
-			out = self.dbops.get_dbcls(dt['type']).execute(dt['name'], cmds)
+			self._exec = self.dbs[int(params[1])]
+			self._input = None
+			self._output = None
 		if params[0] == 'drop':
 			try:
 				dt = self.dbs[int(params[1])]
@@ -98,8 +103,9 @@ class DatabasesPlugin(CategoryPlugin):
 					else:
 						self.put_message('info', 'Database %s added sucessfully' % name)
 			self._add = None
-		if params[0] == 'frmExec':
-			# TODO
-			pass
 		if params[0] == 'dlgExec':
-			self._exec = None
+			if vars.getvalue('action', '') == 'OK':
+				self._input = vars.getvalue('input', '')
+				self._output = self.dbops.get_dbcls(self._exec['type']).execute(self._exec['name'], self._input)
+			else:
+				self._exec = None
