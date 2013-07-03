@@ -16,5 +16,8 @@ class Databases(API):
 		def deluser(self):
 			pass
 
+		def execute(self):
+			pass
+
 		def get_dbs(self):
 			pass

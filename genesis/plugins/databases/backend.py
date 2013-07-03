@@ -7,7 +7,7 @@ class DBOps(Plugin):
 	def get_dbtypes(self):
 		dblist = []
 		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
-			dblist.append({'name': plugin.name, 'icon': plugin.icon})
+			dblist.append(plugin.name)
 		return dblist
 
 	def get_databases(self):

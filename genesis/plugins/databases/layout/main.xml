@@ -1,6 +1,6 @@
 <xml>
-    <toolbar id="toolbar">
-        <button id="newdb" text="Add database" iconfont="gen-plus-circle" />
+    <toolbar>
+        <button id="add" text="Add database" iconfont="gen-plus-circle" />
     </toolbar>
     
     <label text="Databases" size="5" />
@@ -19,5 +19,18 @@
             </dtr>
         </dt>
     </pad>
+
+    <dialogbox id="dlgAdd">
+        <formline text="Type">
+            <select name="type" id="type">
+            </select>
+        </formline>
+        <formline text="Name">
+            <textinput name="name" id="name" />
+        </formline>
+    </dialogbox>
+
+    <dialogbox id="dlgExec">
+    </dialogbox>
 
 </xml>
