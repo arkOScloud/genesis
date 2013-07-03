@@ -13,7 +13,8 @@ class DBOps(Plugin):
 	def get_databases(self):
 		dblist = []
 		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
-			dblist.append(plugin.get_dbs())
+			for item in plugin.get_dbs():
+				dblist.append(item)
 		return dblist
 
 	def get_dbcls(self, name):

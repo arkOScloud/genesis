@@ -12,11 +12,7 @@ class DatabasesPlugin(CategoryPlugin):
 
 	def on_init(self):
 		self.dbops = DBOps(self.app)
-		getdbs = self.dbops.get_databases()
-		self.dbs = []
-		for lt in getdbs:
-			for item in lt:
-				self.dbs.append(item)
+		self.dbs = sorted(self.dbops.get_databases(), key=lambda db: db['name'])
 
 	def on_session_start(self):
 	    self._add = None
@@ -28,7 +24,7 @@ class DatabasesPlugin(CategoryPlugin):
 		ui = self.app.inflate('databases:main')
 		t = ui.find('list')
 
-		for d in sorted(self.dbs, key=lambda db: db['name']):
+		for d in self.dbs:
 			t.append(UI.DTR(
 				UI.Iconfont(iconfont="gen-database"),
 				UI.Label(text=d['name']),
@@ -75,14 +71,15 @@ class DatabasesPlugin(CategoryPlugin):
 			self._input = None
 			self._output = None
 		if params[0] == 'drop':
+			self.app.log.error('Dropping ' + params[1])
 			try:
 				dt = self.dbs[int(params[1])]
+				self.app.log.error('Dropping dict ' + str(dt))
 				self.dbops.get_dbcls(dt['type']).remove(dt['name'])
 			except Exception, e:
 				self.put_message('err', 'Database drop failed: ' + str(e))
 				self.app.log.error('Database drop failed: ' + str(e))
 			else:
-				self.dbs.pop(int(params[1]))
 				self.put_message('info', 'Database successfully dropped')
 
 	@event('dialog/submit')
