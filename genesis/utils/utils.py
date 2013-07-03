@@ -129,11 +129,26 @@ def shell_bg(c, output=None, deleteout=False):
 
 def shell_status(c):
     """
-    Same, but returns the exitcode.
+    Same, but returns only the exitcode.
     """
     return subprocess.Popen('LC_ALL=C '+c, shell=True,
             stderr=subprocess.PIPE,
             stdout=subprocess.PIPE).wait()
+
+def shell_cs(c, stderr=False):
+    """
+    Same, but returns exitcode and output in a tuple.
+    """
+    p = subprocess.Popen('LC_ALL=C '+c, shell=True,
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE)
+
+    try:
+        data = p.stdout.read() # Workaround; waiting first causes a deadlock
+    except: # WTF OSError (interrupted request)
+        data = ''
+    p.wait()
+    return (p.returncode, data + p.stdout.read() + (p.stderr.read() if stderr else ''))
 
 def shell_stdin(c, input):
     """
