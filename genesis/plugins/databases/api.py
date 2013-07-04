@@ -2,6 +2,8 @@ from genesis.com import *
 from genesis import apis
 
 class Databases(apis.API):
+	def __init__(self, app):
+		self.app = app
 
 	class IDatabase(Interface):
 		def add(self):
@@ -10,10 +12,10 @@ class Databases(apis.API):
 		def remove(self):
 			pass
 
-		def adduser(self):
+		def usermod(self):
 			pass
 
-		def deluser(self):
+		def chperm(self):
 			pass
 
 		def execute(self):
@@ -22,9 +24,8 @@ class Databases(apis.API):
 		def get_dbs(self):
 			pass
 
-class DBOps(apis.API):
-	def __init__(self, app):
-		self.app = app
+		def get_users(self):
+			pass
 
 	def get_dbtypes(self):
 		dblist = []
@@ -39,9 +40,17 @@ class DBOps(apis.API):
 				dblist.append(item)
 		return dblist
 
-	def get_dbcls(self, name):
-		dbcls = ''
+	def get_interface(self, name):
+		interface = ''
 		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
 			if plugin.__class__.__name__ == name:
-				dbcls = plugin
-		return dbcls
+				interface = plugin
+		return interface
+
+	def get_users(self):
+		userlist = []
+		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
+			if plugin.multiuser == True:
+				for item in plugin.get_users():
+					userlist.append(item)
+		return userlist

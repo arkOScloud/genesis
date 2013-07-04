@@ -1,23 +1,44 @@
 <xml>
     <toolbar>
         <button id="add" text="Add database" iconfont="gen-plus-circle" />
+        <button id="adduser" text="Add user" iconfont="gen-user-plus" />
     </toolbar>
-    
-    <label text="Databases" size="5" />
 
     <pad id="main">
-        <dt id="list" width="100%">
-            <dtr header="True">
-                <dth width="1" />
-                <dth>
-                    <label text="Name" />
-                </dth>
-                <dth>
-                    <label text="Type" />
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
+        <tabcontrol id="tabs" active="0">
+            <tabheader text="Databases" id="0"/>
+            <tabheader text="Users" id="1"/>
+
+            <tabbody id="0">
+                <dt id="list" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Name" />
+                        </dth>
+                        <dth>
+                            <label text="Type" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </tabbody>
+
+            <tabbody id="1">
+                <dt id="usrlist" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Username" />
+                        </dth>
+                        <dth>
+                            <label text="Database Type" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </tabbody>
+        </tabcontrol>
     </pad>
 
     <dialogbox id="dlgAdd">
@@ -27,6 +48,19 @@
         </formline>
         <formline text="Name">
             <textinput name="name" id="name" />
+        </formline>
+    </dialogbox>
+
+    <dialogbox id="dlgChmod">
+    </dialogbox>
+
+    <dialogbox id="dlgAddUser">
+        <formline text="Type">
+            <select name="usertype" id="usertype">
+            </select>
+        </formline>
+        <formline text="Username">
+            <textinput name="username" id="username" />
         </formline>
     </dialogbox>
 

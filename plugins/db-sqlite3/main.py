@@ -11,6 +11,7 @@ class SQLite3(Plugin):
     implements(apis.databases.IDatabase)
     name = 'SQLite3'
     icon = 'gen-database'
+    multiuser = False
 
     def add(self, dbname):
         path = '/var/lib/sqlite3/%s.db' % dbname
@@ -21,10 +22,10 @@ class SQLite3(Plugin):
     def remove(self, dbname):
         shell('rm /var/lib/sqlite3/%s.db' % dbname)
 
-    def adduser(self):
+    def usermod(self):
         pass
 
-    def deluser(self):
+    def chperm(self):
         pass
 
     def execute(self, dbname, command):
@@ -36,3 +37,6 @@ class SQLite3(Plugin):
             if thing.endswith('.db'):
                 dblist.append({'name': thing.rstrip('.db'), 'type': 'SQLite3', 'class': self.__class__})
         return dblist
+
+    def get_users(self):
+        pass
