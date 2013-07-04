@@ -34,8 +34,9 @@ class Dashboard(CategoryPlugin):
                         id=str(x),
                     )
                 )
-            except:
-                raise
+            except Exception, e:
+                self.put_message('err', 'One or more widgets failed to load. Check the logs for info')
+                self.app.log.error('System Monitor Widget failed to load: '+str(e))
 
     def get_ui(self):
         ui = self.app.inflate('sysmon:main')
