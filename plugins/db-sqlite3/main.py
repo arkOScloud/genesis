@@ -14,6 +14,7 @@ class SQLite3(Plugin):
     multiuser = False
 
     def add(self, dbname):
+        self.chkpath()
         path = '/var/lib/sqlite3/%s.db' % dbname
         status = shell_cs('sqlite3 %s "ATTACH \'%s\' AS %s;"' % (path,path,dbname), stderr=True)
         if status[0] >= 1:
@@ -32,6 +33,7 @@ class SQLite3(Plugin):
         return shell('sqlite3 /var/lib/sqlite3/%s.db "%s"' % (dbname, command), stderr=True)
 
     def get_dbs(self):
+        self.chkpath()
         dblist = []
         for thing in os.listdir('/var/lib/sqlite3'):
             if thing.endswith('.db'):
@@ -40,3 +42,7 @@ class SQLite3(Plugin):
 
     def get_users(self):
         pass
+
+    def chkpath(self):
+        if not os.path.isdir('/var/lib/sqlite3'):
+            os.makedirs('/var/lib/sqlite3')

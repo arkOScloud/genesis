@@ -10,20 +10,25 @@ class DatabasesPlugin(CategoryPlugin):
 
 	def on_init(self):
 		self.dbops = apis.databases(self.app)
-		self.dbs = sorted(self.dbops.get_databases(), key=lambda db: db['name'])
-		self.users = sorted(self.dbops.get_users(), key=lambda db: db['name'])
+		self.dbs = sorted(self.dbops.get_databases(), 
+			key=lambda db: db['name'])
+		self.users = sorted(self.dbops.get_users(), 
+			key=lambda db: db['name'])
 		self.dbtypes = sorted(self.dbops.get_dbtypes())
 
 	def on_session_start(self):
-	    self._add = None
-	    self._useradd = None
-	    self._chmod = None
-	    self._exec = None
-	    self._input = None
-	    self._output = None
+		self._tab = 0
+		self._add = None
+		self._useradd = None
+		self._chmod = None
+		self._exec = None
+		self._import = None
+		self._input = None
+		self._output = None
 
 	def get_ui(self):
 		ui = self.app.inflate('databases:main')
+		ui.find('tabs').set('active', self._tab)
 		t = ui.find('list')
 		ut = ui.find('usrlist')
 
@@ -88,13 +93,18 @@ class DatabasesPlugin(CategoryPlugin):
 			type_sel = []
 			for x in self.dbtypes:
 				if self.dbops.get_interface(x).multiuser == True:
-					UI.SelectOption(text = x, value = x)
+					type_sel.append(UI.SelectOption(text = x, value = x))
 			ui.appendAll('usertype', *type_sel)
 		else:
 			ui.remove('dlgAddUser')
 
 		if self._chmod is not None:
-			pass
+			iface = self.dbops.get_interface(self._chmod['type'])
+			plist = iface.chperm('', self._chmod['name'], 'check')
+			dblist = [UI.SelectOption(text = x['name'], value = x['name'])
+					for x in iface.get_dbs()]
+			ui.find('permlist').set('value', plist)
+			ui.appendAll('dblist', *dblist)
 		else:
 			ui.remove('dlgChmod')
 
@@ -104,11 +114,23 @@ class DatabasesPlugin(CategoryPlugin):
 	def on_click(self, event, params, vars = None):
 		if params[0] == 'add':
 			self._add = len(self.dbs)
+			self._tab = 0
+		if params[0] == 'adduser':
+			self._useradd = len(self.users)
+			self._tab = 1
 		if params[0] == 'exec':
 			self._exec = self.dbs[int(params[1])]
 			self._input = None
 			self._output = None
+			self._tab = 0
+		if params[0] == 'chmod':
+			self._chmod = self.users[int(params[1])]
+			self._tab = 1
+		if params[0] == 'import':
+			self._import = True
+			self._tab = 0
 		if params[0] == 'drop':
+			self._tab = 0
 			try:
 				dt = self.dbs[int(params[1])]
 				self.dbops.get_interface(dt['type']).remove(dt['name'])
@@ -117,6 +139,17 @@ class DatabasesPlugin(CategoryPlugin):
 				self.app.log.error('Database drop failed: ' + str(e))
 			else:
 				self.put_message('info', 'Database successfully dropped')
+		if params[0] == 'deluser':
+			self._tab = 1
+			try:
+				dt = self.users[int(params[1])]
+				iface = self.dbops.get_interface(dt['type'])
+				iface.usermod(dt['name'], 'del', '')
+			except Exception, e:
+				self.put_message('err', 'User drop failed: ' + str(e))
+				self.app.log.error('User drop failed: ' + str(e))
+			else:
+				self.put_message('info', 'User deleted') 
 
 	@event('dialog/submit')
 	def on_submit(self, event, params, vars = None):
@@ -131,14 +164,53 @@ class DatabasesPlugin(CategoryPlugin):
 					try:
 						cls.add(name)
 					except Exception, e:
-						self.put_message('err', 'Database add failed: ' + str(e))
-						self.app.log.error('Database add failed: ' + str(e))
+						self.put_message('err', 'Database add failed: ' 
+							+ str(e))
+						self.app.log.error('Database add failed: ' 
+							+ str(e))
 					else:
-						self.put_message('info', 'Database %s added sucessfully' % name)
+						self.put_message('info', 
+							'Database %s added sucessfully' % name)
 			self._add = None
 		if params[0] == 'dlgExec':
 			if vars.getvalue('action', '') == 'OK':
 				self._input = vars.getvalue('input', '')
-				self._output = self.dbops.get_interface(self._exec['type']).execute(self._exec['name'], self._input)
+				iface = self.dbops.get_interface(self._exec['type'])
+				self._output = iface.execute(self._exec['name'], self._input)
 			else:
 				self._exec = None
+		if params[0] == 'dlgAddUser':
+			if vars.getvalue('action', '') == 'OK':
+				username = vars.getvalue('username')
+				passwd = vars.getvalue('passwd')
+				usertype = vars.getvalue('usertype', '')
+				if not username or not usertype:
+					self.put_message('err', 'Name or type not selected')
+				else:
+					try:
+						iface = self.dbops.get_interface(usertype)
+						iface.usermod(username, 'add', passwd)
+					except Exception, e:
+						self.put_message('err', 'User add failed: '
+							+ str(e))
+						self.app.log.error('User add failed: '
+							+ str(e))
+					else:
+						self.put_message('info',
+							'User %s added successfully' % username)
+			self._useradd = None
+		if params[0] == 'dlgChmod':
+			if vars.getvalue('action', '') == 'OK':
+				action = vars.getvalue('chperm', '')
+				dbname = vars.getvalue('dblist', '')
+				try:
+					iface = self.dbops.get_interface(self._chmod['type'])
+					iface.chperm(dbname, self._chmod['name'], action)
+				except Exception, e:
+					self.put_message('err', 'Permission change failed, see logs')
+					self.app.log.error('Permission change failed: '
+						+ str(e))
+				else:
+					self.put_message('info',
+						'Permissions for %s changed successfully' % self._chmod['name'])
+			self._chmod = None

@@ -52,6 +52,17 @@
     </dialogbox>
 
     <dialogbox id="dlgChmod">
+        <formline text="Current Permissions">
+            <textinputarea name="permlist" id="permlist" disabled="True" height="200px" />
+        </formline>
+        <formline text="Action">
+            <radio value="grant" text="Grant all permissions" id="cgrant" name="chperm" checked="True"/>
+            <radio value="revoke" text="Revoke all permissions" id="crevoke" name="chperm" />
+        </formline>
+        <formline text="On database">
+            <select name="dblist" id="dblist">
+            </select>
+        </formline>
     </dialogbox>
 
     <dialogbox id="dlgAddUser">
@@ -61,6 +72,9 @@
         </formline>
         <formline text="Username">
             <textinput name="username" id="username" />
+        </formline>
+        <formline text="Password">
+            <textinput name="passwd" id="passwd" password="true"/>
         </formline>
     </dialogbox>
 

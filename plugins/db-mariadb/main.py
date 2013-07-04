@@ -41,18 +41,30 @@ class MariaDB(Plugin):
 
     def chperm(self, dbname, user, action):
         if action == 'check':
-            status = shell_cs(
-                'mysql -e "SHOW GRANTS FOR \'%s\@\'localhost\';"'
+            out = shell_cs(
+                'mysql -e "SHOW GRANTS FOR \'%s\'@\'localhost\';"'
                 % user, stderr=True
             )
-        if action == 'grant':
+            parse = []
+            status = ''
+            for line in out[1].split('\n'):
+                if line.startswith('Grants for'):
+                    continue
+                elif line is '' or line is ' ':
+                    continue
+                else:
+                    parse.append(line.split(' IDENT')[0])
+            for line in parse:
+                status += line + '\n'
+            return status
+        elif action == 'grant':
             status = shell_cs(
                 'mysql -e "GRANT ALL ON %s.* TO \'%s\'@\'localhost\';"' 
                 % (dbname,user), stderr=True
             )
         elif action == 'revoke':
             status = shell_cs(
-                'mysql -e "REVOKE ALL ON %s.* TO \'%s\'@\'localhost\';"' 
+                'mysql -e "REVOKE ALL ON %s.* FROM \'%s\'@\'localhost\';"' 
                 % (dbname,user), stderr=True
             )
         if status[0] >= 1:
@@ -77,12 +89,13 @@ class MariaDB(Plugin):
 
     def get_users(self):
         userlist = []
+        excludes = ['root', ' ', '']
         output = shell('mysql -e "SELECT user FROM mysql.user;"')
-        for line in output:
-            if not line in userlist:
+        for line in output.split('\n')[1:]:
+            if not line in userlist and not line in excludes:
                 userlist.append({
                     'name': line,
-                    'type': 'MariaDB'
+                    'type': 'MariaDB',
                     'class': self.__class__
                 })
         return userlist
