@@ -116,3 +116,15 @@ class NetworkConnection(object):
 
     def __setitem__(self, idx, val):
         self.params[idx] = val      
+
+
+class IDNSConfig(Interface):
+    nameservers = None
+
+    def save(self):
+        pass
+
+
+class Nameserver:
+    cls = ''
+    address = ''

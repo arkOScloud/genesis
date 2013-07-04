@@ -1,27 +1,129 @@
 <xml>
-    <label text="Network Connections" size="5" />
-    <pad id="conn">
-        <toolbar id="path">
-            <button id="addconn" text="Add Connection" icon="/dl/core/ui/stock/add.png" />
-            <button id="refresh" text="Refresh List" icon="/dl/core/ui/stock/refresh.png" />
-        </toolbar>
-        <br />
-        <dt id="connlist" width="100%">
-            <dtr header="True">
-                <dth width="1" />
-                <dth>
-                    <label text="Network" />
-                </dth>
-                <dth>
-                    <label text="Type" />
-                </dth>
-                <dth>
-                    <label text="Addressing" />
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
-    </pad>
+    <tabcontrol id="tabs" active="0">
+        <tabheader text="Networking" id="0"/>
+        <tabheader text="Hosts" id="1"/>
+        <tabheader text="DNS" id="2"/>
+
+        <tabbody id="0">
+            <label text="Network Connections" size="5" />
+            <pad id="conn">
+                <toolbar id="path">
+                    <button id="addconn" text="Add Connection" iconfont="gen-plus-circle" />
+                    <button id="refresh" text="Refresh List" iconfont="gen-loop-2" />
+                </toolbar>
+                <br />
+                <dt id="connlist" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Network" />
+                        </dth>
+                        <dth>
+                            <label text="Type" />
+                        </dth>
+                        <dth>
+                            <label text="Addressing" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </pad>
+
+            <label text="Network Interfaces" size="5" />
+            <pad id="dev">
+                <dt id="devlist" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Interface" />
+                        </dth>
+                        <dth>
+                            <label text="Class" />
+                        </dth>
+                        <dth>
+                            <label text="Address" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </pad>
+        </tabbody>
+
+        <tabbody id="1">
+            <label text="Hosts" size="5" />
+            <pad id="hosts">
+                <toolbar>
+                    <button id="add" text="Add host" iconfont="gen-plus-circle" />
+                    <button id="hostname" text="Change hostname" iconfont="gen-tag-2" />
+                </toolbar>
+                <br />
+                <dt id="hostlist" width="100%">
+                    <dtr header="True">
+                        <dth>
+                            <label text="IP address" />
+                        </dth>
+                        <dth>
+                            <label text="Hostname" />
+                        </dth>
+                        <dth>
+                            <label text="Aliases" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </pad>
+        </tabbody>
+
+        <tabbody id="2">
+            <label text="DNS servers and options" size="5" />
+            <pad id="dns">
+            <toolbar>
+                <button text="Add option" id="addns" iconfont="gen-plus-circle" />
+            </toolbar>
+            <br />
+                <dt id="list">
+                    <dtr header="True">
+                        <dth width="50%">
+                            <label text="Type" />
+                        </dth>
+                        <dth width="50%">
+                            <label text="Address" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </pad>
+        </tabbody>
+    </tabcontrol>
+
+    <dialogbox id="dlgEdit">
+        <formline text="IP address">
+            <textinput id="ip" name="ip" />
+        </formline>
+        <formline text="Hostname">
+            <textinput id="name" name="name" />
+        </formline>
+        <formline text="Aliases">
+            <textinput id="aliases" name="aliases" />
+        </formline>
+    </dialogbox>
+
+    <inputbox id="dlgSelf" text="Hostname" />
+
+    <dialogbox id="dlgEditDNS">
+        <formline text="Type">
+            <select name="cls">
+                <selectoption text="Nameserver" id="cls-nameserver" />
+                <selectoption text="Local domain" id="cls-domain" />
+                <selectoption text="Search list" id="cls-search" />
+                <selectoption text="Sort list" id="cls-sortlist" />
+                <selectoption text="Options" id="cls-options" />
+            </select>
+        </formline>
+        <formline text="Value">
+            <textinput name="address" id="value" />
+        </formline>
+    </dialogbox>
 
     <dialogbox id="dlgEditConn">
         <formline text="Connection Name">
@@ -55,23 +157,4 @@
             <textinput id="key" name="key" password="True" />
         </formline>
     </dialogbox>
-
-    <label text="Network Interfaces" size="5" />
-    <pad id="dev">
-        <dt id="devlist" width="100%">
-            <dtr header="True">
-                <dth width="1" />
-                <dth>
-                    <label text="Interface" />
-                </dth>
-                <dth>
-                    <label text="Class" />
-                </dth>
-                <dth>
-                    <label text="Address" />
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
-    </pad>
 </xml>
