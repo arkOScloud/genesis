@@ -73,7 +73,7 @@ if __name__ == '__main__':
         from genesis.standalone import run_server
         run_server(log_level, config_file)
     else:
-        genesisd = GenesisDaemon('/var/run/genesis.pid',stdout='/var/log/genesis.log',stderr='/var/log/genesis.err.log')
+        genesisd = GenesisDaemon('/var/run/genesis.pid',stdout='/var/log/genesis.log')
         genesisd.log_level = log_level
         genesisd.config_file = config_file
 
