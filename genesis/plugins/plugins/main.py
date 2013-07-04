@@ -39,9 +39,12 @@ class PluginManager(CategoryPlugin, URLHandler):
                     ))
 
             if k.problem:
-                row.find('status').set('iconfont', 'gen-close-2')
+                row.find('status').set('iconfont', 'gen-close-2 text-error')
                 row.find('status').set('text', 'Error')
-                row.append('reqs', UI.IconFont(iconfont="gen-warning", text=k.problem))
+                row.find('icon').set('class', k.iconfont + ' text-error')
+                row.find('name').set('class', 'text-error')
+                row.find('desc').set('class', 'text-error')
+                row.append('reqs', UI.IconFont(iconfont="gen-warning text-error", text=k.problem))
             else:
                 row.find('status').set('iconfont', 'gen-checkmark')
                 row.find('status').set('text', 'Installed and Enabled')
