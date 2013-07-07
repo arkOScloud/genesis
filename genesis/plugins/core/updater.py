@@ -21,10 +21,11 @@ class Updater (Component):
 
         while True:
             try:
-                self.feed = {}
+                self.feed = []
                 rm.update_list()
                 for e in feed_url.entries:
-                    self.feed[e.title] = e.link
+                    self.feed.append({'title': e.title, 'link': e.link, 
+                        'time': e.published_parsed})
             except:
                 pass
             time.sleep(60*60*12) # each 12 hrs
