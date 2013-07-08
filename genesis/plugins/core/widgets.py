@@ -2,7 +2,7 @@ from genesis.ui import *
 from genesis.com import implements, Plugin
 from genesis.api import *
 from genesis import apis
-from updater import Updater
+from updater import FeedUpdater
 
 # We want apis.dashboard already!
 import genesis.plugins.sysmon.api
@@ -17,7 +17,7 @@ class NewsWidget(Plugin):
 
     def get_ui(self, cfg, id=None):
         ui = self.app.inflate('core:news')
-        feed = Updater.get().get_feed()
+        feed = FeedUpdater.get().get_feed()
         if feed is not '':
             for i in sorted(feed, key=lambda dt: dt['time'], reverse=True):
                 ui.append('list', UI.CustomHTML(html='<a href="%s" target="_blank"><li>%s</li></a>'%(i['link'],i['title'])))

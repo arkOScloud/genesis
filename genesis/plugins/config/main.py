@@ -2,6 +2,7 @@ from genesis.api import *
 from genesis.ui import *
 from genesis.utils import hashpw
 from genesis.plugins.recovery.api import *
+from genesis.plugins.core.updater import UpdateCheck
 
 
 class ConfigPlugin(CategoryPlugin):
@@ -12,6 +13,8 @@ class ConfigPlugin(CategoryPlugin):
     def on_session_start(self):
         self._config = None
         self._restart = False
+        self._updstat = (False, '')
+        self._update = None
 
     def get_ui(self):
         ui = self.app.inflate('config:main')
@@ -23,6 +26,7 @@ class ConfigPlugin(CategoryPlugin):
         ui.find('cert_file').set('value', self.app.gconfig.get('genesis', 'cert_file', ''))
         ui.find('cert_key').set('value', self.app.gconfig.get('genesis', 'cert_key', ''))
         ui.find('nofx').set('checked', self.app.gconfig.get('genesis', 'nofx', '')=='1')
+        ui.find('updcheck').set('checked', self.app.gconfig.get('genesis', 'updcheck', '')=='1')
         ui.find('purge').set('checked', self.app.gconfig.get('genesis', 'purge', '')=='1')
 
         # Security
@@ -40,10 +44,24 @@ class ConfigPlugin(CategoryPlugin):
                 UI.TipIcon(text='Edit', iconfont="gen-pencil-2", id='editconfig/'+c.target.__name__),
             ))
 
+        # Updates
+        self._updstat = UpdateCheck.get().get_status()
+        if self._updstat[0] == True:
+            ui.find('updstatus').set('text', 'An update for Genesis is available. Version %s' % self._updstat[1])
+            ui.find('updstatus').set('size', '3')
+            ui.find('updaction').set('text', 'Update Now')
+            ui.find('updaction').set('iconfont', 'gen-arrow-down-3')
+            ui.find('updaction').set('design', 'primary')
+
         if self._config:
             ui.append('main',
                 self.app.get_config_by_classname(self._config).get_ui_edit()
             )
+
+        if self._update is not None:
+            pass
+        else:
+            ui.remove('dlgUpdate')
 
         if self._changed:
             self.put_message('warn', 'Restart required')
@@ -52,6 +70,11 @@ class ConfigPlugin(CategoryPlugin):
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
+        if params[0] == 'updaction':
+            if self._updstat[0] == False:
+                UpdateCheck.get().check_updates()
+            else:
+                self._update = True
         if params[0] == 'editconfig':
             self._config = params[1]
         if params[0] == 'restart':
@@ -79,15 +102,21 @@ class ConfigPlugin(CategoryPlugin):
                 self.app.gconfig.set('genesis', 'cert_key', vars.getvalue('cert_key', ''))
                 self.app.gconfig.set('genesis', 'auth_enabled', vars.getvalue('httpauth', '0'))
                 self.app.gconfig.set('genesis', 'nofx', vars.getvalue('nofx', '0'))
+                self.app.gconfig.set('genesis', 'updcheck', vars.getvalue('updcheck', '1'))
                 self.app.gconfig.set('genesis', 'purge', vars.getvalue('purge', '0'))
                 self.app.gconfig.save()
-                self.put_message('info', 'Saved')
+                self.put_message('info', 'Settings saved.')
         if params[0] == 'dlgEditModuleConfig':
             if vars.getvalue('action','') == 'OK':
                 cfg = self.app.get_config_by_classname(self._config)
                 cfg.apply_vars(vars)
                 cfg.save()
             self._config = None
+        if params[0] == 'dlgUpdate':
+            if vars.getvalue('action', '') == 'OK':
+                shell('pacman -S --noconfirm genesis')
+                self.put_message('err', 'Update complete. Please reboot your system.')
+            self._update = None
 
 
 class GenesisConfig (Plugin):

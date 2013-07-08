@@ -100,6 +100,8 @@ class PackageManagerPlugin(CategoryPlugin):
             for p in sorted(self._status.upgradeable.keys()):
                 p = self._status.upgradeable[p]
                 stat = self._get_icon(p.name)
+                if p.name == 'genesis':
+                    continue
                 r = UI.DTR(
                         UI.IconFont(iconfont=stat),
                         UI.Label(text=p.name),

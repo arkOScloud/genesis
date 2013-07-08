@@ -1,4 +1,9 @@
 <xml>
+    <div class="well updwell">
+        <label size="1" id="updstatus" text="You are running the latest version of Genesis. No updates available." />
+        <button id="updaction" iconfont="gen-loop-2" text="Check for updates" />
+    </div>
+
     <label size="5" text="General Settings" />
     <br />
         <simpleform id="frmGeneral">
@@ -8,7 +13,7 @@
             <formline text="Port">
                 <textinput name="bind_port" id="bind_port"/>
             </formline>
-            <formline text="Authorization" help="See below for authorized accounts">
+            <formline text="Authorization" help="See 'Users' for authorized accounts">
                 <checkbox id="httpauth" name="httpauth" text="Enable" />
             </formline>
             <formline text="SSL" help="Changing SSL settings requires Genesis restart">
@@ -22,6 +27,9 @@
             </formline>
             <formline text="Visual effects" help="Smooth transitions and others">
                 <checkbox id="nofx" name="nofx" text="Disable" />
+            </formline>
+            <formline text="Automatically check for updates?" help="If yes, Genesis will check for updates on startup, and once every day">
+                <checkbox id="updcheck" name="updcheck" text="Yes"/>
             </formline>
             <formline text="Wipe configuration on plugin removal" help="When you remove a plugin from the Applications list, its associated configurations will also be purged">
                 <checkbox id="purge" name="purge" text="Yes" />
@@ -47,4 +55,11 @@
             </dtr>
         </dt>
     </pad>
+
+    <dialogbox id="dlgUpdate">
+        <label size="1" text="Click 'OK' to begin downloading the update." /><br />
+        <label size="1" text="Once the installation is complete, a notification will display and ask you to reboot your system." /><br />
+        <label size="1" text="Please save your work and reboot immediately after the installation is complete." />
+    </dialogbox>
+
 </xml>
