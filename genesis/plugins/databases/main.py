@@ -31,6 +31,20 @@ class DatabasesPlugin(CategoryPlugin):
 		ui.find('tabs').set('active', self._tab)
 		t = ui.find('list')
 		ut = ui.find('usrlist')
+		tlbr = ui.find('toolbar')
+
+		ubutton = False
+		for dbtype in self.dbtypes:
+			if self.dbops.get_interface(dbtype).multiuser == True:
+				ubutton = True
+		if ubutton == True:
+			tlbr.append(
+				UI.Button(
+					id="adduser",
+					text="Add user",
+					iconfont="gen-user-plus"
+					)
+				)
 
 		for d in self.dbs:
 			t.append(UI.DTR(
@@ -113,7 +127,10 @@ class DatabasesPlugin(CategoryPlugin):
 	@event('button/click')
 	def on_click(self, event, params, vars = None):
 		if params[0] == 'add':
-			self._add = len(self.dbs)
+			if self.dbtypes == []:
+				self.put_message('err', 'No database engines installed. Check the Applications tab to find some')
+			else:
+				self._add = len(self.dbs)
 			self._tab = 0
 		if params[0] == 'adduser':
 			self._useradd = len(self.users)
