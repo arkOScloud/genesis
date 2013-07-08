@@ -1,0 +1,31 @@
+<xml>
+    <toolbar>
+        <button id="add" text="Add website" iconfont="gen-plus-circle" />
+    </toolbar>
+
+    <pad id="main">
+        <dt id="list" width="100%">
+            <dtr header="True">
+                <dth width="1" />
+                <dth>
+                    <label text="Name" />
+                </dth>
+                <dth>
+                    <label text="Type" />
+                </dth>
+                <dth width="1" />
+            </dtr>
+        </dt>
+    </pad>
+
+    <dialogbox id="dlgAdd">
+        <formline text="Type">
+            <select name="type" id="type">
+            </select>
+        </formline>
+        <formline text="Name">
+            <textinput name="name" id="name" />
+        </formline>
+    </dialogbox>
+
+</xml>

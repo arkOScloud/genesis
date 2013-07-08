@@ -11,7 +11,8 @@ from genesis.plugins.sysalerts import *
 from genesis.plugins.users import *
 from genesis.plugins.network import *
 from genesis.plugins.databases import *
+from genesis.plugins.webapps import *
 
 plist = ['resources', 'core', 'advancedcontrols', 'dashboard', 
 'firstrun', 'databases', 'config', 'plugins', 'network', 'recovery', 
-'sysmon', 'sysalerts', 'users']
+'sysmon', 'sysalerts', 'users', 'webapps']
