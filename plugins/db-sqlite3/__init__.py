@@ -3,7 +3,7 @@ MODULES = ['main']
 DEPS =  [
     (['any'],
      [
-    	('app', 'sqlite', ''),
+    	('app', 'SQLite', 'sqlite3'),
      ])
 ]
 

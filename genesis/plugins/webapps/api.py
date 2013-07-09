@@ -9,13 +9,16 @@ class Webapps(apis.API):
 		name = ''
 		dpath = ''
 
-		def install(self, package):
+		def install(self, name):
 			pass
 
-		def remove(self):
+		def remove(self, name):
 			pass
 
 		def get_sites(self):
+			pass
+
+		def get_info(self):
 			pass
 
 	def get_apptypes(self):

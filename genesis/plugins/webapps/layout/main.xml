@@ -19,11 +19,27 @@
     </pad>
 
     <dialogbox id="dlgAdd">
-        <formline text="Type">
-            <select name="type" id="type">
-            </select>
-        </formline>
-        <formline text="Name">
+        <pad>
+            <hcontainer>
+                <list id="provs" width="200" height="300" />
+                <scrollcontainer width="400" height="300">
+                    <image id="logo" />
+                    <formline text="Name">
+                        <label name="appname" id="appname" />
+                    </formline>
+                    <formline text="Intro">
+                        <label name="short" id="short" />
+                    </formline>
+                    <formline text="Website">
+                        <outlinklabel id="website" />
+                    </formline>
+                    <formline text="Description">
+                        <label name="desc" id="desc" />
+                    </formline>
+                </scrollcontainer>
+            </hcontainer>
+        </pad>
+        <formline text="Site Name">
             <textinput name="name" id="name" />
         </formline>
     </dialogbox>

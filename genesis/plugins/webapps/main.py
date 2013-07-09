@@ -14,6 +14,8 @@ class WebAppsPlugin(CategoryPlugin):
 		self.sites = sorted(self.waops.get_sites(), 
 			key=lambda st: st['name'])
 		self.apptypes = sorted(self.waops.get_apptypes())
+		if not self._current:
+			self._current = self.apptypes[0]
 
 	def on_session_start(self):
 		self._add = None
@@ -42,10 +44,28 @@ class WebAppsPlugin(CategoryPlugin):
 					),
 				))
 
+		provs = ui.find('provs')
+
+		for apptype in self.apptypes:
+			provs.append(
+					UI.ListItem(
+						UI.Label(text=apptype),
+						id=apptype,
+						active=apptype==self._current
+					)
+				)
+
+		info = self.waops.get_interface(self._current).get_info()
+		if info['logo'] is True:
+			ui.find('logo').set('file', '/dl/'+info['name'].lower()+'/logo.png')
+		ui.find('appname').set('text', info['name'])
+		ui.find('short').set('text', info['short'])
+		ui.find('website').set('text', info['site'])
+		ui.find('website').set('url', info['site'])
+		ui.find('desc').set('text', info['long'])
+
 		if self._add is not None:
-			type_sel = [UI.SelectOption(text = x, value = x)
-				for x in self.apptypes]
-			ui.appendAll('type', *type_sel)
+			pass
 		else:
 			ui.remove('dlgAdd')
 
@@ -64,11 +84,10 @@ class WebAppsPlugin(CategoryPlugin):
 		if params[0] == 'dlgAdd':
 			if vars.getvalue('action', '') == 'OK':
 				name = vars.getvalue('name', '')
-				apptype = vars.getvalue('type', '')
-				if not name or not apptype:
+				if not name or not self._current:
 					self.put_message('err', 'Name or type not selected')
 				else:
-					cls = self.waops.get_interface(apptype)
+					cls = self.waops.get_interface(self._current)
 					try:
 						cls.install(name)
 					except Exception, e:
@@ -80,3 +99,9 @@ class WebAppsPlugin(CategoryPlugin):
 						self.put_message('info', 
 							'%s added sucessfully' % name)
 			self._add = None
+
+	@event('listitem/click')
+	def on_list_click(self, event, params, vars=None):
+		for p in self.apptypes:
+			if p == params[0]:
+				self._current = p
