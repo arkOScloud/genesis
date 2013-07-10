@@ -4,6 +4,9 @@ DEPS =  [
     (['any'],
      [
     	('app', 'MariaDB', 'mysqld'),
+    	('app', 'nginx', 'nginx'),
+    	('app', 'PHP', 'php'),
+    	('app', 'FastCGI', 'php-fpm'),
     	('plugin', 'db-mariadb')
      ])
 ]

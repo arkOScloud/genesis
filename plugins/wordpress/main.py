@@ -2,9 +2,8 @@ from genesis.api import *
 from genesis.ui import *
 from genesis.com import Plugin, Interface, implements
 from genesis import apis
-from genesis.utils import shell, shell_cs, download
+from genesis.utils import shell, download
 
-import ast
 import hashlib
 import os
 import random
@@ -16,26 +15,54 @@ class WordPress(Plugin):
 	name = 'WordPress'
 	dpath = 'https://wordpress.org/latest.tar.gz'
 	icon = 'gen-earth'
+	php = True
+	nomulti = True
 
-	def install(self, name):
-		download(dpath, file='/tmp/wordpress.tar.gz')
-		shell('tar xzf '+os.path.join(path, 'wordpress.zip')
-			+' -C '+os.path.join('/var/webapps/wordpress', name)
-			+' --strip 1')
+	def install(self, name, vars):
+		# Make sure the target directory exists, but is empty
+		target_path = os.path.join('/var/webapps/wordpress', name)
+		if os.path.isdir(target_path):
+			shutil.rmtree(target_path)
+		os.makedirs(target_path)
+
+		# Get the database object, and determine proper values
 		dbase = apis.databases(self.app).get_interface('MariaDB')
-		dbase.add(name)
+		if vars.getvalue('wp-dbname', '') == '':
+			dbname = name
+		else:
+			dbname = vars.getvalue('wp-dbname')
 		secret_key = hashlib.sha1(str(random.random())).hexdigest()
-		passwd = secret_key[0:8]
+		if vars.getvalue('wp-dbpasswd', '') == '':
+			passwd = secret_key[0:8]
+		else:
+			passwd = vars.getvalue('wp-dbpasswd')
+
+		# Download and extract the WordPress source package
+		try:
+			download(self.dpath, file='/tmp/wordpress.tar.gz')
+		except Exception, e:
+			raise Exception('Download failed - %s' % str(e))
+		shell('tar xzf /tmp/wordpress.tar.gz -C '
+			+os.path.join('/var/webapps/wordpress', name)
+			+' --strip 1')
+
+		# Request a database and user to interact with it
+		dbase.add(dbname)
+		dbase.usermod(dbname, 'add', passwd)
+		dbase.chperm(dbname, dbname, 'grant')
+
+		# Write a standard WordPress config file
 		f = open(os.path.join('/var/webapps/wordpress', name, 'wp-config.php'), 'w')
 		f.write('<?php\n'
-				'define(\'DB_NAME\', \''+name+'\');\n'
-				'define(\'DB_USER\', \''+name+'\');\n'
+				'define(\'DB_NAME\', \''+dbname+'\');\n'
+				'define(\'DB_USER\', \''+dbname+'\');\n'
 				'define(\'DB_PASSWORD\', \''+passwd+'\');\n'
 				'define(\'DB_HOST\', \'localhost\');\n'
+				'define(\'DB_CHARSET\', \'utf8\');\n'
 				'define(\'SECRET_KEY\', \''+secret_key+'\');\n'
- 				'\n'
+				'\n'
 				'define(\'WP_CACHE\', true);\n'
- 				'\n'
+				'\n'
 				'/*\n'
 				'define(\'AUTH_KEY\', \''+secret_key+'\');\n'
 				'define(\'SECURE_AUTH_KEY\', \''+secret_key+'\');\n'
@@ -47,39 +74,67 @@ class WordPress(Plugin):
 				'\n'
 				'/** Absolute path to the WordPress directory. */\n'
 				'if ( !defined(\'ABSPATH\') )\n'
-				'define(\'ABSPATH\', dirname(__FILE__) . \'/\');\n'
-				'\n'
-				'/** Pull in the config information */\n'
-				'require_once(ABSPATH . \'wp-info.php\');\n'
-				'require_once(ABSPATH . \'wp-overrides.php\');\n'
+				'	define(\'ABSPATH\', dirname(__FILE__) . \'/\');\n'
 				'\n'
 				'/** Sets up WordPress vars and included files. */\n'
 				'require_once(ABSPATH . \'wp-settings.php\');\n'
 			)
-		dbase.usermod(name, 'add', passwd)
-		dbase.chperm(name, name, 'grant')
+		f.close()
+
+		# Write an nginx serverblock
+		f = open('/etc/nginx/sites-available/'+name, 'w')
+		f.write(
+			'# GENESIS WordPress\n'
+			'server {\n'
+			'	listen '+vars.getvalue('port', '80')+';\n'
+			'	server_name '+vars.getvalue('addr', 'localhost')+';\n'
+			'	root /var/webapps/wordpress/'+name+';\n'
+			'	index index.php;\n'
+			'\n'
+			'	location = /favicon.ico {\n'
+			'		log_not_found off;\n'
+			'		access_log off;\n'
+			'	}\n'
+			'\n'
+			'	location = /robots.txt {\n'
+			'		allow all;\n'
+			'		log_not_found off;\n'
+			'		access_log off;\n'
+			'	}\n'
+			'\n'
+			'	location / {\n'
+			'		try_files $uri $uri/ /index.php?$args;\n'
+			'	}\n'
+			'\n'
+			'	location ~ \.php$ {\n'
+			'		fastcgi_pass unix:/run/php-fpm/php-fpm.sock;\n'
+			'		fastcgi_index index.php;\n'
+			'		include fastcgi.conf;\n'
+			'	}\n'
+			'\n'
+			'	location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {\n'
+			'		expires max;\n'
+			'		log_not_found off;\n'
+			'	}\n'
+			'}\n'
+			)
+
+		# Make sure that the correct PHP settings are enabled
+		shell('sed -i s/;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
 
 	def remove(self, name):
+		f = open(os.path.join('/var/webapps/wordpress', name, 'wp-config.php'), 'r')
+		for line in f.readlines():
+			if 'DB_NAME' in line:
+				data = line.split('\'')[1::2]
+				dbname = data[1]
+				break
+		f.close()
+		apis.webapps(self.app).nginx_remove(name)
 		dbase = apis.databases(self.app).get_interface('MariaDB')
-		dbase.remove(name)
-		dbase.usermod(name, 'del', '')
+		dbase.remove(dbname)
+		dbase.usermod(dbname, 'del', '')
 		shutil.rmtree(os.path.join('/var/webapps/wordpress', name))
-
-	def get_sites(self):
-		sitelist = []
-		if not os.path.isdir('/var/webapps/wordpress'):
-			os.makedirs('/var/webapps/wordpress')
-		for thing in os.walk('/var/webapps/wordpress').next()[1]:
-			path = os.path.join('/var/webapps/wordpress', thing)
-			if os.path.exists(os.path.join(path, '.genesis')):
-				f = open(os.path.join(path, '.genesis'), 'r')
-				try:
-					data = ast.literal_eval(f.read())
-					sitelist.append(data)
-				except:
-					pass
-				f.close()
-		return sitelist
 
 	def get_info(self):
 		return {
