@@ -3,6 +3,8 @@ from genesis.ui import *
 from genesis import apis
 from genesis.utils import download
 
+import backend
+
 
 class WebAppsPlugin(CategoryPlugin):
 	text = 'Websites'
@@ -10,10 +12,11 @@ class WebAppsPlugin(CategoryPlugin):
 	folder = 'servers'
 
 	def on_init(self):
-		self.waops = apis.webapps(self.app)
-		self.sites = sorted(self.waops.get_sites(), 
+		self.apiops = apis.webapps(self.app)
+		self.mgr = backend.WABackend()
+		self.sites = sorted(self.apiops.get_sites(), 
 			key=lambda st: st['name'])
-		self.apptypes = sorted(self.waops.get_apptypes())
+		self.apptypes = sorted(self.apiops.get_apptypes())
 		if not self._current:
 			self._current = self.apptypes[0]
 
@@ -28,7 +31,10 @@ class WebAppsPlugin(CategoryPlugin):
 		for s in self.sites:
 			t.append(UI.DTR(
 				UI.Iconfont(iconfont="gen-earth"),
-				UI.Label(text=s['name']),
+				(UI.OutLinkLabel(
+					text=s['name'],
+					url=s['addr']
+					) if s['addr'] is not False else UI.Label(text=s['name'])),
 				UI.Label(text=s['type']),
 				UI.HContainer(
 					UI.TipIcon(
@@ -61,7 +67,7 @@ class WebAppsPlugin(CategoryPlugin):
 					)
 				)
 
-		info = self.waops.get_interface(self._current).get_info()
+		info = self.apiops.get_interface(self._current).get_info()
 		if info['logo'] is True:
 			ui.find('logo').set('file', '/dl/'+info['name'].lower()+'/logo.png')
 		ui.find('appname').set('text', info['name'])
@@ -74,7 +80,7 @@ class WebAppsPlugin(CategoryPlugin):
 			ui.remove('dlgAdd')
 
 		if self._setup is not None:
-			iface = self.waops.get_interface(self._setup)
+			iface = self.apiops.get_interface(self._setup)
 			if iface.nomulti is True:
 				for site in self.sites:
 					if iface.name in site['type']:
@@ -101,8 +107,8 @@ class WebAppsPlugin(CategoryPlugin):
 		if params[0] == 'drop':
 			try:
 				dt = self.sites[int(params[1])]
-				self.waops.nginx_disable(dt['name'])
-				self.waops.get_interface(dt['type']).remove(dt['name'])
+				iface = self.apiops.get_interface(dt['type'])
+				self.mgr.remove(dt['name'], iface)
 			except Exception, e:
 				self.put_message('err', 'Website removal failed: ' + str(e))
 				self.app.log.error('Website removal failed: ' + str(e))
@@ -110,10 +116,10 @@ class WebAppsPlugin(CategoryPlugin):
 				self.put_message('info', 'Website successfully removed')
 		if params[0] == 'enable':
 			dt = self.sites[int(params[1])]
-			self.waops.nginx_enable(dt['name'])
+			self.mgr.nginx_enable(dt['name'])
 		if params[0] == 'disable':
 			dt = self.sites[int(params[1])]
-			self.waops.nginx_disable(dt['name'])
+			self.mgr.nginx_disable(dt['name'])
 
 	@event('dialog/submit')
 	def on_submit(self, event, params, vars = None):
@@ -125,32 +131,26 @@ class WebAppsPlugin(CategoryPlugin):
 			if vars.getvalue('action', '') == 'OK':
 				name = vars.getvalue('name', '').lower()
 				port = vars.getvalue('port', '80')
+				samename = False
+				for site in self.sites:
+					if name == site['name']:
+						samename = True
 				if not name or not self._setup:
 					self.put_message('err', 'Name or type not selected')
+				elif samename is True:
+					self.put_message('err', 'A site with this name already exists')
 				elif port == self.app.gconfig.get('genesis', 'bind_port', ''):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
 				else:
-					cls = self.waops.get_interface(self._current)
 					try:
-						status = cls.install(name, vars)
+						iface = self.apiops.get_interface(self._current)
+						self.mgr.add(name, iface, vars, True)
 					except Exception, e:
-						self.put_message('err', 'Website add failed: ' 
-							+ str(e))
-						self.app.log.error('Website add failed: ' 
-							+ str(e))
+						self.put_message('err', str(e))
+						self.app.log.error(str(e))
 					else:
-						if cls.php is True:
-							self.waops.php_enable()
-						try:
-							self.waops.nginx_enable(name)
-						except Exception, e:
-							self.app.log.error(str(e))
-							self.put_message('info',
-								'App installed but services could not '
-								'restart. Check the logs for info')
-						else:
-							self.put_message('info', 
-								'%s added sucessfully' % name)
+						self.put_message('info', 
+							'%s added sucessfully' % name)
 			self._setup = None
 
 	@event('listitem/click')
