@@ -29,32 +29,45 @@ class ReloadError(Exception):
 
 class WABackend:
 	def add(self, name, webapp, vars, enable=True):
-		if not webapp.dpath.endswith('.tar.gz'):
-			raise InstallError('Only .tar.gz packages supported for now')
+		if webapp.dpath.endswith('.tar.gz'):
+			ending = '.tar.gz'
+		elif webapp.dpath.endswith('.tar.bz2'):
+			ending = '.tar.bz2'
+		else:
+			raise InstallError('Only gzip and bzip packages supported for now')
+
+		# Run webapp preconfig, if any
+		try:
+			webapp.pre_install(name, vars)
+		except Exception, e:
+			raise InstallError('Webapp config - '+str(e))
 
 		# Make sure the target directory exists, but is empty
 		# Testing for sites with the same name should have happened by now
 		target_path = os.path.join('/srv/http/webapps', name)
+		pkg_path = '/tmp/'+name+ending
 		if os.path.isdir(target_path):
 			shutil.rmtree(target_path)
 		os.makedirs(target_path)
 
 		# Download and extract the source package
 		try:
-			download(webapp.dpath, file='/tmp/'+name+'.tar.gz')
+			download(webapp.dpath, file=pkg_path)
 		except Exception, e:
 			raise InstallError('Couldn\'t download - %s' % str(e))
-		status = shell_cs('tar xzf /tmp/'+name+'.tar.gz -C '
-			+target_path+' --strip 1')
+		status = shell_cs('tar '
+			+('xzf' if ending is '.tar.gz' else 'xjf')
+			+' /tmp/'+name+ending+' -C '
+			+target_path+' --strip 1', stderr=True)
 		if status[0] >= 1:
 			raise InstallError(status[1])
+		os.remove(pkg_path)
 
 		# Setup the webapp and create an nginx serverblock
 		try:
-			webapp.install(name, target_path, vars)
+			webapp.post_install(name, target_path, vars)
 		except Exception, e:
 			raise InstallError('Webapp config - '+str(e))
-
 		try:
 			self.nginx_add(
 				name=name, 
@@ -89,20 +102,15 @@ class WABackend:
 					path = line.split()[1].rstrip(';')
 					break
 		else:
-			webapp.remove(name, path)
+			webapp.pre_remove(name, path)
 		shutil.rmtree(path)
 		self.nginx_remove(name)
+		if webapp != '':
+			webapp.post_remove(name)
 
 	def nginx_add(self, name, stype, path, addr, port, add='', php=False):
 		if path == '':
 			path = os.path.join('/srv/http/webapps/', name)
-		phploc = (
-			'	location ~ \.php$ {\n'
-			'		fastcgi_pass unix:/run/php-fpm/php-fpm.sock;\n'
-			'		fastcgi_index index.php;\n'
-			'		include fastcgi.conf;\n'
-			'	}\n'
-			)
 		f = open('/etc/nginx/sites-available/'+name, 'w')
 		f.write(
 			'# GENESIS '+stype+' http://'+addr+'\n'
@@ -111,7 +119,6 @@ class WABackend:
 			'   server_name '+addr+';\n'
 			'   root '+path+';\n'
 			'   index index.'+('php' if php else 'html')+';\n'
-			+(phploc if php else '')
 			+(add if add is not '' else '')+
 			'}\n'
 			)

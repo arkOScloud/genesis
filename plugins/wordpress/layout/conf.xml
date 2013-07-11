@@ -4,6 +4,6 @@
 	    <textinput name="wp-dbname" id="wp-dbname" />
 	</formline>
 	<formline text="Database User Password">
-	    <textinput name="wp-dbpasswd" id="wp-dbpasswd" />
+	    <textinput name="wp-dbpasswd" id="wp-dbpasswd" password="True" />
 	</formline>
 </xml>

@@ -33,13 +33,22 @@ class WordPress(Plugin):
 		'		try_files $uri $uri/ /index.php?$args;\n'
 		'	}\n'
 		'\n'
+		'	location ~ \.php$ {\n'
+		'		fastcgi_pass unix:/run/php-fpm/php-fpm.sock;\n'
+		'		fastcgi_index index.php;\n'
+		'		include fastcgi.conf;\n'
+		'}\n'
+		'\n'
 		'	location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {\n'
 		'		expires max;\n'
 		'		log_not_found off;\n'
 		'	}\n'
 		)
 
-	def install(self, name, path, vars):
+	def pre_install(self, name, vars):
+		pass
+
+	def post_install(self, name, path, vars):
 		# Get the database object, and determine proper values
 		dbase = apis.databases(self.app).get_interface('MariaDB')
 		if vars.getvalue('wp-dbname', '') == '':
@@ -94,7 +103,7 @@ class WordPress(Plugin):
 		# can make adjustments and save plugins when need be.
 		shell('chown -R http:http '+path)
 
-	def remove(self, name, path):
+	def pre_remove(self, name, path):
 		f = open(os.path.join(path, 'wp-config.php'), 'r')
 		for line in f.readlines():
 			if 'DB_NAME' in line:
@@ -105,6 +114,9 @@ class WordPress(Plugin):
 		dbase = apis.databases(self.app).get_interface('MariaDB')
 		dbase.remove(dbname)
 		dbase.usermod(dbname, 'del', '')
+
+	def post_remove(self, name):
+		pass
 
 	def get_info(self):
 		return {

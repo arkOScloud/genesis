@@ -16,10 +16,16 @@ class Webapps(apis.API):
 		nomulti = False
 		addtoblock = ''
 
-		def install(self, name):
+		def pre_install(self, name, vars):
 			pass
 
-		def remove(self, name):
+		def post_install(self, name, path, vars):
+			pass
+
+		def pre_remove(self, name, path):
+			pass
+
+		def post_remove(self, name):
 			pass
 
 		def get_info(self):

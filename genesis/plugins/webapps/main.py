@@ -86,6 +86,7 @@ class WebAppsPlugin(CategoryPlugin):
 					if iface.name in site['type']:
 						ui.remove('dlgSetup')
 						self.put_message('err', 'Only one site of this type at any given time')
+						self._setup = None
 						return ui
 			try:
 				cfgui = self.app.inflate(iface.name.lower() + ':conf')
