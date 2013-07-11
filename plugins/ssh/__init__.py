@@ -2,7 +2,7 @@ MODULES = ['main', 'backend']
 
 DEPS = [(['any'],
          [
-           ('app', 'sshd', 'sshd'),
+           ('app', 'OpenSSH', 'sshd'),
          ]
        )]
 

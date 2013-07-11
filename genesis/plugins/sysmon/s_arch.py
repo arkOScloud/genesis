@@ -17,19 +17,23 @@ class ArchServiceManager(Plugin):
         services = []
 
         if self.use_systemd:
-            service = re.compile("^([^\s]+)\.service\W")
-
-            for unit in shell("systemctl --no-ask-password --full -t service list-unit-files --all").splitlines():
-                match = service.match(unit)
-                if match:
-                    services.append(match.group(1))
+            for unit in shell("systemctl --no-ask-password --full -t service --all").splitlines():
+                data = unit.split()
+                if data == [] or not data[0].endswith('.service'):
+                    continue
+                if 'inactive' in data[2]:
+                    status = 'stopped'
+                else:
+                    status = 'running'
+                services.append((re.sub('\.service$', '', data[0]), status))
         else:
             services = os.listdir('/etc/rc.d')
 
         r = []
         for s in services:
             svc = apis.services.Service()
-            svc.name = s
+            svc.name = s[0]
+            svc._status = s[1]
             svc.mgr = self
             r.append(svc)
 
@@ -37,12 +41,9 @@ class ArchServiceManager(Plugin):
 
     def get_status(self, name):
         if self.use_systemd:
-            re_status = re.compile("^\s+Active: ([^\s]+)", re.M)
+            status = shell("systemctl --no-ask-password is-active {}.service".format(name))
 
-            status = shell("systemctl --no-ask-password status {}.service".format(name))
-            match = re_status.search(status)
-
-            if not match or match.group(1) != "active":
+            if not status or "inactive" in status:
                 return 'stopped'
             else:
                 return 'running'

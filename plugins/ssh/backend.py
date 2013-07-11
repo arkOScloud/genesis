@@ -21,18 +21,16 @@ class SSHConfig(Plugin):
 
         for s in ss:
             if s != '':
-                if s[0] == '#':
-                    s = s[1:]
-                if s[0] == ' ':
+                if s[0] == '#' or s[0] == ' ':
                     s = s[1:]
                 s = s.split()
                 if 'PermitRootLogin' in s[0]:
                     r['root'] = True if 'yes' in s[1] else False
-                if 'PubkeyAuthentication' in s[0]:
+                elif 'PubkeyAuthentication' in s[0]:
                     r['pkey'] = True if 'yes' in s[1] else False
-                if 'PasswordAuthentication' in s[0]:
+                elif 'PasswordAuthentication' in s[0]:
                     r['passwd'] = True if 'yes' in s[1] else False
-                if 'PermitEmptyPasswords' in s[0]:
+                elif 'PermitEmptyPasswords' in s[0]:
                     r['epasswd'] = True if 'yes' in s[1] else False
 
         return r
