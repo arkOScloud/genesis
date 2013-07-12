@@ -34,7 +34,7 @@ class Webapps(apis.API):
 	def get_apptypes(self):
 		applist = []
 		for plugin in self.app.grab_plugins(apis.webapps.IWebapp):
-			applist.append(plugin.name)
+			applist.append(plugin)
 		return applist
 
 	def get_sites(self):
@@ -57,6 +57,7 @@ class Webapps(apis.API):
 					'name': site,
 					'type': stype,
 					'addr': addr,
+					'class': self.get_interface(stype),
 					'enabled': enabled
 				})
 			f.close()

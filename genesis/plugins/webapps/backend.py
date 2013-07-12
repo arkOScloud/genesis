@@ -1,5 +1,6 @@
-from genesis.com import *
+from genesis.com import Plugin, Interface, implements
 from genesis.utils import shell, shell_cs, download
+from genesis import apis
 
 import os
 import shutil
@@ -33,6 +34,8 @@ class WABackend:
 			ending = '.tar.gz'
 		elif webapp.dpath.endswith('.tar.bz2'):
 			ending = '.tar.bz2'
+		elif webapp.dpath is None:
+			ending = ''
 		else:
 			raise InstallError('Only gzip and bzip packages supported for now')
 
@@ -51,23 +54,26 @@ class WABackend:
 		os.makedirs(target_path)
 
 		# Download and extract the source package
-		try:
-			download(webapp.dpath, file=pkg_path)
-		except Exception, e:
-			raise InstallError('Couldn\'t download - %s' % str(e))
-		status = shell_cs('tar '
-			+('xzf' if ending is '.tar.gz' else 'xjf')
-			+' /tmp/'+name+ending+' -C '
-			+target_path+' --strip 1', stderr=True)
-		if status[0] >= 1:
-			raise InstallError(status[1])
-		os.remove(pkg_path)
+		if webapp.dpath is not None:
+			try:
+				download(webapp.dpath, file=pkg_path)
+			except Exception, e:
+				raise InstallError('Couldn\'t download - %s' % str(e))
+			status = shell_cs('tar '
+				+('xzf' if ending is '.tar.gz' else 'xjf')
+				+' /tmp/'+name+ending+' -C '
+				+target_path+' --strip 1', stderr=True)
+			if status[0] >= 1:
+				raise InstallError(status[1])
+			os.remove(pkg_path)
 
 		# Setup the webapp and create an nginx serverblock
 		try:
 			webapp.post_install(name, target_path, vars)
 		except Exception, e:
 			raise InstallError('Webapp config - '+str(e))
+		php = vars.getvalue('php', '')
+		addtoblock = vars.getvalue('addtoblock', '')
 		try:
 			self.nginx_add(
 				name=name, 
@@ -75,8 +81,8 @@ class WABackend:
 				path=target_path, 
 				addr=vars.getvalue('addr', 'localhost'), 
 				port=vars.getvalue('port', '80'), 
-				add=webapp.addtoblock, 
-				php=(True if webapp.php is True else False)
+				add=(addtoblock if addtoblock is not '' else webapp.addtoblock), 
+				php=(True if webapp.php is True or php is '1' else False)
 				)
 		except Exception, e:
 			raise PartialError('nginx serverblock couldn\'t be written - '+str(e))
@@ -113,7 +119,7 @@ class WABackend:
 			path = os.path.join('/srv/http/webapps/', name)
 		f = open('/etc/nginx/sites-available/'+name, 'w')
 		f.write(
-			'# GENESIS '+stype+' http://'+addr+'\n'
+			'# GENESIS '+stype+' http://'+addr+':'+port+'\n'
 			'server {\n'
 			'   listen '+port+';\n'
 			'   server_name '+addr+';\n'
@@ -159,3 +165,53 @@ class WABackend:
 		status = shell_cs('systemctl restart php-fpm')
 		if status[0] >= 1:
 			raise
+
+class Website(Plugin):
+	implements(apis.webapps.IWebapp)
+	name = 'Website'
+	dpath = None
+	icon = 'gen-earth'
+	sort = 'bottom'
+	php = False
+	nomulti = False
+
+	addtoblock = ''
+
+	def pre_install(self, name, vars):
+		if vars.getvalue('ws-dbsel', 'None') is not 'None':
+			if vars.getvalue('ws-dbname', '') == '':
+				raise Exception('Must choose a database name if you want to create one')
+			if vars.getvalue('ws-dbpass', '') == '':
+				raise Exception('Must choose a database password if you want to create one')
+		if vars.getvalue('ws-dbsel', 'None') is 'None':
+			if vars.getvalue('ws-dbname', '') is not '':
+				raise Exception('Must choose a database type if you want to create one')
+			if vars.getvalue('ws-dbpass', '') is not '':
+				raise Exception('Must choose a database type if you want to create one')
+
+	def post_install(self, name, path, vars):
+		# Create a database if the user wants one
+		if vars.getvalue('ws-dbsel', 'None') is not 'None':
+			dbtype = vars.getvalue('ws-dbsel', '')
+			dbname = vars.getvalue('ws-dbname', '')
+			passwd = vars.getvalue('ws-dbpass', '')
+			dbase = apis.databases(self.app).get_interface(dbtype)
+			dbase.add(dbname)
+			dbase.usermod(dbname, 'add', passwd)
+			dbase.chperm(dbname, dbname, 'grant')
+
+	def pre_remove(self, name, path):
+		pass
+
+	def post_remove(self, name):
+		pass
+
+	def get_info(self):
+		return {
+			'name': 'Website',
+			'short': 'Upload your own HTML/PHP files',
+			'long': ('Create a custom website with your own HTML or PHP '
+					'files.'),
+			'site': None,
+			'logo': False
+		}

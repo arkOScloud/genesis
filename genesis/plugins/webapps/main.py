@@ -16,7 +16,8 @@ class WebAppsPlugin(CategoryPlugin):
 		self.mgr = backend.WABackend()
 		self.sites = sorted(self.apiops.get_sites(), 
 			key=lambda st: st['name'])
-		self.apptypes = sorted(self.apiops.get_apptypes())
+		ats = sorted(self.apiops.get_apptypes(), key=lambda x: x.name.lower())
+		self.apptypes = sorted(ats, key=lambda x: (hasattr(x, 'sort')))
 		if not self._current:
 			self._current = self.apptypes[0]
 
@@ -33,7 +34,7 @@ class WebAppsPlugin(CategoryPlugin):
 				UI.Iconfont(iconfont="gen-earth"),
 				(UI.OutLinkLabel(
 					text=s['name'],
-					url=s['addr']
+					url=(s['addr'] if not s['addr'].endswith(':80') else s['addr'].rsplit(':', 1)[0])
 					) if s['addr'] is not False else UI.Label(text=s['name'])),
 				UI.Label(text=s['type']),
 				UI.HContainer(
@@ -61,37 +62,48 @@ class WebAppsPlugin(CategoryPlugin):
 		for apptype in self.apptypes:
 			provs.append(
 					UI.ListItem(
-						UI.Label(text=apptype),
-						id=apptype,
-						active=apptype==self._current
+						UI.Label(text=apptype.name),
+						id=apptype.name,
+						active=apptype.name==self._current.name
 					)
 				)
 
-		info = self.apiops.get_interface(self._current).get_info()
+		info = self._current.get_info()
 		if info['logo'] is True:
 			ui.find('logo').set('file', '/dl/'+info['name'].lower()+'/logo.png')
 		ui.find('appname').set('text', info['name'])
 		ui.find('short').set('text', info['short'])
-		ui.find('website').set('text', info['site'])
-		ui.find('website').set('url', info['site'])
+		if info['site'] is None:
+			ui.find('website').set('text', 'None')
+			ui.find('website').set('url', 'http://localhost')
+		else:
+			ui.find('website').set('text', info['site'])
+			ui.find('website').set('url', info['site'])
 		ui.find('desc').set('text', info['long'])
 
 		if self._add is None:
 			ui.remove('dlgAdd')
 
 		if self._setup is not None:
-			iface = self.apiops.get_interface(self._setup)
-			if iface.nomulti is True:
+			if self._setup.nomulti is True:
 				for site in self.sites:
-					if iface.name in site['type']:
+					if self._setup.name in site['type']:
 						ui.remove('dlgSetup')
 						self.put_message('err', 'Only one site of this type at any given time')
 						self._setup = None
 						return ui
 			try:
-				cfgui = self.app.inflate(iface.name.lower() + ':conf')
+				if self._setup.name == 'Website':
+					cfgui = self.app.inflate('webapps:conf')
+					type_sel = [UI.SelectOption(text='None', value='None')]
+					for x in sorted(apis.databases(self.app).get_dbtypes()):
+						type_sel.append(UI.SelectOption(text = x, value = x))
+					cfgui.appendAll('ws-dbsel', *type_sel)
+				else:
+					cfgui = self.app.inflate(self._setup.name.lower() + ':conf')
 				ui.append('app-config', cfgui)
 			except:
+				raise
 				ui.find('app-config').append(UI.Label(text="No config options available for this app"))
 		else:
 			ui.remove('dlgSetup')
@@ -108,8 +120,7 @@ class WebAppsPlugin(CategoryPlugin):
 		if params[0] == 'drop':
 			try:
 				dt = self.sites[int(params[1])]
-				iface = self.apiops.get_interface(dt['type'])
-				self.mgr.remove(dt['name'], iface)
+				self.mgr.remove(dt['name'], dt['class'])
 			except Exception, e:
 				self.put_message('err', 'Website removal failed: ' + str(e))
 				self.app.log.error('Website removal failed: ' + str(e))
@@ -144,8 +155,7 @@ class WebAppsPlugin(CategoryPlugin):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
 				else:
 					try:
-						iface = self.apiops.get_interface(self._current)
-						self.mgr.add(name, iface, vars, True)
+						self.mgr.add(name, self._current, vars, True)
 					except Exception, e:
 						self.put_message('err', str(e))
 						self.app.log.error(str(e))
@@ -157,5 +167,5 @@ class WebAppsPlugin(CategoryPlugin):
 	@event('listitem/click')
 	def on_list_click(self, event, params, vars=None):
 		for p in self.apptypes:
-			if p == params[0]:
+			if p.name == params[0]:
 				self._current = p
