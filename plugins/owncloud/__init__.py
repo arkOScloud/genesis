@@ -3,12 +3,13 @@ MODULES = ['main']
 DEPS =  [
     (['any'],
      [
-    	('app', 'MariaDB', 'mysqld'),
+    	('app', 'mariadb', 'mysqld'),
     	('app', 'nginx', 'nginx'),
-    	('app', 'PHP', 'php'),
-    	('app', 'PHP-FPM', 'php-fpm'),
-    	('app', 'PHP-GD', 'php-gd'),
-    	('app', 'PHP-Intl', 'php-intl'),
+    	('app', 'php', 'php'),
+    	('app', 'php-fpm', 'php-fpm'),
+    	('app', 'php-gd', 'php-gd'),
+    	('app', 'php-intl', 'php-intl'),
+        ('app', 'php-apc', 'php-apc'),
     	('plugin', 'db-mariadb')
      ])
 ]

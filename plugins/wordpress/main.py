@@ -97,7 +97,8 @@ class WordPress(Plugin):
 		f.close()
 
 		# Make sure that the correct PHP settings are enabled
-		shell('sed -i s/;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
+		shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
+		shell('sed -i s/\;extension=apc.so/extension=apc.so/g /etc/php/conf.d/apc.ini')
 
 		# Finally, make sure that permissions are set so that Wordpress
 		# can make adjustments and save plugins when need be.
