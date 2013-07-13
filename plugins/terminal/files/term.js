@@ -112,7 +112,7 @@ function termInit(tid) {
     _term = $('#term');
 
     $(document).keypress(function (event) {
-        var ch = __filter_key(event, $.browser.mozilla);
+        var ch = __filter_key(event, navigator.userAgent.indexOf('Firefox') !== -1);
         if (event.which != 13)
             termSend(Base64.encode(ch));
         event.preventDefault();
