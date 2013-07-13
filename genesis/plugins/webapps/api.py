@@ -39,6 +39,10 @@ class Webapps(apis.API):
 
 	def get_sites(self):
 		applist = []
+		if not os.path.exists('/etc/nginx/sites-available'):
+			os.makedirs('/etc/nginx/sites-available')
+		if not os.path.exists('/etc/nginx/sites-enabled'):
+			os.makedirs('/etc/nginx/sites-enabled')
 		for site in os.listdir('/etc/nginx/sites-available'):
 			f = open(os.path.join('/etc/nginx/sites-available', site), 'r')
 			data = f.readline()

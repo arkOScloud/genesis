@@ -346,7 +346,7 @@ class PluginLoader:
             if shell_status('which '+dep[2]) != 0:
                 if platform == 'arch' or platform == 'arkos':
                     try:
-                        shell('pacman -S --noconfirm '+dep[1])
+                        shell('pacman -Sy --noconfirm --needed '+dep[1])
                         shell('systemctl enable '+dep[2])
                     except:
                         raise SoftwareRequirementError(*dep[1:])
@@ -499,13 +499,23 @@ class RepositoryManager:
         shell('rm -r %s/%s' % (dir, id))
 
         if id in PluginLoader.list_plugins():
+            depends = []
             try:
-                pdata = PluginLoader.list_plugins()[id].deps
-                for thing in pdata:
+                pdata = PluginLoader.list_plugins()
+                thisplugin = pdata[id].deps
+                for thing in thisplugin:
                     if 'app' in thing[0]:
-                        shell('systemctl stop ' + thing[2])
-                        shell('systemctl disable ' + thing[2])
-                        shell('pacman -%s --noconfirm ' %('Rn' if self.purge is '1' else 'R') + thing[1])
+                        depends.append((thing, 0))
+                for plugin in pdata:
+                    f.write(str(pdata[plugin].deps) + '\n')
+                    for item in enumerate(depends):
+                        if item[1][0] in pdata[plugin].deps:
+                            depends[item[0]] = (depends[item[0]][0], depends[item[0]][1]+1)
+                for thing in depends:
+                    if thing[1] <= 1:
+                        shell('systemctl stop ' + thing[0][2])
+                        shell('systemctl disable ' + thing[0][2])
+                        shell('pacman -%s --noconfirm ' %('Rn' if self.purge is '1' else 'R') + thing[0][1])
             except KeyError:
                 pass
             PluginLoader.unload(id)

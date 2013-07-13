@@ -1,5 +1,6 @@
 from genesis.com import *
 from genesis import apis
+from genesis.utils import shell_status
 
 class Databases(apis.API):
 	def __init__(self, app):
@@ -30,7 +31,14 @@ class Databases(apis.API):
 	def get_dbtypes(self):
 		dblist = []
 		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
-			dblist.append(plugin.name)
+			active = None
+			if plugin.task is not '':
+				status = shell_status('systemctl is-active %s' % plugin.task)
+				if status is 0:
+					active = True
+				else:
+					active = False
+			dblist.append((plugin.name, active))
 		return dblist
 
 	def get_databases(self):

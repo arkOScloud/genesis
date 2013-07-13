@@ -11,6 +11,7 @@ class SQLite3(Plugin):
     implements(apis.databases.IDatabase)
     name = 'SQLite3'
     icon = 'gen-database'
+    task = ''
     multiuser = False
 
     def add(self, dbname):

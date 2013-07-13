@@ -54,7 +54,11 @@ class UpdateCheck(Component):
             self.app.log.error('Update check failed: ' + str(e))
 
     def run(self):
-        if self.app.gconfig.get('genesis', 'updcheck') == '1':
+        try:
+            status = self.app.gconfig.get('genesis', 'updcheck')
+        except:
+            status = '1'
+        if status == '1':
             platform = detect_platform()
             if platform == 'arkos' or platform == 'arch':
                 self.check_updates()

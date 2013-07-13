@@ -7,7 +7,6 @@
         <tabcontrol id="tabs" active="0">
             <tabheader text="Databases" id="0"/>
             <tabheader text="Users" id="1"/>
-            <tabheader text="Services" id="2"/>
 
             <tabbody id="0">
                 <dt id="list" width="100%">
@@ -31,18 +30,6 @@
                         <dth>
                             <label text="Username" />
                         </dth>
-                        <dth>
-                            <label text="Database Type" />
-                        </dth>
-                        <dth width="1" />
-                    </dtr>
-                </dt>
-            </tabbody>
-
-            <tabbody id="2">
-                <dt id="svclist" width="100%">
-                    <dtr header="True">
-                        <dth width="1" />
                         <dth>
                             <label text="Database Type" />
                         </dth>

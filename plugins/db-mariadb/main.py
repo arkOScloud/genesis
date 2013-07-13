@@ -9,6 +9,7 @@ class MariaDB(Plugin):
     implements(apis.databases.IDatabase)
     name = 'MariaDB'
     icon = 'gen-database'
+    task = 'mysqld'
     multiuser = True
 
     def add(self, dbname):
@@ -79,7 +80,7 @@ class MariaDB(Plugin):
             'mysql', 'performance_schema']
         dbs = shell('mysql -e "SHOW DATABASES;"')
         for line in dbs.split('\n'):
-            if not line in excludes and line is not '':
+            if not line in excludes and line.split():
                 dblist.append({
                     'name': line,
                     'type': 'MariaDB',

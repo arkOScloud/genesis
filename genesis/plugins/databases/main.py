@@ -14,7 +14,8 @@ class DatabasesPlugin(CategoryPlugin):
 			key=lambda db: db['name'])
 		self.users = sorted(self.dbops.get_users(), 
 			key=lambda db: db['name'])
-		self.dbtypes = sorted(self.dbops.get_dbtypes())
+		self.dbtypes = sorted(self.dbops.get_dbtypes(), 
+			key=lambda db: db[0])
 
 	def on_session_start(self):
 		self._tab = 0
@@ -33,9 +34,15 @@ class DatabasesPlugin(CategoryPlugin):
 		ut = ui.find('usrlist')
 		tlbr = ui.find('toolbar')
 
+		for dbtype in self.dbtypes:
+			if dbtype[1] is False:
+				self.put_message('err', 'The %s database process is not '
+					'running. Your databases/users for this type will not '
+					'appear until you start the process.' % dbtype[0])
+
 		ubutton = False
 		for dbtype in self.dbtypes:
-			if self.dbops.get_interface(dbtype).multiuser == True:
+			if self.dbops.get_interface(dbtype[0]).multiuser == True:
 				ubutton = True
 		if ubutton == True:
 			tlbr.append(
@@ -87,7 +94,7 @@ class DatabasesPlugin(CategoryPlugin):
 				))
 
 		if self._add is not None:
-			type_sel = [UI.SelectOption(text = x, value = x)
+			type_sel = [UI.SelectOption(text = x[0], value = x[0])
                     for x in self.dbtypes]
 			ui.appendAll('type', *type_sel)
 		else:
@@ -106,8 +113,8 @@ class DatabasesPlugin(CategoryPlugin):
 		if self._useradd is not None:
 			type_sel = []
 			for x in self.dbtypes:
-				if self.dbops.get_interface(x).multiuser == True:
-					type_sel.append(UI.SelectOption(text = x, value = x))
+				if self.dbops.get_interface(x[0]).multiuser == True:
+					type_sel.append(UI.SelectOption(text=x[0], value=x[0]))
 			ui.appendAll('usertype', *type_sel)
 		else:
 			ui.remove('dlgAddUser')
@@ -115,7 +122,7 @@ class DatabasesPlugin(CategoryPlugin):
 		if self._chmod is not None:
 			iface = self.dbops.get_interface(self._chmod['type'])
 			plist = iface.chperm('', self._chmod['name'], 'check')
-			dblist = [UI.SelectOption(text = x['name'], value = x['name'])
+			dblist = [UI.SelectOption(text=x['name'], value=x['name'])
 					for x in iface.get_dbs()]
 			ui.find('permlist').set('value', plist)
 			ui.appendAll('dblist', *dblist)
