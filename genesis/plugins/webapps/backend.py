@@ -3,6 +3,7 @@ from genesis.utils import shell, shell_cs, download
 from genesis import apis
 
 import os
+import re
 import shutil
 
 
@@ -99,20 +100,13 @@ class WABackend:
 			except:
 				raise ReloadError('PHP-FPM')
 
-	def remove(self, name, webapp):
-		path = os.path.join('/srv/http/webapps', name)
-		if webapp == '':
-			f = open('/etc/nginx/sites-available/'+name, 'r')
-			for line in f.readlines():
-				if 'root' in line:
-					path = line.split()[1].rstrip(';')
-					break
-		else:
-			webapp.pre_remove(name, path)
-		shutil.rmtree(path)
-		self.nginx_remove(name)
-		if webapp != '':
-			webapp.post_remove(name)
+	def remove(self, site):
+		if site['class'] != '':
+			site['class'].pre_remove(site['name'], site['path'])
+		shutil.rmtree(site['path'])
+		self.nginx_remove(site['name'])
+		if site['class'] != '':
+			site['class'].post_remove(site['name'])
 
 	def nginx_add(self, name, stype, path, addr, port, add='', php=False):
 		if path == '':
@@ -129,6 +123,23 @@ class WABackend:
 			'}\n'
 			)
 		f.close()
+
+	def nginx_edit(self, origname, name, stype, path, addr, port, php=False):
+		path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', name))
+		shell('sed -i "s/.*GENESIS.*/# GENESIS %s/" /etc/nginx/sites-available/%s' % (stype, origname))	
+		shell('sed -i "s/.*listen .*/\tlisten %s\;/" /etc/nginx/sites-available/%s' % (port, origname))
+		shell('sed -i "s/.*server_name .*/\tserver_name %s\;/" /etc/nginx/sites-available/%s' % (addr, origname))
+		shell('sed -i "s/.*root .*/\troot %s\;/" /etc/nginx/sites-available/%s' % (path, origname))
+		shell('sed -i "s/.*index index.*/\tindex index.%s\;/" /etc/nginx/sites-available/%s' % ('php' if php else 'html', origname))
+		if name is not origname:
+			if os.path.exists(os.path.join('/srv/http/webapps', name)):
+				shutil.rmtree(os.path.join('/srv/http/webapps', name))
+			shutil.move(os.path.join('/srv/http/webapps', origname), 
+				os.path.join('/srv/http/webapps', name))
+			shutil.move(os.path.join('/etc/nginx/sites-available', origname),
+				os.path.join('/etc/nginx/sites-available', name))
+			self.nginx_disable(origname, reload=False)
+			self.nginx_enable(name)
 
 	def nginx_remove(self, sitename, reload=True):
 		try:

@@ -343,7 +343,7 @@ class PluginLoader:
         platform = PluginLoader.platform
 
         if dep[0] == 'app':
-            if shell_status('which '+dep[2]) != 0:
+            if shell_status('which '+dep[2]) != 0 and shell_status('pacman -Q '+dep[1]) != 0:
                 if platform == 'arch' or platform == 'arkos':
                     try:
                         shell('pacman -Sy --noconfirm --needed '+dep[1])

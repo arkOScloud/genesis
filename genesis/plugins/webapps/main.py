@@ -23,6 +23,7 @@ class WebAppsPlugin(CategoryPlugin):
 
 	def on_session_start(self):
 		self._add = None
+		self._edit = None
 		self._setup = None
 
 	def get_ui(self):
@@ -30,12 +31,18 @@ class WebAppsPlugin(CategoryPlugin):
 		t = ui.find('list')
 
 		for s in self.sites:
+			if s['addr'] is not False:
+				addr = 'http://' + s['addr'] + (':'+s['port'] if s['port'] is not '80' else '')
+			else:
+				addr = False
+
 			t.append(UI.DTR(
 				UI.Iconfont(iconfont="gen-earth"),
 				(UI.OutLinkLabel(
 					text=s['name'],
-					url=(s['addr'] if not s['addr'].endswith(':80') else s['addr'].rsplit(':', 1)[0])
-					) if s['addr'] is not False else UI.Label(text=s['name'])),
+					url=addr
+					) if s['addr'] is not False else UI.Label(text=s['name'])
+				),
 				UI.Label(text=s['type']),
 				UI.HContainer(
 					UI.TipIcon(
@@ -108,6 +115,13 @@ class WebAppsPlugin(CategoryPlugin):
 		else:
 			ui.remove('dlgSetup')
 
+		if self._edit is not None:
+			ui.find('cfgname').set('value', self._edit['name'])
+			ui.find('cfgaddr').set('value', self._edit['addr'])
+			ui.find('cfgport').set('value', self._edit['port'])
+		else:
+			ui.remove('dlgEdit')
+
 		return ui
 
 	@event('button/click')
@@ -117,10 +131,11 @@ class WebAppsPlugin(CategoryPlugin):
 				self.put_message('err', 'No webapp types installed. Check the Applications tab to find some')
 			else:
 				self._add = len(self.sites)
+		if params[0] == 'config':
+			self._edit = self.sites[int(params[1])]
 		if params[0] == 'drop':
 			try:
-				dt = self.sites[int(params[1])]
-				self.mgr.remove(dt['name'], dt['class'])
+				self.mgr.remove(self.sites[int(params[1])])
 			except Exception, e:
 				self.put_message('err', 'Website removal failed: ' + str(e))
 				self.app.log.error('Website removal failed: ' + str(e))
@@ -139,6 +154,25 @@ class WebAppsPlugin(CategoryPlugin):
 			if vars.getvalue('action', '') == 'OK':
 				self._setup = self._current
 			self._add = None
+		if params[0] == 'dlgEdit':
+			if vars.getvalue('action', '') == 'OK':
+				if vars.getvalue('cfgname', '') == '':
+					self.put_message('err', 'Must choose a name')
+				elif vars.getvalue('cfgaddr', '') == '':
+					self.put_message('err', 'Must choose an address')
+				elif vars.getvalue('cfgport', '') == '':
+					self.put_message('err', 'Must choose a port (default 80)')
+				else:
+					self.mgr.nginx_edit(
+						origname=self._edit['name'], 
+						name=vars.getvalue('cfgname'), 
+						stype=self._edit['type'], 
+						path=self._edit['path'], 
+						addr=vars.getvalue('cfgaddr'), 
+						port=vars.getvalue('cfgport'), 
+						php=self._edit['php']
+						)
+			self._edit = None
 		if params[0] == 'dlgSetup':
 			if vars.getvalue('action', '') == 'OK':
 				name = vars.getvalue('name', '').lower()
