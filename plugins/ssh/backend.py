@@ -3,7 +3,8 @@ from genesis.utils import *
 from genesis.com import *
 from genesis import apis
 
-from os import path, makedirs
+import os
+import re
 
 
 class SSHConfig(Plugin):
@@ -18,43 +19,47 @@ class SSHConfig(Plugin):
     def read(self):
         ss = ConfManager.get().load('ssh', '/etc/ssh/sshd_config').split('\n')
         r = {}
+        rroot = re.compile('.*?PermitRootLogin ([^\s]+)', flags=re.IGNORECASE)
+        rpkey = re.compile('.*?PubkeyAuthentication ([^\s]+)', flags=re.IGNORECASE)
+        rpasswd = re.compile('.*?PasswordAuthentication ([^\s]+)', flags=re.IGNORECASE)
+        repasswd = re.compile('.*?PermitEmptyPasswords ([^\s]+)', flags=re.IGNORECASE)
 
-        for s in ss:
-            if s != '':
-                if s[0] == '#' or s[0] == ' ':
-                    s = s[1:]
-                s = s.split()
-                if 'PermitRootLogin' in s[0]:
-                    r['root'] = True if 'yes' in s[1] else False
-                elif 'PubkeyAuthentication' in s[0]:
-                    r['pkey'] = True if 'yes' in s[1] else False
-                elif 'PasswordAuthentication' in s[0]:
-                    r['passwd'] = True if 'yes' in s[1] else False
-                elif 'PermitEmptyPasswords' in s[0]:
-                    r['epasswd'] = True if 'yes' in s[1] else False
+        for line in ss:
+            if re.match(rroot, line):
+                r['root'] = True if 'yes' in re.match(rroot, line).group(1) else False
+            elif re.match(rpkey, line):
+                r['pkey'] = True if 'yes' in re.match(rpkey, line).group(1) else False
+            elif re.match(rpasswd, line):
+                r['passwd'] = True if 'yes' in re.match(rpasswd, line).group(1) else False
+            elif re.match(repasswd, line):
+                r['epasswd'] = True if 'yes' in re.match(repasswd, line).group(1) else False
 
         return r
 
     def save(self, s):
         conf = ConfManager.get().load('ssh', '/etc/ssh/sshd_config').split('\n')
         f = ''
+        rroot = re.compile('.*?PermitRootLogin ([^\s]+)', flags=re.IGNORECASE)
+        rpkey = re.compile('.*?PubkeyAuthentication ([^\s]+)', flags=re.IGNORECASE)
+        rpasswd = re.compile('.*?PasswordAuthentication ([^\s]+)', flags=re.IGNORECASE)
+        repasswd = re.compile('.*?PermitEmptyPasswords ([^\s]+)', flags=re.IGNORECASE)
         for line in conf:
-            if 'PermitRootLogin' in line:
+            if re.match(rroot, line):
                 if s['root'] is True:
                     f += 'PermitRootLogin yes\n'
                 else:
                     f += 'PermitRootLogin no\n'
-            elif 'PubkeyAuthentication' in line:
+            elif re.match(rpkey, line):
                 if s['pkey'] is True:
                     f += 'PubkeyAuthentication yes\n'
                 else:
                     f += 'PubkeyAuthentication no\n'
-            elif 'PasswordAuthentication' in line:
+            elif re.match(rpasswd, line):
                 if s['passwd'] is True:
                     f += 'PasswordAuthentication yes\n'
                 else:
                     f += 'PasswordAuthentication no\n'
-            elif 'PermitEmptyPasswords' in line:
+            elif re.match(repasswd, line):
                 if s['epasswd'] is True:
                     f += 'PermitEmptyPasswords yes\n'
                 else:
@@ -91,9 +96,9 @@ class PKeysConfig(Plugin):
             self.currentuser = self.app.auth.user
 
         for user in self.app.gconfig.options('users'):
-            if not path.exists('/home/' + user + '/.ssh'):
-                makedirs('/home/' + user + '/.ssh')
-            if not path.exists('/home/' + user + '/.ssh/authorized_keys'):
+            if not os.path.exists('/home/' + user + '/.ssh'):
+                os.makedirs('/home/' + user + '/.ssh')
+            if not os.path.exists('/home/' + user + '/.ssh/authorized_keys'):
                 f = open('/home/' + user + '/.ssh/authorized_keys', 'w')
                 f.write('')
                 f.close()
