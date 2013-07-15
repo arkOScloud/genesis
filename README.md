@@ -15,16 +15,20 @@ Running Genesis from this Github repo is advised ONLY for development purposes.
 For information on developing plugins for use with Genesis, see the development centre on https://arkos.io. Specifically:
 
 * [Plugin Structure](http://arkos.io/dev/genesis/plugstruct) - Getting started with writing Genesis plugins
-* [Plugin Reference](http://arkos.io/dev/genesis/plugref) - Important classes and functions for writing plugins
+* [Webapps and Databases API](http://arkos.io/dev/genesis/wadapi) - Including a new webapp or database type for installation in Genesis
 * [User Interface](http://arkos.io/dev/genesis/ux) - How to write a user interface compatible with Genesis' UX system
-* [API Reference](http://arkos.io/dev/genesis/api) - The big book of all classes and functions
+* [Icon Reference](http://arkos.io/dev/genesis/iconref) - Choosing iconfont classes to use in your plugins
+* [General API Reference](http://arkos.io/dev/genesis/api) - The big book of all classes and functions
 
 Once you have a plugin, feel free to let @jacook know and testing can be arranged. If the plugin works well and contributes to arkOS' mission, it may then be included in the central plugin repository.
 
 
 ## Acknowledgments
-arkOS Project Contributors:
+Genesis is developed by:
 * Jacob Cook @jacook
+
+With a big thanks to those who have made contributions!
 * AJ Bahnken @ajvb
+* Timothy Farrell @explorigin
 
 This project was forked from Ajenti, an excellent server management framework by @Eugeny located here: https://github.com/Eugeny/ajenti.
