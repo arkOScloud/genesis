@@ -189,13 +189,15 @@ class WebAppsPlugin(CategoryPlugin):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
 				else:
 					try:
-						self.mgr.add(name, self._current, vars, True)
+						spmsg = self.mgr.add(name, self._current, vars, True)
 					except Exception, e:
 						self.put_message('err', str(e))
 						self.app.log.error(str(e))
 					else:
 						self.put_message('info', 
 							'%s added sucessfully' % name)
+						if spmsg is not '':
+							self.put_message('info', spmsg)
 			self._setup = None
 
 	@event('listitem/click')

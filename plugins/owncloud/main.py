@@ -51,6 +51,7 @@ class ownCloud(Plugin):
         '		fastcgi_param SCRIPT_FILENAME $document_root$1;\n'
         '		fastcgi_param PATH_INFO $2;\n'
         '		fastcgi_pass unix:/run/php-fpm/php-fpm.sock;\n'
+        '		fastcgi_read_timeout 900s;\n'
         '}\n'
         '\n'
         '	location ~* ^.+\.(jpg|jpeg|gif|bmp|ico|png|css|js|swf)$ {\n'
@@ -118,7 +119,11 @@ class ownCloud(Plugin):
 		shell('sed -i s/\;extension=openssl.so/extension=openssl.so/g /etc/php/php.ini')
 		shell('sed -i s/\;extension=apc.so/extension=apc.so/g /etc/php/conf.d/apc.ini')
 
+		# Return an explicatory message
+		return 'ownCloud takes a long time to set up on the RPi. Once you open the page for the first time, it may take 5-10 minutes for the content to appear. Please do not refresh the page.'
+
 	def pre_remove(self, name, path):
+		dbname = name
 		if os.path.exists(os.path.join(path, 'config', 'config.php')):
 			f = open(os.path.join(path, 'config', 'config.php'), 'r')
 			for line in f.readlines():
@@ -127,11 +132,11 @@ class ownCloud(Plugin):
 					dbname = data[1]
 					break
 			f.close()
-		elif os.path.exists(os.path.join(path, 'config', 'config.php')):
+		elif os.path.exists(os.path.join(path, 'config', 'autoconfig.php')):
 			f = open(os.path.join(path, 'config', 'autoconfig.php'), 'r')
 			for line in f.readlines():
 				if 'dbname' in line:
-					data = line.split('\'')[1::2]
+					data = line.split('\"')[1::2]
 					dbname = data[1]
 					break
 			f.close()

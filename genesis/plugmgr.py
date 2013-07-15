@@ -507,12 +507,11 @@ class RepositoryManager:
                     if 'app' in thing[0]:
                         depends.append((thing, 0))
                 for plugin in pdata:
-                    f.write(str(pdata[plugin].deps) + '\n')
                     for item in enumerate(depends):
                         if item[1][0] in pdata[plugin].deps:
                             depends[item[0]] = (depends[item[0]][0], depends[item[0]][1]+1)
                 for thing in depends:
-                    if thing[1] <= 1:
+                    if thing[1] <= 1 and not 'openssl' in thing[0][1]:
                         shell('systemctl stop ' + thing[0][2])
                         shell('systemctl disable ' + thing[0][2])
                         shell('pacman -%s --noconfirm ' %('Rn' if self.purge is '1' else 'R') + thing[0][1])

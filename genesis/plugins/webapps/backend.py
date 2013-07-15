@@ -31,6 +31,8 @@ class ReloadError(Exception):
 
 class WABackend:
 	def add(self, name, webapp, vars, enable=True):
+		specialmsg = ''
+
 		if webapp.dpath.endswith('.tar.gz'):
 			ending = '.tar.gz'
 		elif webapp.dpath.endswith('.tar.bz2'):
@@ -70,7 +72,7 @@ class WABackend:
 
 		# Setup the webapp and create an nginx serverblock
 		try:
-			webapp.post_install(name, target_path, vars)
+			specialmsg = webapp.post_install(name, target_path, vars)
 		except Exception, e:
 			raise InstallError('Webapp config - '+str(e))
 		php = vars.getvalue('php', '')
@@ -99,6 +101,9 @@ class WABackend:
 				self.php_reload()
 			except:
 				raise ReloadError('PHP-FPM')
+
+		if specialmsg is not '':
+			return specialmsg
 
 	def remove(self, site):
 		if site['class'] != '':
