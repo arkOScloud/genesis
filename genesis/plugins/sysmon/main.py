@@ -59,7 +59,7 @@ class Dashboard(CategoryPlugin):
                 dlg.append('list', UI.ListItem(
                     UI.HContainer(
                         UI.IconFont(iconfont=prov.iconfont),
-                        UI.Label(text=prov.name),
+                        UI.Label(text=' '+prov.name),
                     ),
                     id=prov.plugin_id,
                 ))

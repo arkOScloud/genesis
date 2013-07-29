@@ -91,8 +91,10 @@ class FirstRun(CategoryPlugin, URLHandler):
             if resize:
                 reboot = self.resize()
                 self.put_message('info', 'Remember to restart your arkOS node after this wizard. To do this, click "Settings > Reboot".')
-            if not ssh:
-                shell('sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config')
+            if ssh:
+                shell('sed -i "/PermitRootLogin no/c\PermitRootLogin yes" /etc/ssh/sshd_config')
+            else:
+                shell('sed -i "/PermitRootLogin yes/c\PermitRootLogin no" /etc/ssh/sshd_config')
             if hostname:
                 shell('echo "' + hostname + '" > /etc/hostname')
             zone = zone.split('/')

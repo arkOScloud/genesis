@@ -3,7 +3,7 @@ MODULES = ['backend', 'main']
 DEPS =  [
     (['any'],
      [
-    	('app', 'Samba', 'smbd'),
+    	('app', 'samba', 'smbd'),
         ('plugin'),
      ])
 ]
