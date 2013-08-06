@@ -104,7 +104,7 @@ class WebAppsPlugin(CategoryPlugin):
 					cfgui = self.app.inflate('webapps:conf')
 					type_sel = [UI.SelectOption(text='None', value='None')]
 					for x in sorted(apis.databases(self.app).get_dbtypes()):
-						type_sel.append(UI.SelectOption(text = x, value = x))
+						type_sel.append(UI.SelectOption(text=x[0], value=x[0]))
 					cfgui.appendAll('ws-dbsel', *type_sel)
 				else:
 					cfgui = self.app.inflate(self._setup.name.lower() + ':conf')
@@ -196,7 +196,7 @@ class WebAppsPlugin(CategoryPlugin):
 					else:
 						self.put_message('info', 
 							'%s added sucessfully' % name)
-						if spmsg is not '':
+						if spmsg:
 							self.put_message('info', spmsg)
 			self._setup = None
 

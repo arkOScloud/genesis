@@ -33,12 +33,12 @@ class WABackend:
 	def add(self, name, webapp, vars, enable=True):
 		specialmsg = ''
 
-		if webapp.dpath.endswith('.tar.gz'):
+		if webapp.dpath is None:
+			ending = ''
+		elif webapp.dpath.endswith('.tar.gz'):
 			ending = '.tar.gz'
 		elif webapp.dpath.endswith('.tar.bz2'):
 			ending = '.tar.bz2'
-		elif webapp.dpath is None:
-			ending = ''
 		else:
 			raise InstallError('Only gzip and bzip packages supported for now')
 
@@ -77,6 +77,9 @@ class WABackend:
 			raise InstallError('Webapp config - '+str(e))
 		php = vars.getvalue('php', '')
 		addtoblock = vars.getvalue('addtoblock', '')
+		if webapp.name == 'Website' and php == '1':
+			addtoblock = webapp.phpblock + '\n' + addtoblock
+
 		try:
 			self.nginx_add(
 				name=name, 
@@ -102,7 +105,7 @@ class WABackend:
 			except:
 				raise ReloadError('PHP-FPM')
 
-		if specialmsg is not '':
+		if specialmsg:
 			return specialmsg
 
 	def remove(self, site):
@@ -124,7 +127,7 @@ class WABackend:
 			'   server_name '+addr+';\n'
 			'   root '+path+';\n'
 			'   index index.'+('php' if php else 'html')+';\n'
-			+(add if add is not '' else '')+
+			+(add if add is not '' else '')+'\n'
 			'}\n'
 			)
 		f.close()
@@ -193,21 +196,29 @@ class Website(Plugin):
 
 	addtoblock = ''
 
+	phpblock = (
+		'	location ~ \.php$ {\n'
+		'		fastcgi_pass unix:/run/php-fpm/php-fpm.sock;\n'
+		'		fastcgi_index index.php;\n'
+		'		include fastcgi.conf;\n'
+		'	}\n'
+		)
+
 	def pre_install(self, name, vars):
-		if vars.getvalue('ws-dbsel', 'None') is not 'None':
+		if vars.getvalue('ws-dbsel', 'None') == 'None':
+			if vars.getvalue('ws-dbname', '') != '':
+				raise Exception('Must choose a database type if you want to create one')
+			if vars.getvalue('ws-dbpass', '') != '':
+				raise Exception('Must choose a database type if you want to create one')
+		if vars.getvalue('ws-dbsel', 'None') != 'None':
 			if vars.getvalue('ws-dbname', '') == '':
 				raise Exception('Must choose a database name if you want to create one')
 			if vars.getvalue('ws-dbpass', '') == '':
 				raise Exception('Must choose a database password if you want to create one')
-		if vars.getvalue('ws-dbsel', 'None') is 'None':
-			if vars.getvalue('ws-dbname', '') is not '':
-				raise Exception('Must choose a database type if you want to create one')
-			if vars.getvalue('ws-dbpass', '') is not '':
-				raise Exception('Must choose a database type if you want to create one')
 
 	def post_install(self, name, path, vars):
 		# Create a database if the user wants one
-		if vars.getvalue('ws-dbsel', 'None') is not 'None':
+		if vars.getvalue('ws-dbsel', 'None') != 'None':
 			dbtype = vars.getvalue('ws-dbsel', '')
 			dbname = vars.getvalue('ws-dbname', '')
 			passwd = vars.getvalue('ws-dbpass', '')
@@ -215,6 +226,26 @@ class Website(Plugin):
 			dbase.add(dbname)
 			dbase.usermod(dbname, 'add', passwd)
 			dbase.chperm(dbname, dbname, 'grant')
+
+		# Write a basic index file showing that we are here
+		if vars.getvalue('php', '0') == '1':
+			php = True
+		else:
+			php = False
+		f = open(os.path.join(path, 'index.'+('php' if php is True else 'html')), 'w')
+		f.write(
+			'<html>\n'
+			'<body>\n'
+			'<h1>Genesis - Custom Site</h1>\n'
+			'<p>Your site is online and available at '+path+'</p>\n'
+			'<p>Feel free to paste your site files here</p>\n'
+			'</body>\n'
+			'</html>\n'
+			)
+		f.close()
+
+		# Give access to httpd
+		shell('chown -R http:http '+path)
 
 	def pre_remove(self, name, path):
 		pass
