@@ -58,8 +58,7 @@ class FirstRun(CategoryPlugin, URLHandler):
 
     def resize(self):
         shell_stdin('fdisk /dev/mmcblk0', 'd\n2\nn\np\n2\n\n\nw\n')
-        shell('resize2fs /dev/mmcblk0p2')
-        shell('e2fsck -fy /dev/mmcblk0p2')
+        shell('(crontab -l ; echo "@reboot resize2fs /dev/mmcblk0p2") | crontab -')
         self.app.gconfig.set('genesis', 'restartmsg', 'yes')
         self.app.gconfig.save()
 
