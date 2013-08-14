@@ -106,7 +106,7 @@ class LinuxConfig(ModuleConfig):
     target = UsersBackend
     platform = ['debian', 'arch', 'arkos', 'fedora', 'centos', 'gentoo', 'mandriva']
 
-    cmd_add = 'useradd {0}'
+    cmd_add = 'useradd -m {0}'
     cmd_del = 'userdel {0}'
     cmd_add_group = 'groupadd {0}'
     cmd_del_group = 'groupdel {0}'
