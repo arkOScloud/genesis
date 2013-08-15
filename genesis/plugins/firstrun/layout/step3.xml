@@ -1,22 +1,14 @@
 <xml>
-    <label size="5" text="Initial System Settings" />
+    <label size="4" text="Welcome to Genesis" />
     <pad>
-    <label size="1" text="To finish the installation of arkOS, please fill out the following settings. If you don't know what a setting means, it's OK to leave it as the default value." />
-    <formbox hidecancel="True" id="frmSettings">
-        <formline text="Set hostname:">
-            <textinput name="hostname" value="arkos" />
-            <label size="1" text="Your hostname is the name you enter on your network to gain access to your arkOS node. It is also the address you will enter into your browser to get to Genesis. For example, if your hostname is 'arkos', then you will enter 'http://arkos:8000' to open Genesis." />
+    <formbox hidecancel="True" id="frmChangeRootPassword">
+        <label size="3" text="Please change the password for the root account. This password has to be changed, wether you plan on using the root account or not." />
+        <spacer height="20" />
+        <formline text="Password:">
+            <textinput name="root_password" password="True" />
         </formline>
-        <formline text="Set timezone:">
-            <select id="zoneselect" name="zoneselect" />
-        </formline>
-        <formline text="Expand arkOS to fit SD card?">
-            <checkbox name='resize' checked='False' />
-            <label size="1" text="If you installed arkOS via the Installer, and you have an SD card larger than 2GB, select this option. It will expand arkOS to give you all of the free space on this SD card. Requires a restart to take effect." />
-        </formline>
-        <formline text="Allow SSH as Root?">
-            <checkbox name='ssh' checked='False' /> 
-            <label size="1" text="Advanced: If you want to SSH into your RPi as the Root user, check this box. If not, leave it unchecked, and you can use SSH with the user established in the last step. Note that enabling this is a security risk!" />
+        <formline text="Password again:">
+            <textinput name="root_password_again" password="True" />
         </formline>
     </formbox>
     </pad>

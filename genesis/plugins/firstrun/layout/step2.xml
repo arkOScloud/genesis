@@ -10,6 +10,9 @@
         <formline text="Password:">
             <textinput name="password" password="True" />
         </formline>
+        <formline text="Password again:">
+            <textinput name="password_again" password="True" />
+        </formline>
     </formbox>
     </pad>
 </xml>

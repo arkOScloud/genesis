@@ -25,13 +25,13 @@ class FirstRun(CategoryPlugin, URLHandler):
         step = self.app.inflate('firstrun:step%i'%self._step)
         ui.append('content', step)
 
-        if self._step == 3:
+        if self._step == 4:
             tz_sel = [UI.SelectOption(text = x, value = x,
                         selected = False)
                         for x in zonelist.zones]
             ui.appendAll('zoneselect', *tz_sel)
 
-        if self._step == 4:
+        if self._step == 5:
             self._mgr = RepositoryManager(self.app.config)
             self._mgr.update_list()
 
@@ -70,8 +70,13 @@ class FirstRun(CategoryPlugin, URLHandler):
         if params[0] == 'frmChangePassword':
             self._username = vars.getvalue('login', '')
             self._password = vars.getvalue('password', '')
-            if self._username == '' or self._password == '':
-                self.put_message('err', 'Enter valid login and password')
+            self._password_again = vars.getvalue('password_again', '')
+            if self._username == '':
+                self.put_message('err', 'The username can\'t be empty')
+            elif self._password == '':
+                self.put_message('err', 'The password can\'t be empty')
+            elif self._password != self._password_again:
+                self.put_message('err', 'The passwords don\'t match')
             else:
                 # add Unix user
                 self.backend = UsersBackend(self.app)
@@ -82,15 +87,24 @@ class FirstRun(CategoryPlugin, URLHandler):
                         self._editing = ''
                         return
                 self._step = 3
+        if params[0] == 'frmChangeRootPassword':
+            self._root_password = vars.getvalue('root_password', '')
+            self._root_password_again = vars.getvalue('root_password_again', '')
+            if self._root_password == '':
+                self.put_message('err', 'The password can\'t be empty')
+            elif self._root_password != self._root_password_again:
+                self.put_message('err', 'The passwords don\'t match')
+            else:
+                self._step = 4
         if params[0] == 'frmSettings':
             hostname = vars.getvalue('hostname', '')
             zone = vars.getvalue('zoneselect', 'UTC')
             resize = vars.getvalue('resize', 'False')
-            ssh = vars.getvalue('ssh', 'False')
+            ssh_as_root = vars.getvalue('ssh_as_root', 'False')
             if resize:
                 reboot = self.resize()
                 self.put_message('info', 'Remember to restart your arkOS node after this wizard. To do this, click "Settings > Reboot".')
-            if ssh:
+            if ssh_as_root:
                 shell('sed -i "/PermitRootLogin no/c\PermitRootLogin yes" /etc/ssh/sshd_config')
             else:
                 shell('sed -i "/PermitRootLogin yes/c\PermitRootLogin no" /etc/ssh/sshd_config')
@@ -104,7 +118,7 @@ class FirstRun(CategoryPlugin, URLHandler):
             if os.path.exists('/etc/localtime'):
                 os.remove('/etc/localtime')
             os.symlink(zonepath, '/etc/localtime')
-            self._step = 4
+            self._step = 5
         if params[0] == 'frmPlugins':
             lst = self._mgr.available
 
@@ -121,8 +135,9 @@ class FirstRun(CategoryPlugin, URLHandler):
             self.app.gconfig.save()
             self.put_message('info', 'Setup complete!')
 
-            # add Unix user and allow sudo use
+            # change root password, add Unix user, and allow sudo use
             self.backend = UsersBackend(self.app)
+            self.backend.change_user_password('root', self._root_password)            
             self.backend.add_user(self._username)
             self.backend.change_user_password(self._username, self._password)
             sudofile = open('/etc/sudoers', 'r+')
@@ -139,4 +154,4 @@ class FirstRun(CategoryPlugin, URLHandler):
             self.app.gconfig.remove_option('users', 'admin')
             self.app.gconfig.set('users', self._username, hashpw(self._password))
             self.app.gconfig.save()
-            self._step = 5
+            self._step = 6
