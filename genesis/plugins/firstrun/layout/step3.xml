@@ -2,12 +2,12 @@
     <label size="4" text="Welcome to Genesis" />
     <pad>
     <formbox hidecancel="True" id="frmChangeRootPassword">
-        <label size="3" text="Please change the password for the root account. This password has to be changed, wether you plan on using the root account or not." />
+        <label size="3" text="Please change the password for the root (administrative) account. This password has to be changed, whether you plan on using the root account or not." />
         <spacer height="20" />
         <formline text="Password:">
             <textinput name="root_password" password="True" />
         </formline>
-        <formline text="Password again:">
+        <formline text="Re-enter password:">
             <textinput name="root_password_again" password="True" />
         </formline>
     </formbox>
