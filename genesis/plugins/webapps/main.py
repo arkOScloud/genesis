@@ -59,7 +59,7 @@ class WebAppsPlugin(CategoryPlugin):
 						iconfont='gen-cancel-circle',
 						id='drop/' + str(self.sites.index(s)),
 						text='Delete',
-						warning='Delete site %s? This action is irreversible'%s['name']
+						warning='Are you sure you wish to delete site %s? This action is irreversible.'%s['name']
 						)
 					),
 				))

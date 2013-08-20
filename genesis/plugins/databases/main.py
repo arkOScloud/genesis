@@ -68,7 +68,7 @@ class DatabasesPlugin(CategoryPlugin):
 						iconfont='gen-cancel-circle',
 						id='drop/' + str(self.dbs.index(d)),
 						text='Delete',
-						warning='Delete database %s'%d['name']
+						warning='Are you sure you wish to delete database %s? This may prevent any applications using it from functioning properly.'%d['name']
 						)
 					),
 				))
@@ -88,7 +88,7 @@ class DatabasesPlugin(CategoryPlugin):
 						iconfont='gen-cancel-circle',
 						id='deluser/' + str(self.users.index(u)),
 						text='Delete',
-						warning='Delete user %s'%u['name']
+						warning='Are you sure you wish to delete user %s? This may prevent any applications using it from functioning properly.'%u['name']
 						)
 					),
 				))

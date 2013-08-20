@@ -81,7 +81,6 @@
             <h3><i class="gen-warning"></i> Warning!</h3>
         </div>
         <div class="modal-body">
-            You are about to:
             <strong id="warning-text" />
         </div>
         <div class="modal-footer">

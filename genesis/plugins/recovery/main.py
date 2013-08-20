@@ -48,7 +48,7 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
                                 text='Recover',
                                 iconfont="gen-folder-upload",
                                 id='restore/%s/%s'%(self._current,rev.revision),
-                                warning='Restore configuration of %s as of %s (rev %s)'%(
+                                warning='Are you sure you wish to restore the configuration of %s as of %s (rev %s)?'%(
                                         self._current,
                                         rev.date,
                                         rev.revision
@@ -64,7 +64,7 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
                                 text='Drop',
                                 iconfont='gen-folder-minus',
                                 id='drop/%s/%s'%(self._current,rev.revision),
-                                warning='Delete backed up configuration of %s as of %s (rev %s)'%(
+                                warning='Are you sure you wish to delete the backed up configuration of %s as of %s (rev %s)?'%(
                                         self._current,
                                         rev.date,
                                         rev.revision

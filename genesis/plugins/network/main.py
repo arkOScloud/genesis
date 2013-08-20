@@ -59,14 +59,14 @@ class NetworkPlugin(CategoryPlugin):
                                 UI.TipIcon(iconfont='gen-%s'%('checkmark-circle' if not i.up else 'minus-circle'), 
                                     text=('Disconnect' if i.up else 'Connect'), 
                                     id=('conn' + ('down' if i.up else 'up') + '/' + i.name), 
-                                    warning='%s %s? This may interrupt your session.' % (('Disconnect' if i.up else 'Connect to'), i.name)),
+                                    warning='Are you sure you wish to %s %s? This may interrupt your session.' % (('disconnect from' if i.up else 'connect to'), i.name)),
                                 UI.TipIcon(iconfont='gen-%s'%('link' if not i.enabled else 'link-2'), 
                                     text=('Disable' if i.enabled else 'Enable'), 
                                     id=('conn' + ('disable' if i.enabled else 'enable') + '/' + i.name)),
                                 UI.TipIcon(iconfont='gen-cancel-circle', 
                                     text='Delete', 
                                     id=('delconn/' + i.name), 
-                                    warning='Delete %s? This is permanent and may interrupt your session.' % (i.name))
+                                    warning='Are you sure you wish to delete %s? This is permanent and may interrupt your session.' % (i.name))
                             ),
                            ))
 
@@ -89,7 +89,7 @@ class NetworkPlugin(CategoryPlugin):
                                 UI.TipIcon(iconfont='gen-%s'%('checkmark-circle' if not i.up else 'cancel-circle'), 
                                     text=('Down' if i.up else 'Up'), 
                                     id=('if' + ('down' if i.up else 'up') + '/' + i.name), 
-                                    warning='Bring %s interface %s? This may interrupt your session.' % (('Down' if i.up else 'Up'), i.name)
+                                    warning='Are you sure you wish to bring %s interface %s? This may interrupt your session.' % (('down' if i.up else 'up'), i.name)
                                 ),
                                 UI.TipIcon(iconfont='gen-%s'%('link' if not i.enabled else 'link-2'), 
                                     text=('Disable' if i.enabled else 'Enable'), 
@@ -156,7 +156,7 @@ class NetworkPlugin(CategoryPlugin):
                         iconfont='gen-cancel-circle',
                         id='del/' + str(self.hosts.index(h)),
                         text='Delete',
-                        warning='Remove %s from hosts'%h.ip
+                        warning='Are you sure you wish to remove %s from the list of hosts?'%h.ip
                     )
                 ),
             ))
