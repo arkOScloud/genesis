@@ -14,6 +14,10 @@
             <checkbox name='resize' checked='False' />
             <label size="1" text="If you installed arkOS via the Installer, and you have an SD card larger than 2GB, select this option. It will expand arkOS to give you all of the free space on this SD card. Requires a restart to take effect." />
         </formline>
+        <formline text="Optimize graphical memory?">
+            <checkbox name='gpumem' checked='True' />
+            <label size="1" text="As you will not be using your Raspberry Pi directly with a monitor/keyboard, you can elect to free up some of the reserved graphical memory for general use. Use this to set GPU memory to the minimum 16MB." />
+        </formline>
         <formline text="Allow SSH as Root?">
             <checkbox name='ssh_as_root' checked='False' /> 
             <label size="1" text="Advanced: If you want to SSH into your RPi as the Root user, check this box. If not, leave it unchecked, and you can use SSH with the user established in the last step. Note that enabling this is a security risk!" />

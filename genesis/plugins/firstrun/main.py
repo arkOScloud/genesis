@@ -100,16 +100,28 @@ class FirstRun(CategoryPlugin, URLHandler):
             hostname = vars.getvalue('hostname', '')
             zone = vars.getvalue('zoneselect', 'UTC')
             resize = vars.getvalue('resize', 'False')
+            gpumem = vars.getvalue('gpumem', 'False')
             ssh_as_root = vars.getvalue('ssh_as_root', 'False')
-            if resize:
+            
+            if resize != '0':
                 reboot = self.resize()
                 self.put_message('info', 'Remember to restart your arkOS node after this wizard. To do this, click "Settings > Reboot".')
-            if ssh_as_root:
+           
+            if ssh_as_root != '0':
                 shell('sed -i "/PermitRootLogin no/c\PermitRootLogin yes" /etc/ssh/sshd_config')
             else:
                 shell('sed -i "/PermitRootLogin yes/c\PermitRootLogin no" /etc/ssh/sshd_config')
-            if hostname:
+            
+            if hostname != '0':
                 shell('echo "' + hostname + '" > /etc/hostname')
+
+            if gpumem != '0':
+                shell('mount /dev/mmcblk0p1 /boot')
+                if os.path.exists('/boot/config.txt'):
+                    shell('sed -i "/gpu_mem=/c\gpu_mem=16" /boot/config.txt')
+                else:
+                    shell('echo "gpu_mem=16" >> /boot/config.txt')
+
             zone = zone.split('/')
             try:
                 zonepath = os.path.join('/usr/share/zoneinfo', zone[0], zone[1])
