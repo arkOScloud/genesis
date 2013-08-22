@@ -77,10 +77,20 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
     @url('^/core/progress$')
     def serve_progress(self, req, sr):
         r = []
+        if self.app.session.has_key('statusmsg'):
+            for msg in self.app.session['statusmsg']:
+                r.append({
+                    'id': msg[0],
+                    'type': 'statusbox',
+                    'owner': msg[0],
+                    'status': msg[1]
+                })
+            del self.app.session['statusmsg']
         for p in sorted(self.app.grab_plugins(IProgressBoxProvider)):
             if p.has_progress():
                 r.append({
                     'id': p.plugin_id,
+                    'type': 'progressbox',
                     'owner': p.title,
                     'status': p.get_progress(),
                     'can_abort': p.can_abort

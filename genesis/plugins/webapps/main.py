@@ -1,9 +1,11 @@
+from genesis.com import *
 from genesis.api import *
+from genesis.plugins.core.api import *
 from genesis.ui import *
 from genesis import apis
-from genesis.utils import download
+from genesis.utils import *
 
-import backend
+from backend import WABackend
 
 
 class WebAppsPlugin(CategoryPlugin):
@@ -13,7 +15,7 @@ class WebAppsPlugin(CategoryPlugin):
 
 	def on_init(self):
 		self.apiops = apis.webapps(self.app)
-		self.mgr = backend.WABackend()
+		self.mgr = WABackend()
 		self.sites = sorted(self.apiops.get_sites(), 
 			key=lambda st: st['name'])
 		ats = sorted(self.apiops.get_apptypes(), key=lambda x: x.name.lower())
@@ -96,6 +98,7 @@ class WebAppsPlugin(CategoryPlugin):
 				for site in self.sites:
 					if self._setup.name in site['type']:
 						ui.remove('dlgSetup')
+						ui.remove('dlgEdit')
 						self.put_message('err', 'Only one site of this type at any given time')
 						self._setup = None
 						return ui
@@ -134,13 +137,8 @@ class WebAppsPlugin(CategoryPlugin):
 		if params[0] == 'config':
 			self._edit = self.sites[int(params[1])]
 		if params[0] == 'drop':
-			try:
-				self.mgr.remove(self.sites[int(params[1])])
-			except Exception, e:
-				self.put_message('err', 'Website removal failed: ' + str(e))
-				self.app.log.error('Website removal failed: ' + str(e))
-			else:
-				self.put_message('info', 'Website successfully removed')
+			w = WAWorker(self, 'drop', self.sites[int(params[1])])
+			w.start()
 		if params[0] == 'enable':
 			dt = self.sites[int(params[1])]
 			self.mgr.nginx_enable(dt['name'])
@@ -188,16 +186,9 @@ class WebAppsPlugin(CategoryPlugin):
 				elif port == self.app.gconfig.get('genesis', 'bind_port', ''):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
 				else:
-					try:
-						spmsg = self.mgr.add(name, self._current, vars, True)
-					except Exception, e:
-						self.put_message('err', str(e))
-						self.app.log.error(str(e))
-					else:
-						self.put_message('info', 
-							'%s added sucessfully' % name)
-						if spmsg:
-							self.put_message('info', spmsg)
+					w = WAWorker(self, 'add', name, self._current, vars)
+					w.start()
+					
 			self._setup = None
 
 	@event('listitem/click')
@@ -205,3 +196,32 @@ class WebAppsPlugin(CategoryPlugin):
 		for p in self.apptypes:
 			if p.name == params[0]:
 				self._current = p
+
+
+class WAWorker(BackgroundWorker):
+	def __init__(self, *args):
+		self.backend = WABackend()
+		BackgroundWorker.__init__(self, *args)
+
+	def run(self, cat, action, name, current='', vars=None):
+		if action == 'add':
+			try:
+				spmsg = self.backend.add(cat, name, current, vars, True)
+			except Exception, e:
+				cat.clr_statusmsg()
+				cat.put_message('err', str(e))
+				cat.app.log.error(str(e))
+			else:
+				cat.put_message('info', 
+					'%s added sucessfully' % name)
+				if spmsg:
+					cat.put_message('info', spmsg)
+		elif action == 'drop':
+			try:
+				self.backend.remove(cat, name)
+			except Exception, e:
+				cat.clr_statusmsg()
+				cat.put_message('err', 'Website removal failed: ' + str(e))
+				cat.app.log.error('Website removal failed: ' + str(e))
+			else:
+				cat.put_message('info', 'Website successfully removed')

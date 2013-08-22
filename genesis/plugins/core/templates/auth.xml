@@ -40,7 +40,7 @@ $('#form').submit(function (e) {
     e.preventDefault();
     $('#login').addClass('disabled');
     $('#auth-error').css('display', 'none');
-    Genesis.UI.wipeOut('visible'); 
+    Genesis.UI.wipeOut(true); 
     $.ajax({
         url: '/auth',
         type: 'POST',

@@ -60,7 +60,6 @@ Genesis = {
     init: function () {
         Genesis.query('/handle/nothing');
         Genesis.Core.requestProgress();
-        Genesis.UI.animateProgress();
     },
 
     Core: {
@@ -95,23 +94,56 @@ Genesis = {
                 success: function (j) {
                     j = JSON.parse(j);
                     $('#progress-box').empty();
-                    clearTimeout(Genesis.UI._animateProgressTimeout);
                     for (prg in j) {
-                        Genesis.Core.addProgress(j[prg]);
-                    }
-                    Genesis.UI.animateProgress();
+                        if (j[prg].type === 'statusbox') {
+                            Genesis.Core.setStatusProgress(j[prg])
+                        } else {
+                            Genesis.Core.addProgress(j[prg]);
+                        };
+                    };
                 },
                 complete: function () {
-                    setTimeout('Genesis.Core.requestProgress()', 3000);
+                    setTimeout('Genesis.Core.requestProgress()', 2000);
                 }
             });
         },
 
         addProgress: function (desc) {
-            var html = '<div class="progress-box"><a class="close" onclick="return Genesis.showWarning(\'';
-            html += 'Cancel background task for ' + desc.owner + '?\', \'aborttask/' + desc.id + '\');">×</a>';
+            if (desc.can_abort) {
+                var html = '<div class="progress-box"><a class="close" onclick="return Genesis.showWarning(\'';
+                html += 'Cancel background task for ' + desc.owner + '?\', \'aborttask/' + desc.id + '\');">×</a>';
+            } else {
+                var html = '<div class="progress-box">'
+            };
             html += '<p><strong>' + desc.owner + '</strong> ' + desc.status + '</p></div>';
             $('#progress-box').append(html);
+        },
+
+        setStatusProgress: function (desc) {
+            if (desc.status && $('#pbox-'+desc.id).length) {
+                $('#pbox-'+desc.id).text(desc.status);
+            } else if (desc.status) {
+                Genesis.UI.wipeOut(true);
+                status = '<p class="pbox-status" id="pbox-'+desc.id+'">'+desc.status+'</p>'
+                $('#pbox-text').append(status);
+                $('#pbox').show();
+                $('#pbox').center();
+            } else if ($('#pbox').is(':visible')) {
+                $('#whiteout').stop(true);
+                Genesis.UI.wipeOut();
+                $('#pbox-text').empty();
+                $('#pbox').hide();
+                $('#whiteout').promise().done(function() {
+                    Genesis.query('/handle/nothing');
+                });
+            };
+        },
+
+        clearStatusProgress: function () {
+            $('#whiteout').stop(true);
+            Genesis.UI.wipeOut();
+            $('#pbox-text').empty();
+            $('#pbox').hide();
         },
 
     },
@@ -205,6 +237,7 @@ Genesis = {
             else {
                 $('#whiteout').stop().fadeTo(250, 0, function () { $(this).hide() });
                 $('#ajax-loader').stop().fadeTo(250, 0, function () { $(this).hide() });
+                $('#ajax-data').text('');
                 $('body').css('cursor', '');
             }
         },
@@ -238,25 +271,8 @@ Genesis = {
             $('#'+id).fadeIn(600);
             return false;
         },
-
-        _animateProgressTimeout: null, 
-
-        animateProgress: function () {
-            var x = $('.progress-box').css('background-position-x');
-            if (!x || x.length < 3) x = '0px';
-            x = x.substr(0, x.length - 2);
-            x = parseInt(x);
-            $('.progress-box').css('background-position-x', x);
-            $('.progress-box').stop().animate(
-                {'background-position-x': x + 100}, 
-                1000, 
-                'linear'
-            );
-            Genesis.UI._animateProgressTimeout = setTimeout('Genesis.UI.animateProgress()', 1000);
-        },
     }
 };
-
 
 
 jQuery.fn.center = function () {

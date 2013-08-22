@@ -212,6 +212,22 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
             self.app.session['messages'] = []
         self.app.session['messages'].append((cls, msg))
 
+    def put_statusmsg(self, msg):
+        """
+        Sets a blocking status message to appear while an operation completes.
+        """
+        if not self.app.session.has_key('statusmsg'):
+            self.app.session['statusmsg'] = []
+        self.app.session['statusmsg'].append((self.text, msg))
+
+    def clr_statusmsg(self):
+        """
+        Clear the currently shown status window
+        """
+        if not self.app.session.has_key('statusmsg'):
+            self.app.session['statusmsg'] = []
+        self.app.session['statusmsg'].append((self.text, False))
+
 
 class ModuleConfig(Plugin):
     """

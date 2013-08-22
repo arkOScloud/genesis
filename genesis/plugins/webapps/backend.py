@@ -30,7 +30,7 @@ class ReloadError(Exception):
 
 
 class WABackend:
-	def add(self, name, webapp, vars, enable=True):
+	def add(self, cat, name, webapp, vars, enable=True):
 		specialmsg = ''
 
 		if webapp.dpath is None:
@@ -44,6 +44,7 @@ class WABackend:
 
 		# Run webapp preconfig, if any
 		try:
+			cat.put_statusmsg('Running pre-install configuration...')
 			webapp.pre_install(name, vars)
 		except Exception, e:
 			raise InstallError('Webapp config - '+str(e))
@@ -59,6 +60,7 @@ class WABackend:
 		# Download and extract the source package
 		if webapp.dpath is not None:
 			try:
+				cat.put_statusmsg('Downloading webapp package...')
 				download(webapp.dpath, file=pkg_path)
 			except Exception, e:
 				raise InstallError('Couldn\'t download - %s' % str(e))
@@ -72,6 +74,7 @@ class WABackend:
 
 		# Setup the webapp and create an nginx serverblock
 		try:
+			cat.put_statusmsg('Running post-install configuration...')
 			specialmsg = webapp.post_install(name, target_path, vars)
 		except Exception, e:
 			raise InstallError('Webapp config - '+str(e))
@@ -105,16 +108,22 @@ class WABackend:
 			except:
 				raise ReloadError('PHP-FPM')
 
+		cat.clr_statusmsg()
+
 		if specialmsg:
 			return specialmsg
 
-	def remove(self, site):
+	def remove(self, cat, site):
 		if site['class'] != '':
+			cat.put_statusmsg('Preparing for removal...')
 			site['class'].pre_remove(site['name'], site['path'])
+		cat.put_statusmsg('Removing website...')
 		shutil.rmtree(site['path'])
 		self.nginx_remove(site['name'])
 		if site['class'] != '':
+			cat.put_statusmsg('Cleaning up...')
 			site['class'].post_remove(site['name'])
+		cat.clr_statusmsg()
 
 	def nginx_add(self, name, stype, path, addr, port, add='', php=False):
 		if path == '':
@@ -184,6 +193,7 @@ class WABackend:
 		status = shell_cs('systemctl restart php-fpm')
 		if status[0] >= 1:
 			raise
+
 
 class Website(Plugin):
 	implements(apis.webapps.IWebapp)

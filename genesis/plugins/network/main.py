@@ -43,59 +43,59 @@ class NetworkPlugin(CategoryPlugin):
         for x in self.conn_config.connections:
             i = self.conn_config.connections[x]
             cl.append(UI.DTR(
-                            UI.HContainer(
-                                UI.IconFont(iconfont=('gen-checkmark-circle' if i.up else ''),
-                                    text=('Connected' if i.up else ''),
-                                ),
-                            ),
-                            UI.Label(text=i.name),
-                            UI.Label(text=i.devclass),
-                            UI.Label(text=i.addressing),
-                            UI.HContainer(
-                                UI.TipIcon(iconfont='gen-info',
-                                    text='Info', id='conninfo/' + i.name),
-                                UI.TipIcon(iconfont='gen-pencil-2',
-                                    text='Edit', id='editconn/' + i.name),
-                                UI.TipIcon(iconfont='gen-%s'%('checkmark-circle' if not i.up else 'minus-circle'), 
-                                    text=('Disconnect' if i.up else 'Connect'), 
-                                    id=('conn' + ('down' if i.up else 'up') + '/' + i.name), 
-                                    warning='Are you sure you wish to %s %s? This may interrupt your session.' % (('disconnect from' if i.up else 'connect to'), i.name)),
-                                UI.TipIcon(iconfont='gen-%s'%('link' if not i.enabled else 'link-2'), 
-                                    text=('Disable' if i.enabled else 'Enable'), 
-                                    id=('conn' + ('disable' if i.enabled else 'enable') + '/' + i.name)),
-                                UI.TipIcon(iconfont='gen-cancel-circle', 
-                                    text='Delete', 
-                                    id=('delconn/' + i.name), 
-                                    warning='Are you sure you wish to delete %s? This is permanent and may interrupt your session.' % (i.name))
-                            ),
-                           ))
+                UI.HContainer(
+                    UI.IconFont(iconfont=('gen-checkmark-circle' if i.up else ''),
+                        text=('Connected' if i.up else ''),
+                    ),
+                ),
+                UI.Label(text=i.name),
+                UI.Label(text=i.devclass),
+                UI.Label(text=i.addressing),
+                UI.HContainer(
+                    UI.TipIcon(iconfont='gen-info',
+                        text='Info', id='conninfo/' + i.name),
+                    UI.TipIcon(iconfont='gen-pencil-2',
+                        text='Edit', id='editconn/' + i.name),
+                    UI.TipIcon(iconfont='gen-%s'%('checkmark-circle' if not i.up else 'minus-circle'), 
+                        text=('Disconnect' if i.up else 'Connect'), 
+                        id=('conn' + ('down' if i.up else 'up') + '/' + i.name), 
+                        warning='Are you sure you wish to %s %s? This may interrupt your session.' % (('disconnect from' if i.up else 'connect to'), i.name)),
+                    UI.TipIcon(iconfont='gen-%s'%('link' if not i.enabled else 'link-2'), 
+                        text=('Disable' if i.enabled else 'Enable'), 
+                        id=('conn' + ('disable' if i.enabled else 'enable') + '/' + i.name)),
+                    UI.TipIcon(iconfont='gen-cancel-circle', 
+                        text='Delete', 
+                        id=('delconn/' + i.name), 
+                        warning='Are you sure you wish to delete %s? This is permanent and may interrupt your session.' % (i.name))
+                    ),
+               ))
 
         nl = ui.find('devlist')
         
         for x in self.net_config.interfaces:
             i = self.net_config.interfaces[x]
             nl.append(UI.DTR(
-                            UI.HContainer(
-                                UI.IconFont(iconfont='gen-%s'%('checkmark-circle' if i.up else ''),
-                                    text=('Up' if i.up else '')
-                                ),
-                            ),
-                            UI.Label(text=i.name),
-                            UI.Label(text=i.devclass),
-                            UI.Label(text=self.net_config.get_ip(i.name)),
-                            UI.HContainer(
-                                UI.TipIcon(iconfont='gen-info',
-                                    text='Info', id='intinfo/' + i.name),
-                                UI.TipIcon(iconfont='gen-%s'%('checkmark-circle' if not i.up else 'cancel-circle'), 
-                                    text=('Down' if i.up else 'Up'), 
-                                    id=('if' + ('down' if i.up else 'up') + '/' + i.name), 
-                                    warning='Are you sure you wish to bring %s interface %s? This may interrupt your session.' % (('down' if i.up else 'up'), i.name)
-                                ),
-                                UI.TipIcon(iconfont='gen-%s'%('link' if not i.enabled else 'link-2'), 
-                                    text=('Disable' if i.enabled else 'Enable'), 
-                                    id=('if' + ('disable' if i.enabled else 'enable') + '/' + i.name))
-                            ),
-                           ))
+                UI.HContainer(
+                    UI.IconFont(iconfont='gen-%s'%('checkmark-circle' if i.up else ''),
+                        text=('Up' if i.up else '')
+                    ),
+                ),
+                UI.Label(text=i.name),
+                UI.Label(text=i.devclass),
+                UI.Label(text=self.net_config.get_ip(i.name)),
+                UI.HContainer(
+                    UI.TipIcon(iconfont='gen-info',
+                        text='Info', id='intinfo/' + i.name),
+                    UI.TipIcon(iconfont='gen-%s'%('checkmark-circle' if not i.up else 'cancel-circle'), 
+                        text=('Down' if i.up else 'Up'), 
+                        id=('if' + ('down' if i.up else 'up') + '/' + i.name), 
+                        warning='Are you sure you wish to bring %s interface %s? This may interrupt your session.' % (('down' if i.up else 'up'), i.name)
+                    ),
+                    UI.TipIcon(iconfont='gen-%s'%('link' if not i.enabled else 'link-2'), 
+                        text=('Disable' if i.enabled else 'Enable'), 
+                        id=('if' + ('disable' if i.enabled else 'enable') + '/' + i.name))
+                    ),
+               ))
             self.ifacelist.extend(i.name)
 
         c = ui.find('conn')
