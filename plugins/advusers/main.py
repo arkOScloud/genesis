@@ -1,3 +1,5 @@
+import re
+
 from genesis.ui import *
 from genesis.com import implements
 from genesis.api import *
@@ -155,6 +157,10 @@ class SysUsersPlugin(CategoryPlugin):
             v = vars.getvalue('value', '')
             if vars.getvalue('action', '') == 'OK':
                 if self._editing == 'adduser':
+                    if re.search('[A-Z]|\.|:|[ ]|-$', v):
+                        self.put_message('err', 'Username must not contain capital letters, dots, colons, spaces, or end with a hyphen')
+                        self._editing = ''
+                        return
                     self.reload_data()
                     for u in self.users:
                         if u.login == v:
