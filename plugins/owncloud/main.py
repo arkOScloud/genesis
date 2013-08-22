@@ -14,6 +14,7 @@ class ownCloud(Plugin):
 	name = 'ownCloud'
 	dpath = 'http://download.owncloud.org/community/owncloud-5.0.7.tar.bz2'
 	icon = 'gen-cloud'
+	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
 	php = True
 	nomulti = True
 	addtoblock = (

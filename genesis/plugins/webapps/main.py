@@ -8,27 +8,46 @@ from genesis.utils import *
 from backend import WABackend
 
 
-class WebAppsPlugin(CategoryPlugin):
+class WebAppsPlugin(apis.services.ServiceControlPlugin):
 	text = 'Websites'
 	iconfont = 'gen-earth'
 	folder = 'servers'
+	services = []
 
 	def on_init(self):
+		self.services = []
 		self.apiops = apis.webapps(self.app)
 		self.mgr = WABackend()
 		self.sites = sorted(self.apiops.get_sites(), 
 			key=lambda st: st['name'])
 		ats = sorted(self.apiops.get_apptypes(), key=lambda x: x.name.lower())
 		self.apptypes = sorted(ats, key=lambda x: (hasattr(x, 'sort')))
+		if len(self.sites) != 0:
+			self.services.append(('Web Server', 'nginx'))
 		if not self._current:
 			self._current = self.apptypes[0]
+		for apptype in self.apptypes:
+			ok = False
+			for site in self.sites:
+				if site['type'] == apptype.name:
+					ok = True
+			if ok == False:
+				continue
+			for dep in apptype.services:
+				post = True
+				for svc in self.services:
+					if svc[1] == dep[1]:
+						post = False
+				if post == True:
+					self.services.append((dep[0], dep[1]))
+				
 
 	def on_session_start(self):
 		self._add = None
 		self._edit = None
 		self._setup = None
 
-	def get_ui(self):
+	def get_main_ui(self):
 		ui = self.app.inflate('webapps:main')
 		t = ui.find('list')
 

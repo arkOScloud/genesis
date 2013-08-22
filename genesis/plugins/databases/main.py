@@ -3,10 +3,11 @@ from genesis.ui import *
 from genesis import apis
 
 
-class DatabasesPlugin(CategoryPlugin):
+class DatabasesPlugin(apis.services.ServiceControlPlugin):
 	text = 'Databases'
 	iconfont = 'gen-database'
 	folder = 'system'
+	services = []
 
 	def on_init(self):
 		self.dbops = apis.databases(self.app)
@@ -16,6 +17,15 @@ class DatabasesPlugin(CategoryPlugin):
 			key=lambda db: db['name'])
 		self.dbtypes = sorted(self.dbops.get_dbtypes(), 
 			key=lambda db: db[0])
+		for dbtype in self.dbtypes:
+			ok = True
+			if dbtype[1] == '':
+				ok = False
+			for svc in self.services:
+				if svc[1] == dbtype[1]:
+					ok = False
+			if ok == True:	
+				self.services.append((dbtype[0], dbtype[1]))
 
 	def on_session_start(self):
 		self._tab = 0
@@ -27,23 +37,23 @@ class DatabasesPlugin(CategoryPlugin):
 		self._input = None
 		self._output = None
 
-	def get_ui(self):
+	def get_main_ui(self):
 		ui = self.app.inflate('databases:main')
 		ui.find('tabs').set('active', self._tab)
 		t = ui.find('list')
 		ut = ui.find('usrlist')
 		tlbr = ui.find('toolbar')
 
+		ubutton = False
 		for dbtype in self.dbtypes:
-			if dbtype[1] is False:
+			if dbtype[2] is False:
 				self.put_message('err', 'The %s database process is not '
 					'running. Your databases/users for this type will not '
 					'appear until you start the process.' % dbtype[0])
-
-		ubutton = False
-		for dbtype in self.dbtypes:
-			if self.dbops.get_interface(dbtype[0]).multiuser == True:
-				ubutton = True
+			else:
+				if self.dbops.get_interface(dbtype[0]).multiuser == True:
+					ubutton = True
+			
 		if ubutton == True:
 			tlbr.append(
 				UI.Button(

@@ -38,7 +38,7 @@ class Databases(apis.API):
 					active = True
 				else:
 					active = False
-			dblist.append((plugin.name, active))
+			dblist.append((plugin.name, plugin.task, active))
 		return dblist
 
 	def get_databases(self):
