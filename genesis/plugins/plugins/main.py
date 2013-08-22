@@ -20,7 +20,7 @@ class PluginManager(CategoryPlugin, URLHandler):
     def get_ui(self):
         ui = self.app.inflate('plugins:main')
 
-        inst = self._mgr.installed
+        inst = sorted(self._mgr.installed, key=lambda x: x.name.lower())
 
         for k in inst:
             row = self.app.inflate('plugins:item')
@@ -51,7 +51,7 @@ class PluginManager(CategoryPlugin, URLHandler):
             ui.append('list', row)
 
 
-        lst = self._mgr.available
+        lst = sorted(self._mgr.available, key=lambda x: x.name.lower())
 
         btn = UI.Button(text='Check for updates', id='update')
         if len(lst) == 0:
