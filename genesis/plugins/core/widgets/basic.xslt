@@ -31,8 +31,18 @@
             </xsl:when>
 
             <xsl:when test="@onclick = '' or not (@onclick)">
+                <xsl:variable name="cls">
+                    <xsl:choose>
+                        <xsl:when test="@cls != ''">
+                            <xsl:value-of select="@cls" />
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="x:attr(@class, 'button')" />
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
                 return Genesis.query('/handle/<xsl:value-of
-                        select="x:attr(@class, 'button')" />/click/<xsl:value-of
+                        select="$cls" />/click/<xsl:value-of
                         select="@id" />');
             </xsl:when>
 
@@ -161,5 +171,5 @@
 </xsl:template>
 
 <xsl:template match="tipicon">
-    <tooltip placement="above" text="{@text}"><button id="{@id}" design="tipicon" onclick="{@onclick}" warning="{@warning}" iconfont="{@iconfont}"/></tooltip>
+    <tooltip placement="above" text="{@text}"><button id="{@id}" design="tipicon" cls="{@cls}" onclick="{@onclick}" warning="{@warning}" iconfont="{@iconfont}"/></tooltip>
 </xsl:template>

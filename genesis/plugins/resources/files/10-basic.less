@@ -22,53 +22,75 @@ body {
     }
 }
 
-
 .btn {
-	padding: 0 10px;
-	border: none;
-	background-image: none;
-	background-color: #BFC6CB;
-	color: #FFFFFF;
-	text-decoration: none;
-	text-shadow: none;
-	.box-shadow(none);
-	line-height: 25px;
-    	img {
-        	float: left;
-        	padding: 4px 6px 0 0;
-    	}
+    padding: 0 10px;
+    border: none;
+    background-image: none;
+    background-color: #BFC6CB;
+    color: #FFFFFF;
+    text-decoration: none;
+    text-shadow: none;
+    .box-shadow(none);
+    line-height: 25px;
+        img {
+            float: left;
+            padding: 4px 6px 0 0;
+        }
 
-	&:hover,
-	&:focus {
-		color: white;
-	}
+    &:hover,
+    &:focus {
+        color: white;
+    }
 
-	&:active,
-	&.active {
-		.box-shadow(none);
-		color: rgba(255, 255, 255, 0.75);
-	}
+    &:active,
+    &.active {
+        .box-shadow(none);
+        color: rgba(255, 255, 255, 0.75);
+    }
 
-	&.disabled,
-	&[disabled] {
-		color: white;
-	}
+    &.disabled,
+    &[disabled] {
+        color: white;
+    }
 
-	&-large {
-		padding: 18px 36px;
-	}
+    &-large {
+        padding: 18px 36px;
+    }
 
-	&-small {
-		padding: 2px 12px;
-	}
+    &-small {
+        padding: 2px 12px;
+    }
 
-	&-mini {
-		padding: 1px 8px;
-	}
+    &-mini {
+        padding: 1px 8px;
+    }
 }
 
 .btn.default {
     .defbtn();
+}
+
+.btn.tipicon {
+    margin: 2px;
+    background: none !important;
+    padding: 0 !important;
+    border: 0 !important;
+    line-height: 0;
+    color: #2C3E50;
+}
+
+.ui-el-toolbar {
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    padding: 5px 0;
+    .border-radius(5px);
+
+    .btn {
+        .custom-button-mixin();
+        .defbtn();
+        margin: 0 2px;
+        .border-radius(3px);
+    }
 }
 
 .btn.mini {
@@ -95,29 +117,6 @@ body {
     &:hover {
         background-color: #ED7669;
         text-shadow: none;
-    }
-}
-
-.btn.tipicon {
-    margin: 2px;
-    background: none !important;
-    padding: 0 !important;
-    border: 0 !important;
-    line-height: 0;
-    color: #2C3E50;
-}
-
-.ui-el-toolbar {
-    border-bottom: 1px solid #ccc;
-    width: 100%;
-    padding: 5px 0;
-    .border-radius(5px);
-
-    .btn {
-        .custom-button-mixin();
-        .defbtn();
-        margin: 0 2px;
-        .border-radius(3px);
     }
 }
 

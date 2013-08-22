@@ -10,7 +10,7 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
     text = 'Shares (Win)'
     iconfont = 'gen-upload-2'
     folder = 'servers'
-    service_name = 'smbd'
+    services = [('Samba', 'smbd')]
     
     def on_session_start(self):
         self._tab = 0

@@ -27,6 +27,6 @@
             </li>
         </ul>              
     </div>
-    <script>Genesis.UI.clearStatusProgress();</script>
+    <script>Genesis.Core.clearStatusProgress();</script>
 </pad>
 </xml>

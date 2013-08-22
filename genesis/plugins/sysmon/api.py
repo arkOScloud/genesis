@@ -178,44 +178,67 @@ class Services(API):
     
     class ServiceControlPlugin(CategoryPlugin):
         abstract = True
+        display = False
         
-        service_name = 'none'
-        service_expected_status = None
+        services = []
         
         def get_ui(self):
             mgr = self.app.get_backend(apis.services.IServiceManager)
-            
-            st = 'failed'
-            st = mgr.get_status(self.service_name)
-            try:
-                st = mgr.get_status(self.service_name)
-                if self.service_expected_status:        
-                    if self.service_expected_status != st:
-                        st = 'failed'
-            except:
-                st = 'failed'
 
-            self.service_status = st
-            self.service_expected_status = None
+            res = UI.DT(UI.DTR(
+                    UI.DTH(width=20),
+                    UI.DTH(UI.Label(text='Service')),
+                    UI.DTH(width=20),
+                    header=True
+                  ), width='100%', noborder=True)
+
+            alert = False
+
+            for s in self.services:
+                try:
+                    st = mgr.get_status(s[1])
+                except:
+                    st = 'failed'
+                    alert = True
+                if st == 'running':
+                    ctl = UI.HContainer(
+                              UI.TipIcon(text='Stop', cls='servicecontrol', iconfont='gen-stop', id='stop/' + s[1]),
+                              UI.TipIcon(text='Restart', cls='servicecontrol', iconfont='gen-loop-2', id='restart/' + s[1])
+                          )
+                else:
+                    ctl = UI.TipIcon(text='Start', cls='servicecontrol', iconfont='gen-play-2', id='start/' + s[1])
+                    alert = True
+                t = UI.DTR(
+                        UI.IconFont(iconfont='gen-' + ('play-2' if st == 'running' else 'stop')),
+                        UI.Label(text='%s (%s)'%(s[0], s[1])),
+                        ctl
+                    )
+                res.append(t)
             
             panel = UI.ServicePluginPanel(
-                status=self.service_status, 
-                servicename=self.service_name
+                alert=('True' if alert else 'False')
             )
-            return UI.Container(panel, self.get_main_ui())
+
+            if self.display:
+                dlg = UI.DialogBox(
+                        UI.ScrollContainer(res, width=300, height=300),
+                        id='dlgServices',
+                        hidecancel='True'
+                    )
+                return UI.Container(panel, dlg, self.get_main_ui())
+            else:
+                return UI.Container(panel, self.get_main_ui())
 
         @event('servicecontrol/click')
         def on_service_control(self, event, params, vars=None):
+            if params[0] == 'services':
+                self.display = True
             if params[0] == 'restart':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
-                mgr.restart(self.service_name)
-                self.service_expected_status = 'running'
+                mgr.restart(params[1])
             if params[0] == 'start':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
-                mgr.start(self.service_name)
-                self.service_expected_status = 'running'
+                mgr.start(params[1])
             if params[0] == 'stop':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
-                mgr.stop(self.service_name)
-                self.service_expected_status = 'stopped'
-
+                mgr.stop(params[1])
