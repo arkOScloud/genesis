@@ -1,6 +1,8 @@
 import subprocess
 import threading
+import os
 import sys
+import pwd
 
 
 class BackgroundWorker:
@@ -64,21 +66,37 @@ class BackgroundProcess (BackgroundWorker):
     - ``exitcode`` - `int`, process' exit code
     - ``cmdline`` - `str`, process' commandline
     """
-    def __init__(self, cmd):
-        BackgroundWorker.__init__(self, cmd)
+    def __init__(self, cmd, runas=None):
+        BackgroundWorker.__init__(self, cmd, runas)
         self.output = ''
         self.errors = ''
         self.exitcode = None
         self.cmdline = cmd
+        self.runas = runas
 
-    def run(self, c):
+    def run(self, c, runas):
         """
         Runs the process in foreground
         """
-        self.process = subprocess.Popen(c, shell=True,
-                                           stderr=subprocess.PIPE,
-                                           stdout=subprocess.PIPE,
-                                           stdin=subprocess.PIPE)
+        if runas != None and runas != 'anonymous':
+            env = os.environ.copy()
+            env['USER'] = runas
+            env['LOGNAME'] = runas
+            cwd = os.path.expanduser('~'+runas)
+            env['HOME'] = cwd
+            env['PWD'] = cwd
+            self.process = subprocess.Popen(c, shell=True,
+                                               stderr=subprocess.PIPE,
+                                               stdout=subprocess.PIPE,
+                                               stdin=subprocess.PIPE,
+                                               preexec_fn=self.as_user(runas),
+                                               cwd=cwd,
+                                               env=env)
+        else:
+            self.process = subprocess.Popen(c, shell=True,
+                                               stderr=subprocess.PIPE,
+                                               stdout=subprocess.PIPE,
+                                               stdin=subprocess.PIPE)
 
         self.output += self.process.stdout.readline() # Workaround; waiting first causes a deadlock
         while self.process.returncode is None and not self._aborted:
@@ -87,6 +105,15 @@ class BackgroundProcess (BackgroundWorker):
         self.errors += self.process.stderr.read()
         self.output += self.process.stdout.read()
         self.exitcode = self.process.returncode
+
+    def as_user(self, runas):
+        uid = pwd.getpwnam(runas)[2]
+        gid = pwd.getpwnam(runas)[3]
+        def set_ids():
+            os.setgroups([])
+            os.setregid(gid, gid)
+            os.setreuid(uid, uid)
+        return set_ids
 
     def feed_input(self, data):
         """

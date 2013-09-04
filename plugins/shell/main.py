@@ -38,7 +38,7 @@ class ShellPlugin(CategoryPlugin):
 
     def go(self, cmd):
         if not self._process.is_running():
-            self._process = BackgroundProcess(cmd)
+            self._process = BackgroundProcess(cmd, runas=self.app.auth.user)
             self._process.start()
             rcnt = [cmd]
             if len(self._recent) > 0:
