@@ -148,7 +148,7 @@ class WABackend:
 		shell('sed -i "s/.*server_name .*/\tserver_name %s\;/" /etc/nginx/sites-available/%s' % (addr, origname))
 		shell('sed -i "s/.*root .*/\troot %s\;/" /etc/nginx/sites-available/%s' % (path, origname))
 		shell('sed -i "s/.*index index.*/\tindex index.%s\;/" /etc/nginx/sites-available/%s' % ('php' if php else 'html', origname))
-		if name is not origname:
+		if name != origname:
 			if os.path.exists(os.path.join('/srv/http/webapps', name)):
 				shutil.rmtree(os.path.join('/srv/http/webapps', name))
 			shutil.move(os.path.join('/srv/http/webapps', origname), 
