@@ -7,6 +7,7 @@ from genesis.utils import shell
 import hashlib
 import os
 import random
+import urllib
 
 
 class WordPress(Plugin):
@@ -67,6 +68,20 @@ class WordPress(Plugin):
 		dbase.usermod(dbname, 'add', passwd)
 		dbase.chperm(dbname, dbname, 'grant')
 
+		# Use the WordPress key generators as first option
+		# If connection fails, use the secret_key as fallback
+		try:
+			keysection = urllib.urlopen('https://api.wordpress.org/secret-key/1.1/salt/').read()
+		except:
+			keysection = ''
+		if not 'define(\'AUTH_KEY' in keysection:
+			keysection = (
+				'define(\'AUTH_KEY\', \''+secret_key+'\');\n'
+				'define(\'SECURE_AUTH_KEY\', \''+secret_key+'\');\n'
+				'define(\'LOGGED_IN_KEY\', \''+secret_key+'\');\n'
+				'define(\'NONCE_KEY\', \''+secret_key+'\');\n'
+				)
+
 		# Write a standard WordPress config file
 		f = open(os.path.join(path, 'wp-config.php'), 'w')
 		f.write('<?php\n'
@@ -80,11 +95,8 @@ class WordPress(Plugin):
 				'define(\'WP_CACHE\', true);\n'
 				'\n'
 				'/*\n'
-				'define(\'AUTH_KEY\', \''+secret_key+'\');\n'
-				'define(\'SECURE_AUTH_KEY\', \''+secret_key+'\');\n'
-				'define(\'LOGGED_IN_KEY\', \''+secret_key+'\');\n'
-				'define(\'NONCE_KEY\', \''+secret_key+'\');\n'
-				'*/'
+				+keysection+
+				'*/\n'
 				'\n'
 				'$table_prefix = \'wp_\';\n'
 				'\n'
