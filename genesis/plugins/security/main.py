@@ -28,7 +28,7 @@ class FirewallPlugin(CategoryPlugin):
         self._error = None
 
     def get_ui(self):
-        ui = self.app.inflate('iptables:main')
+        ui = self.app.inflate('security:main')
         if self.cfg.has_autostart():
             btn = ui.find('autostart')
             btn.set('text', 'Disable autostart')

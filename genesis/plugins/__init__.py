@@ -5,6 +5,7 @@ from genesis.plugins.firstrun import *
 from genesis.plugins.plugins import *
 from genesis.plugins.recovery import *
 from genesis.plugins.advancedcontrols import *
+from genesis.plugins.security import *
 from genesis.plugins.sysmon import *
 from genesis.plugins.sysalerts import *
 from genesis.plugins.users import *
@@ -14,4 +15,4 @@ from genesis.plugins.webapps import *
 
 plist = ['resources', 'core', 'advancedcontrols', 'dashboard', 
 'firstrun', 'databases', 'config', 'plugins', 'network', 'recovery', 
-'sysmon', 'sysalerts', 'users', 'webapps']
+'security', 'sysmon', 'sysalerts', 'users', 'webapps']
