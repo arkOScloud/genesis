@@ -18,7 +18,7 @@ class TransmissionConfig(Plugin):
     def save(self, configDict):
         s = json.dumps(configDict)
         ConfManager.get().save('transmission', self.configFile, s)
-        ConfManager.get().commit()
+        ConfManager.get().commit('transmission')
 
     def __init__(self):
         pass
