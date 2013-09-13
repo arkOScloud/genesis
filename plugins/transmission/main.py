@@ -17,7 +17,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     def get_ui(self):
         ui = self.app.inflate('transmission:main')
 
-        for k,v in self.config:
+        for k,v in self.config.items():
             e = UI.DTR(
             UI.IconFont(iconfont='gen-folder'),
                     UI.Label(text=k),
