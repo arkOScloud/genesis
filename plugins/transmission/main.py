@@ -7,11 +7,11 @@ import backend
 class TransmissionPlugin(apis.services.ServiceControlPlugin):
     text = 'Transmission'
     iconfont = 'gen-download'
-    folder = 'applications'
+    folder = 'tools'
     services = [('Transmission Client', 'transmission-daemon')]
 
     def on_init(self):
-        be = backend.TransmissionConfig()
+        be = backend.TransmissionConfig(self)
         self.config = be.load()
 
     def get_ui(self):
