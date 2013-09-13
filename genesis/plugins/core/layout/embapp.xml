@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <style type="text/css">
+            html, body {
+                margin:0;
+                height: 100%;
+            }
+
+            #ea-header {
+                top: 0;
+                position: fixed;
+                height: 50px;
+                width: 100%;
+                background-color: #2C3E50;
+                color: #FFFFFF;
+            }
+
+            #ea-header a {
+                color: #FFFFFF;
+            }
+
+            #ea-frame {
+                position: fixed;
+                top: 50px;
+                bottom: 0px;
+                width: 100%;
+                height: 100%;
+            }
+
+            .ea-link {
+                display: inline;
+                margin-left: 15px;
+                float: left;
+            }
+
+            .ea-port {
+                display: inline;
+                margin-right: 15px;
+                float: right;
+            }
+        </style>
+        <script src="/dl/core/_jquery.min.js" />
+    </head>
+    <body>
+        <div id="ea-header">
+            <div class="ea-link">
+                <p><a id="ea-link" href="">« Return to Genesis</a></p>
+            </div>
+            <div class="ea-port">
+                <p id="ea-port"></p>
+            </div>
+        </div>
+        <iframe id="ea-frame" src="" />
+    <script>
+        var port = $('#ea-port').text();
+        var frameurl = window.location.origin.replace(/:\d+/g, '');
+        $('#ea-link').attr('href', window.location.origin);
+        $('#ea-frame').attr('src', frameurl + port);
+    </script>
+    </body>
+</html>
