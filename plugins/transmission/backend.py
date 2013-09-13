@@ -1,14 +1,27 @@
+import json
+
 from genesis.api import *
+from genesis.com import *
 
-class SambaConfig(IConfigurable):
-    pass
+class TransmissionConfig(Plugin):
+    implements(IConfigurable)
+    name = 'Transmission'
+    id = 'transmission'
+    iconfont = 'gen-download'
 
-class GeneralConfig(ModuleConfig):
-    target=SambaConfig
-    platform = ['debian', 'centos', 'arch', 'arkos', 'gentoo', 'mandriva']
+    configFile = '/var/lib/transmission/.config/transmission-daemon/settings.json'
 
-    labels = {
-        'cfg_file': 'Configuration file'
-    }
+    def load(self):
+        s = ConfManager.get().load('transmission', self.configFile)
+        return json.loads(s)
 
-    cfg_file = '/var/lib/transmission/.config/transmission-daemon/settings.json'
+    def save(self, configDict):
+        s = json.dumps(configDict)
+        ConfManager.get().save('transmission', self.configFile, s)
+        ConfManager.get().commit()
+
+    def __init__(self):
+        pass
+
+    def list_files(self):
+        return [self.configFile]
