@@ -228,6 +228,9 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
             self.app.session['statusmsg'] = []
         self.app.session['statusmsg'].append((self.text, False))
 
+    def redirapp(self, port):
+        return UI.JS(code='window.location.replace("/embapp/'+str(port)+'")')
+
 
 class ModuleConfig(Plugin):
     """
