@@ -9,8 +9,6 @@ class TransmissionConfig(Plugin):
     id = 'transmission'
     iconfont = 'gen-download'
 
-    configFile = '/var/lib/transmission/.config/transmission-daemon/settings.json'
-
     def load(self):
         s = ConfManager.get().load('transmission', self.configFile)
         return json.loads(s)
@@ -21,7 +19,17 @@ class TransmissionConfig(Plugin):
         ConfManager.get().commit('transmission')
 
     def __init__(self):
-        pass
+        self.configFile = self.app.get_config(self).cfg_file
 
     def list_files(self):
         return [self.configFile]
+
+class GeneralConfig(ModuleConfig):
+    target=TransmissionConfig
+    platform = ['debian', 'centos', 'arch', 'arkos', 'gentoo', 'mandriva']
+
+    labels = {
+        'cfg_file': 'Configuration file'
+    }
+
+    cfg_file = '/var/lib/transmission/.config/transmission-daemon/settings.json'
