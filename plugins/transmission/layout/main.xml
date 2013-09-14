@@ -7,7 +7,7 @@
         <tabcontrol id="tabs" active="0">
             <tabheader text="Config" id="0"/>
             <tabbody id="0">
-                <scrollcontainer>
+                <scrollcontainer width="100%">
                     <dt id="config" width="100%">
                         <dtr header="True">
                             <dth width="1" />

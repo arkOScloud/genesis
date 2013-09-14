@@ -19,9 +19,9 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
 
         for k,v in self.config.items():
             e = UI.DTR(
-            UI.IconFont(iconfont='gen-folder'),
-                    UI.Label(text=k),
-                    UI.Label(text=v),
+                UI.IconFont(iconfont='gen-folder'),
+                UI.Label(text=k),
+                UI.Label(text=v),
             )
             ui.append('config', e)
 
