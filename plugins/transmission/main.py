@@ -19,6 +19,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
 
     def get_main_ui(self):
         if self._redir:
+            self._redir = False
             return self.redirapp(int(self._config['rpc-port']))
         else:
             ui = self.app.inflate('transmission:main')
