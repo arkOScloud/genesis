@@ -29,3 +29,8 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             ui.append('config', e)
 
         return ui
+
+    @event('button/click')
+    def on_click(self, event, params, vars = None):
+        if params[0] == 'launch':
+            return self.redirapp(int(self.config['rpc-port']))
