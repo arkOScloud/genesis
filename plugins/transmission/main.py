@@ -11,8 +11,8 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     services = [('Transmission Client', 'transmission')]
 
     def on_init(self):
-        be = backend.TransmissionConfig(self.app)
-        self._config = be.load()
+        self._config = backend.TransmissionConfig(self.app)
+        self._config.load()
 
     def on_session_start(self):
         self._redir = False
@@ -21,18 +21,18 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     def get_main_ui(self):
         if self._redir:
             self._redir = False
-            return self.redirapp(int(self._config['rpc-port']))
+            return self.redirapp(int(self._config.get('rpc-port')))
         else:
             ui = self.app.inflate('transmission:main')
             ui.find('tabs').set('active', self._tab)
 
             basic = UI.Container(
                 UI.Formline(
-                    UI.TextInput(name='rpc-port', value=self._config['rpc-port']),
+                    UI.TextInput(name='rpc-port', value=self._config.get('rpc-port')),
                     text='RPC Port',
                     ),
                 UI.Formline(
-                    UI.Checkbox( name='rpc-whitelist-enabled', checked=self._config['rpc-whitelist-enabled']=='true'),
+                    UI.Checkbox( name='rpc-whitelist-enabled', checked=self._config.get('rpc-whitelist-enabled')=='true'),
                     text='RPC Whitelist Enabled',
                     ),
             )

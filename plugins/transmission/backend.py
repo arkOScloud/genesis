@@ -11,15 +11,25 @@ class TransmissionConfig(Plugin):
 
     def load(self):
         s = ConfManager.get().load('transmission', self.configFile)
-        return json.loads(s)
+        self.config = json.loads(s)
 
-    def save(self, configDict):
-        s = json.dumps(configDict)
+    def save(self):
+        s = json.dumps(self.config)
         ConfManager.get().save('transmission', self.configFile, s)
         ConfManager.get().commit('transmission')
 
+    def get(self, key):
+        return self.config[key]
+
+    def set(self, key, value):
+        self.config[key] = value
+
+    def items(self):
+        return self.config.items()
+
     def __init__(self):
         self.configFile = self.app.get_config(self).cfg_file
+        self.config = {}
 
     def list_files(self):
         return [self.configFile]
