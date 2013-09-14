@@ -27,14 +27,18 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             ui.find('tabs').set('active', self._tab)
 
             basic = UI.FormBox(
+                UI.FormLine(
+                    UI.TextInput(name='download-dir', value=self._config.get('download-dir')),
+                    text='Download Directory',
+                ),
                 UI.Formline(
                     UI.TextInput(name='rpc-port', value=self._config.get('rpc-port')),
                     text='RPC Port',
-                    ),
+                ),
                 UI.Formline(
                     UI.Checkbox( name='rpc-whitelist-enabled', checked=self._config.get('rpc-whitelist-enabled')),
                     text='RPC Whitelist Enabled',
-                    ),
+                ),
                 id="frmBasic"
             )
             ui.append('tab0', basic)
@@ -62,6 +66,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             if vars.getvalue('action', '') == 'OK':
                 self._config.set('rpc-port', int(vars.getvalue('rpc-port', '')))
                 self._config.set('rpc-whitelist-enabled', vars.getvalue('rpc-whitelist-enabled', '')=='1')
+                self._config.set('download-dir', vars.getvalue('download-dir', ''))
                 self._config.save()
             elif vars.getvalue('action', '') == 'Cancel':
                 self._config.load()
