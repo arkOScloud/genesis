@@ -60,8 +60,8 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
         if params[0] == 'frmBasic':
             print vars
             if vars.getvalue('action', '') == 'OK':
-                self._config.set('rpc-port', vars.getvalue('rpc-port', ''))
-                self._config.set('rpc-whitelist-enabled', vars.getvalue('rpc-whitelist-enabled', ''))
+                self._config.set('rpc-port', int(vars.getvalue('rpc-port', '')))
+                self._config.set('rpc-whitelist-enabled', bool(vars.getvalue('rpc-whitelist-enabled', '')))
                 self._config.save()
             elif vars.getvalue('action', '') == 'Cancel':
                 self._config.load()
