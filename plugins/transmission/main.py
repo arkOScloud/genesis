@@ -33,4 +33,4 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     @event('button/click')
     def on_click(self, event, params, vars = None):
         if params[0] == 'launch':
-            return self.redirapp(int(self.config['rpc-port']))
+            self.redirapp(int(self.config['rpc-port']))
