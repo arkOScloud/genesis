@@ -26,7 +26,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             ui = self.app.inflate('transmission:main')
             ui.find('tabs').set('active', self._tab)
 
-            basic = UI.Container(
+            basic = UI.FormBox(id="frmBasic",
                 UI.Formline(
                     UI.TextInput(name='rpc-port', value=self._config.get('rpc-port')),
                     text='RPC Port',
@@ -60,4 +60,3 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             self._config.load()
         elif params[0] == 'save':
             print vars
-

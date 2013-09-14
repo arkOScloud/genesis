@@ -11,26 +11,25 @@
             </tabbody>
             <tabheader text="Advanced" id="1"/>
             <tabbody id="1">
-                <scrollcontainer width="100%">
-                    <dt id="all_config" width="100%">
-                        <dtr header="True">
-                            <dth width="1" />
-                            <dth>
-                                <label text="Key" />
-                            </dth>
-                            <dth>
-                                <label text="Value" />
-                            </dth>
-                            <dth width="1" />
-                        </dtr>
-                    </dt>
-                </scrollcontainer>
+                <formbox id="frmAdvanced">
+                    <scrollcontainer width="100%">
+                        <dt id="all_config" width="100%">
+                            <dtr header="True">
+                                <dth width="1" />
+                                <dth>
+                                    <label text="Key" />
+                                </dth>
+                                <dth>
+                                    <label text="Value" />
+                                </dth>
+                                <dth width="1" />
+                            </dtr>
+                        </dt>
+                    </scrollcontainer>
+                </formbox>
             </tabbody>
 
         </tabcontrol>
-        <hcontainer>
-            <button id="save" text="Save" />
-            <button id="discard" text="Discard" />
-        </hcontainer>
+
     </pad>
 </xml>
