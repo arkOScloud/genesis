@@ -3,6 +3,8 @@ from genesis.com import implements
 from genesis.api import *
 from genesis import apis
 from genesis.utils import *
+from genesis.plugmgr import PluginLoader
+from genesis.plugins.network.api import *
 
 from backend import *
 
@@ -18,6 +20,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
     def on_init(self):
         self.cfg = Config(self.app)
         self.cfg.load()
+        self.net_config = self.app.get_backend(INetworkConfig)
 
     def on_session_start(self):
         self._stab = 0
@@ -29,6 +32,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self._editing_chain = None
         self._editing_rule = None
         self._error = None
+        self._srvmgr = apis.servermanager(self.app)
 
     def get_main_ui(self):
         ui = self.app.inflate('security:main')
@@ -38,6 +42,32 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             btn.set('text', 'Disable autostart')
             btn.set('id', 'noautostart')
 
+        ranges = []
+        for x in self.net_config.interfaces:
+            i = self.net_config.interfaces[x]
+            r = self.net_config.get_ip(i.name)
+            if not '127.0.0.1' in r and not '0.0.0.0' in r:
+                ranges.append(self.net_config.get_ip(i.name))
+        ui.find('ranges').set('text', 'Local networks: ' + ', '.join(ranges))
+
+        al = ui.find('applist')
+
+        for s in self._srvmgr.get_all():
+            if not hasattr(s, 'allow'):
+                s.allow = 2
+            if s.allow == 1:
+                perm = 'Local Only'
+            elif s.allow == 2:
+                perm = 'All Networks'
+            else:
+                perm = 'None'
+            al.append(UI.DTR(
+                UI.IconFont(iconfont=s.icon),
+                UI.Label(text=s.name),
+                UI.Label(text=', '.join(str(x) for x in s.ports)),
+                UI.Label(text=perm),
+                UI.Label(text='')
+               ))
 
         tc = UI.TabControl(active=self._tab)
         ui.append('advroot', tc)
