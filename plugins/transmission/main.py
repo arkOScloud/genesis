@@ -61,7 +61,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             print vars
             if vars.getvalue('action', '') == 'OK':
                 self._config.set('rpc-port', int(vars.getvalue('rpc-port', '')))
-                self._config.set('rpc-whitelist-enabled', bool(vars.getvalue('rpc-whitelist-enabled', '')))
+                self._config.set('rpc-whitelist-enabled', vars.getvalue('rpc-whitelist-enabled', '')=='1')
                 self._config.save()
             elif vars.getvalue('action', '') == 'Cancel':
                 self._config.load()
