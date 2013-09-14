@@ -24,13 +24,25 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
         else:
             ui = self.app.inflate('transmission:main')
 
+            basic = UI.Container(
+                UI.Formline(
+                    UI.TextInput(name='rpc-port', value=self._config['rpc-port']),
+                    text='RPC Port',
+                    ),
+                UI.Formline(
+                    UI.Checkbox( name='rpc-whitelist-enabled', checked=self._config['rpc-whitelist-enabled']=='true'),
+                    text='RPC Whitelist Enabled',
+                    ),
+            )
+            ui.append('2', basic)
+
             for k,v in sorted(self._config.items()):
                 e = UI.DTR(
                     UI.IconFont(iconfont='gen-folder'),
                     UI.Label(text=k),
                     UI.Label(text=v),
                 )
-                ui.append('config', e)
+                ui.append('all_config', e)
 
             return ui
 

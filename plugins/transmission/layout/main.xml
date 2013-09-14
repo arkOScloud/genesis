@@ -5,10 +5,14 @@
 
     <pad id="main">
         <tabcontrol id="tabs" active="0">
-            <tabheader text="Config" id="0"/>
-            <tabbody id="0">
+            <tabheader text="Basic" id="0" />
+            <tabbody id="2">
+
+            </tabbody>
+            <tabheader text="Advanced" id="1"/>
+            <tabbody id="3">
                 <scrollcontainer width="100%">
-                    <dt id="config" width="100%">
+                    <dt id="all_config" width="100%">
                         <dtr header="True">
                             <dth width="1" />
                             <dth>
