@@ -52,7 +52,11 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     def on_click(self, event, params, vars = None):
         if params[0] == 'launch':
             self._redir=True
-        elif params[0] == 'discard':
+
+    @event('dialog/submit')
+    @event('form/submit')
+    def on_submit(self, event, params, vars=None):
+        if params[0] == 'discard':
             self._config.load()
         elif params[0] == 'save':
             print vars
