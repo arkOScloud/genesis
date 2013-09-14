@@ -14,7 +14,15 @@ class Dashboard(CategoryPlugin):
     folder = 'top'
 
     def on_session_start(self):
+        # start port and rule tracking on startup
+        servers = apis.servermanager(self.app)
+        servers.scan_plugins()
+        servers.scan_webapps()
+        srvmgr = apis.rulemanager(self.app)
+        srvmgr.scan_servers()
         self._adding_widget = None
+
+        # start widget manager and show SSL warning if applicable
         self._mgr = apis.dashboard.WidgetManager(self.app)
         if self.app.gconfig.get('genesis', 'ssl') == '0':
             self.put_message('warn', 'Please enable SSL to ensure secure communication with the server')

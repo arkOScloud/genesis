@@ -3,7 +3,6 @@ from genesis.com import implements
 from genesis.api import *
 from genesis import apis
 from genesis.utils import *
-from genesis.plugmgr import PluginLoader
 from genesis.plugins.network.api import *
 
 from backend import *
@@ -32,7 +31,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self._editing_chain = None
         self._editing_rule = None
         self._error = None
-        self._srvmgr = apis.servermanager(self.app)
+        self._srvmgr = apis.rulemanager(self.app)
 
     def get_main_ui(self):
         ui = self.app.inflate('security:main')
@@ -52,9 +51,10 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
 
         al = ui.find('applist')
 
-        for s in self._srvmgr.get_all():
-            if not hasattr(s, 'allow'):
-                s.allow = 2
+        rules = sorted(self._srvmgr.get_all(), 
+            key=lambda s: s.server.name)
+
+        for s in rules:
             if s.allow == 1:
                 perm = 'Local Only'
             elif s.allow == 2:
@@ -62,9 +62,9 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             else:
                 perm = 'None'
             al.append(UI.DTR(
-                UI.IconFont(iconfont=s.icon),
-                UI.Label(text=s.name),
-                UI.Label(text=', '.join(str(x) for x in s.ports)),
+                UI.IconFont(iconfont=s.server.icon),
+                UI.Label(text=s.server.name),
+                UI.Label(text=', '.join(str(x) for x in s.server.ports)),
                 UI.Label(text=perm),
                 UI.Label(text='')
                ))

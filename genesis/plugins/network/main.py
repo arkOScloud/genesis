@@ -30,8 +30,6 @@ class NetworkPlugin(CategoryPlugin):
         self._editing_self = False
         self._editing_ns = None
         self._servers = apis.servermanager(self.app)
-        self._servers.scan_plugins()
-        self._servers.scan_webapps()
         
     def get_ui(self):
         self.ifacelist = []
