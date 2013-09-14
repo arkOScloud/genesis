@@ -34,7 +34,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
                     text='RPC Whitelist Enabled',
                     ),
             )
-            ui.append('2', basic)
+            ui.append('tab0', basic)
 
             for k,v in sorted(self._config.items()):
                 e = UI.DTR(

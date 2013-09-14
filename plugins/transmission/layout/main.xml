@@ -6,8 +6,8 @@
     <pad id="main">
         <tabcontrol id="tabs" active="0">
             <tabheader text="Basic" id="0" />
-            <tabbody id="2">
-
+            <tabbody id="0">
+                <container id="tab0" />
             </tabbody>
             <tabheader text="Advanced" id="1"/>
             <tabbody id="3">
