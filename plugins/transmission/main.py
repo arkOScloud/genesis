@@ -13,10 +13,9 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     def on_init(self):
         be = backend.TransmissionConfig(self.app)
         self._config = be.load()
-        self._redir = False
 
     def on_session_start(self):
-        pass
+        self._redir = False
 
     def get_main_ui(self):
         if self._redir:
