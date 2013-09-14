@@ -11,13 +11,16 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     services = [('Transmission Client', 'transmission')]
 
     def on_init(self):
+        pass
+
+    def on_session_start(self):
         be = backend.TransmissionConfig(self.app)
         self.config = be.load()
 
     def get_ui(self):
         ui = self.app.inflate('transmission:main')
 
-        for k,v in self.config.items():
+        for k,v in sorted(self.config.items()):
             e = UI.DTR(
                 UI.IconFont(iconfont='gen-folder'),
                 UI.Label(text=k),
