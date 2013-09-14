@@ -32,7 +32,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
                     text='RPC Port',
                     ),
                 UI.Formline(
-                    UI.Checkbox( name='rpc-whitelist-enabled', checked=self._config.get('rpc-whitelist-enabled')=='true'),
+                    UI.Checkbox( name='rpc-whitelist-enabled', checked=self._config.get('rpc-whitelist-enabled')),
                     text='RPC Whitelist Enabled',
                     ),
                 id="frmBasic"
