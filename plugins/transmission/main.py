@@ -26,7 +26,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             ui = self.app.inflate('transmission:main')
             ui.find('tabs').set('active', self._tab)
 
-            basic = UI.FormBox(id="frmBasic",
+            basic = UI.FormBox(
                 UI.Formline(
                     UI.TextInput(name='rpc-port', value=self._config.get('rpc-port')),
                     text='RPC Port',
@@ -35,6 +35,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
                     UI.Checkbox( name='rpc-whitelist-enabled', checked=self._config.get('rpc-whitelist-enabled')=='true'),
                     text='RPC Whitelist Enabled',
                     ),
+                id="frmBasic"
             )
             ui.append('tab0', basic)
 
