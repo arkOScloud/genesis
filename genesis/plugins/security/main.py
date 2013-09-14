@@ -1,15 +1,17 @@
 from genesis.ui import *
 from genesis.com import implements
 from genesis.api import *
+from genesis import apis
 from genesis.utils import *
 
 from backend import *
 
 
-class FirewallPlugin(CategoryPlugin):
-    text = 'Firewall Tables'
-    iconfont = 'gen-fire'
-    folder = 'advanced'
+class SecurityPlugin(apis.services.ServiceControlPlugin):
+    text = 'Security'
+    iconfont = 'gen-lock-2'
+    folder = 'system'
+    services = [('Intrusion Prevention', 'fail2ban')]
 
     defactions = ['ACCEPT', 'DROP', 'REJECT', 'LOG', 'EXIT', 'MASQUERADE']
 
@@ -18,6 +20,7 @@ class FirewallPlugin(CategoryPlugin):
         self.cfg.load()
 
     def on_session_start(self):
+        self._stab = 0
         self._tab = 0
         self._shuffling = None
         self._shuffling_table = None
@@ -27,8 +30,9 @@ class FirewallPlugin(CategoryPlugin):
         self._editing_rule = None
         self._error = None
 
-    def get_ui(self):
-        ui = self.app.inflate('iptables:main')
+    def get_main_ui(self):
+        ui = self.app.inflate('security:main')
+        ui.find('stabs').set('active', 's'+str(self._stab))
         if self.cfg.has_autostart():
             btn = ui.find('autostart')
             btn.set('text', 'Disable autostart')
@@ -36,7 +40,7 @@ class FirewallPlugin(CategoryPlugin):
 
 
         tc = UI.TabControl(active=self._tab)
-        ui.append('root', tc)
+        ui.append('advroot', tc)
 
         if len(self.cfg.tables) == 0:
             self.cfg.load_runtime()
@@ -65,13 +69,13 @@ class FirewallPlugin(CategoryPlugin):
             self._error = None
 
         if self._shuffling != None:
-            ui.append('root', self.get_ui_shuffler())
+            ui.append('advroot', self.get_ui_shuffler())
 
         if self._adding_chain != None:
-            ui.append('root', UI.InputBox(id='dlgAddChain', text='Chain name:'))
+            ui.append('advroot', UI.InputBox(id='dlgAddChain', text='Chain name:'))
 
         if self._editing_rule != None:
-            ui.append('root', self.get_ui_edit_rule(
+            ui.append('advroot', self.get_ui_edit_rule(
                         rule=self.cfg.tables[self._editing_table].\
                                       chains[self._editing_chain].\
                                       rules[self._editing_rule]
@@ -173,29 +177,38 @@ class FirewallPlugin(CategoryPlugin):
     @event('button/click')
     def on_click(self, event, params, vars=None):
         if params[0] == 'apply':
+            self._stab = 2
             self._error = self.cfg.apply_now()
         if params[0] == 'autostart':
+            self._stab = 2
             self.cfg.set_autostart(True)
         if params[0] == 'noautostart':
+            self._stab = 2
             self.cfg.set_autostart(False)
         if params[0] == 'loadruntime':
+            self._stab = 2
             self.cfg.load_runtime()
         if params[0] == 'setdefault':
+            self._stab = 2
             self._tab = self.cfg.table_index(params[1])
             self.cfg.tables[params[1]].chains[params[2]].default = params[3]
             self.cfg.save()
         if params[0] == 'shuffle':
+            self._stab = 2
             self._tab = self.cfg.table_index(params[1])
             self._shuffling_table = params[1]
             self._shuffling = params[2]
         if params[0] == 'addchain':
+            self._stab = 2
             self._tab = self.cfg.table_index(params[1])
             self._adding_chain = params[1]
         if params[0] == 'deletechain':
+            self._stab = 2
             self._tab = self.cfg.table_index(params[1])
             self.cfg.tables[params[1]].chains.pop(params[2])
             self.cfg.save()
         if params[0] == 'addrule':
+            self._stab = 2
             self._tab = self.cfg.table_index(params[1])
             self._editing_table = params[1]
             self._editing_chain = params[2]
@@ -204,8 +217,8 @@ class FirewallPlugin(CategoryPlugin):
             self._editing_rule = len(ch.rules)
             ch.rules.append(Rule('-A %s -j ACCEPT'%params[2]))
             self.cfg.save()
-
         if params[0] == 'deleterule':
+            self._stab = 2
             self.cfg.tables[self._editing_table].\
                      chains[self._editing_chain].\
                      rules.pop(self._editing_rule)
@@ -216,6 +229,7 @@ class FirewallPlugin(CategoryPlugin):
 
     @event('fwrule/click')
     def on_fwrclick(self, event, params, vars=None):
+        self._stab = 2
         self._tab = self.cfg.table_index(params[0])
         self._editing_table = params[0]
         self._editing_chain = params[1]
@@ -229,6 +243,7 @@ class FirewallPlugin(CategoryPlugin):
                 if n == '': return
                 self.cfg.tables[self._adding_chain].chains[n] = Chain(n, '-')
                 self.cfg.save()
+            self._stab = 2
             self._adding_chain = None
         if params[0] == 'dlgShuffler':
             if vars.getvalue('action', '') == 'OK':
@@ -238,6 +253,7 @@ class FirewallPlugin(CategoryPlugin):
                 for s in d:
                     ch.rules.append(Rule(s))
                 self.cfg.save()
+            self._stab = 2
             self._shuffling = None
             self._shuffling_table = None
         if params[0] == 'dlgEditRule':
@@ -246,6 +262,7 @@ class FirewallPlugin(CategoryPlugin):
                          chains[self._editing_chain].\
                           rules[self._editing_rule].apply_vars(vars)
                 self.cfg.save()
+            self._stab = 2
             self._editing_chain = None
             self._editing_table = None
             self._editing_rule = None

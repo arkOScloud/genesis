@@ -1,0 +1,24 @@
+<xml>
+    <tabcontrol id="stabs" active="0">
+        <tabheader text="Firewall" id="s0"/>
+        <tabheader text="Defense" id="s1"/>
+        <tabheader text="Tables (Advanced)" id="s2"/>
+
+        <tabbody id="s0">
+        </tabbody>
+        <tabbody id="s1">
+        </tabbody>
+        <tabbody id="s2">
+            <toolbar>
+                <hcontainer>
+                    <button text="Apply" id="apply" iconfont="gen-checkmark-circle" />
+                    <button text="Load current" id="loadruntime" warning="Dispose saved configuration and load current iptables status" iconfont="gen-enter" />
+                    <button text="Autostart" id="autostart" iconfont="gen-link" />
+                </hcontainer>
+            </toolbar>
+
+            <pad id="advroot">
+            </pad>
+        </tabbody>
+    </tabcontrol>
+</xml>

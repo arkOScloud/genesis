@@ -185,6 +185,15 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         start_response('301 Moved Permanently', [('Location', '/')])
         return ''
 
+    @url('^/embapp/.+')
+    def goto_embed(self, req, start_response):
+        path = req['PATH_INFO'].split('/')
+
+        content = self.app.inflate('core:embapp')
+        content.insertText('ea-port', ':' + path[2])
+        self._cat_selected = 'dashboard'
+        return content.render()
+
     @event('category/click')
     def handle_category(self, event, params, **kw):
         if not isinstance(params, list):
