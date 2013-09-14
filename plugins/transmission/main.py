@@ -8,7 +8,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     text = 'Transmission'
     iconfont = 'gen-download'
     folder = 'apps'
-    services = [('Transmission Client', 'transmission-daemon')]
+    services = [('Transmission Client', 'transmission')]
 
     def on_init(self):
         be = backend.TransmissionConfig(self.app)
