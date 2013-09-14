@@ -11,11 +11,11 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     services = [('Transmission Client', 'transmission')]
 
     def on_init(self):
-        pass
-
-    def on_session_start(self):
         be = backend.TransmissionConfig(self.app)
         self.config = be.load()
+
+    def on_session_start(self):
+        pass
 
     def get_ui(self):
         ui = self.app.inflate('transmission:main')
