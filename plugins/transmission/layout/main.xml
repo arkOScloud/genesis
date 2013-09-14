@@ -25,12 +25,12 @@
                         </dtr>
                     </dt>
                 </scrollcontainer>
-                <hcontainer>
-                    <button id="save" text="Save" />
-                    <button id="discard" text="Discard" />
-                </hcontainer>
             </tabbody>
 
         </tabcontrol>
+        <hcontainer>
+            <button id="save" text="Save" />
+            <button id="discard" text="Discard" />
+        </hcontainer>
     </pad>
 </xml>

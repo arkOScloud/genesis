@@ -42,7 +42,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
                 e = UI.DTR(
                     UI.IconFont(iconfont='gen-folder'),
                     UI.Label(text=k),
-                    UI.Label(text=v),
+                    UI.TextInput(name=k, value=v),
                 )
                 ui.append('all_config', e)
 
