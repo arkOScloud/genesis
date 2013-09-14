@@ -3,6 +3,7 @@ MODULES = ['main', 'backend']
 DEPS = [(['any'],
          [
              ('app', 'transmission-cli', 'transmission-daemon'),
+             ('plugin')
              ]
         )]
 
