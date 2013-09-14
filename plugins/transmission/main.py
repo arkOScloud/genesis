@@ -17,7 +17,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     def on_session_start(self):
         pass
 
-    def get_ui(self):
+    def get_main_ui(self):
         ui = self.app.inflate('transmission:main')
 
         for k,v in sorted(self.config.items()):
