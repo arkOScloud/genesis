@@ -7,3 +7,27 @@ genesis.egg-info/*
 .~lock.*
 
 repo
+
+.idea/workspace.xml
+
+.idea/vcs.xml
+
+.idea/scopes/scope_settings.xml
+
+.idea/.name
+
+.idea/genesis.iml
+
+.idea/misc.xml
+
+.idea/modules.xml
+
+.idea/encodings.xml
+
+.idea/testrunner.xml
+
+.idea/other.xml
+
+.idea/other.xml
+
+.gitignore

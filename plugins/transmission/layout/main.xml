@@ -7,18 +7,24 @@
         <tabcontrol id="tabs" active="0">
             <tabheader text="Config" id="0"/>
             <tabbody id="0">
-                <dt id="config" width="100%">
-                    <dtr header="True">
-                        <dth width="1" />
-                        <dth>
-                            <label text="Key" />
-                        </dth>
-                        <dth>
-                            <label text="Value" />
-                        </dth>
-                        <dth width="1" />
-                    </dtr>
-                </dt>
+                <scrollcontainer>
+                    <dt id="config" width="100%">
+                        <dtr header="True">
+                            <dth width="1" />
+                            <dth>
+                                <label text="Key" />
+                            </dth>
+                            <dth>
+                                <label text="Value" />
+                            </dth>
+                            <dth width="1" />
+                        </dtr>
+                    </dt>
+                </scrollcontainer>
+                <hcontainer>
+                    <button id="save" text="Save" />
+                    <button id="discard" text="Discard" />
+                </hcontainer>
             </tabbody>
 
         </tabcontrol>
