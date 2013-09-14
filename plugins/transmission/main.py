@@ -57,7 +57,9 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     @event('dialog/submit')
     @event('form/submit')
     def on_submit(self, event, params, vars=None):
-        if params[0] == 'discard':
-            self._config.load()
-        elif params[0] == 'save':
+        if params[0] == 'frmBasic':
             print vars
+            if vars.getvalue('action', '') == 'OK':
+                pass
+            else:
+                print vars.getvalue('action', '')
