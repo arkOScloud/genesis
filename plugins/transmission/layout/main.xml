@@ -10,7 +10,7 @@
                 <container id="tab0" />
             </tabbody>
             <tabheader text="Advanced" id="1"/>
-            <tabbody id="3">
+            <tabbody id="1">
                 <scrollcontainer width="100%">
                     <dt id="all_config" width="100%">
                         <dtr header="True">

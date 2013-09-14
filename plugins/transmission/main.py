@@ -16,6 +16,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
 
     def on_session_start(self):
         self._redir = False
+        self._tab = 0
 
     def get_main_ui(self):
         if self._redir:
@@ -23,6 +24,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             return self.redirapp(int(self._config['rpc-port']))
         else:
             ui = self.app.inflate('transmission:main')
+            ui.find('tabs').set('active', self._tab)
 
             basic = UI.Container(
                 UI.Formline(
