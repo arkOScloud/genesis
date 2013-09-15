@@ -32,6 +32,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self._editing_rule = None
         self._error = None
         self._srvmgr = apis.rulemanager(self.app)
+        self._fwmgr = apis.fwmanager()
 
     def get_main_ui(self):
         ui = self.app.inflate('security:main')
@@ -41,20 +42,20 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             btn.set('text', 'Disable autostart')
             btn.set('id', 'noautostart')
 
-        ranges = []
+        self.ranges = []
         for x in self.net_config.interfaces:
             i = self.net_config.interfaces[x]
             r = self.net_config.get_ip(i.name)
             if not '127.0.0.1' in r and not '0.0.0.0' in r:
-                ranges.append(self.net_config.get_ip(i.name))
-        ui.find('ranges').set('text', 'Local networks: ' + ', '.join(ranges))
+                self.ranges.append(self.net_config.get_ip(i.name))
+        ui.find('ranges').set('text', 'Local networks: ' + ', '.join(self.ranges))
 
         al = ui.find('applist')
 
-        rules = sorted(self._srvmgr.get_all(), 
+        self.rules = sorted(self._srvmgr.get_all(), 
             key=lambda s: s.server.name)
 
-        for s in rules:
+        for s in self.rules:
             if s.allow == 1:
                 perm = 'Local Only'
             elif s.allow == 2:
@@ -66,7 +67,18 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
                 UI.Label(text=s.server.name),
                 UI.Label(text=', '.join(str(x) for x in s.server.ports)),
                 UI.Label(text=perm),
-                UI.Label(text='')
+                UI.HContainer(
+                    UI.TipIcon(iconfont='gen-earth',
+                        text='Allow From Anywhere', id='2/' + str(self.rules.index(s))),
+                    UI.TipIcon(iconfont='gen-home',
+                        text='Local Access Only', id='1/' + str(self.rules.index(s))),
+                    UI.TipIcon(iconfont='gen-close', 
+                        text='Deny All', 
+                        id='0/' + str(rules.index(s)), 
+                        warning='Are you sure you wish to deny all access to %s? '
+                        'This will prevent anyone (including you) from connecting to it.' 
+                        % s.server.name),
+                    ),
                ))
 
         tc = UI.TabControl(active=self._tab)
@@ -206,6 +218,22 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
+        if params[0] == '2':
+            self._srvmgr.update(self.rules[params[1]].server, 
+                2, self.ranges)
+            self._fwmgr.regen()
+        if params[0] == '1':
+            self._srvmgr.update(self.rules[params[1]].server, 
+                1, self.ranges)
+            self._fwmgr.regen()
+        if params[0] == '0':
+            if self.rules[params[1]].server.server_id == 'genesis':
+                self.put_message('err', 'You cannot deny all access to Genesis. '
+                    'Try limiting it to your local network instead.')
+            else:
+                self._srvmgr.update(self.rules[params[1]].server, 
+                    0, self.ranges)
+                self._fwmgr.regen()
         if params[0] == 'apply':
             self._stab = 2
             self._error = self.cfg.apply_now()

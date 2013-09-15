@@ -16,6 +16,8 @@ class Dashboard(CategoryPlugin):
     def on_session_start(self):
         # start port and rule tracking on startup
         servers = apis.servermanager(self.app)
+        servers.add('genesis', 'genesis', 'Genesis', 'gen-arkos-round',
+            [self.app.gconfig.get('genesis', 'bind_port')])
         servers.scan_plugins()
         servers.scan_webapps()
         srvmgr = apis.rulemanager(self.app)

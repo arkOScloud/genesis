@@ -25,6 +25,27 @@ def fix_unicode(s):
     d = ''.join(max(i, ' ') if not i in ['\n', '\t', '\r'] else i for i in s)
     return unicode(d.encode('utf-8', 'xmlcharref'), errors='replace')
 
+def cidr_to_netmask(cidr):
+    """
+    Convert a CIDR to netmask. Takes integer.
+    Returns string in xxx.xxx.xxx.xxx format.
+    """
+    mask = [0, 0, 0, 0]
+    for i in range(cidr):
+        mask[i/8] = mask[i/8] + (1 << (7 - i % 8))
+    return ".".join(map(str, mask))
+
+def netmask_to_cidr(mask):
+    """
+    Convert a netmask to CIDR. Takes string in xxx.xxx.xxx.xxx format.
+    Returns integer.
+    """
+    mask = mask.split('.')
+    binary_str = ''
+    for octet in mask:
+        binary_str += bin(int(octet))[2:].zfill(8)
+    return len(binary_str.rstrip('0'))
+
 def detect_platform(mapping=True):
     """
     Returns a text shortname of the current system platform.
