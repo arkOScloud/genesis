@@ -17,11 +17,15 @@ class TransmissionConfig(Plugin):
         self.mgr = self.app.get_backend(apis.services.IServiceManager)
 
     def save(self):
+        wasrunning = False
         s = json.dumps(self.config)
-        self.mgr.stop(self.serviceName)
+        if self.mgr.get_status('transmission') == 'running':
+            wasrunning = True
+            self.mgr.stop(self.serviceName)
         ConfManager.get().save('transmission', self.configFile, s)
         ConfManager.get().commit('transmission')
-        self.mgr.start(self.serviceName)
+        if wasrunning:
+            self.mgr.start(self.serviceName)
 
     def get(self, key):
         return self.config[key]
