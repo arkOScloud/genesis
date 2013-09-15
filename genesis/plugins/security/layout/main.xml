@@ -5,6 +5,24 @@
         <tabheader text="Tables (Advanced)" id="s2"/>
 
         <tabbody id="s0">
+            <pad id="conn">
+                <label id="ranges" />
+                <dt id="applist" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Application Name" />
+                        </dth>
+                        <dth>
+                            <label text="Port(s)" />
+                        </dth>
+                        <dth>
+                            <label text="Authorization" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </pad>
         </tabbody>
         <tabbody id="s1">
         </tabbody>

@@ -1,5 +1,6 @@
 from genesis.com import *
 from genesis.api import *
+from genesis import apis
 
 
 class INetworkConfig(Interface):

@@ -3,12 +3,9 @@
         <style type="text/css">
             html, body {
                 margin:0;
-                height: 100%;
             }
 
             #ea-header {
-                top: 0;
-                position: fixed;
                 height: 50px;
                 width: 100%;
                 background-color: #2C3E50;
@@ -19,10 +16,18 @@
                 color: #FFFFFF;
             }
 
-            #ea-frame {
-                position: fixed;
+            #ea-frame-container {
+                position: absolute;
                 top: 50px;
+                left: 0px;
                 bottom: 0px;
+                width: 100%;
+            }
+
+            #ea-frame {
+                margin: 0;
+                padding: 0;
+                border: 0;
                 width: 100%;
                 height: 100%;
             }
@@ -50,7 +55,9 @@
                 <p id="ea-port"></p>
             </div>
         </div>
-        <iframe id="ea-frame" src="" />
+        <div id="ea-frame-container">
+            <iframe id="ea-frame" src="" />
+        </div>
     <script>
         var port = $('#ea-port').text();
         var frameurl = window.location.origin.replace(/:\d+/g, '');

@@ -10,6 +10,7 @@ setup(
         'pyOpenSSL',
         'gevent',
         'lxml>=2.2.4',
+        'python-iptables',
     ],
     description='arkOS node management app',
     author='The CitizenWeb Project',
