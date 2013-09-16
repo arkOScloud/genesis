@@ -1,4 +1,5 @@
 import json
+import os
 
 from genesis.api import *
 from genesis.com import *
@@ -12,9 +13,15 @@ class TransmissionConfig(Plugin):
     serviceName = 'transmission'
 
     def load(self):
+        self.mgr = self.app.get_backend(apis.services.IServiceManager)
+        # The transmission package doesn't install the config file.
+        # So if this is first run, start then stop the daemon to generate it.
+        # TODO: Make this less awful
+        if not os.path.exists(self.configFile):
+            self.mgr.stop(self.serviceName)
+            self.mgr.start(self.serviceName)
         s = ConfManager.get().load('transmission', self.configFile)
         self.config = json.loads(s)
-        self.mgr = self.app.get_backend(apis.services.IServiceManager)
 
     def save(self):
         wasrunning = False
