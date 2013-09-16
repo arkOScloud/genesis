@@ -40,6 +40,13 @@ class ServerManager(apis.API):
 				slist.append(x)
 		return slist
 
+	def get_by_port(self, port):
+		slist = []
+		for x in self.servers:
+			if port in x.ports[1]:
+				slist.append(x)
+		return slist
+
 	def get_all(self):
 		return self.servers
 

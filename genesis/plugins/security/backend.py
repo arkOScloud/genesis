@@ -64,23 +64,44 @@ class RuleManager(apis.API):
 
 
 class FWMonitor(apis.API):
+    def __init__(self, app):
+        self.app = app
+
     def scan(self):
         # Parse iptables and update our local models
         # If no rule is found, set as deny all
-        pass
+        tb = iptc.Table(iptc.Table.FILTER)
+        c = iptc.Chain(tb, "genesis-apps")
+        if not tb.is_chain(c):
+            tb.create_chain(c)
+            return
+        for r in c.rules:
+            m = r.matches[0]
+            for s in apis.servermanager(self.app).get_by_port(m.dport):
+                srv = apis.rulemanager(self.app).get(s)
+                if '0.0.0.0/255.255.255.255' in r.src:
+                    srv.allow = 2
+                else:
+                    srv.allow = 1
 
     def regen(self):
         # Regenerate our chain.
-        pass
+        self.flush()
+        for x in apis.rulemanager(self.app).get_all():
+            for p in x.server.port:
+                self.add(p[0], p[1], x.range)
 
     def add(self, protocol, port, range=''):
         # Add rule for this port
         # If range is not provided, assume '0.0.0.0'
-        c = iptc.Chain(iptc.Table(iptc.Table.FILTER), "genesis-apps")
+        tb = iptc.Table(iptc.Table.FILTER)
+        c = iptc.Chain(tb, "genesis-apps")
+        if not tb.is_chain(c):
+            tb.create_chain(c)
         r = iptc.Rule()
         r.protocol = protocol
         if range == '':
-            r.src = '0.0.0.0'
+            r.src = '0.0.0.0/255.255.255.255'
         else:
             ip, cidr = range.split('/')
             mask = cidr_to_netmask(int(cidr))
@@ -95,37 +116,39 @@ class FWMonitor(apis.API):
     def remove(self, protocol, port, range=''):
         # Remove rule(s) in our chain matching this port
         # If range is not provided, delete all rules for this port
-        c = iptc.Chain(iptc.Table(iptc.Table.FILTER), "genesis-apps")
-        r = iptc.Rule()
-        r.protocol = protocol
-        if range == '':
-            r.src = '0.0.0.0'
-        else:
-            ip, cidr = range.split('/')
-            mask = cidr_to_netmask(int(cidr))
-            r.src = ip + '/' + mask
-        m = iptc.Match(r, protocol)
-        m.dport = port
-        r.add_match(m)
-        t = iptc.Target(r, 'ACCEPT')
-        r.target = t
-        c.delete_rule(r)
-
+        tb = iptc.Table(iptc.Table.FILTER)
+        c = iptc.Chain(tb, "genesis-apps")
+        if not tb.is_chain(c):
+            return
+        for r in c.rules:
+            if range != '':
+                if r.matches[0].dport == port and range in r.dst:
+                    c.delete_rule(r)
+            else:
+                if r.matches[0].dport == port:
+                    c.delete_rule(r)
 
     def find(self, protocol, port, range=''):
         # Returns true if rule is found for this port
         # If range IS provided, return true only if range is the same
-        c = iptc.Chain(iptc.Table(iptc.Table.FILTER), "genesis-apps")
-        if range != '' and range in c.rules and port in c.rules:
-            return True
-        elif range == '' and port in c.rules:
-            return True
-        else:
+        tb = iptc.Table(iptc.Table.FILTER)
+        c = iptc.Chain(tb, "genesis-apps")
+        if not tb.is_chain(c):
             return False
+        for r in c.rules:
+            if range != '':
+                if r.matches[0].dport == port and range in r.dst:
+                    return True
+            elif range == '' and r.matches[0].dport == port:
+                return True
+        return False
 
     def flush(self):
         # Flush out our chain
-        c = iptc.Chain(iptc.Table(iptc.Table.FILTER), "genesis-apps")
+        tb = iptc.Table(iptc.Table.FILTER)
+        c = iptc.Chain(tb, "genesis-apps")
+        if not tb.is_chain(c):
+            return
         c.flush()
 
     def save(self):
