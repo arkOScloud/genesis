@@ -21,7 +21,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self.cfg.load()
         self.net_config = self.app.get_backend(INetworkConfig)
         self.rules = sorted(self._srvmgr.get_all(), 
-            key=lambda s: s.server.name)
+            key=lambda s: s[0].server.name)
         self.ranges = []
 
     def on_session_start(self):
@@ -218,21 +218,18 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
     @event('button/click')
     def on_click(self, event, params, vars=None):
         if params[0] == '2':
-            self._srvmgr.update(self.rules[int(params[1])].server, 
-                2, self.ranges)
-            self._fwmgr.regen()
+            self._srvmgr.set(self.rules[int(params[1])].server, 2)
+            self._fwmgr.regen(self.ranges)
         if params[0] == '1':
-            self._srvmgr.update(self.rules[int(params[1])].server, 
-                1, self.ranges)
-            self._fwmgr.regen()
+            self._srvmgr.set(self.rules[int(params[1])].server, 1)
+            self._fwmgr.regen(self.ranges)
         if params[0] == '0':
             if self.rules[int(params[1])].server.server_id == 'genesis':
                 self.put_message('err', 'You cannot deny all access to Genesis. '
                     'Try limiting it to your local network instead.')
             else:
-                self._srvmgr.update(self.rules[params[1]].server, 
-                    0, self.ranges)
-                self._fwmgr.regen()
+                self._srvmgr.set(self.rules[params[1]].server, 0)
+                self._fwmgr.regen(self.ranges)
         if params[0] == 'apply':
             self._stab = 2
             self._error = self.cfg.apply_now()
