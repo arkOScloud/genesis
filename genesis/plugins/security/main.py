@@ -3,6 +3,7 @@ from genesis.com import implements
 from genesis.api import *
 from genesis import apis
 from genesis.utils import *
+from genesis.plugins.network.api import *
 
 from firewall import RuleManager, FWMonitor
 from backend import *
@@ -21,7 +22,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self.cfg.load()
         self.net_config = self.app.get_backend(INetworkConfig)
         self.rules = sorted(self._srvmgr.get_all(), 
-            key=lambda s: s[0].server.name)
+            key=lambda s: s[0].name)
         self.ranges = []
 
     def on_session_start(self):
@@ -34,8 +35,8 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self._editing_chain = None
         self._editing_rule = None
         self._error = None
-        self._srvmgr = RuleManager()
-        self._fwmgr = FWMonitor()
+        self._srvmgr = RuleManager(self.app)
+        self._fwmgr = FWMonitor(self.app)
 
     def get_main_ui(self):
         ui = self.app.inflate('security:main')
@@ -55,16 +56,16 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         al = ui.find('applist')
 
         for s in self.rules:
-            if s.allow == 1:
+            if s[1] == 1:
                 perm = 'Local Only'
-            elif s.allow == 2:
+            elif s[1] == 2:
                 perm = 'All Networks'
             else:
                 perm = 'None'
             al.append(UI.DTR(
-                UI.IconFont(iconfont=s.server.icon),
-                UI.Label(text=s.server.name),
-                UI.Label(text=', '.join(str(x[1]) for x in s.server.ports)),
+                UI.IconFont(iconfont=s[0].icon),
+                UI.Label(text=s[0].name),
+                UI.Label(text=', '.join(str(x[1]) for x in s[0].ports)),
                 UI.Label(text=perm),
                 UI.HContainer(
                     UI.TipIcon(iconfont='gen-earth',
@@ -76,7 +77,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
                         id='0/' + str(self.rules.index(s)), 
                         warning='Are you sure you wish to deny all access to %s? '
                         'This will prevent anyone (including you) from connecting to it.' 
-                        % s.server.name),
+                        % s[0].name),
                     ),
                ))
 
@@ -218,17 +219,17 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
     @event('button/click')
     def on_click(self, event, params, vars=None):
         if params[0] == '2':
-            self._srvmgr.set(self.rules[int(params[1])].server, 2)
+            self._srvmgr.set(self.rules[int(params[1])][0], 2)
             self._fwmgr.regen(self.ranges)
         if params[0] == '1':
-            self._srvmgr.set(self.rules[int(params[1])].server, 1)
+            self._srvmgr.set(self.rules[int(params[1])][0], 1)
             self._fwmgr.regen(self.ranges)
         if params[0] == '0':
-            if self.rules[int(params[1])].server.server_id == 'genesis':
+            if self.rules[int(params[1])][0].server_id == 'genesis':
                 self.put_message('err', 'You cannot deny all access to Genesis. '
                     'Try limiting it to your local network instead.')
             else:
-                self._srvmgr.set(self.rules[params[1]].server, 0)
+                self._srvmgr.set(self.rules[params[1]][0], 0)
                 self._fwmgr.regen(self.ranges)
         if params[0] == 'apply':
             self._stab = 2

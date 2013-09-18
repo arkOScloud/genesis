@@ -1,4 +1,5 @@
 from api import *
+from control import *
 from main import *
 from nc_arch import *
 from recovery import *

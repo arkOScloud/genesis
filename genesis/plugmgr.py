@@ -21,7 +21,6 @@ import weakref
 
 from genesis.com import *
 from genesis.utils import detect_platform, shell, shell_status, download
-from genesis.plugins.network.control import NetworkControl
 import genesis
 
 RETRY_LIMIT = 10
@@ -519,7 +518,6 @@ class RepositoryManager:
             except KeyError:
                 pass
             PluginLoader.unload(id)
-            NetworkControl().remove(id)
 
         self.update_installed()
         self.update_available()
@@ -570,7 +568,6 @@ class RepositoryManager:
         if load:
             PluginLoader.load(id)
 
-        NetworkControl().refresh()
         self.update_installed()
         self.update_available()
         self.update_upgradable()

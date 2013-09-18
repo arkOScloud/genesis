@@ -7,26 +7,32 @@ from servers import *
 
 class NetworkControl(Plugin):
 	# Convenience functions for routine synchronized ops
+	abstract = True
+
 	def session_start(self):
-		servers = ServerManager()
+		servers = ServerManager(self.app)
 		servers.add('genesis', 'genesis', 'Genesis', 'gen-arkos-round',
 			[('tcp', self.app.gconfig.get('genesis', 'bind_port'))])
 		servers.scan_plugins()
 		servers.scan_webapps()
-		RuleManager().scan_servers()
-		FWMonitor().regen(servers.get_ranges())
+		RuleManager(self.app).scan_servers()
+		FWMonitor(self.app).regen()
 
 	def session_stop(self):
 		pass
 
+	def port_changed(self, newport):
+		pass
+
 	def refresh(self):
-		servers = ServerManager()
+		servers = ServerManager(self.app)
 		servers.scan_plugins()
-		RuleManager.scan_servers()
-		FWMonitor.regen(servers.get_ranges())
+		RuleManager(self.app).scan_servers()
+		FWMonitor(self.app).regen()
 
 	def remove(self, id):
-		servers = ServerManager()
-		RuleManager.remove_by_plugin(id)
-		servers.remove_by_plugin(id)
-		FWMonitor.regen(servers.get_ranges())
+		servers = ServerManager(self.app)
+		if servers.get_by_plugin(id) != []:
+			RuleManager(self.app).remove_by_plugin(id)
+			servers.remove_by_plugin(id)
+			FWMonitor(self.app).regen()

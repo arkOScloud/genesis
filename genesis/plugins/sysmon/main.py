@@ -15,7 +15,7 @@ class Dashboard(CategoryPlugin):
     folder = 'top'
 
     def on_session_start(self):
-        NetworkControl().session_start()
+        NetworkControl(self.app).session_start()
         self._adding_widget = None
 
         # start widget manager and show SSL warning if applicable

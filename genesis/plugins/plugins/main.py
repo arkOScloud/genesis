@@ -1,6 +1,7 @@
 from genesis.api import *
 from genesis.ui import *
 from genesis.plugmgr import PluginLoader, RepositoryManager
+from genesis.plugins.network.control import NetworkControl
 
 
 class PluginManager(CategoryPlugin, URLHandler):
@@ -10,6 +11,7 @@ class PluginManager(CategoryPlugin, URLHandler):
 
     def on_session_start(self):
         self._mgr = RepositoryManager(self.app.config)
+        self._nc = NetworkControl(self.app)
 
     def on_init(self):
         self._mgr.refresh()
@@ -115,6 +117,7 @@ class PluginManager(CategoryPlugin, URLHandler):
             self.put_message('info', 'Plugin list updated')
         if params[0] == 'remove':
             self._mgr.remove(params[1])
+            self._nc.remove(params[1])
             self.put_message('info', 'Plugin removed. Refresh page for changes to take effect.')
         if params[0] == 'reload':
             try:
@@ -130,6 +133,7 @@ class PluginManager(CategoryPlugin, URLHandler):
             self.app.restart()
         if params[0] == 'install':
             self._mgr.install(params[1], load=True)
+            self._nc.refresh()
             self.put_message('info', 'Plugin installed. Refresh page for changes to take effect.')
             ComponentManager.get().rescan()
-            ConfManager.get().rescan();
+            ConfManager.get().rescan()

@@ -1,5 +1,8 @@
 from genesis import apis
+from genesis.com import *
 from genesis.api import *
+
+from api import *
 
 
 class Server(object):
@@ -11,6 +14,7 @@ class Server(object):
 
 
 class ServerManager(Plugin):
+	abstract = True
 	servers = []
 
 	def add(self, server_id, plugin_id, name, icon='', ports=[]):
@@ -56,7 +60,7 @@ class ServerManager(Plugin):
 	def get_ranges(self):
 		ranges = []
 		nc = self.app.get_backend(INetworkConfig)
-		for x in nc:
+		for x in nc.interfaces:
 			i = nc.interfaces[x]
 			r = nc.get_ip(i.name)
 			if not '127.0.0.1' in r and not '0.0.0.0' in r:
@@ -84,7 +88,7 @@ class ServerManager(Plugin):
 				self.servers.pop(x)
 		for s in apis.webapps(self.app).get_sites():
 			self.add(s['name'], 'webapps', s['name'] + ' (' + s['type'] + ')',
-				'gen-earth', [s['port']])
+				'gen-earth', [('tcp', s['port'])])
 
 	def remove(self, id):
 		self.servers.pop(lambda x: x.server_id == id)
