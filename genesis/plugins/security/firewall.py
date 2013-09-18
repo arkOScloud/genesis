@@ -12,7 +12,7 @@ class RuleManager(Plugin):
 
     def set(self, server, allow):
         self.app.gconfig.set('security', 'fw-%s-%s'
-            %(server.plugin_id, server.server_id), allow)
+            %(server.plugin_id, server.server_id), str(allow))
         self.app.gconfig.save()
 
     def get(self, server):
@@ -98,17 +98,17 @@ class FWMonitor(Plugin):
                 else:
                     rm.set(s, 1)
 
-    def regen(self, range=''):
+    def regen(self, range=[]):
         # Regenerate our chain.
         # If local ranges are not provided, get them.
         self.flush()
-        if range == '':
+        if range == []:
             range = ServerManager(self.app).get_ranges()
         for x in RuleManager(self.app).get_all():
             for p in x[0].ports:
-                if x[1] == 2:
+                if int(x[1]) == 2:
                     self.add(p[0], p[1], '0.0.0.0')
-                elif x[1] == 1:
+                elif int(x[1]) == 1:
                     for r in range:
                         self.add(p[0], p[1], r)
                 else:

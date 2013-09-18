@@ -6,7 +6,6 @@ from genesis.utils import detect_distro, detect_platform
 from genesis.api import *
 from genesis import apis
 from genesis.plugins.core.updater import UpdateCheck
-from genesis.plugins.network.control import NetworkControl
 
 
 class Dashboard(CategoryPlugin):
@@ -15,7 +14,7 @@ class Dashboard(CategoryPlugin):
     folder = 'top'
 
     def on_session_start(self):
-        NetworkControl(self.app).session_start()
+        apis.networkcontrol(self.app).session_start()
         self._adding_widget = None
 
         # start widget manager and show SSL warning if applicable
@@ -41,7 +40,7 @@ class Dashboard(CategoryPlugin):
                 )
             except Exception, e:
                 self.put_message('err', 'One or more widgets failed to load. Check the logs for info')
-                self.app.log.error('System Monitor Widget failed to load: '+str(e))
+                self.app.log.error('System Monitor Widget failed to load '+w.title+': '+str(e))
 
     def get_ui(self):
         ui = self.app.inflate('sysmon:main')

@@ -63,8 +63,14 @@ class ServerManager(Plugin):
 		for x in nc.interfaces:
 			i = nc.interfaces[x]
 			r = nc.get_ip(i.name)
-			if not '127.0.0.1' in r and not '0.0.0.0' in r:
-				ranges.append(r)
+			if '127.0.0.1' in r or '0.0.0.0' in r:
+				continue
+			ri, rr = r.split('/')
+			ri = ri.split('.')
+			ri[3] = '0'
+			ri = ".".join(ri)
+			r = ri + '/' + rr
+			ranges.append(r)
 		return ranges
 
 	def scan_plugins(self):

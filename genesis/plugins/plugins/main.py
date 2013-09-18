@@ -1,7 +1,7 @@
 from genesis.api import *
 from genesis.ui import *
+from genesis import apis
 from genesis.plugmgr import PluginLoader, RepositoryManager
-from genesis.plugins.network.control import NetworkControl
 
 
 class PluginManager(CategoryPlugin, URLHandler):
@@ -11,7 +11,7 @@ class PluginManager(CategoryPlugin, URLHandler):
 
     def on_session_start(self):
         self._mgr = RepositoryManager(self.app.config)
-        self._nc = NetworkControl(self.app)
+        self._nc = apis.networkcontrol(self.app)
 
     def on_init(self):
         self._mgr.refresh()

@@ -23,7 +23,6 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self.net_config = self.app.get_backend(INetworkConfig)
         self.rules = sorted(self._srvmgr.get_all(), 
             key=lambda s: s[0].name)
-        self.ranges = []
 
     def on_session_start(self):
         self._stab = 0
@@ -35,6 +34,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self._editing_chain = None
         self._editing_rule = None
         self._error = None
+        self._ranges = []
         self._srvmgr = RuleManager(self.app)
         self._fwmgr = FWMonitor(self.app)
 
@@ -46,12 +46,19 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             btn.set('text', 'Disable autostart')
             btn.set('id', 'noautostart')
 
+        self._ranges = []
         for x in self.net_config.interfaces:
             i = self.net_config.interfaces[x]
             r = self.net_config.get_ip(i.name)
-            if not '127.0.0.1' in r and not '0.0.0.0' in r:
-                self.ranges.append(self.net_config.get_ip(i.name))
-        ui.find('ranges').set('text', 'Local networks: ' + ', '.join(self.ranges))
+            if '127.0.0.1' in r or '0.0.0.0' in r:
+                continue
+            ri, rr = r.split('/')
+            ri = ri.split('.')
+            ri[3] = '0'
+            ri = ".".join(ri)
+            r = ri + '/' + rr
+            self._ranges.append(r)
+        ui.find('ranges').set('text', 'Local networks: ' + ', '.join(self._ranges))
 
         al = ui.find('applist')
 
@@ -220,17 +227,17 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
     def on_click(self, event, params, vars=None):
         if params[0] == '2':
             self._srvmgr.set(self.rules[int(params[1])][0], 2)
-            self._fwmgr.regen(self.ranges)
+            self._fwmgr.regen(self._ranges)
         if params[0] == '1':
             self._srvmgr.set(self.rules[int(params[1])][0], 1)
-            self._fwmgr.regen(self.ranges)
+            self._fwmgr.regen(self._ranges)
         if params[0] == '0':
             if self.rules[int(params[1])][0].server_id == 'genesis':
                 self.put_message('err', 'You cannot deny all access to Genesis. '
                     'Try limiting it to your local network instead.')
             else:
                 self._srvmgr.set(self.rules[params[1]][0], 0)
-                self._fwmgr.regen(self.ranges)
+                self._fwmgr.regen(self._ranges)
         if params[0] == 'apply':
             self._stab = 2
             self._error = self.cfg.apply_now()
