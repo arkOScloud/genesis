@@ -1,6 +1,5 @@
 from genesis import apis
 from genesis.api import *
-from genesis.plugins.webapps.api import Webapps
 
 
 class Server(object):
@@ -54,6 +53,16 @@ class ServerManager(Plugin):
 	def get_all(self):
 		return self.servers
 
+	def get_ranges(self):
+		ranges = []
+		nc = self.app.get_backend(INetworkConfig)
+		for x in nc:
+			i = nc.interfaces[x]
+			r = nc.get_ip(i.name)
+			if not '127.0.0.1' in r and not '0.0.0.0' in r:
+				ranges.append(r)
+		return ranges
+
 	def scan_plugins(self):
 		for c in self.app.grab_plugins(ICategoryProvider):
 			if hasattr(c, 'services'):
@@ -73,7 +82,7 @@ class ServerManager(Plugin):
 		for x in self.servers:
 			if x.plugin_id == 'webapps':
 				self.servers.pop(x)
-		for s in Webapps(self.app).get_sites():
+		for s in apis.webapps(self.app).get_sites():
 			self.add(s['name'], 'webapps', s['name'] + ' (' + s['type'] + ')',
 				'gen-earth', [s['port']])
 

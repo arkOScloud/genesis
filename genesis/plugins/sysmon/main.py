@@ -6,8 +6,7 @@ from genesis.utils import detect_distro, detect_platform
 from genesis.api import *
 from genesis import apis
 from genesis.plugins.core.updater import UpdateCheck
-from genesis.plugins.network.servers import ServerManager
-from genesis.plugins.security.backend import RuleManager, FWMonitor
+from genesis.plugins.network.control import NetworkControl
 
 
 class Dashboard(CategoryPlugin):
@@ -16,14 +15,7 @@ class Dashboard(CategoryPlugin):
     folder = 'top'
 
     def on_session_start(self):
-        # start port and rule tracking on startup
-        servers = ServerManager()
-        servers.add('genesis', 'genesis', 'Genesis', 'gen-arkos-round',
-            [('tcp', self.app.gconfig.get('genesis', 'bind_port'))])
-        servers.scan_plugins()
-        servers.scan_webapps()
-        RuleManager().scan_servers()
-        FWMonitor().regen()
+        NetworkControl().session_start()
         self._adding_widget = None
 
         # start widget manager and show SSL warning if applicable

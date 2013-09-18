@@ -21,7 +21,7 @@ import weakref
 
 from genesis.com import *
 from genesis.utils import detect_platform, shell, shell_status, download
-from genesis.plugins.security.backend import RuleManager, FWMonitor
+from genesis.plugins.network.control import NetworkControl
 import genesis
 
 RETRY_LIMIT = 10
@@ -519,11 +519,7 @@ class RepositoryManager:
             except KeyError:
                 pass
             PluginLoader.unload(id)
-
-            # Process server registration and firewall rules changes
-            RuleManager.remove_by_plugin(id)
-            ServerManager.remove_by_plugin(id)
-            FWMonitor.regen()
+            NetworkControl().remove(id)
 
         self.update_installed()
         self.update_available()
@@ -574,11 +570,7 @@ class RepositoryManager:
         if load:
             PluginLoader.load(id)
 
-        # Process server registration and firewall rules changes
-        ServerManager.scan_plugins()
-        RuleManager.scan_servers()
-        FWMonitor.regen()
-
+        NetworkControl().refresh()
         self.update_installed()
         self.update_available()
         self.update_upgradable()

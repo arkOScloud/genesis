@@ -3,8 +3,8 @@ from genesis.com import implements
 from genesis.api import *
 from genesis import apis
 from genesis.utils import *
-from genesis.plugins.network.api import *
 
+from firewall import RuleManager, FWMonitor
 from backend import *
 
 
