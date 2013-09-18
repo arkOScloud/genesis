@@ -34,8 +34,8 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self._editing_chain = None
         self._editing_rule = None
         self._error = None
-        self._srvmgr = apis.rulemanager(self.app)
-        self._fwmgr = apis.fwmonitor(self.app)
+        self._srvmgr = RuleManager()
+        self._fwmgr = FWMonitor()
 
     def get_main_ui(self):
         ui = self.app.inflate('security:main')

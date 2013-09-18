@@ -11,11 +11,8 @@ class Server(object):
 	ports = []
 
 
-class ServerManager(apis.API):
+class ServerManager(Plugin):
 	servers = []
-
-	def __init__(self, app):
-		self.app = app
 
 	def add(self, server_id, plugin_id, name, icon='', ports=[]):
 		s = Server()
@@ -37,6 +34,13 @@ class ServerManager(apis.API):
 		slist = []
 		for x in self.servers:
 			if x.server_id == id:
+				slist.append(x)
+		return slist
+
+	def get_by_plugin(self, id):
+		slist = []
+		for x in self.servers:
+			if x.plugin_id == id:
 				slist.append(x)
 		return slist
 
@@ -75,3 +79,6 @@ class ServerManager(apis.API):
 
 	def remove(self, id):
 		self.servers.pop(lambda x: x.server_id == id)
+
+	def remove_by_plugin(self, id):
+		self.servers.pop(lambda x: x.plugin_id == id)

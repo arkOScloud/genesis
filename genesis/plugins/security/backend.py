@@ -7,52 +7,50 @@ from genesis.utils import shell, cidr_to_netmask
 from genesis.api import *
 from genesis import apis
 from genesis.com import *
-from genesis.plugmgr import RepositoryManager
+
+from genesis.plugins.network.servers import ServerManager
 
 
-class RuleManager(apis.API):
+class RuleManager(Plugin):
     rules = []
-
-    def __init__(self, app):
-        self.app = app
 
     def set(self, server, allow):
         self.app.gconfig.set('security', 'fw-%s-%s'
-            %(server.server_id, server.plugin_id), allow)
+            %(server.plugin_id, server.server_id), allow)
         self.app.gconfig.save()
 
     def get(self, server):
-        for x in apis.servermanager(self.app).get_all():
+        for x in ServerManager().get_all():
             if x.server == server:
                 return int(self.app.gconfig.get('security', 'fw-%s-%s'
-                    %(x.server_id, x.plugin_id)))
+                    %(x.plugin_id, x.server_id)))
         return False
 
     def get_by_id(self, id):
-        for x in apis.servermanager(self.app).get_all():
+        for x in ServerManager().get_all():
             if x.server.server_id == id:
                 return (x, int(self.app.gconfig.get('security', 'fw-%s-%s'
-                    %(x.server_id, x.plugin_id))))
+                    %(x.plugin_id, x.server_id))))
         return False
 
     def get_all(self):
         rules = []
-        for x in apis.servermanager(self.app).get_all():
+        for x in ServerManager().get_all():
             rules.append((x, int(self.app.gconfig.get('security', 'fw-%s-%s'
-                %(x.server_id, x.plugin_id)))))
+                %(x.plugin_id, x.server_id)))))
         return rules
 
     def scan_servers(self):
-        # Scan active servers and create entries for 
-        for x in apis.servermanager(self.app).get_all():
+        # Scan active servers and create entries for them when necessary
+        for x in ServerManager().get_all():
             if not self.app.gconfig.has_option('security', 'fw-%s-%s'
-                %(x.server_id, x.plugin_id)):
+                %(x.plugin_id, x.server_id)):
                 self.set(x, 2)
 
     def clear_cache(self):
         # Compares active firewall preferences stored in config
         # to active servers, removes obsolete entries
-        s = apis.servermanager(self.app).get_all()
+        s = ServerManager().get_all()
         r = re.compile('fw-((?:[a-z][a-z]+))-((?:[a-z][a-z]+))',
             re.IGNORECASE)
         for o in self.app.gconfig.options('security'):
@@ -69,18 +67,25 @@ class RuleManager(apis.API):
     def remove(self, server):
         # Remove an entry from firewall config
         self.app.gconfig.remove_option('security', 'fw-%s-%s'
-            %(server.server_id, server.plugin_id))
+            %(server.plugin_id, server.server_id))
+        self.app.gconfig.save()
+
+    def remove_by_plugin(self, id):
+        # Remove all entries for a particular plugin
+        r = re.compile('fw-((?:[a-z][a-z]+))-((?:[a-z][a-z]+))',
+            re.IGNORECASE)
+        for o in self.app.gconfig.options('security'):
+            m = r.match(o)
+            if m and m.group(1) == id:
+                self.app.gconfig.remove_option('security', o)
         self.app.gconfig.save()
 
 
-class FWMonitor(apis.API):
-    def __init__(self, app):
-        self.app = app
-
+class FWMonitor(Plugin):
     def scan(self):
         # Update our local configs from what is in our iptables chain.
         # This should probably never be used, but it looks pretty.
-        rm = apis.rulemanager(self.app)
+        rm = RuleManager()
         tb = iptc.Table(iptc.Table.FILTER)
         c = iptc.Chain(tb, "genesis-apps")
         if not tb.is_chain(c):
@@ -88,7 +93,7 @@ class FWMonitor(apis.API):
             return
         for r in c.rules:
             m = r.matches[0]
-            for s in apis.servermanager(self.app).get_by_port(m.dport):
+            for s in ServerManager().get_by_port(m.dport):
                 srv = rm.get(s)
                 if '0.0.0.0/255.255.255.255' in r.src:
                     rm.set(s, 2)
@@ -98,7 +103,7 @@ class FWMonitor(apis.API):
     def regen(self, range):
         # Regenerate our chain.
         self.flush()
-        for x in apis.rulemanager(self.app).get_all():
+        for x in RuleManager().get_all():
             for p in x[0].server.port:
                 if x[1] == 2:
                     self.add(p[0], p[1], '0.0.0.0')
