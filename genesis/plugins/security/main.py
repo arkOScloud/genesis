@@ -64,27 +64,31 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
 
         for s in self.rules:
             if s[1] == 1:
-                perm = 'Local Only'
+                perm, ic, show = 'Local Only', 'gen-home', [2, 0]
             elif s[1] == 2:
-                perm = 'All Networks'
+                perm, ic, show = 'All Networks', 'gen-earth', [1, 0]
             else:
-                perm = 'None'
+                perm, ic, show = 'None', 'gen-close', [2, 1]
             al.append(UI.DTR(
                 UI.IconFont(iconfont=s[0].icon),
                 UI.Label(text=s[0].name),
                 UI.Label(text=', '.join(str(x[1]) for x in s[0].ports)),
-                UI.Label(text=perm),
                 UI.HContainer(
-                    UI.TipIcon(iconfont='gen-earth',
-                        text='Allow From Anywhere', id='2/' + str(self.rules.index(s))),
-                    UI.TipIcon(iconfont='gen-home',
-                        text='Local Access Only', id='1/' + str(self.rules.index(s))),
-                    UI.TipIcon(iconfont='gen-close', 
+                    UI.IconFont(iconfont=ic),
+                    UI.Label(text=' '),
+                    UI.Label(text=perm),
+                    ),
+                UI.HContainer(
+                    (UI.TipIcon(iconfont='gen-earth',
+                        text='Allow From Anywhere', id='2/' + str(self.rules.index(s))) if 2 in show else None),
+                    (UI.TipIcon(iconfont='gen-home',
+                        text='Local Access Only', id='1/' + str(self.rules.index(s))) if 1 in show else None),
+                    (UI.TipIcon(iconfont='gen-close', 
                         text='Deny All', 
                         id='0/' + str(self.rules.index(s)), 
                         warning='Are you sure you wish to deny all access to %s? '
                         'This will prevent anyone (including you) from connecting to it.' 
-                        % s[0].name),
+                        % s[0].name) if 0 in show else None),
                     ),
                ))
 
@@ -236,7 +240,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
                 self.put_message('err', 'You cannot deny all access to Genesis. '
                     'Try limiting it to your local network instead.')
             else:
-                self._srvmgr.set(self.rules[params[1]][0], 0)
+                self._srvmgr.set(self.rules[int(params[1])][0], 0)
                 self._fwmgr.regen(self._ranges)
         if params[0] == 'apply':
             self._stab = 2

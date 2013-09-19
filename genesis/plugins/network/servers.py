@@ -25,6 +25,7 @@ class ServerManager(Plugin):
 		s.icon = icon
 		s.ports = ports
 		self.servers.append(s)
+		return s
 
 	def update(self, old_id, new_id, name, icon='', ports=[]):
 		s = self.get(old_id)
@@ -89,15 +90,19 @@ class ServerManager(Plugin):
 							pass
 
 	def scan_webapps(self):
-		for x in self.servers:
-			if x.plugin_id == 'webapps':
-				self.servers.pop(x)
+		for x in enumerate(self.servers):
+			if x[1].plugin_id == 'webapps':
+				self.servers.pop(x[0])
 		for s in apis.webapps(self.app).get_sites():
 			self.add(s['name'], 'webapps', s['name'] + ' (' + s['type'] + ')',
 				'gen-earth', [('tcp', s['port'])])
 
 	def remove(self, id):
-		self.servers.pop(lambda x: x.server_id == id)
+		for s in enumerate(self.servers):
+			if s[1].server_id == id:
+				self.servers.pop(s[0])
 
 	def remove_by_plugin(self, id):
-		self.servers.pop(lambda x: x.plugin_id == id)
+		for s in enumerate(self.servers):
+			if s[1].plugin_id == id:
+				self.servers.pop(s[0])

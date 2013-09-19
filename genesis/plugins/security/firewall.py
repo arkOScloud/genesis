@@ -41,6 +41,7 @@ class RuleManager(Plugin):
         for x in ServerManager(self.app).get_all():
             if not self.app.gconfig.has_option('security', 'fw-%s-%s'
                 %(x.plugin_id, x.server_id)):
+                print 'Adding new server: ' + x.plugin_id, x.server_id
                 self.set(x, 2)
 
     def clear_cache(self):
@@ -170,9 +171,8 @@ class FWMonitor(Plugin):
         # Flush out our chain
         tb = iptc.Table(iptc.Table.FILTER)
         c = iptc.Chain(tb, "genesis-apps")
-        if not tb.is_chain(c):
-            return
-        c.flush()
+        if tb.is_chain(c):
+            c.flush()
 
     def save(self):
         # Save rules to file loaded on boot
