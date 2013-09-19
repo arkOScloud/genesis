@@ -46,6 +46,22 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             btn.set('text', 'Disable autostart')
             btn.set('id', 'noautostart')
 
+        present = False
+        try:
+            if self.app.gconfig.get('security', 'noinit') == 'yes':
+                present = True
+        except:
+            pass
+        for rx in iptc.Chain(iptc.Table(iptc.Table.FILTER), 'INPUT').rules:
+            if rx.target.name == 'genesis-apps':
+                present = True
+            elif rx.target.name == 'DROP':
+                present = True
+        if present == False:
+            self.put_message('err', 'There may be a problem with your '
+                'firewall. Please reload the table by clicking "Reinitialize" '
+                'under the Settings tab below.')
+
         self._ranges = []
         for x in self.net_config.interfaces:
             i = self.net_config.interfaces[x]

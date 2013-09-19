@@ -10,6 +10,9 @@ class NetworkControl(apis.API):
     def __init__(self, app):
         self.app = app
 
+    def initialize(self):
+        FWMonitor(self.app).initialize()
+
     def session_start(self):
         servers = ServerManager(self.app)
         servers.add('genesis', 'genesis', 'Genesis', 'gen-arkos-round',

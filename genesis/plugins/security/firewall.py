@@ -41,7 +41,6 @@ class RuleManager(Plugin):
         for x in ServerManager(self.app).get_all():
             if not self.app.gconfig.has_option('security', 'fw-%s-%s'
                 %(x.plugin_id, x.server_id)):
-                print 'Adding new server: ' + x.plugin_id, x.server_id
                 self.set(x, 2)
 
     def clear_cache(self):
@@ -80,6 +79,34 @@ class RuleManager(Plugin):
 
 class FWMonitor(Plugin):
     abstract = True
+
+    def initialize(self):
+        tb = iptc.Table(iptc.Table.FILTER)
+        c = iptc.Chain(tb, 'INPUT')
+        c.flush()
+
+        # Accept loopback
+        r = iptc.Rule()
+        r.in_interface = 'lo'
+        t = iptc.Target(r, 'ACCEPT')
+        r.target = t
+        c.append_rule(r)
+
+        # Accept established/related connections
+        # Unfortunately this has to be done clasically
+        shell('iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT')
+
+        # Accept designated apps
+        r = iptc.Rule()
+        t = iptc.Target(r, 'genesis-apps')
+        r.target = t
+        c.append_rule(r)
+
+        # Reject all else by default
+        r = iptc.Rule()
+        t = iptc.Target(r, 'DROP')
+        r.target = t
+        c.append_rule(r)
 
     def scan(self):
         # Update our local configs from what is in our iptables chain.
