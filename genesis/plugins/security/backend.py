@@ -3,91 +3,10 @@ import getopt
 import iptc
 
 from genesis.ui import UI
-from genesis.utils import shell
+from genesis.utils import shell, cidr_to_netmask
 from genesis.api import *
 from genesis import apis
 from genesis.com import *
-
-
-class ServerRule(object):
-    server = None
-    allow = 2
-    ranges = []
-
-
-class RuleManager(apis.API):
-    rules = []
-
-    def __init__(self, app):
-        self.app = app
-
-    def add(self, server, allow, ranges=[]):
-        for x in self.rules:
-            if x.server == server:
-                raise Exception('Already have a ServerRule for this, update it instead')
-        s = ServerRule()
-        s.server = server
-        if allow == 0:
-            raise Exception('"Deny all"s cannot be added. Remove all rules instead')
-        elif allow == 1:
-            s.ranges = ranges
-        else:
-            s.ranges = ['0.0.0.0']
-        self.rules.append(s)
-
-    def update(self, server, allow, ranges):
-        s = self.get(server)
-        s.allow = allow
-        s.ranges = ranges
-
-    def get(self, server):
-        for x in self.rules:
-            if x.server == server:
-                return x
-        return False
-
-    def get_all(self):
-        return self.rules
-
-    def scan_servers(self):
-        servers = apis.servermanager(self.app).get_all()
-        for s in servers:
-            for x in self.rules:
-                if x.server == s:
-                    break
-            else:
-                self.add(s, 2, [])
-        FWMonitor().scan()
-
-    def remove(self, server):
-        self.rules.pop(lambda x: x.server == server)
-
-
-class FWMonitor:
-    def scan(self):
-        # Parse iptables and update our local models
-        # If no rule is found, set as deny all
-        pass
-
-    def add(self, port, range=''):
-        # Add rule for this port
-        # If range is not provided, assume '0.0.0.0'
-        pass
-
-    def remove(self, port, range=''):
-        # Remove rule(s) in our chain matching this port
-        # If range is not provided, delete all rules for this port
-        pass
-
-    def find(self, port, range=''):
-        # Returns true if rule is found for this port
-        # If range IS provided, return true only if range is the same
-        pass
-
-    def save(self):
-        # Save rules to file loaded on boot
-        pass
-
 
 # Keeping this section for advanced use, for now.
 # TODO: Migrate this where possible to calls for python-iptables

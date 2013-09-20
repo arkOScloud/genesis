@@ -237,6 +237,11 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
                 'running. Please start the service with the Status button '
                 'before continuing.' % service), hidecancel=True)
 
+    def update_services(self, services=None):
+        if services != None:
+            self.services = services
+        apis.networkcontrol(self.app).port_changed(self)
+
 
 class ModuleConfig(Plugin):
     """

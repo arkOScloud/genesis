@@ -3,11 +3,31 @@
         <tabheader text="Firewall" id="s0"/>
         <tabheader text="Defense" id="s1"/>
         <tabheader text="Tables (Advanced)" id="s2"/>
+        <tabheader text="Settings" id="s3"/>
 
         <tabbody id="s0">
-            <pad id="conn">
-                <label id="ranges" />
+            <label size="5" text="Your Apps" />
+            <pad>
                 <dt id="applist" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Application Name" />
+                        </dth>
+                        <dth>
+                            <label text="Port(s)" />
+                        </dth>
+                        <dth>
+                            <label text="Authorization" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </pad>
+
+            <label size="5" text="arkOS Utilities" />
+            <pad>
+                <dt id="arkoslist" width="100%">
                     <dtr header="True">
                         <dth width="1" />
                         <dth>
@@ -37,6 +57,9 @@
 
             <pad id="advroot">
             </pad>
+        </tabbody>
+        <tabbody id="s3">
+            <label id="ranges" />
         </tabbody>
     </tabcontrol>
 </xml>

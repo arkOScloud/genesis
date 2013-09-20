@@ -29,7 +29,6 @@ class NetworkPlugin(CategoryPlugin):
         self._editing = None
         self._editing_self = False
         self._editing_ns = None
-        self._servers = apis.servermanager(self.app)
         
     def get_ui(self):
         self.ifacelist = []

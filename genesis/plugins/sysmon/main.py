@@ -14,12 +14,7 @@ class Dashboard(CategoryPlugin):
     folder = 'top'
 
     def on_session_start(self):
-        # start port and rule tracking on startup
-        servers = apis.servermanager(self.app)
-        servers.scan_plugins()
-        servers.scan_webapps()
-        srvmgr = apis.rulemanager(self.app)
-        srvmgr.scan_servers()
+        apis.networkcontrol(self.app).session_start()
         self._adding_widget = None
 
         # start widget manager and show SSL warning if applicable
@@ -45,7 +40,7 @@ class Dashboard(CategoryPlugin):
                 )
             except Exception, e:
                 self.put_message('err', 'One or more widgets failed to load. Check the logs for info')
-                self.app.log.error('System Monitor Widget failed to load: '+str(e))
+                self.app.log.error('System Monitor Widget failed to load '+w.title+': '+str(e))
 
     def get_ui(self):
         ui = self.app.inflate('sysmon:main')

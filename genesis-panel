@@ -2,7 +2,7 @@
 
 import sys
 import getopt
-import os.path
+import os
 import logging
 
 from genesis.daemon import Daemon
@@ -43,6 +43,7 @@ if __name__ == '__main__':
         sys.exit(2)
 
     action = 'run'
+    os.environ['XTABLES_LIBDIR'] = '/usr/lib/iptables'
 
     for o, a in opts:
         if o in ('-h', '--help'):

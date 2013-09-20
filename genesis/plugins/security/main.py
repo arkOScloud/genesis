@@ -5,6 +5,7 @@ from genesis import apis
 from genesis.utils import *
 from genesis.plugins.network.api import *
 
+from firewall import RuleManager, FWMonitor
 from backend import *
 
 
@@ -20,6 +21,8 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self.cfg = Config(self.app)
         self.cfg.load()
         self.net_config = self.app.get_backend(INetworkConfig)
+        self.rules = sorted(self._srvmgr.get_all(), 
+            key=lambda s: s[0].name)
 
     def on_session_start(self):
         self._stab = 0
@@ -31,7 +34,9 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self._editing_chain = None
         self._editing_rule = None
         self._error = None
-        self._srvmgr = apis.rulemanager(self.app)
+        self._ranges = []
+        self._srvmgr = RuleManager(self.app)
+        self._fwmgr = FWMonitor(self.app)
 
     def get_main_ui(self):
         ui = self.app.inflate('security:main')
@@ -41,33 +46,104 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             btn.set('text', 'Disable autostart')
             btn.set('id', 'noautostart')
 
-        ranges = []
+        present = False
+        try:
+            if self.app.gconfig.get('security', 'noinit') == 'yes':
+                present = True
+        except:
+            pass
+        for rx in iptc.Chain(iptc.Table(iptc.Table.FILTER), 'INPUT').rules:
+            if rx.target.name == 'genesis-apps':
+                present = True
+            elif rx.target.name == 'DROP':
+                present = True
+        if present == False:
+            self.put_message('err', 'There may be a problem with your '
+                'firewall. Please reload the table by clicking "Reinitialize" '
+                'under the Settings tab below.')
+
+        self._ranges = []
         for x in self.net_config.interfaces:
             i = self.net_config.interfaces[x]
             r = self.net_config.get_ip(i.name)
-            if not '127.0.0.1' in r and not '0.0.0.0' in r:
-                ranges.append(self.net_config.get_ip(i.name))
-        ui.find('ranges').set('text', 'Local networks: ' + ', '.join(ranges))
+            if '127.0.0.1' in r or '0.0.0.0' in r:
+                continue
+            ri, rr = r.split('/')
+            ri = ri.split('.')
+            ri[3] = '0'
+            ri = ".".join(ri)
+            r = ri + '/' + rr
+            self._ranges.append(r)
+        ui.find('ranges').set('text', 'Local networks: ' + ', '.join(self._ranges))
 
         al = ui.find('applist')
+        ql = ui.find('arkoslist')
 
-        rules = sorted(self._srvmgr.get_all(), 
-            key=lambda s: s.server.name)
-
-        for s in rules:
-            if s.allow == 1:
-                perm = 'Local Only'
-            elif s.allow == 2:
-                perm = 'All Networks'
+        for s in self.rules:
+            if s[0].plugin_id != 'arkos':
+                if s[1] == 1:
+                    perm, ic, show = 'Local Only', 'gen-home', [2, 0]
+                elif s[1] == 2:
+                    perm, ic, show = 'All Networks', 'gen-earth', [1, 0]
+                else:
+                    perm, ic, show = 'None', 'gen-close', [2, 1]
+                al.append(UI.DTR(
+                    UI.IconFont(iconfont=s[0].icon),
+                    UI.Label(text=s[0].name),
+                    UI.Label(text=', '.join(str(x[1]) for x in s[0].ports)),
+                    UI.HContainer(
+                        UI.IconFont(iconfont=ic),
+                        UI.Label(text=' '),
+                        UI.Label(text=perm),
+                        ),
+                    UI.HContainer(
+                        (UI.TipIcon(iconfont='gen-earth',
+                            text='Allow From Anywhere', id='2/' + str(self.rules.index(s))) if 2 in show else None),
+                        (UI.TipIcon(iconfont='gen-home',
+                            text='Local Access Only', id='1/' + str(self.rules.index(s))) if 1 in show else None),
+                        (UI.TipIcon(iconfont='gen-close', 
+                            text='Deny All', 
+                            id='0/' + str(self.rules.index(s)), 
+                            warning='Are you sure you wish to deny all access to %s? '
+                            'This will prevent anyone (including you) from connecting to it.' 
+                            % s[0].name) if 0 in show else None),
+                        ),
+                   ))
             else:
-                perm = 'None'
-            al.append(UI.DTR(
-                UI.IconFont(iconfont=s.server.icon),
-                UI.Label(text=s.server.name),
-                UI.Label(text=', '.join(str(x) for x in s.server.ports)),
-                UI.Label(text=perm),
-                UI.Label(text='')
-               ))
+                if s[0].server_id == 'beacon' and s[1] == 2:
+                    self._srvmgr.set(s[0], 1)
+                    perm, ic, show = 'Local Only', 'gen-home', [0]
+                elif s[0].server_id == 'beacon' and s[1] == 1:
+                    perm, ic, show = 'Local Only', 'gen-home', [0]
+                elif s[0].server_id == 'beacon' and s[1] == 0:
+                    perm, ic, show = 'None', 'gen-close', [1]
+                elif s[0].server_id == 'genesis' and s[1] == 2:
+                    perm, ic, show = 'All Networks', 'gen-earth', [1]
+                elif s[0].server_id == 'genesis' and s[1] == 1:
+                    perm, ic, show = 'Local Only', 'gen-home', [2]
+                ql.append(UI.DTR(
+                    UI.IconFont(iconfont=s[0].icon),
+                    UI.Label(text=s[0].name),
+                    UI.Label(text=', '.join(str(x[1]) for x in s[0].ports)),
+                    UI.HContainer(
+                        UI.IconFont(iconfont=ic),
+                        UI.Label(text=' '),
+                        UI.Label(text=perm),
+                        ),
+                    UI.HContainer(
+                        (UI.TipIcon(iconfont='gen-earth',
+                            text='Allow From Anywhere', id='2/' + str(self.rules.index(s))) if 2 in show else None),
+                        (UI.TipIcon(iconfont='gen-home',
+                            text='Local Access Only', id='1/' + str(self.rules.index(s))) if 1 in show else None),
+                        (UI.TipIcon(iconfont='gen-close', 
+                            text='Deny All', 
+                            id='0/' + str(self.rules.index(s)), 
+                            warning='Are you sure you wish to deny all access to %s? '
+                            'This will prevent anyone (including you) from connecting to it.' 
+                            % s[0].name) if 0 in show else None),
+                        ),
+                   ))
+
 
         tc = UI.TabControl(active=self._tab)
         ui.append('advroot', tc)
@@ -206,6 +282,20 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
+        if params[0] == '2':
+            self._srvmgr.set(self.rules[int(params[1])][0], 2)
+            self._fwmgr.regen(self._ranges)
+        if params[0] == '1':
+            self._srvmgr.set(self.rules[int(params[1])][0], 1)
+            self._fwmgr.regen(self._ranges)
+        if params[0] == '0':
+            sel = self.rules[int(params[1])][0]
+            if sel.plugin_id == 'arkos' and sel.server_id == 'genesis':
+                self.put_message('err', 'You cannot deny all access to Genesis. '
+                    'Try limiting it to your local network instead.')
+            else:
+                self._srvmgr.set(sel, 0)
+                self._fwmgr.regen(self._ranges)
         if params[0] == 'apply':
             self._stab = 2
             self._error = self.cfg.apply_now()

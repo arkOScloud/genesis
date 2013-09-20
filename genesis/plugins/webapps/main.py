@@ -15,6 +15,13 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 	services = []
 
 	def on_init(self):
+		if self._relsec != None:
+			if self._relsec[0] == 'add':
+				apis.networkcontrol(self.app).add_webapp(self._relsec[1])
+				self._relsec = None
+			elif self._relsec[0] == 'del':
+				apis.networkcontrol(self.app).remove_webapp(self._relsec[1])
+			self._relsec = None
 		self.services = []
 		self.apiops = apis.webapps(self.app)
 		self.mgr = WABackend()
@@ -33,19 +40,20 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					ok = True
 			if ok == False:
 				continue
-			for dep in apptype.services:
-				post = True
-				for svc in self.services:
-					if svc[1] == dep[1]:
-						post = False
-				if post == True:
-					self.services.append((dep[0], dep[1]))
-				
+			if hasattr(apptype, 'services'):
+				for dep in apptype.services:
+					post = True
+					for svc in self.services:
+						if svc[1] == dep[1]:
+							post = False
+					if post == True:
+						self.services.append((dep[0], dep[1]))
 
 	def on_session_start(self):
 		self._add = None
 		self._edit = None
 		self._setup = None
+		self._relsec = None
 
 	def get_main_ui(self):
 		ui = self.app.inflate('webapps:main')
@@ -179,6 +187,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					self.put_message('err', 'Must choose an address')
 				elif vars.getvalue('cfgport', '') == '':
 					self.put_message('err', 'Must choose a port (default 80)')
+				elif vars.getvalue('cfgport') == self.app.gconfig.get('genesis', 'bind_port', ''):
+					self.put_message('err', 'Can\'t use the same port number as Genesis')
 				else:
 					self.mgr.nginx_edit(
 						origname=self._edit['name'], 
@@ -233,6 +243,7 @@ class WAWorker(BackgroundWorker):
 			else:
 				cat.put_message('info', 
 					'%s added sucessfully' % name)
+				cat._relsec = ('add', (name, current, vars))
 				if spmsg:
 					cat.put_message('info', spmsg)
 		elif action == 'drop':
@@ -244,3 +255,4 @@ class WAWorker(BackgroundWorker):
 				cat.app.log.error('Website removal failed: ' + str(e))
 			else:
 				cat.put_message('info', 'Website successfully removed')
+				cat._relsec = ('del', name['name'])
