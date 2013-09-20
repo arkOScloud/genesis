@@ -8,14 +8,15 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     text = 'Transmission'
     iconfont = 'gen-download'
     folder = 'apps'
-    services = [('Transmission Client', 'transmission', [9091])]
+    services = [('Transmission Client', 'transmission', [('tcp', '9091')])]
 
     def on_session_start(self):
         self._redir = False
         self._tab = 0
         self._config = backend.TransmissionConfig(self.app)
         self._config.load()
-        self.services = [('Transmission Client', 'transmission', [int(self._config.get('rpc-port'))])]
+        self.services = [('Transmission Client', 'transmission', [('tcp', self._config.get('rpc-port'))])]
+        self.update_services()
 
     def get_main_ui(self):
         if self._redir:
