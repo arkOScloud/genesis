@@ -41,9 +41,9 @@ class ArchServiceManager(Plugin):
 
     def get_status(self, name):
         if self.use_systemd:
-            status = shell("systemctl --no-ask-password is-active {}.service".format(name))
+            status = shell_status("systemctl --no-ask-password is-active {}.service".format(name))
 
-            if not status or "inactive" in status:
+            if not status or status != 0:
                 return 'stopped'
             else:
                 return 'running'
