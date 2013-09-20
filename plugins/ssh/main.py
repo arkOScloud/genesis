@@ -9,7 +9,7 @@ class SSHPlugin(apis.services.ServiceControlPlugin):
     text = 'SSH'
     iconfont = 'gen-console'
     folder = 'advanced'
-    services = [('SSH Server', 'sshd')]
+    services = [('SSH Server', 'sshd', [('tcp', '22')])]
 
     def on_init(self):
         ss = backend.SSHConfig(self.app)
