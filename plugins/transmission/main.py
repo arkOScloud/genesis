@@ -63,6 +63,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     def on_submit(self, event, params, vars=None):
         if params[0] == 'frmBasic':
             if vars.getvalue('action', '') == 'OK':
+                self.services = [('Transmission Client', 'transmission', [('tcp', vars.getvalue('rpc-port'))])]
                 if int(self._config.get('rpc-port')) != int(vars.getvalue('rpc-port')):
                     self.update_services()
                 self._config.set('rpc-port', int(vars.getvalue('rpc-port', '')))
