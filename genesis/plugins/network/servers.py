@@ -28,7 +28,7 @@ class ServerManager(Plugin):
 		return s
 
 	def update(self, old_id, new_id, name, icon='', ports=[]):
-		s = self.get(old_id)
+		s = self.get(old_id)[0]
 		s.server_id = new_id
 		s.name = name
 		s.icon = icon

@@ -20,14 +20,28 @@ class NetworkControl(apis.API):
         servers.scan_webapps()
         RuleManager(self.app).scan_servers()
         FWMonitor(self.app).regen()
+        FWMonitor(self.app).save()
 
     def add_webapp(self, d):
         servers = ServerManager(self.app)
-        s = servers.add(d[0], 'webapps', 
+        s = servers.add('webapps', d[0], 
             d[0] + ' (' + d[1].name + ')', 'gen-earth', 
             [('tcp', d[2].getvalue('port', '80'))])
         RuleManager(self.app).set(s, 2)
         FWMonitor(self.app).regen()
+        FWMonitor(self.app).save()
+
+    def change_webapp(self, old_id, new_id, type, port):
+        servers = ServerManager(self.app)
+        rm = RuleManager(self.app)
+        s = servers.get(old_id)[0]
+        r = rm.get(s)
+        rm.remove(s)
+        servers.update(old_id, new_id, new_id + ' (' + type + ')',
+            'gen-earth', [('tcp', port)])
+        rm.set(s, r)
+        FWMonitor(self.app).regen()
+        FWMonitor(self.app).save()
 
     def remove_webapp(self, sid):
         servers = ServerManager(self.app)
@@ -35,6 +49,7 @@ class NetworkControl(apis.API):
         RuleManager(self.app).remove(s)
         servers.remove(sid)
         FWMonitor(self.app).regen()
+        FWMonitor(self.app).save()
 
     def port_changed(self, s):
         sm = ServerManager(self.app)
@@ -54,6 +69,7 @@ class NetworkControl(apis.API):
         servers.scan_plugins()
         RuleManager(self.app).scan_servers()
         FWMonitor(self.app).regen()
+        FWMonitor(self.app).save()
 
     def remove(self, id):
         servers = ServerManager(self.app)
@@ -61,3 +77,4 @@ class NetworkControl(apis.API):
             RuleManager(self.app).remove_by_plugin(id)
             servers.remove_by_plugin(id)
             FWMonitor(self.app).regen()
+            FWMonitor(self.app).save()
