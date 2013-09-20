@@ -199,6 +199,9 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						port=vars.getvalue('cfgport'), 
 						php=self._edit['php']
 						)
+				apis.networkcontrol(self.app).change_webapp(
+					self._edit['name'], vars.getvalue('cfgname'), 
+					self._edit['type'], vars.getvalue('cfgport'))
 			self._edit = None
 		if params[0] == 'dlgSetup':
 			if vars.getvalue('action', '') == 'OK':

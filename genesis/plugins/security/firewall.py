@@ -2,7 +2,7 @@ import iptc
 
 from genesis.com import *
 from genesis.api import *
-from genesis.utils import cidr_to_netmask
+from genesis.utils import shell, cidr_to_netmask
 from genesis.plugins.network.servers import ServerManager
 
 
@@ -17,14 +17,14 @@ class RuleManager(Plugin):
 
     def get(self, server):
         for x in ServerManager(self.app).get_all():
-            if x.server == server:
+            if x == server:
                 return int(self.app.gconfig.get('security', 'fw-%s-%s'
                     %(x.plugin_id, x.server_id)))
         return False
 
     def get_by_id(self, id):
         for x in ServerManager(self.app).get_all():
-            if x.server.server_id == id:
+            if x.server_id == id:
                 return (x, int(self.app.gconfig.get('security', 'fw-%s-%s'
                     %(x.plugin_id, x.server_id))))
         return False
@@ -209,4 +209,6 @@ class FWMonitor(Plugin):
 
     def save(self):
         # Save rules to file loaded on boot
-        pass
+        f = open('/etc/iptables/iptables.rules', 'w')
+        f.write(shell('iptables-save'))
+        f.close()
