@@ -63,6 +63,8 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     def on_submit(self, event, params, vars=None):
         if params[0] == 'frmBasic':
             if vars.getvalue('action', '') == 'OK':
+                if int(self._config.get('rpc-port')) != int(vars.getvalue('rpc-port')):
+                    self.update_services()
                 self._config.set('rpc-port', int(vars.getvalue('rpc-port', '')))
                 self._config.set('rpc-whitelist-enabled', vars.getvalue('rpc-whitelist-enabled', '')=='1')
                 self._config.set('download-dir', vars.getvalue('download-dir', ''))

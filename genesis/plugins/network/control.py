@@ -57,16 +57,17 @@ class NetworkControl(apis.API):
         for p in s.services:
             try:
                 if p[2] != [] and sm.get(p[1]) != []:
-                    s = sm.get(p[1])[0]
-                    r = rm.get(s)
-                    rm.remove(s)
+                    sg = sm.get(p[1])[0]
+                    r = rm.get(sg)
+                    rm.remove(sg)
                     sm.update(p[1], p[1], p[0], 
-                        c.iconfont, p[2])
-                    rm.set(s, r)
+                        s.iconfont, p[2])
+                    rm.set(sg, r)
                 elif p[2] != []:
-                    sm.add(p[1], c.plugin_id, p[0], 
-                        c.iconfont, p[2])
-                    rm.set(s, 2)
+                    sg = sm.get(p[1])[0]
+                    sm.add(s.plugin_id, p[1], p[0], 
+                        s.iconfont, p[2])
+                    rm.set(sg, 2)
                 FWMonitor(self.app).regen()
                 FWMonitor(self.app).save()
             except IndexError:
