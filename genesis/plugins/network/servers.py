@@ -17,7 +17,7 @@ class ServerManager(Plugin):
 	abstract = True
 	servers = []
 
-	def add(self, server_id, plugin_id, name, icon='', ports=[]):
+	def add(self, plugin_id, server_id, name, icon='', ports=[]):
 		s = Server()
 		s.server_id = server_id
 		s.plugin_id = plugin_id
@@ -84,7 +84,7 @@ class ServerManager(Plugin):
 					for p in c.services:
 						try:
 							if p[2] != []:
-								self.add(p[1], c.plugin_id, p[0], 
+								self.add(c.plugin_id, p[1], p[0], 
 									c.iconfont, p[2])
 						except IndexError:
 							pass
@@ -94,7 +94,7 @@ class ServerManager(Plugin):
 			if x[1].plugin_id == 'webapps':
 				self.servers.pop(x[0])
 		for s in apis.webapps(self.app).get_sites():
-			self.add(s['name'], 'webapps', s['name'] + ' (' + s['type'] + ')',
+			self.add('webapps', s['name'], s['name'] + ' (' + s['type'] + ')',
 				'gen-earth', [('tcp', s['port'])])
 
 	def remove(self, id):

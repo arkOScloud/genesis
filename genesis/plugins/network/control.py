@@ -10,13 +10,12 @@ class NetworkControl(apis.API):
     def __init__(self, app):
         self.app = app
 
-    def initialize(self):
-        FWMonitor(self.app).initialize()
-
     def session_start(self):
         servers = ServerManager(self.app)
-        servers.add('genesis', 'genesis', 'Genesis', 'gen-arkos-round',
+        servers.add('arkos', 'genesis', 'Genesis', 'gen-arkos-round',
             [('tcp', self.app.gconfig.get('genesis', 'bind_port'))])
+        servers.add('arkos', 'beacon', 'Beacon', 'gen-arkos-round',
+            [('tcp', '8765')])
         servers.scan_plugins()
         servers.scan_webapps()
         RuleManager(self.app).scan_servers()

@@ -77,36 +77,73 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         ui.find('ranges').set('text', 'Local networks: ' + ', '.join(self._ranges))
 
         al = ui.find('applist')
+        ql = ui.find('arkoslist')
 
         for s in self.rules:
-            if s[1] == 1:
-                perm, ic, show = 'Local Only', 'gen-home', [2, 0]
-            elif s[1] == 2:
-                perm, ic, show = 'All Networks', 'gen-earth', [1, 0]
+            if s[0].plugin_id != 'arkos':
+                if s[1] == 1:
+                    perm, ic, show = 'Local Only', 'gen-home', [2, 0]
+                elif s[1] == 2:
+                    perm, ic, show = 'All Networks', 'gen-earth', [1, 0]
+                else:
+                    perm, ic, show = 'None', 'gen-close', [2, 1]
+                al.append(UI.DTR(
+                    UI.IconFont(iconfont=s[0].icon),
+                    UI.Label(text=s[0].name),
+                    UI.Label(text=', '.join(str(x[1]) for x in s[0].ports)),
+                    UI.HContainer(
+                        UI.IconFont(iconfont=ic),
+                        UI.Label(text=' '),
+                        UI.Label(text=perm),
+                        ),
+                    UI.HContainer(
+                        (UI.TipIcon(iconfont='gen-earth',
+                            text='Allow From Anywhere', id='2/' + str(self.rules.index(s))) if 2 in show else None),
+                        (UI.TipIcon(iconfont='gen-home',
+                            text='Local Access Only', id='1/' + str(self.rules.index(s))) if 1 in show else None),
+                        (UI.TipIcon(iconfont='gen-close', 
+                            text='Deny All', 
+                            id='0/' + str(self.rules.index(s)), 
+                            warning='Are you sure you wish to deny all access to %s? '
+                            'This will prevent anyone (including you) from connecting to it.' 
+                            % s[0].name) if 0 in show else None),
+                        ),
+                   ))
             else:
-                perm, ic, show = 'None', 'gen-close', [2, 1]
-            al.append(UI.DTR(
-                UI.IconFont(iconfont=s[0].icon),
-                UI.Label(text=s[0].name),
-                UI.Label(text=', '.join(str(x[1]) for x in s[0].ports)),
-                UI.HContainer(
-                    UI.IconFont(iconfont=ic),
-                    UI.Label(text=' '),
-                    UI.Label(text=perm),
-                    ),
-                UI.HContainer(
-                    (UI.TipIcon(iconfont='gen-earth',
-                        text='Allow From Anywhere', id='2/' + str(self.rules.index(s))) if 2 in show else None),
-                    (UI.TipIcon(iconfont='gen-home',
-                        text='Local Access Only', id='1/' + str(self.rules.index(s))) if 1 in show else None),
-                    (UI.TipIcon(iconfont='gen-close', 
-                        text='Deny All', 
-                        id='0/' + str(self.rules.index(s)), 
-                        warning='Are you sure you wish to deny all access to %s? '
-                        'This will prevent anyone (including you) from connecting to it.' 
-                        % s[0].name) if 0 in show else None),
-                    ),
-               ))
+                if s[0].server_id == 'beacon' and s[1] == 2:
+                    self._srvmgr.set(s[0], 1)
+                    perm, ic, show = 'Local Only', 'gen-home', [0]
+                elif s[0].server_id == 'beacon' and s[1] == 1:
+                    perm, ic, show = 'Local Only', 'gen-home', [0]
+                elif s[0].server_id == 'beacon' and s[1] == 0:
+                    perm, ic, show = 'None', 'gen-close', [1]
+                elif s[0].server_id == 'genesis' and s[1] == 2:
+                    perm, ic, show = 'All Networks', 'gen-earth', [1]
+                elif s[0].server_id == 'genesis' and s[1] == 1:
+                    perm, ic, show = 'Local Only', 'gen-home', [2]
+                ql.append(UI.DTR(
+                    UI.IconFont(iconfont=s[0].icon),
+                    UI.Label(text=s[0].name),
+                    UI.Label(text=', '.join(str(x[1]) for x in s[0].ports)),
+                    UI.HContainer(
+                        UI.IconFont(iconfont=ic),
+                        UI.Label(text=' '),
+                        UI.Label(text=perm),
+                        ),
+                    UI.HContainer(
+                        (UI.TipIcon(iconfont='gen-earth',
+                            text='Allow From Anywhere', id='2/' + str(self.rules.index(s))) if 2 in show else None),
+                        (UI.TipIcon(iconfont='gen-home',
+                            text='Local Access Only', id='1/' + str(self.rules.index(s))) if 1 in show else None),
+                        (UI.TipIcon(iconfont='gen-close', 
+                            text='Deny All', 
+                            id='0/' + str(self.rules.index(s)), 
+                            warning='Are you sure you wish to deny all access to %s? '
+                            'This will prevent anyone (including you) from connecting to it.' 
+                            % s[0].name) if 0 in show else None),
+                        ),
+                   ))
+
 
         tc = UI.TabControl(active=self._tab)
         ui.append('advroot', tc)
@@ -252,11 +289,12 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             self._srvmgr.set(self.rules[int(params[1])][0], 1)
             self._fwmgr.regen(self._ranges)
         if params[0] == '0':
-            if self.rules[int(params[1])][0].server_id == 'genesis':
+            sel = self.rules[int(params[1])][0]
+            if sel.plugin_id == 'arkos' and sel.server_id == 'genesis':
                 self.put_message('err', 'You cannot deny all access to Genesis. '
                     'Try limiting it to your local network instead.')
             else:
-                self._srvmgr.set(self.rules[int(params[1])][0], 0)
+                self._srvmgr.set(sel, 0)
                 self._fwmgr.regen(self._ranges)
         if params[0] == 'apply':
             self._stab = 2

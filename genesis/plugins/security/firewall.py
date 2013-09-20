@@ -39,7 +39,13 @@ class RuleManager(Plugin):
     def scan_servers(self):
         # Scan active servers and create entries for them when necessary
         for x in ServerManager(self.app).get_all():
-            if not self.app.gconfig.has_option('security', 'fw-%s-%s'
+            if x.plugin_id == 'arkos' and x.server_id == 'beacon' and not self.app.gconfig.has_option('security', 'fw-%s-%s'
+                %(x.plugin_id, x.server_id)):
+                self.set(x, 1)
+            elif x.plugin_id == 'arkos' and x.server_id == 'genesis' and not self.app.gconfig.has_option('security', 'fw-%s-%s'
+                %(x.plugin_id, x.server_id)):
+                self.set(x, 2)
+            elif not self.app.gconfig.has_option('security', 'fw-%s-%s'
                 %(x.plugin_id, x.server_id)):
                 self.set(x, 2)
 
