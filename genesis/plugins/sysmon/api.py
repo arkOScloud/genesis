@@ -179,11 +179,17 @@ class Services(API):
     class ServiceControlPlugin(CategoryPlugin):
         abstract = True
         display = False
+        disports = False
         
         services = []
         
         def get_ui(self):
+            from genesis.plugins.security.firewall import RuleManager, FWMonitor
+
             mgr = self.app.get_backend(apis.services.IServiceManager)
+            rum = RuleManager(self.app)
+            self._rules_list = rum.get_by_plugin(self.plugin_id)
+            fwm = FWMonitor(self.app)
 
             res = UI.DT(UI.DTR(
                     UI.DTH(width=20),
@@ -214,9 +220,55 @@ class Services(API):
                         ctl
                     )
                 res.append(t)
+
+            ptalert = False
+
+            if self._rules_list != []:
+                pts = UI.DT(UI.DTR(
+                        UI.DTH(width=20),
+                        UI.DTH(UI.Label(text='Application')),
+                        UI.DTH(UI.Label(text='Ports')),
+                        UI.DTH(UI.Label(text='Authorization')),
+                        UI.DTH(width=20),
+                        header=True
+                      ), width='100%', noborder=True)
+                for p in self._rules_list:
+                    if p[1] == 1:
+                        perm, ic, show = 'Local', 'gen-home', [2, 0]
+                    elif p[1] == 2:
+                        perm, ic, show = 'All', 'gen-earth', [1, 0]
+                    else:
+                        perm, ic, show = 'None', 'gen-close', [2, 1]
+                        ptalert = True
+                    pts.append(UI.DTR(
+                        UI.IconFont(iconfont=p[0].icon),
+                        UI.Label(text=p[0].name),
+                        UI.Label(text=', '.join(str(x[1]) for x in p[0].ports)),
+                        UI.HContainer(
+                            UI.IconFont(iconfont=ic),
+                            UI.Label(text=' '),
+                            UI.Label(text=perm),
+                            ),
+                        UI.HContainer(
+                            (UI.TipIcon(iconfont='gen-earth',
+                                text='Allow All', cls='servicecontrol', 
+                                id='2/' + str(self._rules_list.index(p))) if 2 in show else None),
+                            (UI.TipIcon(iconfont='gen-home',
+                                text='Local Only', cls='servicecontrol',
+                                id='1/' + str(self._rules_list.index(p))) if 1 in show else None),
+                            (UI.TipIcon(iconfont='gen-close', 
+                                text='Deny All', cls='servicecontrol',
+                                id='0/' + str(self._rules_list.index(p)),
+                                warning='Are you sure you wish to deny all access to %s? '
+                                'This will prevent anyone (including you) from connecting to it.' 
+                                % p[0].name) if 0 in show else None),
+                            ),
+                       ))
             
             panel = UI.ServicePluginPanel(
-                alert=('True' if alert else 'False')
+                alert=('True' if alert else 'False'),
+                ports=('True' if self._rules_list != [] else 'False'),
+                ptalert=('True' if ptalert else 'False'),
             )
 
             if self.display:
@@ -226,13 +278,33 @@ class Services(API):
                         hidecancel='True'
                     )
                 return UI.Container(panel, dlg, self.get_main_ui())
+            elif self.disports:
+                dlg = UI.DialogBox(
+                        UI.ScrollContainer(pts, width=300, height=300),
+                        id='dlgPorts',
+                        hidecancel='True'
+                    )
+                return UI.Container(panel, dlg, self.get_main_ui())
             else:
                 return UI.Container(panel, self.get_main_ui())
 
         @event('servicecontrol/click')
         def on_service_control(self, event, params, vars=None):
+            from genesis.plugins.security.firewall import RuleManager, FWMonitor
             if params[0] == 'services':
                 self.display = True
+            if params[0] == 'security':
+                self.disports = True
+            if params[0] == '2':
+                RuleManager(self.app).set(self._rules_list[int(params[1])][0], 2)
+                FWMonitor(self.app).regen()
+            if params[0] == '1':
+                RuleManager(self.app).set(self._rules_list[int(params[1])][0], 1)
+                FWMonitor(self.app).regen()
+            if params[0] == '0':
+                sel = self._rules_list[int(params[1])][0]
+                RuleManager(self.app).set(sel, 0)
+                FWMonitor(self.app).regen()
             if params[0] == 'restart':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
                 mgr.restart(params[1])

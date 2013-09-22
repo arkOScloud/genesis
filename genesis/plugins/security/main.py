@@ -283,12 +283,15 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
     @event('button/click')
     def on_click(self, event, params, vars=None):
         if params[0] == '2':
+            self._stab = 0
             self._srvmgr.set(self.rules[int(params[1])][0], 2)
             self._fwmgr.regen(self._ranges)
         if params[0] == '1':
+            self._stab = 0
             self._srvmgr.set(self.rules[int(params[1])][0], 1)
             self._fwmgr.regen(self._ranges)
         if params[0] == '0':
+            self._stab = 0
             sel = self.rules[int(params[1])][0]
             if sel.plugin_id == 'arkos' and sel.server_id == 'genesis':
                 self.put_message('err', 'You cannot deny all access to Genesis. '
@@ -296,6 +299,9 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             else:
                 self._srvmgr.set(sel, 0)
                 self._fwmgr.regen(self._ranges)
+        if params[0] == 'reinit':
+            self._stab = 0
+            self._fwmgr.initialize()
         if params[0] == 'apply':
             self._stab = 2
             self._error = self.cfg.apply_now()

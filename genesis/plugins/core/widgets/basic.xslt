@@ -22,7 +22,8 @@
         <xsl:choose>
             <xsl:when test="@warning != ''">
                 return Genesis.showWarning('<xsl:value-of select="@warning"/>',
-                    '<xsl:value-of select="@id"/>');
+                    '<xsl:value-of select="@id"/>'<xsl:choose><xsl:when test="@cls != ''">,
+                    '<xsl:value-of select="@cls"/>'</xsl:when></xsl:choose>);
             </xsl:when>
 
             <xsl:when test="@onclick = 'form'">

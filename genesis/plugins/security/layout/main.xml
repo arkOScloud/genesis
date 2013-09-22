@@ -59,6 +59,9 @@
             </pad>
         </tabbody>
         <tabbody id="s3">
+            <toolbar>
+                <button text="Reinitialize" id="reinit" iconfont="gen-loop-2" warning="Are you sure you want to reinitialize your input table? This will clear any custom rules you may have entered into it." />
+            </toolbar>
             <label id="ranges" />
         </tabbody>
     </tabcontrol>

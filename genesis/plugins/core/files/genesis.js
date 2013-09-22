@@ -157,11 +157,16 @@ Genesis = {
         return false;
     },
 
-    showWarning: function (text, btnid) {
+    showWarning: function (text, btnid, cls) {
         Genesis.UI.showAsModal('warningbox');
         $('#warning-text').html(text);
         $('#warningbox').addClass('modal');
         warning_button_id = btnid;
+        if (typeof cls === "undefined") {
+            warning_class = 'button';
+        } else {
+            warning_class = cls;
+        };
         $('.warning-button').unbind('click');
         $('.warning-button').click(Genesis.acceptWarning);
         $('#warning-cancel-button').click(Genesis.cancelWarning);
@@ -175,7 +180,7 @@ Genesis = {
 
     acceptWarning: function () {
         Genesis.cancelWarning();
-        Genesis.query('/handle/button/click/' + warning_button_id);
+        Genesis.query('/handle/'+ warning_class +'/click/' + warning_button_id);
         return false;
     },
 

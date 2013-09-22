@@ -29,6 +29,14 @@ class RuleManager(Plugin):
                     %(x.plugin_id, x.server_id))))
         return False
 
+    def get_by_plugin(self, id):
+        plist = []
+        for x in ServerManager(self.app).get_all():
+            if x.plugin_id == id:
+                plist.append((x, int(self.app.gconfig.get('security', 'fw-%s-%s'
+                    %(x.plugin_id, x.server_id)))))
+        return plist
+
     def get_all(self):
         rules = []
         for x in ServerManager(self.app).get_all():
