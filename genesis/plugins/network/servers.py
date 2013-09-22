@@ -78,7 +78,7 @@ class ServerManager(Plugin):
 		for c in self.app.grab_plugins(ICategoryProvider):
 			if hasattr(c, 'services'):
 				for s in self.servers:
-					if c.plugin_id == s.plugin_id and c.server_id == s.server_id:
+					if c.plugin_id == s.plugin_id:
 						break
 				else:
 					for p in c.services:

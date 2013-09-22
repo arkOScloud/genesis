@@ -19,8 +19,9 @@ import sys
 import traceback
 import weakref
 
+from genesis.api import *
 from genesis.com import *
-from genesis.utils import detect_platform, shell, shell_status, download
+from genesis.utils import BackgroundWorker, detect_platform, shell, shell_status, download
 import genesis
 
 RETRY_LIMIT = 10
@@ -187,7 +188,7 @@ class PluginLoader:
                 o().plugins_changed()
 
     @staticmethod
-    def load(plugin):
+    def load(plugin, cat=''):
         """
         Loads given plugin
         """
@@ -196,6 +197,8 @@ class PluginLoader:
         platform = PluginLoader.platform
         from genesis import generation, version
 
+        if cat:
+            cat.put_statusmsg('Loading plugin %s...' % plugin)
         log.debug('Loading plugin %s' % plugin)
         try:
             mod = imp.load_module(plugin, *imp.find_module(plugin, [path]))
@@ -235,7 +238,7 @@ class PluginLoader:
                         break
                 info.deps = deps
                 for req in deps:
-                    PluginLoader.verify_dep(req)
+                    PluginLoader.verify_dep(req, cat)
 
             PluginLoader.__classes[plugin] = []
             PluginLoader.__submods[plugin] = {}
@@ -336,7 +339,7 @@ class PluginLoader:
         PluginLoader.notify_plugins_changed()
 
     @staticmethod
-    def verify_dep(dep):
+    def verify_dep(dep, cat=''):
         """
         Verifies that given plugin dependency is satisfied. Returns bool
         """
@@ -346,6 +349,8 @@ class PluginLoader:
             if shell_status('which '+dep[2]) != 0 and shell_status('pacman -Q '+dep[1]) != 0:
                 if platform == 'arch' or platform == 'arkos':
                     try:
+                        if cat:
+                            cat.put_statusmsg('Installing dependency %s...' % dep[1])
                         shell('pacman -Sy --noconfirm --needed '+dep[1])
                         shell('systemctl enable '+dep[2])
                     except:
@@ -482,7 +487,7 @@ class RepositoryManager:
         self.update_available()
         self.update_upgradable()
 
-    def remove(self, id):
+    def remove(self, id, cat=''):
         """
         Uninstalls given plugin
 
@@ -495,6 +500,8 @@ class RepositoryManager:
         except:
             self.purge = '1'
 
+        if cat:
+            cat.put_statusmsg('Removing plugin...')
         dir = self.config.get('genesis', 'plugins')
         shell('rm -r %s/%s' % (dir, id))
 
@@ -512,6 +519,8 @@ class RepositoryManager:
                             depends[item[0]] = (depends[item[0]][0], depends[item[0]][1]+1)
                 for thing in depends:
                     if thing[1] <= 1 and not 'openssl' in thing[0][1]:
+                        if cat:
+                            cat.put_statusmsg('Removing dependency %s...' % thing[0][1])
                         shell('systemctl stop ' + thing[0][2])
                         shell('systemctl disable ' + thing[0][2])
                         shell('pacman -%s --noconfirm ' %('Rn' if self.purge is '1' else 'R') + thing[0][1])
@@ -521,8 +530,10 @@ class RepositoryManager:
 
         self.update_installed()
         self.update_available()
+        if cat:
+            cat.put_message('info', 'Plugin removed. Refresh page for changes to take effect.')
 
-    def install(self, id, load=True):
+    def install(self, id, load=True, cat=''):
         """
         Installs a plugin
 
@@ -534,11 +545,13 @@ class RepositoryManager:
         from genesis import generation, version
         dir = self.config.get('genesis', 'plugins')
 
+        if cat:
+            cat.put_statusmsg('Downloading plugin package...')
         download('http://%s/genesis/plugin/%s' % (self.server, id),
             file='%s/plugin.tar.gz'%dir, crit=True)
 
         self.remove(id)
-        self.install_tar(load=load)
+        self.install_tar(load=load, cat=cat)
 
     def install_stream(self, stream):
         """
@@ -551,7 +564,7 @@ class RepositoryManager:
         open('%s/plugin.tar.gz'%dir, 'w').write(stream)
         self.install_tar()
 
-    def install_tar(self, load=True):
+    def install_tar(self, load=True, cat=''):
         """
         Unpacks and installs a ``plugin.tar.gz`` file located in the plugins directory.
 
@@ -560,13 +573,15 @@ class RepositoryManager:
         """
         dir = self.config.get('genesis', 'plugins')
 
+        if cat:
+            cat.put_statusmsg('Extracting plugin package...')
         id = shell('tar tzf %s/plugin.tar.gz'%dir).split('\n')[0].strip('/')
 
         shell('cd %s; tar xf plugin.tar.gz' % dir)
         shell('rm %s/plugin.tar.gz' % dir)
 
         if load:
-            PluginLoader.load(id)
+            PluginLoader.load(id, cat=cat)
 
         self.update_installed()
         self.update_available()
@@ -603,3 +618,19 @@ class PluginInfo:
                     except Exception, e:
                         reqs.append(str(e))
         return ', '.join(reqs)
+
+
+class LiveInstall(BackgroundWorker):
+    def run(self, rm, id, load, cat):
+        rm.install(id, load=load, cat=cat)
+        cat.put_message('info', 'Plugin installed. Refresh page for changes to take effect.')
+        ComponentManager.get().rescan()
+        ConfManager.get().rescan()
+        cat._reloadfw = True
+        cat.clr_statusmsg()
+
+class LiveRemove(BackgroundWorker):
+    def run(self, rm, id, cat):
+        rm.remove(id, cat)
+        cat._reloadfw = True
+        cat.clr_statusmsg()

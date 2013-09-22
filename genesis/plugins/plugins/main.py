@@ -1,7 +1,7 @@
 from genesis.api import *
 from genesis.ui import *
 from genesis import apis
-from genesis.plugmgr import PluginLoader, RepositoryManager
+from genesis.plugmgr import PluginLoader, RepositoryManager, LiveInstall, LiveRemove
 
 
 class PluginManager(CategoryPlugin, URLHandler):
@@ -12,6 +12,7 @@ class PluginManager(CategoryPlugin, URLHandler):
     def on_session_start(self):
         self._mgr = RepositoryManager(self.app.config)
         self._nc = apis.networkcontrol(self.app)
+        self._reloadfw = False
 
     def on_init(self):
         self._mgr.refresh()
@@ -20,6 +21,10 @@ class PluginManager(CategoryPlugin, URLHandler):
         return len(self._mgr.upgradable) or None
 
     def get_ui(self):
+        if self._reloadfw == True:
+            self._nc.refresh()
+            self._reloadfw = False
+
         ui = self.app.inflate('plugins:main')
 
         inst = sorted(self._mgr.installed, key=lambda x: x.name.lower())
@@ -116,9 +121,9 @@ class PluginManager(CategoryPlugin, URLHandler):
             self._mgr.update_list()
             self.put_message('info', 'Plugin list updated')
         if params[0] == 'remove':
-            self._mgr.remove(params[1])
+            lr = LiveRemove(self._mgr, params[1], self)
+            lr.start()
             self._nc.remove(params[1])
-            self.put_message('info', 'Plugin removed. Refresh page for changes to take effect.')
         if params[0] == 'reload':
             try:
                 PluginLoader.unload(params[1])
@@ -132,8 +137,6 @@ class PluginManager(CategoryPlugin, URLHandler):
         if params[0] == 'restart':
             self.app.restart()
         if params[0] == 'install':
-            self._mgr.install(params[1], load=True)
-            self._nc.refresh()
-            self.put_message('info', 'Plugin installed. Refresh page for changes to take effect.')
-            ComponentManager.get().rescan()
-            ConfManager.get().rescan()
+            li = LiveInstall(self._mgr, params[1], 
+                True, self)
+            li.start()
