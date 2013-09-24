@@ -45,6 +45,21 @@
             </pad>
         </tabbody>
         <tabbody id="s1">
+            <label size="5" text="Your Apps" />
+            <pad>
+                <dt id="f2blist" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Application Name" />
+                        </dth>
+                        <dth>
+                            <label text="Status" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </pad>
         </tabbody>
         <tabbody id="s2">
             <toolbar>

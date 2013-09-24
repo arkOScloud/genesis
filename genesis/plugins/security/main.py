@@ -6,6 +6,7 @@ from genesis.utils import *
 from genesis.plugins.network.api import *
 
 from firewall import RuleManager, FWMonitor
+from defense import F2BManager
 from backend import *
 
 
@@ -23,6 +24,8 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self.net_config = self.app.get_backend(INetworkConfig)
         self.rules = sorted(self._srvmgr.get_all(), 
             key=lambda s: s[0].name)
+        self.f2brules = sorted(self._f2bmgr.get_all(),
+            key= lambda s: s['name'])
 
     def on_session_start(self):
         self._stab = 0
@@ -37,6 +40,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self._ranges = []
         self._srvmgr = RuleManager(self.app)
         self._fwmgr = FWMonitor(self.app)
+        self._f2bmgr = F2BManager(self.app)
 
     def get_main_ui(self):
         ui = self.app.inflate('security:main')
@@ -78,6 +82,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
 
         al = ui.find('applist')
         ql = ui.find('arkoslist')
+        fl = ui.find('f2blist')
 
         for s in self.rules:
             if s[0].plugin_id != 'arkos':
@@ -144,6 +149,27 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
                         ),
                    ))
 
+        for s in self.f2brules:
+            perm, ic, show = 'Disabled', 'gen-close', 'e'
+            for f in s['f2b']:
+                for line in f['jail_opts']:
+                    if line[0] == 'enabled' and line[1] == 'true':
+                        perm, ic, show = 'Enabled', 'gen-checkmark-circle', 'd'
+            fl.append(UI.DTR(
+                UI.IconFont(iconfont=s['icon']),
+                UI.Label(text=s['name']),
+                UI.HContainer(
+                    UI.IconFont(iconfont=ic),
+                    UI.Label(text=' '),
+                    UI.Label(text=perm),
+                    ),
+                UI.HContainer(
+                    (UI.TipIcon(iconfont='gen-checkmark-circle',
+                        text='Enable All Defense', id='edef/' + str(self.f2brules.index(s))) if show == 'e' else None),
+                    (UI.TipIcon(iconfont='gen-close',
+                        text='Disable All Defense', id='ddef/' + str(self.f2brules.index(s))) if show == 'd' else None),
+                    ),
+               ))
 
         tc = UI.TabControl(active=self._tab)
         ui.append('advroot', tc)
@@ -299,8 +325,14 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             else:
                 self._srvmgr.set(sel, 0)
                 self._fwmgr.regen(self._ranges)
+        if params[0] == 'edef':
+            self._stab = 1
+            self._f2bmgr.enable_all(self.f2brules[int(params[1])])
+        if params[0] == 'ddef':
+            self._stab = 1
+            self._f2bmgr.disable_all(self.f2brules[int(params[1])])
         if params[0] == 'reinit':
-            self._stab = 0
+            self._stab = 3
             self._fwmgr.initialize()
         if params[0] == 'apply':
             self._stab = 2
