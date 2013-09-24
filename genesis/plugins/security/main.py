@@ -203,6 +203,16 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             vc.append(UI.Button(iconfont='gen-plus-circle', text='Add new chain to '+t.name, id='addchain/'+t.name))
             tc.add(t.name, vc)
 
+        try:
+            ui.find('f2b_maxretry').set('value', self._f2bmgr.maxretry())
+            ui.find('f2b_findtime').set('value', self._f2bmgr.findtime())
+            ui.find('f2b_bantime').set('value', self._f2bmgr.bantime())
+        except F2BConfigNotFound:
+            ui.find('f2b_maxretry').set('disabled', 'true')
+            ui.find('f2b_findtime').set('disabled', 'true')
+            ui.find('f2b_bantime').set('disabled', 'true')
+            ui.remove('frmDefenseButton')
+
         if self._idef is not None:
             ui.find('f2b_appname').set('text', self._idef['name'])
             for j in self._idef['f2b']:
@@ -441,8 +451,18 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self._editing_chain = params[1]
         self._editing_rule = int(params[2])
 
+    @event('form/submit')
     @event('dialog/submit')
     def on_submit(self, event, params, vars):
+        if params[0] == 'frmDefense':
+            self._stab = 3
+            if vars.getvalue('action', '') == 'OK':
+                try:
+                    self._f2bmgr.maxretry(vars.getvalue('f2b_maxretry', ''))
+                    self._f2bmgr.findtime(vars.getvalue('f2b_findtime', ''))
+                    self._f2bmgr.bantime(vars.getvalue('f2b_bantime', ''))
+                except F2BConfigNotFound:
+                    pass
         if params[0] == 'dlgF2BInfo':
             self._stab = 1
             self._idef = None

@@ -77,7 +77,29 @@
             <toolbar>
                 <button text="Reinitialize" id="reinit" iconfont="gen-loop-2" warning="Are you sure you want to reinitialize your input table? This will clear any custom rules you may have entered into it." />
             </toolbar>
-            <label id="ranges" />
+            <label size="5" text="Firewall Settings" />
+            <pad>
+                <label size="1" id="ranges" />
+            </pad>
+
+            <label size="5" text="Defense Settings" />
+            <pad>
+                <label size='2' text="Note that the below values are default. If the individual plugin's settings override these, they will not apply for that plugin." />
+                <simpleform id="frmDefense">
+                    <formline text="Max number of retry attempts" help="Once an access attempt is denied more than this many times, the offender's IP address will be banned per the rules below">
+                        <textinput name="f2b_maxretry" id="f2b_maxretry"/>
+                    </formline>
+                    <formline text="Find time" help="Once this time (in seconds) elapses between access attempts, the attempt counter clears">
+                        <textinput name="f2b_findtime" id="f2b_findtime"/>
+                    </formline>
+                    <formline text="Ban time" help="The amount of time (in seconds) that banned IP addresses are banned for">
+                        <textinput name="f2b_bantime" id="f2b_bantime"/>
+                    </formline>
+                    <formline>
+                        <button onclick="form" form="frmDefense" id="frmDefenseButton" design="primary" action="OK" text="Save Defense Settings" />
+                    </formline>
+                </simpleform>
+            </pad>
         </tabbody>
     </tabcontrol>
 

@@ -17,28 +17,28 @@ class F2BManager(Plugin):
 	jailconf = '/etc/fail2ban/jail.conf'
 	filters = '/etc/fail2ban/filter.d'
 
-	def enable_jail(self, jailname):
+	def get_jail_config(self):
 		cfg = ConfigParser.SafeConfigParser()
 		if cfg.read(self.jailconf) == []:
 			raise F2BConfigNotFound()
+		return cfg
+
+	def enable_jail(self, jailname):
+		cfg = self.get_jail_config()
 		cfg.set(jailname, 'enabled', 'true')
 		f = open(self.jailconf, 'w')
 		cfg.write(f)
 		f.close()
 
 	def disable_jail(self, jailname):
-		cfg = ConfigParser.SafeConfigParser()
-		if cfg.read(self.jailconf) == []:
-			raise F2BConfigNotFound()
+		cfg = self.get_jail_config()
 		cfg.set(jailname, 'enabled', 'false')
 		f = open(self.jailconf, 'w')
 		cfg.write(f)
 		f.close()
 
 	def enable_all(self, obj):
-		cfg = ConfigParser.SafeConfigParser()
-		if cfg.read(self.jailconf) == []:
-			raise F2BConfigNotFound()
+		cfg = self.get_jail_config()
 		for jail in obj['f2b']:
 			cfg.set(jail['name'], 'enabled', 'true')
 		f = open(self.jailconf, 'w')
@@ -46,21 +46,57 @@ class F2BManager(Plugin):
 		f.close()
 
 	def disable_all(self, obj):
-		cfg = ConfigParser.SafeConfigParser()
-		if cfg.read(self.jailconf) == []:
-			raise F2BConfigNotFound()
+		cfg = self.get_jail_config()
 		for jail in obj['f2b']:
 			cfg.set(jail['name'], 'enabled', 'false')
 		f = open(self.jailconf, 'w')
 		cfg.write(f)
 		f.close()
 
+	def bantime(self, bantime=''):
+		cfg = self.get_jail_config()
+		if bantime == '':
+			return cfg.get('DEFAULT', 'bantime')
+		elif bantime != cfg.get('DEFAULT', 'bantime'):
+			cfg.set('DEFAULT', 'bantime', bantime)
+			f = open(self.jailconf, 'w')
+			cfg.write(f)
+			f.close()
+
+	def findtime(self, findtime=''):
+		cfg = self.get_jail_config()
+		if findtime == '':
+			return cfg.get('DEFAULT', 'findtime')
+		elif findtime != cfg.get('DEFAULT', 'findtime'):
+			cfg.set('DEFAULT', 'findtime', findtime)
+			f = open(self.jailconf, 'w')
+			cfg.write(f)
+			f.close()
+
+	def maxretry(self, maxretry=''):
+		cfg = self.get_jail_config()
+		if maxretry == '':
+			return cfg.get('DEFAULT', 'maxretry')
+		elif maxretry != cfg.get('DEFAULT', 'maxretry'):
+			cfg.set('DEFAULT', 'maxretry', maxretry)
+			f = open(self.jailconf, 'w')
+			cfg.write(f)
+			f.close()
+
+	def upd_ignoreip(self, ranges):
+		ranges.insert(0, '127.0.0.1/8')
+		s = ' '.join(ranges)
+		cfg = self.get_jail_config()
+		if s != cfg.get('DEFAULT', 'ignoreip'):
+			cfg.set('DEFAULT', 'ignoreip', s)
+			f = open(self.jailconf, 'w')
+			cfg.write(f)
+			f.close()
+
 	def get_all(self):
 		lst = []
-		cfg = ConfigParser.SafeConfigParser()
+		cfg = self.get_jail_config()
 		fcfg = ConfigParser.SafeConfigParser()
-		if cfg.read(self.jailconf) == []:
-			raise F2BConfigNotFound()
 		for c in self.app.grab_plugins(ICategoryProvider):
 			if hasattr(c, 'fail2ban'):
 				lst.append({'name': c.text,
