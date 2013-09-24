@@ -80,4 +80,12 @@
             <label id="ranges" />
         </tabbody>
     </tabcontrol>
+
+    <dialogbox id="dlgF2BInfo" hidecancel="True">
+        <formline text="Application Name">
+            <label id="f2b_appname" />
+        </formline>
+        <formline text="Available Jails" id="f2b_jails">
+        </formline>
+    </dialogbox>
 </xml>

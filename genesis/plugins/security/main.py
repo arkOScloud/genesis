@@ -6,7 +6,7 @@ from genesis.utils import *
 from genesis.plugins.network.api import *
 
 from firewall import RuleManager, FWMonitor
-from defense import F2BManager
+from defense import F2BManager, F2BConfigNotFound
 from backend import *
 
 
@@ -24,10 +24,15 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         self.net_config = self.app.get_backend(INetworkConfig)
         self.rules = sorted(self._srvmgr.get_all(), 
             key=lambda s: s[0].name)
-        self.f2brules = sorted(self._f2bmgr.get_all(),
-            key= lambda s: s['name'])
+        try:
+            self.f2brules = sorted(self._f2bmgr.get_all(),
+                key= lambda s: s['name'])
+        except F2BConfigNotFound, e:
+            self.put_message('err', e)
+            self.f2brules = []
 
     def on_session_start(self):
+        self._idef = None
         self._stab = 0
         self._tab = 0
         self._shuffling = None
@@ -164,6 +169,8 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
                     UI.Label(text=perm),
                     ),
                 UI.HContainer(
+                    UI.TipIcon(iconfont='gen-info', text='Information',
+                        id='idef/' + str(self.f2brules.index(s))),
                     (UI.TipIcon(iconfont='gen-checkmark-circle',
                         text='Enable All Defense', id='edef/' + str(self.f2brules.index(s))) if show == 'e' else None),
                     (UI.TipIcon(iconfont='gen-close',
@@ -195,6 +202,26 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
                 vc.append(uic)
             vc.append(UI.Button(iconfont='gen-plus-circle', text='Add new chain to '+t.name, id='addchain/'+t.name))
             tc.add(t.name, vc)
+
+        if self._idef is not None:
+            ui.find('f2b_appname').set('text', self._idef['name'])
+            for j in self._idef['f2b']:
+                perm, ic, show = 'Disabled', 'gen-close', 'e'
+                for line in j['jail_opts']:
+                    if line[0] == 'enabled' and line[1] == 'true':
+                        perm, ic, show = 'Enabled', 'gen-checkmark-circle', 'd'
+                ui.find('f2b_jails').append(
+                    UI.DTR(
+                        UI.Label(text=j['name']),
+                        UI.HContainer(
+                            (UI.TipIcon(iconfont='gen-checkmark-circle',
+                                text='Enable', id='ed/' + j['name']) if show == 'e' else None),
+                            (UI.TipIcon(iconfont='gen-close',
+                                text='Disable', id='dd/' + j['name']) if show == 'd' else None),
+                        ),
+                    ))
+        else:
+            ui.remove('dlgF2BInfo')
 
         if self._error is not None and len(self._error) > 0:
             self.put_message('warn', self._error)
@@ -325,12 +352,33 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
             else:
                 self._srvmgr.set(sel, 0)
                 self._fwmgr.regen(self._ranges)
+        if params[0] == 'idef':
+            self._stab = 1
+            self._idef = self.f2brules[int(params[1])]
+        if params[0] == 'ed':
+            self._stab = 1
+            try:
+                self._f2bmgr.enable_jail(params[1])
+            except F2BConfigNotFound, e:
+                self.put_message('err', e)
+        if params[0] == 'dd':
+            self._stab = 1
+            try:
+                self._f2bmgr.disable_jail(params[1])
+            except F2BConfigNotFound, e:
+                self.put_message('err', e)
         if params[0] == 'edef':
             self._stab = 1
-            self._f2bmgr.enable_all(self.f2brules[int(params[1])])
+            try:
+                self._f2bmgr.enable_all(self.f2brules[int(params[1])])
+            except F2BConfigNotFound, e:
+                self.put_message('err', e)
         if params[0] == 'ddef':
             self._stab = 1
-            self._f2bmgr.disable_all(self.f2brules[int(params[1])])
+            try:
+                self._f2bmgr.disable_all(self.f2brules[int(params[1])])
+            except F2BConfigNotFound, e:
+                self.put_message('err', e)
         if params[0] == 'reinit':
             self._stab = 3
             self._fwmgr.initialize()
@@ -395,6 +443,9 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
 
     @event('dialog/submit')
     def on_submit(self, event, params, vars):
+        if params[0] == 'dlgF2BInfo':
+            self._stab = 1
+            self._idef = None
         if params[0] == 'dlgAddChain':
             if vars.getvalue('action', '') == 'OK':
                 n = vars.getvalue('value', '')
