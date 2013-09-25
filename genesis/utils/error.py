@@ -34,6 +34,15 @@ class ConfigurationError(Exception):
         return 'Plugin failed to configure: ' + self.hint
 
 
+class SystemTimeError(Exception):
+    def __init__(self, offset):
+        Exception.__init__(self)
+        self.offset = offset
+
+    def __str__(self):
+        return 'System time is too far off - offset is ' + str(self.offset)
+
+
 def format_exception(app, err):
     print '\n%s\n' % err
     templ = app.get_template('error.xml')

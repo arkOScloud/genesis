@@ -1,0 +1,38 @@
+<xml>
+    <toolbar>
+        <button id="add" text="New certificate" iconfont="gen-certificate" />
+        <button id="add" text="New private key" iconfont="gen-key" />
+    </toolbar>
+
+    <label size="5" text="My Certificates" />
+    <pad>
+        <dt id="certlist" width="100%">
+            <dtr header="True">
+                <dth width="1" />
+                <dth>
+                    <label text="Name" />
+                </dth>
+                <dth>
+                    <label text="Attached to" />
+                </dth>
+                <dth width="1" />
+            </dtr>
+        </dt>
+    </pad>
+
+    <label size="5" text="My Private Keys" />
+    <pad>
+        <dt id="keylist" width="100%">
+            <dtr header="True">
+                <dth width="1" />
+                <dth>
+                    <label text="Name" />
+                </dth>
+                <dth>
+                    <label text="Specifications" />
+                </dth>
+                <dth width="1" />
+            </dtr>
+        </dt>
+    </pad>
+</xml>
