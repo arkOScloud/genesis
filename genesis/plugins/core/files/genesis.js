@@ -124,6 +124,7 @@ Genesis = {
                 $('#pbox-'+desc.id).text(desc.status);
             } else if (desc.status) {
                 $('html').scrollTop(0);
+                $('#whiteout').stop(true);
                 Genesis.UI.wipeOut(true);
                 status = '<p class="pbox-status" id="pbox-'+desc.id+'">'+desc.status+'</p>'
                 $('#pbox-text').append(status);
@@ -138,7 +139,7 @@ Genesis = {
                     Genesis.query('/handle/nothing');
                 });
             } else if (!desc.status) {
-                    Genesis.query('/handle/nothing');;
+                    Genesis.query('/handle/nothing');
             };
         },
 

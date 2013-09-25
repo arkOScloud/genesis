@@ -1,4 +1,6 @@
+import time
 import subprocess
+import ntplib
 import platform
 import os
 import mimetypes
@@ -7,6 +9,25 @@ from datetime import datetime
 from hashlib import sha1
 from base64 import b64encode
 from passlib.hash import sha512_crypt
+
+
+class SystemTime:
+    def get_datetime(self, display=''):
+        if display:
+            return time.strftime(display)
+        else:
+            return time.localtime()
+
+    def get_date(self):
+        return time.strftime('%d %b %Y')
+
+    def get_time(self):
+        return time.strftime('%H:%M')
+
+    def get_offset(self):
+        ntp = ntplib.NTPClient()
+        resp = ntp.request('0.pool.ntp.org', version=3)
+        return resp.offset
 
 
 def enquote(s):
