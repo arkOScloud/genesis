@@ -18,6 +18,7 @@ class WordPress(Plugin):
 	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
 	php = True
 	nomulti = True
+	ssl = True
 
 	addtoblock = (
 		'	location = /favicon.ico {\n'
@@ -93,6 +94,7 @@ class WordPress(Plugin):
 				'define(\'SECRET_KEY\', \''+secret_key+'\');\n'
 				'\n'
 				'define(\'WP_CACHE\', true);\n'
+				'define(\'FORCE_SSL_ADMIN\', false);\n'
 				'\n'
 				'/*\n'
 				+keysection+
@@ -131,6 +133,40 @@ class WordPress(Plugin):
 
 	def post_remove(self, name):
 		pass
+
+	def ssl_enable(self, path, cfile, kfile):
+		ic = open(os.path.join(path, 'wp-config.php'), 'r').readlines()
+		f = open(os.path.join(path, 'wp-config.php'), 'w')
+		oc = []
+		found = False
+		for l in ic:
+			if 'define(\'FORCE_SSL_ADMIN\'' in l:
+				l = 'define(\'FORCE_SSL_ADMIN\', false);\n'
+				oc.append(l)
+				found = True
+			else:
+				oc.append(l)
+		if found == False:
+			oc.append('define(\'FORCE_SSL_ADMIN\', true);\n')
+		f.writelines(oc)
+		f.close()
+
+	def ssl_disable(self, path):
+		ic = open(os.path.join(path, 'wp-config.php'), 'r').readlines()
+		f = open(os.path.join(path, 'wp-config.php'), 'w')
+		oc = []
+		found = False
+		for l in ic:
+			if 'define(\'FORCE_SSL_ADMIN\'' in l:
+				l = 'define(\'FORCE_SSL_ADMIN\', false);\n'
+				oc.append(l)
+				found = True
+			else:
+				oc.append(l)
+		if found == False:
+			oc.append('define(\'FORCE_SSL_ADMIN\', false);\n')
+		f.writelines(oc)
+		f.close()
 
 	def get_info(self):
 		return {

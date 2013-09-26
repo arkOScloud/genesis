@@ -17,6 +17,7 @@ class ownCloud(Plugin):
 	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
 	php = True
 	nomulti = True
+	ssl = True
 	addtoblock = (
 		'	error_page 403 = /core/templates/403.php;\n'
 		'	error_page 404 = /core/templates/404.php;\n'
@@ -147,6 +148,52 @@ class ownCloud(Plugin):
 
 	def post_remove(self, name):
 		pass
+
+	def ssl_enable(self, path, cfile, kfile):
+		if os.path.exists(os.path.join(path, 'config', 'config.php')):
+			px = os.path.join(path, 'config', 'config.php')
+		else:
+			px = os.path.join(path, 'config', 'autoconfig.php')
+		ic = open(px, 'r').readlines()
+		f = open(px, 'w')
+		oc = []
+		found = False
+		for l in ic:
+			if '"forcessl" =>' in l:
+				l = '"forcessl" => true,\n'
+				oc.append(l)
+				found = True
+			else:
+				oc.append(l)
+		if found == False:
+			for x in enumerate(oc):
+				if '"dbhost" =>' in x[1]:
+					oc.insert(x[0] + 1, '"forcessl" => true,\n')
+		f.writelines(oc)
+		f.close()
+
+	def ssl_disable(self, path):
+		if os.path.exists(os.path.join(path, 'config', 'config.php')):
+			px = os.path.join(path, 'config', 'config.php')
+		else:
+			px = os.path.join(path, 'config', 'autoconfig.php')
+		ic = open(px, 'r').readlines()
+		f = open(px, 'w')
+		oc = []
+		found = False
+		for l in ic:
+			if '"forcessl" =>' in l:
+				l = '"forcessl" => false,\n'
+				oc.append(l)
+				found = True
+			else:
+				oc.append(l)
+		if found == False:
+			for x in enumerate(oc):
+				if '"dbhost" =>' in x[1]:
+					oc.insert(x[0] + 1, '"forcessl" => false,\n')
+		f.writelines(oc)
+		f.close()
 
 	def get_info(self):
 		return {
