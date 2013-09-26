@@ -5,7 +5,7 @@ from genesis.ui import *
 from genesis import apis
 from genesis.utils import *
 
-from backend import WABackend
+from backend import WebappControl
 
 
 class WebAppsPlugin(apis.services.ServiceControlPlugin):
@@ -24,7 +24,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			self._relsec = None
 		self.services = []
 		self.apiops = apis.webapps(self.app)
-		self.mgr = WABackend()
+		self.mgr = WebappControl(self.app)
 		self.sites = sorted(self.apiops.get_sites(), 
 			key=lambda st: st['name'])
 		ats = sorted(self.apiops.get_apptypes(), key=lambda x: x.name.lower())
@@ -60,7 +60,9 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		t = ui.find('list')
 
 		for s in self.sites:
-			if s['addr'] is not False:
+			if s['addr'] is not False and s['ssl']:
+				addr = 'https://' + s['addr'] + (':'+s['port'] if s['port'] is not '443' else '')
+			elif s['addr'] is not False:
 				addr = 'http://' + s['addr'] + (':'+s['port'] if s['port'] is not '80' else '')
 			else:
 				addr = False
@@ -196,7 +198,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						stype=self._edit['type'], 
 						path=self._edit['path'], 
 						addr=vars.getvalue('cfgaddr'), 
-						port=vars.getvalue('cfgport'), 
+						port=vars.getvalue('cfgport'),
+						ssl=self._edit['ssl'],
 						php=self._edit['php']
 						)
 				apis.networkcontrol(self.app).change_webapp(
@@ -231,14 +234,11 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
 
 class WAWorker(BackgroundWorker):
-	def __init__(self, *args):
-		self.backend = WABackend()
-		BackgroundWorker.__init__(self, *args)
-
 	def run(self, cat, action, name, current='', vars=None):
 		if action == 'add':
 			try:
-				spmsg = self.backend.add(cat, name, current, vars, True)
+				spmsg = WebappControl(cat.app).add(
+					cat, name, current, vars, True)
 			except Exception, e:
 				cat.clr_statusmsg()
 				cat.put_message('err', str(e))
@@ -251,7 +251,7 @@ class WAWorker(BackgroundWorker):
 					cat.put_message('info', spmsg)
 		elif action == 'drop':
 			try:
-				self.backend.remove(cat, name)
+				WebappControl(cat.app).remove(cat, name)
 			except Exception, e:
 				cat.clr_statusmsg()
 				cat.put_message('err', 'Website removal failed: ' + str(e))

@@ -33,3 +33,15 @@ class IProgressBoxProvider(Interface):
         """
         Should abort current activity
         """
+
+
+class ISSLPlugin(Interface):
+    text = ''
+    iconfont = ''
+    cert_type = 'cert-key'
+
+    def enable_ssl(self):
+        pass
+
+    def disable_ssl(self):
+        pass

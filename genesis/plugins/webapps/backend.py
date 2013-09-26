@@ -6,6 +6,8 @@ import os
 import re
 import shutil
 
+import nginxparser
+
 
 class InstallError(Exception):
 	def __init__(self, cause):
@@ -29,7 +31,7 @@ class ReloadError(Exception):
 		return 'Installation successful, but %s restart failed. Check your configs' % self.cause
 
 
-class WABackend:
+class WebappControl(Plugin):
 	def add(self, cat, name, webapp, vars, enable=True):
 		specialmsg = ''
 
@@ -126,6 +128,7 @@ class WABackend:
 		cat.clr_statusmsg()
 
 	def nginx_add(self, name, stype, path, addr, port, add='', php=False):
+		# TODO update this to use nginxparser
 		if path == '':
 			path = os.path.join('/srv/http/webapps/', name)
 		f = open('/etc/nginx/sites-available/'+name, 'w')
@@ -141,10 +144,12 @@ class WABackend:
 			)
 		f.close()
 
-	def nginx_edit(self, origname, name, stype, path, addr, port, php=False):
+	def nginx_edit(self, origname, name, stype, path, addr, port, ssl, php=False):
+		# TODO update this to use nginxparser
 		path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', name))
-		shell('sed -i "s/.*GENESIS.*/# GENESIS %s/" /etc/nginx/sites-available/%s' % (stype, origname))	
-		shell('sed -i "s/.*listen .*/\tlisten %s\;/" /etc/nginx/sites-available/%s' % (port, origname))
+		shell('sed -i "s/.*GENESIS.*/# GENESIS %s %s/" /etc/nginx/sites-available/%s' 
+			% (stype, (('https:\/\/' if ssl else 'http:\/\/')+addr+':'+port), origname))	
+		shell('sed -i "s/.*listen .*/\tlisten %s\;/" /etc/nginx/sites-available/%s' % ((port+' ssl' if ssl else port), origname))
 		shell('sed -i "s/.*server_name .*/\tserver_name %s\;/" /etc/nginx/sites-available/%s' % (addr, origname))
 		shell('sed -i "s/.*root .*/\troot %s\;/" /etc/nginx/sites-available/%s' % (path, origname))
 		shell('sed -i "s/.*index index.*/\tindex index.%s\;/" /etc/nginx/sites-available/%s' % ('php' if php else 'html', origname))
@@ -157,6 +162,7 @@ class WABackend:
 				os.path.join('/etc/nginx/sites-available', name))
 			self.nginx_disable(origname, reload=False)
 			self.nginx_enable(name)
+		self.nginx_reload()
 
 	def nginx_remove(self, sitename, reload=True):
 		try:
@@ -194,6 +200,59 @@ class WABackend:
 		if status[0] >= 1:
 			raise
 
+	def ssl_enable(self, data, cpath, kpath):
+		name, stype = data['name'], data['type']
+		n = nginxparser.loads(
+			open('/etc/nginx/sites-available/'+name, 'r').read())
+		port = '443'
+		for l in n:
+			if l[0] == ['server']:
+				for x in l[1]:
+					if x[0] == 'listen':
+						if x[1] == '80':
+							x[1] = '443 ssl'
+							port = '443'
+						else:
+							port = x[1]
+							x[1] = x[1] + ' ssl'
+				l[1].append(['ssl_certificate', cpath])
+				l[1].append(['ssl_certificate_key', kpath])
+				l[1].append(['ssl_protocols', 'TLSv1 TLSv1.1 TLSv1.2'])
+				l[1].append(['ssl_ciphers', 'HIGH:!aNULL:!MD5'])
+		comline = '# GENESIS '+stype+' https://'+data['addr']+':'+port+'\n'
+		open('/etc/nginx/sites-available/'+name, 'w').write(
+			comline+nginxparser.dumps(n))
+		apis.webapps(self.app).get_interface(stype).ssl_enable(
+			os.path.join('/srv/http/webapps', name), cpath, kpath)
+		self.nginx_reload()
+
+	def ssl_disable(self, data):
+		name, stype = data['name'], data['type']
+		n = nginxparser.loads(
+			open('/etc/nginx/sites-available/'+name, 'r').read())
+		port = '80'
+		for l in n[0]:
+			if l[0] == 'server':
+				for x in l[1]:
+					if x[0] == 'listen':
+						if x[1] == '443 ssl':
+							x[1] = '80'
+							port = '80'
+						else:
+							x[1] = x[1].rstrip(' ssl')
+							port = x[1]
+					elif x[0] == 'ssl_certificate':
+						l[1].remove(x)
+					elif x[0] == 'ssl_protocols':
+						l[1].remove(x)
+					elif x[0] == 'ssl_ciphers':
+						l[1].remove(x)
+		comline = '# GENESIS '+stype+' http://'+data['addr']+':'+port+'\n'
+		open('/etc/nginx/sites-available/'+name, 'w').write(
+			comline+nginxparser.dumps(n))
+		apis.webapps(self.app).get_interface(stype).ssl_disable(
+			os.path.join('/srv/http/webapps', name))
+		self.nginx_reload()
 
 class Website(Plugin):
 	implements(apis.webapps.IWebapp)
@@ -203,6 +262,7 @@ class Website(Plugin):
 	sort = 'bottom'
 	php = False
 	nomulti = False
+	ssl = True
 
 	addtoblock = ''
 
@@ -261,6 +321,12 @@ class Website(Plugin):
 		pass
 
 	def post_remove(self, name):
+		pass
+
+	def ssl_enable(self, path, cfile, kfile):
+		pass
+
+	def ssl_disable(self, path):
 		pass
 
 	def get_info(self):

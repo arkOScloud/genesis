@@ -16,6 +16,7 @@ class Webapps(apis.API):
 		php = False
 		nomulti = False
 		addtoblock = ''
+		ssl = False
 
 		def pre_install(self, name, vars):
 			pass
@@ -30,6 +31,12 @@ class Webapps(apis.API):
 			pass
 
 		def get_info(self):
+			pass
+
+		def ssl_enable(self, path, cfile, kfile):
+			pass
+
+		def ssl_disable(self, path):
 			pass
 
 	def get_apptypes(self):
@@ -65,6 +72,7 @@ class Webapps(apis.API):
 					stype = re.match(rtype, line).group(1)
 				elif re.match(rport, line):
 					port = re.match(rport, line).group(1)
+					ssl = re.match(rport, line).group(2)
 				elif re.match(raddr, line):
 					addr = re.match(raddr, line).group(1)
 				elif re.match(rpath, line):
@@ -76,15 +84,23 @@ class Webapps(apis.API):
 			else:
 				enabled = False
 
+			cls = self.get_interface(stype)
+			if hasattr(cls, 'ssl'):
+				ssl_able = cls.ssl
+			else:
+				ssl_able = False
+
 			# Create dict of values
 			applist.append({
 					'name': site,
 					'type': stype,
+					'ssl': (True if ssl == 'ssl' else False),
+					'ssl_able': ssl_able,
 					'addr': addr, 
 					'port': port,
 					'path': path, 
 					'php': php,
-					'class': self.get_interface(stype),
+					'class': cls,
 					'enabled': enabled
 				})
 			f.close()
