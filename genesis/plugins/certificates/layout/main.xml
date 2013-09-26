@@ -1,11 +1,11 @@
 <xml>
     <toolbar>
-        <button id="add" text="New certificate" iconfont="gen-certificate" />
-        <button id="add" text="New private key" iconfont="gen-key" />
+        <button id="add" text="Add external certificate" iconfont="gen-certificate" />
+        <button id="gen" text="Generate certificate" iconfont="gen-certificate" />
     </toolbar>
 
     <label size="5" text="My Certificates" />
-    <pad>
+    <pad id="main">
         <dt id="certlist" width="100%">
             <dtr header="True">
                 <dth width="1" />
@@ -20,19 +20,26 @@
         </dt>
     </pad>
 
-    <label size="5" text="My Private Keys" />
-    <pad>
-        <dt id="keylist" width="100%">
-            <dtr header="True">
-                <dth width="1" />
-                <dth>
-                    <label text="Name" />
-                </dth>
-                <dth>
-                    <label text="Specifications" />
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
-    </pad>
+    <dialogbox id="dlgGen">
+        <formline text="Certificate name" help="An internal name to help you identify this certificate within Genesis.">
+            <textinput name="certname" id="certname" />
+        </formline>
+        <formline text="Country" help="A two-letter representation of your country. Example: 'US' for United States">
+            <textinput name="certcountry" id="certcountry" />
+        </formline>
+        <formline text="State or Province">
+            <textinput name="certsp" id="certsp" />
+        </formline>
+        <formline text="Locality" help="Your town, city or community name">
+            <textinput name="certlocale" id="certlocale" />
+        </formline>
+        <formline text="Name" help="Your name">
+            <textinput name="certuname" id="certuname" />
+        </formline>
+        <formline text="Email" help="Your email address">
+            <textinput name="certemail" id="certemail" />
+        </formline>
+        <formline text="Assign to:" help="Here's a list of plugins and webapps that you can assign this certificate to. Check the boxes for those that apply. Remember that they must be accessible under the same domain as listed above." id="certassign">
+        </formline>
+    </dialogbox>
 </xml>
