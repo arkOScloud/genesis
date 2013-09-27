@@ -50,7 +50,7 @@ class CertControl(Plugin):
 		cfg.set('cert', 'name', name)
 		cfg.set('cert', 'expiry', crt.get_notAfter())
 		cfg.set('cert', 'chain', chain)
-		cfg.set('cert', 'assigned', '\n'.join(assign))
+		cfg.set('cert', 'assign', '\n'.join(assign))
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
 
 	def gencert(self, name):
@@ -99,13 +99,14 @@ class CertControl(Plugin):
 		# TODO read the cfg and disable SSL on unselected options
 		cfg = ConfigParser.ConfigParser()
 		cfg.read('/etc/ssl/certs/genesis/'+name+'.gcinfo')
-		alist = []
+		alist = cfg.get('cert', 'assign').split('\n')
 		for x in assign:
 			if x[0] == 'genesis':
 				self.app.gconfig.set('genesis', 'cert_file', 
 					'/etc/ssl/certs/genesis/'+name+'.crt')
 				self.app.gconfig.set('genesis', 'cert_key', 
 					'/etc/ssl/private/genesis/'+name+'.key')
+				self.app.gconfig.set('genesis', 'ssl', '1')
 				alist.append('Genesis')
 			elif x[0] == 'webapp':
 				WebappControl(self.app).ssl_enable(x[1],
@@ -115,6 +116,25 @@ class CertControl(Plugin):
 			elif x[0] == 'plugin':
 				x[1].enable_ssl()
 				alist.append(x[1].text)
+		cfg.set('cert', 'assign', '\n'.join(alist))
+		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
+
+	def unassign(self, name, assign):
+		cfg = ConfigParser.ConfigParser()
+		cfg.read('/etc/ssl/certs/genesis/'+name+'.gcinfo')
+		alist = cfg.get('cert', 'assign').split('\n')
+		for x in assign:
+			if x[0] == 'genesis':
+				self.app.gconfig.set('genesis', 'cert_file', '')
+				self.app.gconfig.set('genesis', 'cert_key', '')
+				self.app.gconfig.set('genesis', 'ssl', '0')
+				alist.remove('Genesis')
+			elif x[0] == 'webapp':
+				WebappControl(self.app).ssl_disable(x[1])
+				alist.remove(x[1]['name'] + ' ('+x[1]['type']+')')
+			elif x[0] == 'plugin':
+				x[1].disable_ssl()
+				alist.remove(x[1].text)
 		cfg.set('cert', 'assign', '\n'.join(alist))
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
 

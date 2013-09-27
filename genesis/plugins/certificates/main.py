@@ -52,18 +52,81 @@ class CertificatesPlugin(CategoryPlugin):
 		else:
 			ui.remove('dlgGen')
 
+		if self._cinfo:
+			self._wal, self._pal = self._cc.get_ssl_capable()
+			ui.find('certname').set('text', self._cinfo['name'])
+			exp = self._cinfo['expiry']
+			exp = exp[0:4] + '-' + exp[4:6] + '-' + exp[6:8] + ', ' + exp[8:10] + ':' + exp[10:12]
+			ui.find('expires').set('text', exp)
+			for x in self._wal:
+				if (x['name']+' ('+x['type']+')') in self._cinfo['assign']:
+					ic, ict, show = 'gen-checkmark-circle', 'Assigned', 'd'
+				else:
+					ic, ict, show = None, None, 'e'
+				ui.find('certassign').append(
+					UI.DTR(
+						UI.IconFont(iconfont=ic, text=ict),
+						UI.IconFont(iconfont='gen-earth'),
+						UI.Label(text=x['name']),
+						UI.HContainer(
+							(UI.TipIcon(iconfont='gen-checkmark-circle',
+								text='Assign', id='ac/'+self._cinfo['name']+'/w/'+str(self._wal.index(x))) if show == 'e' else None),
+							(UI.TipIcon(iconfont='gen-close',
+								text='Unassign', id='uc/'+self._cinfo['name']+'/w/'+str(self._wal.index(x)),
+								warning=('Are you sure you wish to unassign this certificate? '
+									'SSL on this service will be disabled.')) if show == 'd' else None),
+						),
+					)
+				)
+			for x in self._pal:
+				if x.text in self._cinfo['assign']:
+					ic, ict, show = 'gen-checkmark-circle', 'Assigned', 'd'
+				else:
+					ic, ict, show = None, None, 'e'
+				ui.find('certassign').append(
+					UI.DTR(
+						UI.IconFont(iconfont=ic, text=ict),
+						UI.IconFont(iconfont=x.iconfont),
+						UI.Label(text=x.text),
+						UI.HContainer(
+							(UI.TipIcon(iconfont='gen-checkmark-circle',
+								text='Assign', id='ac/'+self._cinfo['name']+'/p/'+str(self._pal.index(x))) if show == 'e' else None),
+							(UI.TipIcon(iconfont='gen-close',
+								text='Unassign', id='uc/'+self._cinfo['name']+'/p/'+str(self._pal.index(x)),
+								warning=('Are you sure you wish to unassign this certificate? '
+									'SSL on this service will be disabled.')) if show == 'd' else None),
+						),
+					)
+				)
+		else:
+			ui.remove('dlgInfo')
+
 		return ui
 
 	@event('button/click')
 	def on_click(self, event, params, vars = None):
 		if params[0] == 'add':
 			pass
+		if params[0] == 'info':
+			self._cinfo = self.certs[int(params[1])]
 		if params[0] == 'gen':
 			self._gen = True
 		if params[0] == 'del':
 			self._cc.remove(self.certs[int(params[1])]['name'])
 			for a in self.certs[int(params[1])]['assign']:
 				pass
+		if params[0] == 'ac' and params[2] == 'p':
+			self._cc.assign(self._cinfo['name'], 
+				[('plugin', self._pal[int(params[3])])])
+		elif params[0] == 'ac' and params[2] == 'w':
+			self._cc.assign(self._cinfo['name'],
+				[('webapp', self._wal[int(params[3])])])
+		if params[0] == 'uc' and params[2] == 'p':
+			self._cc.unassign(self._cinfo['name'], 
+				[('plugin', self._pal[int(params[3])])])
+		elif params[0] == 'uc' and params[2] == 'w':
+			self._cc.unassign(self._cinfo['name'],
+				[('webapp', self._wal[int(params[3])])])
 
 	@event('dialog/submit')
 	def on_submit(self, event, params, vars = None):
@@ -81,7 +144,13 @@ class CertificatesPlugin(CategoryPlugin):
 						lst.append(('plugin', self._pal[i]))
 				cgw = CertGenWorker(self, vars.getvalue('certname'), lst)
 				cgw.start()
+			self._wal = []
+			self._pal = []
 			self._gen = False
+		if params[0] == 'dlgInfo':
+			self._cinfo = None
+			self._wal = []
+			self._pal = []
 
 
 class CertGenWorker(BackgroundWorker):

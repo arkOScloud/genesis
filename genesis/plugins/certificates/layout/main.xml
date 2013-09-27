@@ -42,4 +42,28 @@
         <formline text="Assign to:" help="Here's a list of plugins and webapps that you can assign this certificate to. Check the boxes for those that apply. Remember that they must be accessible under the same domain as listed above." id="certassign">
         </formline>
     </dialogbox>
+
+    <dialogbox id="dlgInfo" hidecancel="True">
+        <formline text="Certificate name">
+            <label name="certname" id="certname" />
+        </formline>
+        <formline text="Serves domain">
+            <label name="domain" id="domain" />
+        </formline>
+        <formline text="Expires">
+            <label name="exipres" id="expires" />
+        </formline>
+        <formline text="Assign to:">
+            <dt id="certassign" width="100%">
+                <dtr header="True">
+                    <dth width="1" />
+                    <dth width="1" />
+                    <dth>
+                        <label text="Application" />
+                    </dth>
+                    <dth width="1" />
+                </dtr>
+            </dt>
+        </formline>
+    </dialogbox>
 </xml>

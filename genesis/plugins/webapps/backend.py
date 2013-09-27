@@ -187,7 +187,7 @@ class WebappControl(Plugin):
 	def nginx_reload(self):
 		status = shell_cs('systemctl restart nginx')
 		if status[0] >= 1:
-			raise
+			raise Exception('nginx failed to reload.')
 
 	def php_enable(self):
 		shell('sed -i "s/.*include \/etc\/nginx\/php.conf.*/\tinclude \/etc\/nginx\/php.conf;/" /etc/nginx/nginx.conf')
@@ -198,7 +198,7 @@ class WebappControl(Plugin):
 	def php_reload(self):
 		status = shell_cs('systemctl restart php-fpm')
 		if status[0] >= 1:
-			raise
+			raise Exception('nginx failed to reload.')
 
 	def ssl_enable(self, data, cpath, kpath):
 		name, stype = data['name'], data['type']
@@ -231,17 +231,21 @@ class WebappControl(Plugin):
 		n = nginxparser.loads(
 			open('/etc/nginx/sites-available/'+name, 'r').read())
 		port = '80'
-		for l in n[0]:
-			if l[0] == 'server':
+		for l in n:
+			if l[0] == ['server']:
 				for x in l[1]:
 					if x[0] == 'listen':
 						if x[1] == '443 ssl':
 							x[1] = '80'
 							port = '80'
+							print True
 						else:
 							x[1] = x[1].rstrip(' ssl')
+							print x[1]
 							port = x[1]
 					elif x[0] == 'ssl_certificate':
+						l[1].remove(x)
+					elif x[0] == 'ssl_certificate_key':
 						l[1].remove(x)
 					elif x[0] == 'ssl_protocols':
 						l[1].remove(x)
