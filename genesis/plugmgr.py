@@ -118,6 +118,25 @@ class CrashedError(BaseRequirementError):
         return 'crashed during load: %s' % self.inner
 
 
+class ImSorryDave(Exception):
+    """
+    General exception when an attempted operation has a conflict
+    """
+    def __init__(self, target, depend, reason):
+        self.target = target
+        self.reason = reason
+        self.depend = depend
+
+    def __str__(self):
+        if self.reason == 'remove':
+            return ('%s can\'t be removed, as %s still depends on it. '
+                'Please remove that first if you would like to remove '
+                'this plugin.' % (self.target, self.depend))
+        else:
+            return ('%s can\'t be installed, as it depends on %s. Please '
+                'install that first.' % (self.target, self.depend))
+
+
 class PluginLoader:
     """
     Handles plugin loading and unloading
@@ -413,6 +432,29 @@ class RepositoryManager:
         self.server = cfg.get('genesis', 'update_server')
         self.refresh()
 
+    def list_available(self):
+        d = {}
+        for x in self.available:
+            d[x.id] = x
+        return d
+
+    def check_conflict(self, id, op):
+        """
+        Check if an operation can be performed due to dependency conflict
+        """
+        pdata = PluginLoader.list_plugins()
+        if op == 'remove':
+            for i in pdata:
+                for dep in pdata[i].deps:
+                    if dep[0] == 'plugin' and dep[1] == id and dep[1] in [x.id for x in self.installed]:
+                        raise ImSorryDave(pdata[dep[1]].name, pdata[i].name, op)
+        elif op == 'install':
+            t = self.list_available()
+            for i in eval(t[id].deps):
+                for dep in i[1]:
+                    if dep[0] == 'plugin' and dep[1] not in [x.id for x in self.installed]:
+                        raise ImSorryDave(t[id].name, t[dep[1]].name, op)
+
     def refresh(self):
         """
         Re-reads saved repository information and rebuilds installed/available lists
@@ -500,6 +542,8 @@ class RepositoryManager:
         except:
             self.purge = '1'
 
+        exclude = ['openssl', 'nginx']
+
         if cat:
             cat.put_statusmsg('Removing plugin...')
         dir = self.config.get('genesis', 'plugins')
@@ -518,7 +562,7 @@ class RepositoryManager:
                         if item[1][0] in pdata[plugin].deps:
                             depends[item[0]] = (depends[item[0]][0], depends[item[0]][1]+1)
                 for thing in depends:
-                    if thing[1] <= 1 and not 'openssl' in thing[0][1]:
+                    if thing[1] <= 1 and not thing[0][1] in exclude:
                         if cat:
                             cat.put_statusmsg('Removing dependency %s...' % thing[0][1])
                         shell('systemctl stop ' + thing[0][2])

@@ -1,7 +1,7 @@
 from genesis.api import *
 from genesis.ui import *
 from genesis import apis
-from genesis.plugmgr import PluginLoader, RepositoryManager, LiveInstall, LiveRemove
+from genesis.plugmgr import ImSorryDave, PluginLoader, RepositoryManager, LiveInstall, LiveRemove
 
 
 class PluginManager(CategoryPlugin, URLHandler):
@@ -121,9 +121,13 @@ class PluginManager(CategoryPlugin, URLHandler):
             self._mgr.update_list()
             self.put_message('info', 'Plugin list updated')
         if params[0] == 'remove':
-            lr = LiveRemove(self._mgr, params[1], self)
-            lr.start()
-            self._nc.remove(params[1])
+            try:
+                self._mgr.check_conflict(params[1], 'remove')
+                lr = LiveRemove(self._mgr, params[1], self)
+                lr.start()
+                self._nc.remove(params[1])
+            except ImSorryDave, e:
+                self.put_message('err', e)
         if params[0] == 'reload':
             try:
                 PluginLoader.unload(params[1])
@@ -137,6 +141,10 @@ class PluginManager(CategoryPlugin, URLHandler):
         if params[0] == 'restart':
             self.app.restart()
         if params[0] == 'install':
-            li = LiveInstall(self._mgr, params[1], 
-                True, self)
-            li.start()
+            try:
+                self._mgr.check_conflict(params[1], 'install')
+                li = LiveInstall(self._mgr, params[1], 
+                    True, self)
+                li.start()
+            except ImSorryDave, e:
+                self.put_message('err', e)
