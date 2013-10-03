@@ -18,6 +18,9 @@ class SystemTime:
         else:
             return time.localtime()
 
+    def get_serial_time(self):
+            return time.strftime('%Y%m%d%H%M%S')
+
     def get_date(self):
         return time.strftime('%d %b %Y')
 

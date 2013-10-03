@@ -231,6 +231,7 @@ class WebappControl(Plugin):
 		n = nginxparser.loads(
 			open('/etc/nginx/sites-available/'+name, 'r').read())
 		port = '80'
+		# Three passes - list loop bug omits entries on some systems 
 		for l in n:
 			if l[0] == ['server']:
 				for x in l[1]:
@@ -244,6 +245,28 @@ class WebappControl(Plugin):
 							print x[1]
 							port = x[1]
 					elif x[0] == 'ssl_certificate':
+						l[1].remove(x)
+					elif x[0] == 'ssl_certificate_key':
+						l[1].remove(x)
+					elif x[0] == 'ssl_protocols':
+						l[1].remove(x)
+					elif x[0] == 'ssl_ciphers':
+						l[1].remove(x)
+		for l in n:
+			if l[0] == ['server']:
+				for x in l[1]:
+					if x[0] == 'ssl_certificate':
+						l[1].remove(x)
+					elif x[0] == 'ssl_certificate_key':
+						l[1].remove(x)
+					elif x[0] == 'ssl_protocols':
+						l[1].remove(x)
+					elif x[0] == 'ssl_ciphers':
+						l[1].remove(x)
+		for l in n:
+			if l[0] == ['server']:
+				for x in l[1]:
+					if x[0] == 'ssl_certificate':
 						l[1].remove(x)
 					elif x[0] == 'ssl_certificate_key':
 						l[1].remove(x)

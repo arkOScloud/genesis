@@ -23,7 +23,6 @@ class CertControl(Plugin):
 			cfg.read(x)
 			certs.append({'name': cfg.get('cert', 'name'),
 				'expiry': cfg.get('cert', 'expiry'),
-				'chain': cfg.get('cert', 'chain'),
 				'assign': cfg.get('cert', 'assign').split('\n')})
 		return certs
 
@@ -49,11 +48,10 @@ class CertControl(Plugin):
 		cfg.add_section('cert')
 		cfg.set('cert', 'name', name)
 		cfg.set('cert', 'expiry', crt.get_notAfter())
-		cfg.set('cert', 'chain', chain)
 		cfg.set('cert', 'assign', '\n'.join(assign))
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
 
-	def gencert(self, name):
+	def gencert(self, name, vars):
 		# Make sure our folders are in place
 		if not os.path.exists('/etc/ssl/certs/genesis'):
 			os.mkdir('/etc/ssl/certs/genesis')
@@ -70,7 +68,7 @@ class CertControl(Plugin):
 		key = OpenSSL.crypto.PKey()
 		key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
 		crt = OpenSSL.crypto.X509()
-		crt.set_serial_number(1)
+		crt.set_serial_number(int(SystemTime().get_serial_time()))
 		crt.gmtime_adj_notBefore(0)
 		crt.gmtime_adj_notAfter(2*365*24*60*60)
 		crt.set_pubkey(key)
@@ -90,16 +88,17 @@ class CertControl(Plugin):
 		cfg.add_section('cert')
 		cfg.set('cert', 'name', name)
 		cfg.set('cert', 'expiry', crt.get_notAfter())
-		cfg.set('cert', 'chain', '')
 		cfg.set('cert', 'assign', '')
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
 
 	def assign(self, name, assign):
 		# Assign a certificate to plugins/webapps as listed
-		# TODO read the cfg and disable SSL on unselected options
 		cfg = ConfigParser.ConfigParser()
 		cfg.read('/etc/ssl/certs/genesis/'+name+'.gcinfo')
 		alist = cfg.get('cert', 'assign').split('\n')
+		for i in alist:
+			if i == '':
+				alist.remove(i)
 		for x in assign:
 			if x[0] == 'genesis':
 				self.app.gconfig.set('genesis', 'cert_file', 
@@ -107,7 +106,8 @@ class CertControl(Plugin):
 				self.app.gconfig.set('genesis', 'cert_key', 
 					'/etc/ssl/private/genesis/'+name+'.key')
 				self.app.gconfig.set('genesis', 'ssl', '1')
-				alist.append('Genesis')
+				alist.append('Genesis SSL')
+				self.app.gconfig.save()
 			elif x[0] == 'webapp':
 				WebappControl(self.app).ssl_enable(x[1],
 					'/etc/ssl/certs/genesis/'+name+'.crt',
@@ -123,12 +123,16 @@ class CertControl(Plugin):
 		cfg = ConfigParser.ConfigParser()
 		cfg.read('/etc/ssl/certs/genesis/'+name+'.gcinfo')
 		alist = cfg.get('cert', 'assign').split('\n')
+		for i in alist:
+			if i == '':
+				alist.remove(i)
 		for x in assign:
 			if x[0] == 'genesis':
 				self.app.gconfig.set('genesis', 'cert_file', '')
 				self.app.gconfig.set('genesis', 'cert_key', '')
 				self.app.gconfig.set('genesis', 'ssl', '0')
-				alist.remove('Genesis')
+				alist.remove('Genesis SSL')
+				self.app.gconfig.save()
 			elif x[0] == 'webapp':
 				WebappControl(self.app).ssl_disable(x[1])
 				alist.remove(x[1]['name'] + ' ('+x[1]['type']+')')
@@ -140,6 +144,21 @@ class CertControl(Plugin):
 
 	def remove(self, name):
 		# Remove cert, key and control file for associated name
+		cfg = ConfigParser.ConfigParser()
+		cfg.read('/etc/ssl/certs/genesis/'+name+'.gcinfo')
+		alist = cfg.get('cert', 'assign').split('\n')
+		wal, pal = self.get_ssl_capable()
+		for x in wal:
+			if (x['name']+' ('+x['type']+')') in alist:
+				WebappControl(self.app).ssl_disable(x)
+		for y in pal:
+			if y.text in alist:
+				y.disable_ssl()
+		if 'Genesis SSL' in alist:
+			self.app.gconfig.set('genesis', 'cert_file', '')
+			self.app.gconfig.set('genesis', 'cert_key', '')
+			self.app.gconfig.set('genesis', 'ssl', '0')
+			self.app.gconfig.save()
 		os.unlink('/etc/ssl/certs/genesis/'+name+'.gcinfo')
 		try:
 			os.unlink('/etc/ssl/certs/genesis/'+name+'.crt')
