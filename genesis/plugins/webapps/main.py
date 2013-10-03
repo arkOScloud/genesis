@@ -179,7 +179,19 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 	def on_submit(self, event, params, vars = None):
 		if params[0] == 'dlgAdd':
 			if vars.getvalue('action', '') == 'OK':
-				self._setup = self._current
+				if hasattr(self._current, 'dbengine'):
+					on = False
+					for dbtype in apis.databases(self.app).get_dbtypes():
+						if self._current.dbengine == dbtype[0] and dbtype[2] == True:
+							on = True
+						elif self._current.dbengine == dbtype[0] and dbtype[2] == None:
+							on = True
+					if on:
+						self._setup = self._current
+					else:
+						self.put_message('err', 'The database engine for %s is not running. Please start it via the Status button.' % self._current.dbengine)
+				else:
+					self._setup = self._current
 			self._add = None
 		if params[0] == 'dlgEdit':
 			if vars.getvalue('action', '') == 'OK':

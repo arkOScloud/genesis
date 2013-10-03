@@ -15,6 +15,7 @@ class WordPress(Plugin):
 	name = 'WordPress'
 	dpath = 'https://wordpress.org/latest.tar.gz'
 	icon = 'gen-earth'
+	dbengine = 'MariaDB'
 	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
 	php = True
 	nomulti = True
