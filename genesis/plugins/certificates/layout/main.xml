@@ -1,6 +1,5 @@
 <xml>
     <toolbar>
-        <button id="add" text="Add external certificate" iconfont="gen-certificate" />
         <button id="gen" text="Generate certificate" iconfont="gen-certificate" />
     </toolbar>
 
