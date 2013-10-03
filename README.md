@@ -8,7 +8,7 @@ For end-users: Genesis is already downloaded and installed on your arkOS node, r
 
 For more information see the [Getting Started](http://arkos.io/doc/getting-started/) page.
 
-Running Genesis from this Github repo is advised ONLY for development purposes.
+Running Genesis from this Github repo is advised ONLY for development purposes. If you do this you will need the following Python modules: `pyOpenSSL`, `gevent`, `lxml`, `python-iptables`, and `pyparsing`.
 
 
 ## Writing Plugins
