@@ -11,6 +11,8 @@ class SSHPlugin(apis.services.ServiceControlPlugin):
     folder = 'advanced'
     services = [('SSH Server', 'sshd', [('tcp', '22')])]
 
+    fail2ban = [{'name': 'ssh-iptables'}]
+
     def on_init(self):
         ss = backend.SSHConfig(self.app)
         pk = backend.PKeysConfig(self.app)
