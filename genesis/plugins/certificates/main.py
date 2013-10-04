@@ -68,6 +68,7 @@ class CertificatesPlugin(CategoryPlugin):
 		if self._cinfo:
 			self._wal, self._pal = self._cc.get_ssl_capable()
 			ui.find('certname').set('text', self._cinfo['name'])
+			ui.find('domain').set('text', self._cinfo['domain'])
 			exp = self._cinfo['expiry']
 			exp = exp[0:4] + '-' + exp[4:6] + '-' + exp[6:8] + ', ' + exp[8:10] + ':' + exp[10:12]
 			ui.find('expires').set('text', exp)
@@ -157,32 +158,35 @@ class CertificatesPlugin(CategoryPlugin):
 			self._gen = True
 		if params[0] == 'del':
 			self._cc.remove(self.certs[int(params[1])]['name'])
-			for a in self.certs[int(params[1])]['assign']:
-				pass
+			self.put_message('info', 'Certificate successfully deleted')
 		if params[0] == 'ac' and params[2] == 'p':
 			self._cc.assign(self._cinfo['name'], 
 				[('plugin', self._pal[int(params[3])])])
 			self._cinfo = None
+			self.put_message('info', '%s added to %s plugin' % (self._cinfo['name'], self._pal[int(params[3])].text))
 		elif params[0] == 'ac' and params[2] == 'w':
 			self._cc.assign(self._cinfo['name'],
 				[('webapp', self._wal[int(params[3])])])
 			self._cinfo = None
+			self.put_message('info', '%s added to %s webapp' % (self._cinfo['name'], self._wal[int(params[3])]['name']))
 		elif params[0] == 'ac' and params[2] == 'g':
 			self._cc.assign(self._cinfo['name'], [[('genesis')]])
 			self._cinfo = None
-			self.put_message('info', 'Restart Genesis for changes to take effect')
+			self.put_message('info', '%s serving as Genesis certificate. Restart Genesis for changes to take effect' % self._cinfo['name'])
 		if params[0] == 'uc' and params[2] == 'p':
 			self._cc.unassign(self._cinfo['name'], 
 				[('plugin', self._pal[int(params[3])])])
 			self._cinfo = None
+			self.put_message('info', '%s removed from %s plugin, and SSL disabled.' % (self._cinfo['name'], self._pal[int(params[3])].text))
 		elif params[0] == 'uc' and params[2] == 'w':
 			self._cc.unassign(self._cinfo['name'],
 				[('webapp', self._wal[int(params[3])])])
 			self._cinfo = None
+			self.put_message('info', '%s removed from %s webapp, and SSL disabled.' % (self._cinfo['name'], self._wal[int(params[3])]['name']))
 		elif params[0] == 'uc' and params[2] == 'g':
 			self._cc.unassign(self._cinfo['name'], [[('genesis')]])
 			self._cinfo = None
-			self.put_message('info', 'Restart Genesis for changes to take effect')
+			self.put_message('info', 'Certificate removed and SSL disabled for Genesis. Restart Genesis for changes to take effect')
 
 	@event('dialog/submit')
 	def on_submit(self, event, params, vars = None):
@@ -190,7 +194,11 @@ class CertificatesPlugin(CategoryPlugin):
 			if vars.getvalue('action', '') == 'OK':
 				pass
 		if params[0] == 'dlgGen':
-			if vars.getvalue('action', '') == 'OK':
+			if vars.getvalue('certname', '') == '':
+				self.put_message('err', 'Certificate name is mandatory')
+			elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
+				self.put_message('err', 'You already have a certificate with that name.')
+			elif vars.getvalue('action', '') == 'OK':
 				lst = []
 				if vars.getvalue('genesis', '') == '1':
 					lst.append([('genesis')])
@@ -206,7 +214,7 @@ class CertificatesPlugin(CategoryPlugin):
 							lst.append(('plugin', self._pal[i]))
 					except TypeError:
 						pass
-				cgw = CertGenWorker(self, vars.getvalue('certname'), lst)
+				cgw = CertGenWorker(self, vars.getvalue('certname'), vars, lst)
 				cgw.start()
 			self._wal = []
 			self._pal = []
@@ -227,3 +235,4 @@ class CertGenWorker(BackgroundWorker):
 		cat.put_statusmsg('Assigning new certificate...')
 		CertControl(cat.app).assign(name, assign)
 		cat.clr_statusmsg()
+		cat.put_message('info', 'Certificate successfully generated')

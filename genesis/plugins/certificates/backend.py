@@ -23,6 +23,7 @@ class CertControl(Plugin):
 			cfg.read(x)
 			certs.append({'name': cfg.get('cert', 'name'),
 				'expiry': cfg.get('cert', 'expiry'),
+				'domain': cfg.get('cert', 'domain'),
 				'assign': cfg.get('cert', 'assign').split('\n')})
 		return certs
 
@@ -68,6 +69,11 @@ class CertControl(Plugin):
 		key = OpenSSL.crypto.PKey()
 		key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
 		crt = OpenSSL.crypto.X509()
+		crt.get_subject().C = vars.getvalue('certcountry', '')
+		crt.get_subject().ST = vars.getvalue('certsp', '')
+		crt.get_subject().L = vars.getvalue('certlocale', '')
+		crt.get_subject().CN = vars.getvalue('certcn', '')
+		crt.get_subject().emailAddress = vars.getvalue('certemail', '')
 		crt.set_serial_number(int(SystemTime().get_serial_time()))
 		crt.gmtime_adj_notBefore(0)
 		crt.gmtime_adj_notAfter(2*365*24*60*60)
@@ -88,6 +94,7 @@ class CertControl(Plugin):
 		cfg.add_section('cert')
 		cfg.set('cert', 'name', name)
 		cfg.set('cert', 'expiry', crt.get_notAfter())
+		cfg.set('cert', 'domain', crt.get_subject().CN)
 		cfg.set('cert', 'assign', '')
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
 

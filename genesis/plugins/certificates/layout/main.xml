@@ -32,8 +32,8 @@
         <formline text="Locality" help="Your town, city or community name">
             <textinput name="certlocale" id="certlocale" />
         </formline>
-        <formline text="Name" help="Your name">
-            <textinput name="certuname" id="certuname" />
+        <formline text="Server Address" help="The address to register this certificate to. NOTE that if you supply this, you will only be able to access your server with this exact address. Make sure that the plugin or webapp can accept requests with this address.">
+            <textinput name="certcn" id="certcn" />
         </formline>
         <formline text="Email" help="Your email address">
             <textinput name="certemail" id="certemail" />
