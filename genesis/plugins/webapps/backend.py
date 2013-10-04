@@ -74,17 +74,10 @@ class WebappControl(Plugin):
 				raise InstallError(status[1])
 			os.remove(pkg_path)
 
-		# Setup the webapp and create an nginx serverblock
-		try:
-			cat.put_statusmsg('Running post-install configuration...')
-			specialmsg = webapp.post_install(name, target_path, vars)
-		except Exception, e:
-			raise InstallError('Webapp config - '+str(e))
 		php = vars.getvalue('php', '')
 		addtoblock = vars.getvalue('addtoblock', '')
-		if webapp.name == 'Website' and php == '1':
-			addtoblock = webapp.phpblock + '\n' + addtoblock
 
+		# Setup the webapp and create an nginx serverblock
 		try:
 			self.nginx_add(
 				name=name, 
@@ -97,6 +90,15 @@ class WebappControl(Plugin):
 				)
 		except Exception, e:
 			raise PartialError('nginx serverblock couldn\'t be written - '+str(e))
+
+		try:
+			cat.put_statusmsg('Running post-install configuration...')
+			specialmsg = webapp.post_install(name, target_path, vars)
+		except Exception, e:
+			raise InstallError('Webapp config - '+str(e))
+
+		if webapp.name == 'Website' and php == '1':
+			addtoblock = webapp.phpblock + '\n' + addtoblock
 
 		if enable is True:
 			try:
@@ -151,7 +153,7 @@ class WebappControl(Plugin):
 			% (stype, (('https:\/\/' if ssl else 'http:\/\/')+addr+':'+port), origname))	
 		shell('sed -i "s/.*listen .*/\tlisten %s\;/" /etc/nginx/sites-available/%s' % ((port+' ssl' if ssl else port), origname))
 		shell('sed -i "s/.*server_name .*/\tserver_name %s\;/" /etc/nginx/sites-available/%s' % (addr, origname))
-		shell('sed -i "s/.*root .*/\troot %s\;/" /etc/nginx/sites-available/%s' % (path, origname))
+		shell('sed -i "s/.*root .*/\troot %s\;/" /etc/nginx/sites-available/%s' % (re.escape(path), origname))
 		shell('sed -i "s/.*index index.*/\tindex index.%s\;/" /etc/nginx/sites-available/%s' % ('php' if php else 'html', origname))
 		if name != origname:
 			if os.path.exists(os.path.join('/srv/http/webapps', name)):
