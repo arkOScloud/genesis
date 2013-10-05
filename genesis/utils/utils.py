@@ -8,7 +8,7 @@ import urllib
 from datetime import datetime
 from hashlib import sha1
 from base64 import b64encode
-from passlib.hash import sha512_crypt
+from passlib.hash import sha512_crypt, bcrypt
 
 
 class SystemTime:
@@ -210,13 +210,22 @@ def shell_stdin(c, input):
 def hashpw(passw, scheme = 'sha512_crypt'):
     """
     Returns a hashed form of given password. Default scheme is
-    sha512_crypt.
+    sha512_crypt. Accepted schemes: sha512_crypt, bcrypt, sha (deprecated)
     """
     if scheme == 'sha512_crypt':
         return sha512_crypt.encrypt(passw)
+    elif scheme == 'bcrypt':
+        # TODO: rounds should be configurable
+        return bcrypt.encrypt(passw, rounds=12)
+    # This scheme should probably be dropped to avoid creating new
+    # unsaltes SHA1 hashes.
     elif scheme == 'sha':
+        import warnings
+        warnings.warn(
+            'SHA1 as a password hash may be removed in a future release.')
         return '{SHA}' + b64encode(sha1(passw).digest())
     return sha512_crypt.encrypt(passw)
+
 
 def str_fsize(sz):
     """
