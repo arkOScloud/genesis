@@ -26,8 +26,8 @@ class Jekyll(Plugin):
 		f = open('/etc/profile', 'r')
 		for l in f.readlines():
 			if l.startswith('PATH="') and not 'ruby/2.0.0/bin' in l:
-				l = l.rstrip('"')
-				l += ':~/.gem/ruby/2.0.0/bin"'
+				l = l.rstrip('"\n')
+				l += ':/root/.gem/ruby/2.0.0/bin"'
 				profile.append(l)
 			else:
 				profile.append(l)

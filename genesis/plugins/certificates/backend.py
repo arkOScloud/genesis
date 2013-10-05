@@ -154,6 +154,21 @@ class CertControl(Plugin):
 		cfg.set('cert', 'assign', '\n'.join(alist))
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
 
+	def remove_notify(self, name):
+		# Called by plugin when removed.
+		# Removes the associated entry from gcinfo tracker file
+		try:
+			cfg = ConfigParser.ConfigParser()
+			cfg.read('/etc/ssl/certs/genesis/'+name+'.gcinfo')
+			alist = []
+			for x in cfg.get('cert', 'assign').split('\n'):
+				if x != name:
+					alist.append(x)
+			cfg.set('cert', 'assign', '\n'.join(alist))
+			cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
+		except:
+			pass
+
 	def remove(self, name):
 		# Remove cert, key and control file for associated name
 		cfg = ConfigParser.ConfigParser()

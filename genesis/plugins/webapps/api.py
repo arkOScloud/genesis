@@ -1,6 +1,8 @@
 from genesis.com import *
 from genesis import apis
 
+import ConfigParser
+import glob
 import os
 import re
 
@@ -112,3 +114,24 @@ class Webapps(apis.API):
 			if plugin.__class__.__name__ == name:
 				interface = plugin
 		return interface
+
+	def cert_remove_notify(self, name, stype):
+		# Called by webapp when removed.
+		# Removes the associated entry from gcinfo tracker file
+		# Placed here for now to avoid awkward circular import
+		try:
+			cfg = ConfigParser.ConfigParser()
+			for x in glob.glob('/etc/ssl/certs/genesis/*.gcinfo'):
+				cfg.read(x)
+				alist = []
+				write = False
+				for i in cfg.get('cert', 'assign').split('\n'):
+					if i != (name+' ('+stype+')'):
+						alist.append(i)
+					else:
+						write = True
+				if write == True:
+					cfg.set('cert', 'assign', '\n'.join(alist))
+					cfg.write(open(x, 'w'))
+		except:
+			pass

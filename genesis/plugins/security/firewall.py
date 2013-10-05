@@ -106,21 +106,26 @@ class FWMonitor(Plugin):
         r.target = t
         c.append_rule(r)
 
-        # Accept established/related connections
-        # Unfortunately this has to be done clasically
-        shell('iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT')
-
         # Accept designated apps
         r = iptc.Rule()
         t = iptc.Target(r, 'genesis-apps')
         r.target = t
         c.append_rule(r)
 
+        # Allow ICMP (ping)
+        shell('iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT')
+
+        # Accept established/related connections
+        # Unfortunately this has to be done clasically
+        shell('iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT')
+
         # Reject all else by default
         r = iptc.Rule()
         t = iptc.Target(r, 'DROP')
         r.target = t
         c.append_rule(r)
+
+        self.save()
 
     def scan(self):
         # Update our local configs from what is in our iptables chain.
@@ -135,7 +140,7 @@ class FWMonitor(Plugin):
             m = r.matches[0]
             for s in ServerManager(self.app).get_by_port(m.dport):
                 srv = rm.get(s)
-                if '0.0.0.0/255.255.255.255' in r.src:
+                if 'anywhere' in r.src:
                     rm.set(s, 2)
                 else:
                     rm.set(s, 1)
@@ -149,12 +154,18 @@ class FWMonitor(Plugin):
         for x in RuleManager(self.app).get_all():
             for p in x[0].ports:
                 if int(x[1]) == 2:
-                    self.add(p[0], p[1], '0.0.0.0')
+                    self.add(p[0], p[1], 'anywhere')
                 elif int(x[1]) == 1:
                     for r in range:
                         self.add(p[0], p[1], r)
                 else:
                     self.remove(p[0], p[1])
+        tb = iptc.Table(iptc.Table.FILTER)
+        c = iptc.Chain(tb, "genesis-apps")
+        r = iptc.Rule()
+        t = iptc.Target(r, 'RETURN')
+        r.target = t
+        c.append_rule(r)
 
     def add(self, protocol, port, range=''):
         # Add rule for this port
@@ -165,9 +176,7 @@ class FWMonitor(Plugin):
             tb.create_chain(c)
         r = iptc.Rule()
         r.protocol = protocol
-        if range == '' or range == '0.0.0.0':
-            r.src = '0.0.0.0/255.255.255.255'
-        else:
+        if range != '' and range != 'anywhere' and range != '0.0.0.0':
             ip, cidr = range.split('/')
             mask = cidr_to_netmask(int(cidr))
             r.src = ip + '/' + mask
