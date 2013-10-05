@@ -47,7 +47,7 @@ class ConfigPlugin(CategoryPlugin):
         # Updates
         self._updstat = UpdateCheck.get().get_status()
         if self._updstat[0] == True:
-            ui.find('updstatus').set('text', 'An update for Genesis is available. Version %s' % self._updstat[1])
+            ui.find('updstatus').set('text', 'An update for Genesis is available.')
             ui.find('updstatus').set('size', '3')
             ui.find('updaction').set('text', 'Update Now')
             ui.find('updaction').set('iconfont', 'gen-arrow-down-3')
@@ -72,7 +72,7 @@ class ConfigPlugin(CategoryPlugin):
     def on_click(self, event, params, vars=None):
         if params[0] == 'updaction':
             if self._updstat[0] == False:
-                UpdateCheck.get().check_updates()
+                UpdateCheck.get().check_updates(refresh=True)
             else:
                 self._update = True
         if params[0] == 'editconfig':

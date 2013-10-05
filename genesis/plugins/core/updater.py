@@ -41,7 +41,9 @@ class UpdateCheck(Component):
     def get_status(self):
         return (self.update, self.version)
 
-    def check_updates(self):
+    def check_updates(self, refresh=False):
+        if refresh:
+            shell('pacman -Sy')
         out = shell('pacman -Qu')
         try:
             for thing in out.split('\n'):
