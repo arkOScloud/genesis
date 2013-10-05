@@ -122,7 +122,10 @@ class WebappControl(Plugin):
 			cat.put_statusmsg('Preparing for removal...')
 			site['class'].pre_remove(site['name'], site['path'])
 		cat.put_statusmsg('Removing website...')
-		shutil.rmtree(site['path'])
+		if site['path'].endswith('_site'):
+			shutil.rmtree(site['path'].rstrip('/_site'))
+		else:
+			shutil.rmtree(site['path'])
 		self.nginx_remove(site['name'])
 		if site['class'] != '':
 			cat.put_statusmsg('Cleaning up...')
@@ -148,12 +151,15 @@ class WebappControl(Plugin):
 
 	def nginx_edit(self, origname, name, stype, path, addr, port, ssl, php=False):
 		# TODO update this to use nginxparser
-		path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', name))
+		if path.endswith('_site'):
+			path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', name, '_site'))
+		else:
+			path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', name))
 		shell('sed -i "s/.*GENESIS.*/# GENESIS %s %s/" /etc/nginx/sites-available/%s' 
 			% (stype, (('https:\/\/' if ssl else 'http:\/\/')+addr+':'+port), origname))	
 		shell('sed -i "s/.*listen .*/\tlisten %s\;/" /etc/nginx/sites-available/%s' % ((port+' ssl' if ssl else port), origname))
 		shell('sed -i "s/.*server_name .*/\tserver_name %s\;/" /etc/nginx/sites-available/%s' % (addr, origname))
-		shell('sed -i "s/.*root .*/\troot %s\;/" /etc/nginx/sites-available/%s' % (re.escape(path), origname))
+		shell('sed -i "s/.*root .*/\troot %s\;/" /etc/nginx/sites-available/%s' % (path, origname))
 		shell('sed -i "s/.*index index.*/\tindex index.%s\;/" /etc/nginx/sites-available/%s' % ('php' if php else 'html', origname))
 		if name != origname:
 			if os.path.exists(os.path.join('/srv/http/webapps', name)):

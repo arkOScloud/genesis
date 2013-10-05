@@ -148,6 +148,11 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			ui.remove('dlgSetup')
 
 		if self._edit is not None:
+			try:
+				edgui = self.app.inflate(self._edit['type'].lower() + ':edit')
+				ui.append('dlgEdit', edgui)
+			except:
+				pass
 			ui.find('cfgname').set('value', self._edit['name'])
 			ui.find('cfgaddr').set('value', self._edit['addr'])
 			ui.find('cfgport').set('value', self._edit['port'])
@@ -163,17 +168,22 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				self.put_message('err', 'No webapp types installed. Check the Applications tab to find some')
 			else:
 				self._add = len(self.sites)
-		if params[0] == 'config':
+		elif params[0] == 'config':
 			self._edit = self.sites[int(params[1])]
-		if params[0] == 'drop':
+		elif params[0] == 'drop':
 			w = WAWorker(self, 'drop', self.sites[int(params[1])])
 			w.start()
-		if params[0] == 'enable':
+		elif params[0] == 'enable':
 			dt = self.sites[int(params[1])]
 			self.mgr.nginx_enable(dt['name'])
-		if params[0] == 'disable':
+		elif params[0] == 'disable':
 			dt = self.sites[int(params[1])]
 			self.mgr.nginx_disable(dt['name'])
+		else: 
+			for x in self.apptypes:
+				if x.name.lower() == params[0]:
+					speccall = getattr(x, params[1])
+					speccall(self._edit)
 
 	@event('dialog/submit')
 	def on_submit(self, event, params, vars = None):
