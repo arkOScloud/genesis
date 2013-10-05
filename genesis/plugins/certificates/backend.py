@@ -69,11 +69,16 @@ class CertControl(Plugin):
 		key = OpenSSL.crypto.PKey()
 		key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
 		crt = OpenSSL.crypto.X509()
-		crt.get_subject().C = vars.getvalue('certcountry', '')
-		crt.get_subject().ST = vars.getvalue('certsp', '')
-		crt.get_subject().L = vars.getvalue('certlocale', '')
-		crt.get_subject().CN = vars.getvalue('certcn', '')
-		crt.get_subject().emailAddress = vars.getvalue('certemail', '')
+		if vars.getvalue('certcountry', '') != '':
+			crt.get_subject().C = vars.getvalue('certcountry')
+		if vars.getvalue('certsp', '') != '':
+			crt.get_subject().ST = vars.getvalue('certsp')
+		if vars.getvalue('certlocale', '') != '':
+			crt.get_subject().L = vars.getvalue('certlocale')
+		if vars.getvalue('certcn', '') != '':
+			crt.get_subject().CN = vars.getvalue('certcn')
+		if vars.getvalue('certemail', '') != '':
+			crt.get_subject().emailAddress = vars.getvalue('certemail')
 		crt.set_serial_number(int(SystemTime().get_serial_time()))
 		crt.gmtime_adj_notBefore(0)
 		crt.gmtime_adj_notAfter(2*365*24*60*60)

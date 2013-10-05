@@ -9,7 +9,7 @@ DEPS =  [
     	('app', 'php-fpm', 'php-fpm'),
     	('app', 'php-gd', 'php-gd'),
     	('app', 'php-intl', 'php-intl'),
-        ('app', 'php-apc', 'php-apc'),
+        ('app', 'php-xcache', 'php-xcache'),
     	('plugin', 'db-mariadb')
      ])
 ]

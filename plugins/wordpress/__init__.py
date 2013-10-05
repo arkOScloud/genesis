@@ -7,7 +7,7 @@ DEPS =  [
     	('app', 'nginx', 'nginx'),
     	('app', 'php', 'php'),
     	('app', 'php-fpm', 'php-fpm'),
-    	('app', 'php-apc', 'php-apc'),
+    	('app', 'php-xcache', 'php-xcache'),
     	('plugin', 'db-mariadb')
      ])
 ]

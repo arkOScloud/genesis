@@ -124,6 +124,9 @@ def run_server(log_level=logging.INFO, config_file=''):
     PluginLoader.register_mgr(app) # Register permanent app
     ComponentManager.create(app)
 
+    # Make sure correct kernel modules are enabled
+    genesis.utils.shell('modprobe ip_tables')
+
     # Start server
     host = config.get('genesis','bind_host')
     port = config.getint('genesis','bind_port')
