@@ -127,9 +127,12 @@ class WebappControl(Plugin):
 		else:
 			shutil.rmtree(site['path'])
 		self.nginx_remove(site['name'])
+		apis.webapps(self.app).cert_remove_notify(site['name'],
+			site['type'])
 		if site['class'] != '':
 			cat.put_statusmsg('Cleaning up...')
 			site['class'].post_remove(site['name'])
+
 		cat.clr_statusmsg()
 
 	def nginx_add(self, name, stype, path, addr, port, add='', php=False):

@@ -162,31 +162,31 @@ class CertificatesPlugin(CategoryPlugin):
 		if params[0] == 'ac' and params[2] == 'p':
 			self._cc.assign(self._cinfo['name'], 
 				[('plugin', self._pal[int(params[3])])])
-			self._cinfo = None
 			self.put_message('info', '%s added to %s plugin' % (self._cinfo['name'], self._pal[int(params[3])].text))
+			self._cinfo = None
 		elif params[0] == 'ac' and params[2] == 'w':
 			self._cc.assign(self._cinfo['name'],
 				[('webapp', self._wal[int(params[3])])])
-			self._cinfo = None
 			self.put_message('info', '%s added to %s webapp' % (self._cinfo['name'], self._wal[int(params[3])]['name']))
+			self._cinfo = None
 		elif params[0] == 'ac' and params[2] == 'g':
 			self._cc.assign(self._cinfo['name'], [[('genesis')]])
-			self._cinfo = None
 			self.put_message('info', '%s serving as Genesis certificate. Restart Genesis for changes to take effect' % self._cinfo['name'])
+			self._cinfo = None
 		if params[0] == 'uc' and params[2] == 'p':
 			self._cc.unassign(self._cinfo['name'], 
 				[('plugin', self._pal[int(params[3])])])
-			self._cinfo = None
 			self.put_message('info', '%s removed from %s plugin, and SSL disabled.' % (self._cinfo['name'], self._pal[int(params[3])].text))
+			self._cinfo = None
 		elif params[0] == 'uc' and params[2] == 'w':
 			self._cc.unassign(self._cinfo['name'],
 				[('webapp', self._wal[int(params[3])])])
-			self._cinfo = None
 			self.put_message('info', '%s removed from %s webapp, and SSL disabled.' % (self._cinfo['name'], self._wal[int(params[3])]['name']))
+			self._cinfo = None
 		elif params[0] == 'uc' and params[2] == 'g':
 			self._cc.unassign(self._cinfo['name'], [[('genesis')]])
-			self._cinfo = None
 			self.put_message('info', 'Certificate removed and SSL disabled for Genesis. Restart Genesis for changes to take effect')
+			self._cinfo = None
 
 	@event('dialog/submit')
 	def on_submit(self, event, params, vars = None):
