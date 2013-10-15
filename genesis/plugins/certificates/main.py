@@ -152,14 +152,14 @@ class CertificatesPlugin(CategoryPlugin):
 	def on_click(self, event, params, vars = None):
 		if params[0] == 'add':
 			pass
-		if params[0] == 'info':
+		elif params[0] == 'info':
 			self._cinfo = self.certs[int(params[1])]
-		if params[0] == 'gen':
+		elif params[0] == 'gen':
 			self._gen = True
-		if params[0] == 'del':
+		elif params[0] == 'del':
 			self._cc.remove(self.certs[int(params[1])]['name'])
 			self.put_message('info', 'Certificate successfully deleted')
-		if params[0] == 'ac' and params[2] == 'p':
+		elif params[0] == 'ac' and params[2] == 'p':
 			self._cc.assign(self._cinfo['name'], 
 				[('plugin', self._pal[int(params[3])])])
 			self.put_message('info', '%s added to %s plugin' % (self._cinfo['name'], self._pal[int(params[3])].text))
@@ -173,7 +173,7 @@ class CertificatesPlugin(CategoryPlugin):
 			self._cc.assign(self._cinfo['name'], [[('genesis')]])
 			self.put_message('info', '%s serving as Genesis certificate. Restart Genesis for changes to take effect' % self._cinfo['name'])
 			self._cinfo = None
-		if params[0] == 'uc' and params[2] == 'p':
+		elif params[0] == 'uc' and params[2] == 'p':
 			self._cc.unassign(self._cinfo['name'], 
 				[('plugin', self._pal[int(params[3])])])
 			self.put_message('info', '%s removed from %s plugin, and SSL disabled.' % (self._cinfo['name'], self._pal[int(params[3])].text))
@@ -193,7 +193,7 @@ class CertificatesPlugin(CategoryPlugin):
 		if params[0] == 'dlgAdd':
 			if vars.getvalue('action', '') == 'OK':
 				pass
-		if params[0] == 'dlgGen':
+		elif params[0] == 'dlgGen':
 			if vars.getvalue('certname', '') == '':
 				self.put_message('err', 'Certificate name is mandatory')
 			elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
@@ -219,7 +219,7 @@ class CertificatesPlugin(CategoryPlugin):
 			self._wal = []
 			self._pal = []
 			self._gen = False
-		if params[0] == 'dlgInfo':
+		elif params[0] == 'dlgInfo':
 			self._cinfo = None
 			self._wal = []
 			self._pal = []
