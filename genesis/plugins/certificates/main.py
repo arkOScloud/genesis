@@ -194,7 +194,9 @@ class CertificatesPlugin(CategoryPlugin):
 			if vars.getvalue('action', '') == 'OK':
 				pass
 		elif params[0] == 'dlgGen':
-			if vars.getvalue('certname', '') == '':
+			if vars.getvalue('action', '') == 'Cancel':
+				pass
+			elif vars.getvalue('certname', '') == '':
 				self.put_message('err', 'Certificate name is mandatory')
 			elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
 				self.put_message('err', 'You already have a certificate with that name.')
