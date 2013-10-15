@@ -175,11 +175,17 @@
                        <formbox id="frmSpecial">
                             <formline text="Run">
                                         <radio value='reboot' text='On reboot' id='rreboot' name='special' />
+                                        <div style="clear:both;"/>
                                         <radio value='hourly' text='Hourly' id='rhourly' name='special' />
+                                        <div style="clear:both;"/>
                                         <radio value='daily' text='Daily' id='rdaily' name='special' />
+                                        <div style="clear:both;"/>
                                         <radio value='weekly' text='Weekly' id='rweekly' name='special' />
+                                        <div style="clear:both;"/>
                                         <radio value='monthly' text='Monthly' id='rmonthly' name='special' />
+                                        <div style="clear:both;"/>
                                         <radio value='yearly' text='Yearly' id='ryearly' name='special' />
+                                        <div style="clear:both;"/>
                             </formline>
                             <formline text="Command">
                                 <textinput id="s_command" name="s_command" />
