@@ -194,30 +194,29 @@ class CertificatesPlugin(CategoryPlugin):
 			if vars.getvalue('action', '') == 'OK':
 				pass
 		elif params[0] == 'dlgGen':
-			if vars.getvalue('action', '') == 'Cancel':
-				pass
-			elif vars.getvalue('certname', '') == '':
-				self.put_message('err', 'Certificate name is mandatory')
-			elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
-				self.put_message('err', 'You already have a certificate with that name.')
-			elif vars.getvalue('action', '') == 'OK':
-				lst = []
-				if vars.getvalue('genesis', '') == '1':
-					lst.append([('genesis')])
-				for i in range(0, len(self._wal)):
-					try:
-						if vars.getvalue('wassign[]')[i] == '1':
-							lst.append(('webapp', self._wal[i]))
-					except TypeError:
-						pass
-				for i in range(0, len(self._pal)):
-					try:
-						if vars.getvalue('passign[]')[i] == '1':
-							lst.append(('plugin', self._pal[i]))
-					except TypeError:
-						pass
-				cgw = CertGenWorker(self, vars.getvalue('certname'), vars, lst)
-				cgw.start()
+			if vars.getvalue('action', '') == 'OK':
+				if vars.getvalue('certname', '') == '':
+					self.put_message('err', 'Certificate name is mandatory')
+				elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
+					self.put_message('err', 'You already have a certificate with that name.')
+				else:
+					lst = []
+					if vars.getvalue('genesis', '') == '1':
+						lst.append([('genesis')])
+					for i in range(0, len(self._wal)):
+						try:
+							if vars.getvalue('wassign[]')[i] == '1':
+								lst.append(('webapp', self._wal[i]))
+						except TypeError:
+							pass
+					for i in range(0, len(self._pal)):
+						try:
+							if vars.getvalue('passign[]')[i] == '1':
+								lst.append(('plugin', self._pal[i]))
+						except TypeError:
+							pass
+					cgw = CertGenWorker(self, vars.getvalue('certname'), vars, lst)
+					cgw.start()
 			self._wal = []
 			self._pal = []
 			self._gen = False
