@@ -56,7 +56,9 @@
         </formline>
         <formline text="Action">
             <radio value="grant" text="Grant all permissions" id="cgrant" name="chperm" checked="True"/>
+            <div style="clear:both;"/>
             <radio value="revoke" text="Revoke all permissions" id="crevoke" name="chperm" />
+            <div style="clear:both;"/>
         </formline>
         <formline text="On database">
             <select name="dblist" id="dblist">
