@@ -77,6 +77,9 @@ class WebappControl(Plugin):
 		php = vars.getvalue('php', '')
 		addtoblock = vars.getvalue('addtoblock', '')
 
+		if webapp.name == 'Website' and php == '1':
+			addtoblock = webapp.phpblock + '\n' + addtoblock
+
 		# Setup the webapp and create an nginx serverblock
 		try:
 			self.nginx_add(
@@ -96,9 +99,6 @@ class WebappControl(Plugin):
 			specialmsg = webapp.post_install(name, target_path, vars)
 		except Exception, e:
 			raise InstallError('Webapp config - '+str(e))
-
-		if webapp.name == 'Website' and php == '1':
-			addtoblock = webapp.phpblock + '\n' + addtoblock
 
 		if enable is True:
 			try:
@@ -305,11 +305,13 @@ class Website(Plugin):
 	addtoblock = ''
 
 	phpblock = (
-		'	location ~ \.php$ {\n'
-		'		fastcgi_pass unix:/run/php-fpm/php-fpm.sock;\n'
-		'		fastcgi_index index.php;\n'
-		'		include fastcgi.conf;\n'
-		'	}\n'
+		'location ~ ^(.+?\.php)(/.*)?$ {\n'
+		'    include fastcgi_params;\n'
+		'    fastcgi_param SCRIPT_FILENAME $document_root$1;\n'
+		'    fastcgi_param PATH_INFO $2;\n'
+		'    fastcgi_pass unix:/run/php-fpm/php-fpm.sock;\n'
+		'    fastcgi_read_timeout 900s;\n'
+		'}\n'
 		)
 
 	def pre_install(self, name, vars):
