@@ -44,6 +44,7 @@ class Dashboard(CategoryPlugin):
 
     def get_ui(self):
         ui = self.app.inflate('sysmon:main')
+        self._mgr = apis.dashboard.WidgetManager(self.app)
         self._mgr.refresh()
 
         self.fill('l', self._mgr.list_left(), ui, 'cleft')
