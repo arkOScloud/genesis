@@ -31,5 +31,6 @@ With a big thanks to those who have made contributions!
 * Jasper van Loenen @javl
 * Timothy Farrell @explorigin
 * Will Wilson @wwilson
+* @mamoit
 
 This project was forked from Ajenti, an excellent server management framework by @Eugeny located here: https://github.com/Eugeny/ajenti.

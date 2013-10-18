@@ -134,6 +134,21 @@ class FirstRun(CategoryPlugin, URLHandler):
         if params[0] == 'frmPlugins':
             lst = self._mgr.available
 
+            toinst = []
+
+            for k in lst:
+                if vars.getvalue('install-'+k.id, '0') == '1':
+                    toinst.append(k.id)
+
+            t = self._mgr.list_available()
+            for y in toinst:
+                for i in eval(t[y].deps):
+                    for dep in i[1]:
+                        if dep[0] == 'plugin' and dep[1] not in toinst:
+                            self.put_message('err', ('%s can\'t be installed, as it depends on %s. Please '
+                                'install that also.' % (t[y].name, t[dep[1]].name)))
+                            return
+
             for k in lst:
                 if vars.getvalue('install-'+k.id, '0') == '1':
                     try:
@@ -160,6 +175,7 @@ class FirstRun(CategoryPlugin, URLHandler):
             for thing in filedata:
                 sudofile.write(thing)
             sudofile.close()
+            shell('groupadd sudo')
             shell('usermod -a -G sudo ' + self._username)
 
             # add user to Genesis config
