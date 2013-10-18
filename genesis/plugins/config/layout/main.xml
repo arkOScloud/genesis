@@ -16,14 +16,8 @@
             <formline text="Authorization" help="See 'Users' for authorized accounts">
                 <checkbox id="httpauth" name="httpauth" text="Enable" />
             </formline>
-            <formline text="SSL" help="Changing SSL settings requires Genesis restart">
-                <checkbox name="ssl" id="ssl" text="Enable" />
-            </formline>
-            <formline text="SSL certificate">
-                <textinput name="cert_file" id="cert_file" design="xlarge" />
-            </formline>
-            <formline text="SSL key">
-                <textinput name="cert_key" id="cert_key" design="xlarge" />
+            <formline text="SSL" help="You can enable/disable SSL by assigning certificates in the Certificates plugin.">
+                <label id="ssl" text="" />
             </formline>
             <formline text="Visual effects" help="Smooth transitions and others">
                 <checkbox id="nofx" name="nofx" text="Disable" />
