@@ -67,7 +67,10 @@ class SSHConfig(Plugin):
             else:
                 f += line + '\n'
         ConfManager.get().save('ssh', '/etc/ssh/sshd_config', f)
-        ConfManager.get().commit('ssh') 
+        ConfManager.get().commit('ssh')
+        mgr = self.app.get_backend(apis.services.IServiceManager)
+        if mgr.get_status('sshd') == 'running':
+            mgr.restart('sshd')
 
 
 class PKey:
@@ -130,4 +133,4 @@ class PKeysConfig(Plugin):
         for k in data:
             d += '%s %s %s\n' % (k.type, k.key, k.name)
         ConfManager.get().save('ssh_pkeys', ('/root' if self.currentuser == 'root' else '/home/' + self.currentuser) + '/.ssh/authorized_keys', d)
-        ConfManager.get().commit('ssh_pkeys')  
+        ConfManager.get().commit('ssh_pkeys')
