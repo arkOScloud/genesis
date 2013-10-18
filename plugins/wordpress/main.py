@@ -97,9 +97,7 @@ class WordPress(Plugin):
 				'define(\'WP_CACHE\', true);\n'
 				'define(\'FORCE_SSL_ADMIN\', false);\n'
 				'\n'
-				'/*\n'
 				+keysection+
-				'*/\n'
 				'\n'
 				'$table_prefix = \'wp_\';\n'
 				'\n'
