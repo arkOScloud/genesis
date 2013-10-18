@@ -229,9 +229,12 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
             self.app.session['statusmsg'] = []
         self.app.session['statusmsg'].append((self.text, False))
 
-    def redirapp(self, service, port):
-        if self.app.get_backend(apis.services.IServiceManager).get_status('transmission') == 'running':
-            return UI.JS(code='window.location.replace("/embapp/'+str(port)+'")')
+    def redirapp(self, service, port, ssl=False):
+        if self.app.get_backend(apis.services.IServiceManager).get_status(service) == 'running':
+            if ssl:
+                return UI.JS(code='window.location.replace("/embapp/'+str(port)+'/ssl")')
+            else:
+                return UI.JS(code='window.location.replace("/embapp/'+str(port)+'")')
         else:
             return UI.DialogBox(UI.Label(text='The service %s is not '
                 'running. Please start the service with the Status button '

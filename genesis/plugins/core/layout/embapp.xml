@@ -56,13 +56,6 @@
             </div>
         </div>
         <div id="ea-frame-container">
-            <iframe id="ea-frame" src="" />
         </div>
-    <script>
-        var port = $('#ea-port').text();
-        var frameurl = window.location.origin.replace(/:\d+/g, '');
-        $('#ea-link').attr('href', window.location.origin);
-        $('#ea-frame').attr('src', frameurl + port);
-    </script>
     </body>
 </html>
