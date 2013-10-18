@@ -12,7 +12,7 @@
         </formline>
         <formline text="Expand arkOS to fit SD card?">
             <checkbox name='resize' checked='False' />
-            <label size="1" text="If you installed arkOS via the Installer, and you have an SD card larger than 2GB, select this option. It will expand arkOS to give you all of the free space on this SD card. Requires a restart to take effect." />
+            <label size="1" text="If you installed arkOS via the Installer, and you have an SD card larger than 2GB, select this option. It will expand arkOS to give you all of the free space on this SD card. Requires a system restart to take effect." />
         </formline>
         <formline text="Optimize graphical memory?">
             <checkbox name='gpumem' checked='True' />

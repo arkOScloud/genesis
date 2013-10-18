@@ -97,7 +97,7 @@ class CertificatesPlugin(CategoryPlugin):
 								text='Unassign', id='uc/'+self._cinfo['name']+'/g',
 								warning=('Are you sure you wish to unassign this certificate? '
 									'SSL on this service will be disabled, and you will need to '
-									'restart Genesis for changes to take place.')) if show == 'd' else None),
+									'reload Genesis for changes to take place.')) if show == 'd' else None),
 						),
 					)
 				)

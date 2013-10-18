@@ -25,9 +25,9 @@
                 <div class="popover bottom">
                   <div id="power-pop-content" class="popover-inner">
                     <ul>
-                        <li><a class="danger top-link" onclick="Genesis.showWarning('Reload Genesis', 'gen_reload');"><i class="gen-arkos-round"></i> Reload</a></li>
-                        <li><a class="danger" onclick="Genesis.showWarning('Shutdown arkOS', 'gen_shutdown');"><i class="gen-switch"></i> Shutdown</a></li>
-                        <li><a class="danger bottom-link" onclick="Genesis.showWarning('Reboot arkOS', 'gen_reboot');"><i class="gen-loop-2"></i> Reboot</a></li>
+                        <li><a class="danger top-link" onclick="Genesis.showWarning('Are you sure you want to reload the Genesis process?', 'gen_reload');"><i class="gen-arkos-round"></i> Reload Genesis</a></li>
+                        <li><a class="danger" onclick="Genesis.showWarning('Are you sure you want to shutdown your system?', 'gen_shutdown');"><i class="gen-switch"></i> Shutdown System</a></li>
+                        <li><a class="danger bottom-link" onclick="Genesis.showWarning('Are you sure you want to restart your system?', 'gen_reboot');"><i class="gen-loop-2"></i> Restart System</a></li>
                     </ul>
                   </div>
                 </div>
