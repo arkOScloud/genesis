@@ -37,9 +37,9 @@ class Jekyll(Plugin):
 
 		# Install the Jekyll and rdiscount gems required.
 		if not any('jekyll' in s for s in shell('gem list').split('\n')):
-			shell('gem install jekyll')
+			shell('gem install --user-install jekyll')
 		if not any('rdiscount' in s for s in shell('gem list').split('\n')):
-			shell('gem install rdiscount')
+			shell('gem install --user-install rdiscount')
 
 	def post_install(self, name, path, vars):
 		# Make sure the webapps config points to the _site directory and generate it.
