@@ -1,7 +1,7 @@
 <xml>
 
 <div class="ui-dashboard-banner">
-    <div style="float:right">
+    <div id="ui-dashboard-buttons" style="float:right">
         <button id="btnAddWidget" text="Add widget" iconfont="gen-plus-circle" />
         <button text="Refresh" iconfont="gen-loop-2" />
     </div>

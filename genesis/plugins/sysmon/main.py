@@ -16,6 +16,7 @@ class Dashboard(CategoryPlugin):
     def on_session_start(self):
         apis.networkcontrol(self.app).session_start()
         self._adding_widget = None
+        self._failed = []
 
         # start widget manager and show SSL warning if applicable
         self._mgr = apis.dashboard.WidgetManager(self.app)
@@ -39,16 +40,21 @@ class Dashboard(CategoryPlugin):
                     )
                 )
             except Exception, e:
-                self.put_message('err', 'One or more widgets failed to load. Check the logs for info')
+                self.put_message('err', 'One or more widgets failed to load. Check the logs for info, or click Clean Up to remove the offending widget(s).')
+                self._failed.append(x)
                 self.app.log.error('System Monitor Widget failed to load '+w.title+': '+str(e))
 
     def get_ui(self):
         ui = self.app.inflate('sysmon:main')
         self._mgr = apis.dashboard.WidgetManager(self.app)
         self._mgr.refresh()
+        self._failed = []
 
         self.fill('l', self._mgr.list_left(), ui, 'cleft')
         self.fill('r', self._mgr.list_right(), ui, 'cright')
+
+        if self._failed != []:
+            ui.find('ui-dashboard-buttons').append(UI.Button(id='btnCleanUp', text='Clean Up', iconfont='gen-remove'))
 
         ui.insertText('host', platform.node())
         ui.insertText('distro', detect_distro())
@@ -102,13 +108,16 @@ class Dashboard(CategoryPlugin):
     def on_event(self, event, params, vars):
         if params[0] == 'btnAddWidget':
             self._adding_widget = True
-        try:
-            wid = int(params[0])
-            params = params[1:]
-            self._mgr.get_widget_object(wid).\
-                handle(event, params, self._mgr.get_widget_config(wid), vars)
-        except:
-            pass
+            try:
+                wid = int(params[0])
+                params = params[1:]
+                self._mgr.get_widget_object(wid).\
+                    handle(event, params, self._mgr.get_widget_config(wid), vars)
+            except:
+                pass
+        elif params[0] == 'btnCleanUp':
+            for x in self._failed:
+                self._mgr.remove_widget(x)
 
     @event('dialog/submit')
     def on_dialog(self, event, params, vars):
