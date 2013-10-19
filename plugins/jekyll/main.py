@@ -27,8 +27,9 @@ class Jekyll(Plugin):
 		for l in f.readlines():
 			if l.startswith('PATH="') and not 'ruby/2.0.0/bin' in l:
 				l = l.rstrip('"\n')
-				l += ':/root/.gem/ruby/2.0.0/bin"'
+				l += ':/root/.gem/ruby/2.0.0/bin"\n'
 				profile.append(l)
+				os.environ['PATH'] = os.environ['PATH'] + ':/root/.gem/ruby/2.0.0/bin'
 			else:
 				profile.append(l)
 		f.close()
