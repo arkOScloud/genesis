@@ -145,7 +145,7 @@ class PackageManagerPlugin(CategoryPlugin):
                         UI.Label(text=self._search[p].version),
                         UI.Label(text=self._search[p].description),
                             UI.HContainer(
-                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p),
+                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p) if self._search[p].state == 'installed' else None,
                                 UI.TipIcon(iconfont='gen-checkmark', text='Install', id='install/'+p) if self._search[p].state == 'removed' else
                                 UI.TipIcon(iconfont='gen-minus', text='Remove', id='remove/'+p),
                                 spacing=0
