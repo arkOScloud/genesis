@@ -70,7 +70,7 @@ class SSHConfig(Plugin):
         ConfManager.get().commit('ssh')
         mgr = self.app.get_backend(apis.services.IServiceManager)
         if mgr.get_status('sshd') == 'running':
-            mgr.restart('sshd')
+            mgr.real_restart('sshd')
 
 
 class PKey:
