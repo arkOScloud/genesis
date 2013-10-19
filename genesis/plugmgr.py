@@ -351,6 +351,8 @@ class PluginLoader:
                     if i is not None:
                         i.unload()
                 PluginManager.class_unregister(cls)
+        if plugin in PluginLoader.__plugins:
+            del PluginLoader.__plugins[plugin]
         if plugin in PluginLoader.__submods:
             del PluginLoader.__submods[plugin]
         if plugin in PluginLoader.__classes:
