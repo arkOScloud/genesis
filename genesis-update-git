@@ -24,7 +24,7 @@ for pac in ${NEEDEDPKGS[@]}; do
 done
 echo "Dependencies checked."
 
-if [ ! -d genesis-git ]; then
+if [ ! -d $GITFOLDER ]; then
   echo "Git has not yet been cloned, cloning."
   if git clone https://github.com/cznweb/genesis.git $GITFOLDER; then
     cd $GITFOLDER
