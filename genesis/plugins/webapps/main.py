@@ -139,7 +139,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						type_sel.append(UI.SelectOption(text=x[0], value=x[0]))
 					cfgui.appendAll('ws-dbsel', *type_sel)
 				else:
-					cfgui = self.app.inflate(self._setup.name.lower() + ':conf')
+					cfgui = self.app.inflate(self._setup.__class__.__name__.lower() + ':conf')
 				ui.append('app-config', cfgui)
 			except:
 				raise
