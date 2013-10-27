@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Update script for Genesis.
+# Installs latest Github version (up to the last commit)
+#
+
+GITFOLDER="/root/genesis-git"
+declare -a NEEDEDPKGS=("setuptools" "git")
+
+if pacman -Qsq genesis ; then
+  echo "Genesis is installed from the repo... Removing it it."
+  pacman -R genesis --noconfirm
+  systemctl daemon-reload
+  echo "Copying old genesis.conf back to it's place."
+  cp /etc/genesis/genesis.conf.pacsave /etc/genesis/genesis.conf
+fi
+
+echo "Checking if needed packages are installed."
+for pac in ${NEEDEDPKGS[@]}; do
+  if ! pacman -Qsq $pac; then
+    echo "$pac is missing, installing."
+    pacman -S $pac --noconfirm
+  fi
+done
+echo "Dependencies checked."
+
+if [ ! -d $GITFOLDER ]; then
+  echo "Git has not yet been cloned, cloning."
+  if git clone https://github.com/cznweb/genesis.git $GITFOLDER; then
+    cd $GITFOLDER
+  else
+    echo "Git clone failed, check your internet connection.";
+    exit
+  fi
+else
+  cd $GITFOLDER
+  echo "Pulling latest Genesis version from Github..."
+  if git pull ; then
+    echo "Git pull successful.";
+  else
+    echo "Git pull failed, check your internet connection.";
+    exit;
+  fi
+fi
+
+echo "Stopping old Genesis..."
+if systemctl stop genesis ; then
+  echo "Genesis stopped.";
+else
+  echo "Genesis was not running.";
+  echo "It doesn't matter, moving on...";
+fi
+
+echo "Running setup..."
+if python2 setup.py install ; then
+  echo "Update successfully installed!";
+  systemctl daemon-reload
+else
+  echo "Installation script failed!";
+  exit;
+fi
+
+echo "Starting new genesis..."
+if systemctl start genesis ; then
+  echo "Updated Genesis started successfully.";
+else
+  echo "Update didn't start correctly.";
+fi
+
