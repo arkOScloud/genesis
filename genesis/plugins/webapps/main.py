@@ -108,7 +108,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
 		info = self._current.get_info()
 		if info['logo'] is True:
-			ui.find('logo').set('file', '/dl/'+info['name'].lower()+'/logo.png')
+			ui.find('logo').set('file', '/dl/'+self._current.__class__.__name__.lower()+'/logo.png')
 		ui.find('appname').set('text', info['name'])
 		ui.find('short').set('text', info['short'])
 		if info['site'] is None:
