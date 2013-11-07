@@ -17,13 +17,12 @@
       <p id="auth-error"><strong>Error: </strong>Login failed. Check username and password.</p>
       <div class="login-icon">
           <img src="/dl/core/ui/auth-logo.png" />
-          <h4>Welcome to<small>Genesis</small></h4>
       </div>
       <div class="login">
         <form id="form" method="POST">
             <p><input type="text" id="username" name="username" class="login-field" placeholder="Enter your username" /><i class="login-field-icon login-field-uicon gen-user"></i></p>
             <p><input type="password" id="password" name="password" class="login-field" placeholder="Enter your password" /><i class="login-field-icon login-field-picon gen-lock"></i></p>
-            <a class="btn btn-block login-button" id="login" onclick="$('#form').submit();">Login</a>
+            <a class="btn btn-block login-button" id="login" onclick="$('#form').submit();">Login to Genesis</a>
         </form>
       </div>
     </div>
@@ -39,7 +38,9 @@ $('#password').bind('keyup', function(event) {
 $('#form').submit(function (e) {
     e.preventDefault();
     $('#login').addClass('disabled');
+    $('#login').text('Authenticating...');
     $('#auth-error').css('display', 'none');
+    $('.auth-page').css('background-color', '#3498DB');
     Genesis.UI.wipeOut(true); 
     $.ajax({
         url: '/auth',
@@ -56,12 +57,12 @@ $('#form').submit(function (e) {
         error: function() {
             Genesis.UI.wipeOut();
             $('#login').removeClass('disabled');
+            $('#login').text('Login to Genesis');
+            $('.auth-page').css('background-color', '#E74C3C');
             $('#auth-error').css('display', 'block');
         }
     });
 });
 </script>
-
 </body>
-
 </html>
