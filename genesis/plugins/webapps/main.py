@@ -242,6 +242,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					self.put_message('err', 'A site with this name already exists')
 				elif port == self.app.gconfig.get('genesis', 'bind_port', ''):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
+				elif ' ' in name or '-' in name:
+					self.put_message('err', 'Site name must not contain spaces or dashes')
 				else:
 					w = WAWorker(self, 'add', name, self._current, vars)
 					w.start()

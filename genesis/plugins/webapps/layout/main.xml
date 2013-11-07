@@ -47,7 +47,7 @@
             <tabheader id="1" text="App Settings" />
 
             <tabbody id="0">
-                <formline text="Site Name" help="An internal name to help you identify this site within Genesis.">
+                <formline text="Site Name" help="An internal name to help you identify this site within Genesis. Must not contain spaces or dashes.">
                     <textinput name="name" id="name" />
                 </formline>
                 <formline text="Address" help="This should be the web address you want this app to be visible on. For example, 'www.example.com'. This hostname should already be assigned to this system via Network Settings > Hosts.">
