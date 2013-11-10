@@ -1,6 +1,6 @@
-# arkOS Genesis
+# Genesis
 
-Genesis is the server manager and interactive utility for systems running the arkOS distribution. This project is currently in development. For more information about arkOS, visit [our website](https://arkos.io).
+Genesis is the interactive server management application for systems running the arkOS distribution. This project is currently in development. For more information about arkOS, visit [our website](https://arkos.io).
 
 
 ## Getting Started
@@ -8,7 +8,7 @@ For end-users: Genesis is already downloaded and installed on your arkOS node, r
 
 For more information see the [Getting Started](http://arkos.io/doc/getting-started/) page.
 
-Running Genesis from this Github repo is advised ONLY for development purposes. If you do this you will need the following Python modules: `pyOpenSSL`, `gevent`, `lxml`, `ntplib`, `python-iptables`, and `pyparsing`.
+Running Genesis from this Github repo is advised ONLY for development purposes. If you do this you will need the following Python modules: `pyOpenSSL`, `gevent`, `lxml`, `ntplib`, `python-iptables`, and `pyparsing`. Once you've cloned this repo, just run `genesis-repo` with root privileges to run a server live in stdout. `genesis-repo -d` and `genesis-repo -s` manually starts and stops the daemon respectively.
 
 
 ## Writing Plugins
