@@ -54,7 +54,7 @@
             <editable id="elogin" />
         </formline>
         <formline text="Password">
-            <editable id="epassword" value="Click to change" />
+            <editpassword id="epassword" value="Click to change password" />
         </formline>
         <formline text="UID">
             <editable id="euid" />

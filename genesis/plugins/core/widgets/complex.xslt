@@ -56,8 +56,6 @@
 </xsl:template>
 
 
-
-
 <xsl:template match="editable">
     <a href="#" onclick="return Genesis.UI.editableActivate('{x:idesc(@id)}')" class="ui-el-editable-inactive" id="{x:idesc(@id)}-normal">
         <xsl:value-of select="@value" />
@@ -69,6 +67,30 @@
             <img href="#" src="/dl/core/ui/stock/dialog-ok.png" onclick="return Genesis.submit('{x:idesc(@id)}', 'OK')" />
         </hlabel>
     </div>
+</xsl:template>
+
+
+<xsl:template match="editpassword">
+    <a href="#" onclick="return Genesis.UI.editableActivate(['{x:idesc(@id)}','{x:idesc(@id)}-b'])" class="ui-el-editable-inactive" id="{x:idesc(@id)}-normal">
+        <xsl:value-of select="@value" />
+    </a>
+    <div id="{x:idesc(@id)}" class="ui-el-editable input-append" style="display:none">
+        <input id="{x:idesc(@id)}-active-url" type="hidden" name="url" value="/handle/form/submit/{@id}"/>
+        <input type="password" name="value" value="{@value}" id="{x:idesc(@id)}-input" onblur="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input','password-error-message'), event" />
+        <div>
+            <input type="password" name="valueb" value="{@value}" id="{x:idesc(@id)}-b-input" onkeypress="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input', 'password-error-message', event)" /> 
+        <hlabel class="add-on active">
+	    <img href="#" src="/dl/core/ui/stock/dialog-ok.png" onclick="return Genesis.submit('{x:idesc(@id)}', 'OK')" /> 
+        </hlabel>
+        </div>
+    </div>
+    <!--<div id="{x:idesc(@id)}-b" class="ui-el-editable input-append" style="display: none">
+        <input type="password" name="valueb" value="{@value}" id="{x:idesc(@id)}-b-input" onkeypress="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input', 'password-error-message', event)" /> 
+        <hlabel class="add-on active">
+	    <img href="#" src="/dl/core/ui/stock/dialog-ok.png" onclick="return Genesis.submit('{x:idesc(@id)}', 'OK')" /> 
+        </hlabel>
+    </div>-->
+    <p class="text-error" id="password-error-message" style="display:none">Passwords do not match</p>
 </xsl:template>
 
 
