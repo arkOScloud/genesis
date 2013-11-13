@@ -3,6 +3,8 @@ var Genesis;
 var warning_button_id;
 
 Genesis = (function() {
+    var firstPasswordEntry = true;
+
     return {
 	query: function (_uri, _data, _noupdate) {
 	    $.ajax({
@@ -18,11 +20,22 @@ Genesis = (function() {
 	},
 
         verifyPassword: function(password1, password2, message, event){
+	    
+            if(event.target.id == password1 && firstPasswordEntry){
+                return true;
+            }
+            firstPasswordEntry = false;
             var pass1 = document.getElementById(password1),
                 pass2 = document.getElementById(password2),
                 error = document.getElementById(message);
             var keycode = (event != undefined && typeof event.keyCode !== "undefined") ? String.fromCharCode(event.keyCode) : '';
-            var match = pass1.value == pass2.value + keycode; 
+            
+            var match;
+            if(event.target.id == password1){
+                match = pass1.value + keycode == pass2.value;
+            } else {
+                match = pass1.value == pass2.value + keycode;
+            }
                 
             error.style.display = (match) ? 'none' : 'block';
             return match;
@@ -216,6 +229,7 @@ Genesis = (function() {
 		    .show()
 		    .fadeTo(500, 1)
 		    .center();
+                firstPasswordEntry = true;
 	    },
 
 	    hideModal: function (id, remove) {
@@ -227,10 +241,13 @@ Genesis = (function() {
 		    if (remove) $(this).remove(); else $(this).hide();
 		});
 	    },
+		
+	    popoverEvent: null,
 
 	    prepPopover: function (event, id) {
 		$('#'+id).toggleClass('selected');
-		$(document.body).on('click.popover.close', Genesis.UI.closePopovers); 
+		if(Genesis.UI.popoverEvent != null) { document.removeEventListener(Genesis.UI.popoverEvent);}
+		Genesis.UI.popoverEvent = document.attachEventListener('click',Genesis.UI.closePopovers);
 		Genesis.UI.closeOtherPopovers(id);
 		event.stopPropagation();
 	    },
@@ -239,7 +256,7 @@ Genesis = (function() {
 		$('.pop-trigger').popover('hide');
 		$('.pop-trigger').removeClass('selected');
 		$('.popover').css('display', 'none');
-                $(document.body).off('click.popover.close');
+                $(document).off('click.popover.close');
 	    },
 
 	    closeOtherPopovers: function (id) {

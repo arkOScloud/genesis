@@ -76,7 +76,7 @@
     </a>
     <div id="{x:idesc(@id)}" class="ui-el-editable input-append" style="display:none">
         <input id="{x:idesc(@id)}-active-url" type="hidden" name="url" value="/handle/form/submit/{@id}"/>
-        <input type="password" name="value" value="{@value}" id="{x:idesc(@id)}-input" onblur="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input','password-error-message'), event" />
+        <input type="password" name="value" value="{@value}" id="{x:idesc(@id)}-input" onkeypress="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input','password-error-message', event)" />
         <div>
             <input type="password" name="valueb" value="{@value}" id="{x:idesc(@id)}-b-input" onkeypress="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input', 'password-error-message', event)" /> 
         <hlabel class="add-on active">
