@@ -112,7 +112,7 @@ class WordPress(Plugin):
 
 		# Make sure that the correct PHP settings are enabled
 		shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
-		shell('sed -i s/\;extension=apc.so/extension=apc.so/g /etc/php/conf.d/apc.ini')
+		shell('sed -i s/\;extension=xcache.so/extension=xcache.so/g /etc/php/conf.d/xcache.ini')
 
 		# Finally, make sure that permissions are set so that Wordpress
 		# can make adjustments and save plugins when need be.

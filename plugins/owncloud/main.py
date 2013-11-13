@@ -14,7 +14,7 @@ import shutil
 class ownCloud(Plugin):
 	implements(apis.webapps.IWebapp)
 	name = 'ownCloud'
-	dpath = 'http://download.owncloud.org/community/owncloud-5.0.11.tar.bz2'
+	dpath = 'http://download.owncloud.org/community/owncloud-5.0.13.tar.bz2'
 	icon = 'gen-cloud'
 	dbengine = 'MariaDB'
 	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
@@ -122,7 +122,7 @@ class ownCloud(Plugin):
 		shell('sed -i s/\;extension=gd.so/extension=gd.so/g /etc/php/php.ini')
 		shell('sed -i s/\;extension=iconv.so/extension=iconv.so/g /etc/php/php.ini')
 		shell('sed -i s/\;extension=openssl.so/extension=openssl.so/g /etc/php/php.ini')
-		shell('sed -i s/\;extension=apc.so/extension=apc.so/g /etc/php/conf.d/apc.ini')
+		shell('sed -i s/\;extension=xcache.so/extension=xcache.so/g /etc/php/conf.d/xcache.ini')
 
 		# Return an explicatory message
 		return 'ownCloud takes a long time to set up on the RPi. Once you open the page for the first time, it may take 5-10 minutes for the content to appear. Please do not refresh the page.'

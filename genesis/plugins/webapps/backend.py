@@ -336,6 +336,7 @@ class Website(Plugin):
 			dbase.add(dbname)
 			dbase.usermod(dbname, 'add', passwd)
 			dbase.chperm(dbname, dbname, 'grant')
+			shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
 
 		# Write a basic index file showing that we are here
 		if vars.getvalue('php', '0') == '1':
@@ -356,6 +357,10 @@ class Website(Plugin):
 
 		# Give access to httpd
 		shell('chown -R http:http '+path)
+
+		# Enable xcache if PHP is set
+		if php:
+			shell('sed -i s/\;extension=xcache.so/extension=xcache.so/g /etc/php/conf.d/xcache.ini')
 
 	def pre_remove(self, name, path):
 		pass
