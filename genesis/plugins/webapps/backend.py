@@ -327,6 +327,8 @@ class Website(Plugin):
 				raise Exception('Must choose a database password if you want to create one')
 			elif ' ' in vars.getvalue('ws-dbname') or '-' in vars.getvalue('ws-dbname'):
 				raise Exception('Database name must not contain spaces or dashes')
+			elif vars.getvalue('ws-dbname') > 16 and vars.getvalue('ws-dbsel') == 'MariaDB':
+				raise Exception('Database name must be shorter than 16 characters')
 
 	def post_install(self, name, path, vars):
 		# Create a database if the user wants one

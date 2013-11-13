@@ -15,6 +15,8 @@ class MariaDB(Plugin):
     def add(self, dbname):
         if ' ' in dbname or '-' in dbname:
             raise Exception('Database name must not contain spaces or dashes')
+        elif len(dbname) > 16:
+            raise Exception('Database name must be shorter than 16 characters')
         status = shell_cs(
             'mysql -e "CREATE DATABASE %s;"' % dbname, stderr=True
         )

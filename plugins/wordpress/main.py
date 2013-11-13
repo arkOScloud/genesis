@@ -53,6 +53,8 @@ class WordPress(Plugin):
 		dbname = vars.getvalue('wp-dbname', '')
 		if ' ' in dbname or '-' in dbname:
 			raise Exception('Database name must not contain spaces or dashes')
+		elif len(dbname) > 16:
+			raise Exception('Database name must be shorter than 16 characters')
 
 	def post_install(self, name, path, vars):
 		# Get the database object, and determine proper values
