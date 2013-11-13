@@ -13,6 +13,8 @@ class MariaDB(Plugin):
     multiuser = True
 
     def add(self, dbname):
+        if ' ' in dbname or '-' in dbname:
+            raise Exception('Database name must not contain spaces or dashes')
         status = shell_cs(
             'mysql -e "CREATE DATABASE %s;"' % dbname, stderr=True
         )

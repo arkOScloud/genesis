@@ -318,13 +318,15 @@ class Website(Plugin):
 		if vars.getvalue('ws-dbsel', 'None') == 'None':
 			if vars.getvalue('ws-dbname', '') != '':
 				raise Exception('Must choose a database type if you want to create one')
-			if vars.getvalue('ws-dbpass', '') != '':
+			elif vars.getvalue('ws-dbpass', '') != '':
 				raise Exception('Must choose a database type if you want to create one')
 		if vars.getvalue('ws-dbsel', 'None') != 'None':
 			if vars.getvalue('ws-dbname', '') == '':
 				raise Exception('Must choose a database name if you want to create one')
-			if vars.getvalue('ws-dbpass', '') == '':
+			elif vars.getvalue('ws-dbpass', '') == '':
 				raise Exception('Must choose a database password if you want to create one')
+			elif ' ' in vars.getvalue('ws-dbname') or '-' in vars.getvalue('ws-dbname'):
+				raise Exception('Database name must not contain spaces or dashes')
 
 	def post_install(self, name, path, vars):
 		# Create a database if the user wants one

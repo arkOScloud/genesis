@@ -50,7 +50,9 @@ class WordPress(Plugin):
 		)
 
 	def pre_install(self, name, vars):
-		pass
+		dbname = vars.getvalue('wp-dbname', '')
+		if ' ' in dbname or '-' in dbname:
+			raise Exception('Database name must not contain spaces or dashes')
 
 	def post_install(self, name, path, vars):
 		# Get the database object, and determine proper values

@@ -66,9 +66,12 @@ class ownCloud(Plugin):
         )
 
 	def pre_install(self, name, vars):
-		if vars.getvalue('oc-username', '') == '':
+		dbname = vars.getvalue('oc-dbname', '')
+		if ' ' in dbname or '-' in dbname:
+			raise Exception('Database name must not contain spaces or dashes')
+		elif vars.getvalue('oc-username', '') == '':
 			raise Exception('Must choose an ownCloud username')
-		if vars.getvalue('oc-logpasswd', '') == '':
+		elif vars.getvalue('oc-logpasswd', '') == '':
 			raise Exception('Must choose an ownCloud password')
 
 	def post_install(self, name, path, vars):
