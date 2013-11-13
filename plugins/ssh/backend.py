@@ -4,6 +4,7 @@ from genesis.com import *
 from genesis import apis
 
 import os
+import pwd
 import re
 
 
@@ -99,12 +100,15 @@ class PKeysConfig(Plugin):
             self.currentuser = self.app.auth.user
 
         for user in self.app.gconfig.options('users'):
+            uid = pwd.getpwnam(user).pw_uid
             if not os.path.exists('/home/' + user + '/.ssh'):
                 os.makedirs('/home/' + user + '/.ssh')
+                os.chown('/home/' + user + '/.ssh', uid, 100)
             if not os.path.exists('/home/' + user + '/.ssh/authorized_keys'):
                 f = open('/home/' + user + '/.ssh/authorized_keys', 'w')
                 f.write('')
                 f.close()
+                os.chown('/home/' + user + '/.ssh/authorized_keys', uid, 100)
 
         ss = ConfManager.get().load('ssh_pkeys', ('/root' if self.currentuser == 'root' else '/home/' + self.currentuser) + '/.ssh/authorized_keys').split('\n')
         r = []
