@@ -60,30 +60,36 @@ class CertControl(Plugin):
 			os.mkdir('/etc/ssl/private/genesis')
 
 		# If system time is way off, raise an error
-		st = SystemTime().get_offset()
-		if st < -3600 or st > 3600:
-			raise SystemTimeError(st)
+		try:
+			st = SystemTime().get_offset()
+			if st < -3600 or st > 3600:
+				raise SystemTimeError(st)
+		except:
+			raise SystemTimeError('UNKNOWN')
 
 		# Generate a key, then use it to sign a new cert
 		# We'll use 2048-bit RSA until pyOpenSSL supports ECC
-		key = OpenSSL.crypto.PKey()
-		key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
-		crt = OpenSSL.crypto.X509()
-		if vars.getvalue('certcountry', '') != '':
-			crt.get_subject().C = vars.getvalue('certcountry')
-		if vars.getvalue('certsp', '') != '':
-			crt.get_subject().ST = vars.getvalue('certsp')
-		if vars.getvalue('certlocale', '') != '':
-			crt.get_subject().L = vars.getvalue('certlocale')
-		if vars.getvalue('certcn', '') != '':
-			crt.get_subject().CN = vars.getvalue('certcn')
-		if vars.getvalue('certemail', '') != '':
-			crt.get_subject().emailAddress = vars.getvalue('certemail')
-		crt.set_serial_number(int(SystemTime().get_serial_time()))
-		crt.gmtime_adj_notBefore(0)
-		crt.gmtime_adj_notAfter(2*365*24*60*60)
-		crt.set_pubkey(key)
-		crt.sign(key, 'sha1')
+		try:
+			key = OpenSSL.crypto.PKey()
+			key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
+			crt = OpenSSL.crypto.X509()
+			if vars.getvalue('certcountry', '') != '':
+				crt.get_subject().C = vars.getvalue('certcountry')
+			if vars.getvalue('certsp', '') != '':
+				crt.get_subject().ST = vars.getvalue('certsp')
+			if vars.getvalue('certlocale', '') != '':
+				crt.get_subject().L = vars.getvalue('certlocale')
+			if vars.getvalue('certcn', '') != '':
+				crt.get_subject().CN = vars.getvalue('certcn')
+			if vars.getvalue('certemail', '') != '':
+				crt.get_subject().emailAddress = vars.getvalue('certemail')
+			crt.set_serial_number(int(SystemTime().get_serial_time()))
+			crt.gmtime_adj_notBefore(0)
+			crt.gmtime_adj_notAfter(2*365*24*60*60)
+			crt.set_pubkey(key)
+			crt.sign(key, 'sha1')
+		except Exception, e:
+			raise Exception('Error generating self-signed certificate: '+str(e))
 		open('/etc/ssl/certs/genesis/'+name+'.crt', "wt").write(
 			OpenSSL.crypto.dump_certificate(
 				OpenSSL.crypto.FILETYPE_PEM, crt)

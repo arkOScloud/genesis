@@ -232,7 +232,12 @@ class CertGenWorker(BackgroundWorker):
 
 	def run(self, cat, name, vars, assign):
 		cat.put_statusmsg('Generating a certificate and key...')
-		CertControl(cat.app).gencert(name, vars)
+		try:
+			CertControl(cat.app).gencert(name, vars)
+		except Exception, e:
+			cat.clr_statusmsg()
+			cat.put_message('err', str(e))
+			cat.app.log.error(str(e))
 		cat.put_statusmsg('Assigning new certificate...')
 		CertControl(cat.app).assign(name, assign)
 		cat.clr_statusmsg()
