@@ -205,8 +205,11 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			self._add = None
 		if params[0] == 'dlgEdit':
 			if vars.getvalue('action', '') == 'OK':
-				if vars.getvalue('cfgname', '') == '':
+				name = vars.getvalue('cfgname', '')
+				if name == '':
 					self.put_message('err', 'Must choose a name')
+				elif ' ' in name or '-' in name:
+					self.put_message('err', 'Site name must not contain spaces or dashes')
 				elif vars.getvalue('cfgaddr', '') == '':
 					self.put_message('err', 'Must choose an address')
 				elif vars.getvalue('cfgport', '') == '':
@@ -224,9 +227,9 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						ssl=self._edit['ssl'],
 						php=self._edit['php']
 						)
-				apis.networkcontrol(self.app).change_webapp(
-					self._edit['name'], vars.getvalue('cfgname'), 
-					self._edit['type'], vars.getvalue('cfgport'))
+					apis.networkcontrol(self.app).change_webapp(
+						self._edit['name'], vars.getvalue('cfgname'), 
+						self._edit['type'], vars.getvalue('cfgport'))
 			self._edit = None
 		if params[0] == 'dlgSetup':
 			if vars.getvalue('action', '') == 'OK':
