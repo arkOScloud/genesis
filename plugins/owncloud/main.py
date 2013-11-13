@@ -5,8 +5,10 @@ from genesis import apis
 from genesis.utils import shell, shell_cs, download
 
 import hashlib
+import errno
 import os
 import random
+import shutil
 
 
 class ownCloud(Plugin):
@@ -151,6 +153,7 @@ class ownCloud(Plugin):
 		pass
 
 	def ssl_enable(self, path, cfile, kfile):
+		# First, force SSL in ownCloud's config file
 		if os.path.exists(os.path.join(path, 'config', 'config.php')):
 			px = os.path.join(path, 'config', 'config.php')
 		else:
@@ -172,6 +175,29 @@ class ownCloud(Plugin):
 					oc.insert(x[0] + 1, '"forcessl" => true,\n')
 		f.writelines(oc)
 		f.close()
+
+		# Next, update the ca-certificates thing to include our cert
+		# (if necessary)
+		if not os.path.exists('/usr/share/ca-certificates'):
+			try:
+				os.makedirs('/usr/share/ca-certificates')
+			except OSError, e:
+				if e.errno == errno.EEXIST and os.path.isdir('/usr/share/ca-certificates'):
+					pass
+				else:
+					raise
+		shutil.copy(cfile, '/usr/share/ca-certificates/')
+		fname = cfile.rstrip('/').split('/')[-1]
+		ic = open('/etc/ca-certificates.conf', 'r').readlines()
+		f = open('/etc/ca-certificates.conf', 'w')
+		oc = []
+		for l in ic:
+			if l != fname+'\n':
+				oc.append(l)
+		oc.append(fname+'\n')
+		f.writelines(oc)
+		f.close()
+		shell('update-ca-certificates')
 
 	def ssl_disable(self, path):
 		if os.path.exists(os.path.join(path, 'config', 'config.php')):
