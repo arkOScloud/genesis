@@ -228,15 +228,18 @@ Genesis = (function() {
 		});
 	    },
 
-	    prepPopover: function (id) {
+	    prepPopover: function (event, id) {
 		$('#'+id).toggleClass('selected');
+		$(document.body).on('click.popover.close', Genesis.UI.closePopovers); 
 		Genesis.UI.closeOtherPopovers(id);
+		event.stopPropagation();
 	    },
 
 	    closePopovers: function () {
 		$('.pop-trigger').popover('hide');
 		$('.pop-trigger').removeClass('selected');
 		$('.popover').css('display', 'none');
+                $(document.body).off('click.popover.close');
 	    },
 
 	    closeOtherPopovers: function (id) {
