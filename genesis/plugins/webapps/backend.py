@@ -160,10 +160,10 @@ class WebappControl(Plugin):
 			path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', name))
 		shell('sed -i "s/.*GENESIS.*/# GENESIS %s %s/" /etc/nginx/sites-available/%s' 
 			% (stype, (('https:\/\/' if ssl else 'http:\/\/')+addr+':'+port), origname))	
-		shell('sed -i "s/.*listen .*/\tlisten %s\;/" /etc/nginx/sites-available/%s' % ((port+' ssl' if ssl else port), origname))
-		shell('sed -i "s/.*server_name .*/\tserver_name %s\;/" /etc/nginx/sites-available/%s' % (addr, origname))
-		shell('sed -i "s/.*root .*/\troot %s\;/" /etc/nginx/sites-available/%s' % (path, origname))
-		shell('sed -i "s/.*index index.*/\tindex index.%s\;/" /etc/nginx/sites-available/%s' % ('php' if php else 'html', origname))
+		shell('sed -i "s/\s*listen .*/\tlisten %s\;/" /etc/nginx/sites-available/%s' % ((port+' ssl' if ssl else port), origname))
+		shell('sed -i "s/\s*server_name .*/\tserver_name %s\;/" /etc/nginx/sites-available/%s' % (addr, origname))
+		shell('sed -i "s/\s*root .*/\troot %s\;/" /etc/nginx/sites-available/%s' % (path, origname))
+		shell('sed -i "s/\s*index index.*/\tindex index.%s\;/" /etc/nginx/sites-available/%s' % ('php' if php else 'html', origname))
 		if name != origname:
 			if os.path.exists(os.path.join('/srv/http/webapps', name)):
 				shutil.rmtree(os.path.join('/srv/http/webapps', name))
