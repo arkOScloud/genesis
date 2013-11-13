@@ -25,7 +25,7 @@
             <editable id="elogin" />
         </formline>
         <formline text="Password">
-            <editable id="epassword" value="Click to change" />
+            <editpassword id="epassword" value="Click to change" />
         </formline>
         <formline text="Home">
             <editable id="ehome" />
