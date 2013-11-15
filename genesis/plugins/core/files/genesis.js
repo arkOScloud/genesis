@@ -28,7 +28,7 @@ Genesis = (function() {
             var pass1 = document.getElementById(password1),
                 pass2 = document.getElementById(password2),
                 error = document.getElementById(message);
-            var keycode = (event != undefined && typeof event.keyCode !== "undefined") ? String.fromCharCode(event.keyCode) : '';
+            var keycode = (event != undefined && typeof event.charCode !== "undefined") ? String.fromCharCode(event.charCode) : '';
             
             var match;
             if(event.target.id == password1){
