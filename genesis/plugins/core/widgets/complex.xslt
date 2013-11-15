@@ -75,19 +75,16 @@
         <xsl:value-of select="@value" />
     </a>
     <div id="{x:idesc(@id)}" class="ui-el-editable input-append" style="display:none">
-        <input id="{x:idesc(@id)}-active-url" type="hidden" name="url" value="/handle/form/submit/{@id}"/>
-        <input type="password" name="value" value="{@value}" id="{x:idesc(@id)}-input" onkeypress="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input','password-error-message', event)" />
+        <p>Enter password twice, leave blank for no change</p>
+        <input type="password" name="{x:idesc(@id)}" id="{x:idesc(@id)}-input" onkeypress="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input','password-error-message', event)" />
         <div>
-            <input type="password" name="valueb" value="{@value}" id="{x:idesc(@id)}-b-input" onkeypress="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input', 'password-error-message', event)" /> 
-        <hlabel class="add-on active">
-	    <img href="#" src="/dl/core/ui/stock/dialog-ok.png" onclick="return Genesis.submit('{x:idesc(@id)}', 'OK')" /> 
-        </hlabel>
+            <input type="password" name="{x:idesc(@id)}b" id="{x:idesc(@id)}-b-input" onkeypress="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input', 'password-error-message', event)" style="margin-top: 15px;"/> 
         </div>
     </div>
     <!--<div id="{x:idesc(@id)}-b" class="ui-el-editable input-append" style="display: none">
         <input type="password" name="valueb" value="{@value}" id="{x:idesc(@id)}-b-input" onkeypress="Genesis.verifyPassword('{x:idesc(@id)}-input', '{x:idesc(@id)}-b-input', 'password-error-message', event)" /> 
         <hlabel class="add-on active">
-	    <img href="#" src="/dl/core/ui/stock/dialog-ok.png" onclick="return Genesis.submit('{x:idesc(@id)}', 'OK')" /> 
+        <img href="#" src="/dl/core/ui/stock/dialog-ok.png" onclick="return Genesis.submit('{x:idesc(@id)}', 'OK')" /> 
         </hlabel>
     </div>-->
     <p class="text-error" id="password-error-message" style="display:none">Passwords do not match</p>

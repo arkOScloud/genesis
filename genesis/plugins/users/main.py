@@ -118,24 +118,25 @@ class UsersPlugin(CategoryPlugin):
                     self.backend.add_user(v)
                     self._selected_user = v
             self._editing = ''
-        if params[0].startswith('e'):
-            v = vars.getvalue('value', '')
-            if params[0] == 'epassword':
-                if v != vars.getvalue('valueb',''):
-                    self.put_message('err', 'Passwords must match')
-                    self._editing == ''
-                    return
-                self.backend.change_user_password(self._selected_user, v)
-                self.app.gconfig.set('users', self._selected_user, hashpw(v))
-            elif params[0] == 'elogin':
-                self.backend.change_user_param(self._selected_user, 'login', v)
-                pw = self.app.gconfig.get('users', self._selected_user, '')
-                self.app.gconfig.remove_option('users', self._selected_user)
-                self.app.gconfig.set('users', v, pw)
-                self._selected_user = v
-            elif params[0] in self.params:
-                self.backend.change_user_param(self._selected_user, params[0][:1], v)
+        if params[0] == 'elogin':
+            self.backend.change_user_param(self._selected_user, 'login', v)
+            pw = self.app.gconfig.get('users', self._selected_user, '')
+            self.app.gconfig.remove_option('users', self._selected_user)
+            self.app.gconfig.set('users', v, pw)
+            self._selected_user = v
+            self.app.gconfig.save()
+            self._editing = ''
+        if params[0] in self.params:
+            self.backend.change_user_param(self._selected_user, params[0][:1], v)
             self.app.gconfig.save()
             self._editing = ''
         if params[0] == 'dlgEditUser':
+            if vars.getvalue('passwd', '') != '':
+                v = vars.getvalue('passwd')
+                if v != vars.getvalue('passwdb',''):
+                    self.put_message('err', 'Passwords must match')
+                    self._editing == ''
+                else:
+                    self.backend.change_user_password(self._selected_user, v)
+                    self.app.gconfig.set('users', self._selected_user, hashpw(v))
             self._selected_user = ''
