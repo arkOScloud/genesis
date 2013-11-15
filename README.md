@@ -14,10 +14,11 @@ Running Genesis from this Github repo is advised ONLY for development purposes. 
 ## Writing Plugins
 For information on developing plugins for use with Genesis, see the development centre on https://arkos.io. Specifically:
 
-* [Plugin Structure](http://arkos.io/dev/genesis/plugstruct) - Getting started with writing Genesis plugins
-* [User Interface](http://arkos.io/dev/genesis/ux) - How to write a user interface compatible with Genesis' UX system
-* [Icon Reference](http://arkos.io/dev/genesis/iconref) - Choosing iconfont classes to use in your plugins
-* [General API Reference](http://arkos.io/dev/genesis/api) - The big book of all classes and functions
+* [Webapp and Databases Structure](https://arkos.io/dev/genesis/apps-dbs) - Getting started with including new webapp and database types in Genesis
+* [Plugin Structure](https://arkos.io/dev/genesis/plugstruct) - Getting started with writing general Genesis plugins
+* [User Interface](https://arkos.io/dev/genesis/ux) - How to write a user interface compatible with Genesis' UX system
+* [Icon Reference](https://arkos.io/dev/genesis/iconref) - Choosing iconfont classes to use in your plugins
+* [General API Reference](https://arkos.io/dev/genesis/api) - The big book of all classes and functions
 
 Once you have a plugin, feel free to let @jacook know and testing can be arranged. If the plugin works well and contributes to arkOS' mission, it may then be included in the central plugin repository.
 
@@ -30,6 +31,7 @@ With a big thanks to those who have made contributions!
 * AJ Bahnken @ajvb
 * Jasper van Loenen @javl
 * Miguel Moitinho @mamoit
+* Steven Nelson @StevenNelson
 * Timothy Farrell @explorigin
 * Will Wilson @wwilson
 
