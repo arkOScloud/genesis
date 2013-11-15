@@ -22,13 +22,13 @@
 
     <dialogbox id="dlgEditUser" hidecancel="True">
         <formline text="Login">
-            <editable id="elogin" />
+            <editfield id="login" />
         </formline>
         <formline text="Password">
             <editpassword id="passwd" value="Click to change" />
         </formline>
         <formline text="Home">
-            <editable id="ehome" />
+            <label id="home" />
         </formline>
         <formline>
             <button id="deluser" design="danger" text="Delete user" />

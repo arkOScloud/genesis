@@ -64,9 +64,9 @@ class UsersPlugin(CategoryPlugin):
         if self._selected_user != '':
             u = self.backend.get_user(self._selected_user, self.users)
 
-            ui.find('elogin').set('value', u.login)
+            ui.find('login').set('value', u.login)
             ui.find('deluser').set('warning', 'Delete user %s'%u.login)
-            ui.find('ehome').set('value', u.home)
+            ui.find('home').set('text', u.home)
         else:
             ui.remove('dlgEditUser')
 
@@ -118,25 +118,31 @@ class UsersPlugin(CategoryPlugin):
                     self.backend.add_user(v)
                     self._selected_user = v
             self._editing = ''
-        if params[0] == 'elogin':
-            self.backend.change_user_param(self._selected_user, 'login', v)
-            pw = self.app.gconfig.get('users', self._selected_user, '')
-            self.app.gconfig.remove_option('users', self._selected_user)
-            self.app.gconfig.set('users', v, pw)
-            self._selected_user = v
-            self.app.gconfig.save()
-            self._editing = ''
-        if params[0] in self.params:
-            self.backend.change_user_param(self._selected_user, params[0][:1], v)
-            self.app.gconfig.save()
-            self._editing = ''
         if params[0] == 'dlgEditUser':
             if vars.getvalue('passwd', '') != '':
                 v = vars.getvalue('passwd')
                 if v != vars.getvalue('passwdb',''):
                     self.put_message('err', 'Passwords must match')
-                    self._editing == ''
+                    self._selected_user = ''
                 else:
                     self.backend.change_user_password(self._selected_user, v)
                     self.app.gconfig.set('users', self._selected_user, hashpw(v))
+            if vars.getvalue('login', '') != '' and vars.getvalue('login', '') != self._selected_user:
+                v = vars.getvalue('login')
+                for u in self.users:
+                    if u.login == v:
+                        self.put_message('err', 'Duplicate name')
+                        self._selected_user = ''
+                        return
+                if re.search('[A-Z]|\.|:|[ ]|-$', v):
+                    self.put_message('err', 'Username must not contain capital letters, dots, colons, spaces, or end with a hyphen')
+                    self._selected_user = ''
+                else:
+                    self.backend.change_user_param(self._selected_user, 'login', v)
+                    pw = self.app.gconfig.get('users', self._selected_user, '')
+                    self.app.gconfig.remove_option('users', self._selected_user)
+                    self.app.gconfig.set('users', v, pw)
+                    self._selected_user = v
+                    self.app.gconfig.save()
+                    self._editing = ''
             self._selected_user = ''
