@@ -49,6 +49,27 @@
 </div>
 </xsl:template>
 
+<xsl:template match="confirmbox">
+<div>
+    <div id="{@id}" class="modal fade">
+        <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
+        <div class="modal-body">
+            <label text="{@text}" />
+        </div>
+
+        <div class="modal-footer">
+            <xsl:if test="not(@hidecancel = 'True')">
+                <button text="Cancel" onclick="form" action="Cancel" form="{@id}"/>
+            </xsl:if>
+            <button text="No" onclick="form" action="Reject" form="{@id}" design="primary" />
+            <button text="Yes" onclick="form" action="Confirm" form="{@id}" design="primary" />
+        </div>
+    </div>
+    <script>
+        Genesis.UI.showAsModal('<xsl:value-of select="@id"/>');
+    </script>
+</div>
+</xsl:template>
 
 <xsl:template match="inputbox">
 <div>

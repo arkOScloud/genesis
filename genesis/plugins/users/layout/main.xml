@@ -35,6 +35,8 @@
         </formline>
     </dialogbox>
 
+    <confirmbox id="dlgConfirmDelete" text="" />
+
     <inputbox id="dlgEdit" />
     </pad>
 </xml>

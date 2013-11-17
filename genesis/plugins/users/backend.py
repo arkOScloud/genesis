@@ -83,6 +83,9 @@ class UsersBackend(Plugin):
     def del_user(self, v):
         shell(self.cfg.cmd_del.format(v))
 
+    def del_user_with_home(self, v):
+        shell(self.cfg.cmd_del_with_home.format(v))
+
     def del_group(self, v):
         shell(self.cfg.cmd_del_group.format(v))
 
@@ -108,6 +111,7 @@ class LinuxConfig(ModuleConfig):
 
     cmd_add = 'useradd -m {0}'
     cmd_del = 'userdel {0}'
+    cmd_del_with_home = 'userdel -r {0}'
     cmd_add_group = 'groupadd {0}'
     cmd_del_group = 'groupdel {0}'
     cmd_set_user_login = 'usermod -l {0} {1}'
@@ -127,6 +131,7 @@ class BSDConfig(ModuleConfig):
 
     cmd_add = 'pw useradd {0}'
     cmd_del = 'pw userdel {0}'
+    cmd_del_with_home = 'pw userdel -r {0}'
     cmd_add_group = 'pw groupadd {0}'
     cmd_del_group = 'pw groupdel {0}'
     cmd_set_user_login = 'pw usermod {1} -l {0}'
