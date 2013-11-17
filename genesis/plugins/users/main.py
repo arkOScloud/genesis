@@ -7,11 +7,16 @@ from genesis.utils import *
 
 from backend import *
 
+from string import Template
+
 
 class UsersPlugin(CategoryPlugin):
     text = 'Users'
     iconfont = 'gen-users'
     folder = 'system'
+
+    k_confirm_deluser_text = Template('Do you want to delete the home folder ($path) of the user $user?')
+    k_confirm_deluser = 'confirm_deluser'
 
     params = {
             'login': 'Login',
@@ -43,10 +48,17 @@ class UsersPlugin(CategoryPlugin):
         ui = self.app.inflate('users:main')
 
         if self._editing != '':
-            if self._editing in self.params:
-                ui.find('dlgEdit').set('text', self.params[self._editing])
+            if self._editing == self.k_confirm_deluser:
+                user = self.backend.get_user(self._selected_user, self.users)
+                ui.find('dlgConfirmDelete').set('text', self.k_confirm_deluser_text.substitute(path = user.home, user = user.login))
+                ui.remove('dlgEdit')
+            else:
+                if self._editing in self.params:
+                    ui.find('dlgEdit').set('text', self.params[self._editing])
+                    ui.remove('dlgConfirmDelete')
         else:
             ui.remove('dlgEdit')
+            ui.remove('dlgConfirmDelete')
 
         # Users
         t = ui.find('userlist')
@@ -61,11 +73,10 @@ class UsersPlugin(CategoryPlugin):
                         UI.TipIcon(iconfont='gen-pencil-2', id='edit/'+u.login, text='Edit'),
                     ))
 
-        if self._selected_user != '':
+        if (self._selected_user != '') and (self._editing != 'confirm_deluser'):
             u = self.backend.get_user(self._selected_user, self.users)
 
             ui.find('login').set('value', u.login)
-            ui.find('deluser').set('warning', 'Delete user %s'%u.login)
             ui.find('home').set('text', u.home)
         else:
             ui.remove('dlgEditUser')
@@ -87,14 +98,7 @@ class UsersPlugin(CategoryPlugin):
             self._tab = 0
             self._editing = 'adduser'
         if params[0] == 'deluser':
-            self._tab = 0
-            self.backend.del_user(self._selected_user)
-            try:
-                self.app.gconfig.remove_option('users', self._selected_user)
-                self.app.gconfig.save()
-            except:
-                pass
-            self._selected_user = ''
+            self._editing = 'confirm_deluser'
 
     @event('dialog/submit')
     @event('form/submit')
@@ -146,3 +150,22 @@ class UsersPlugin(CategoryPlugin):
                     self.app.gconfig.save()
                     self._editing = ''
             self._selected_user = ''
+        if params[0] == 'dlgConfirmDelete':
+            self._tab = 0
+            answer = vars.getvalue('action', '')
+            if answer != 'Cancel':
+                self.delete_user(answer)
+            self._selected_user = ''
+            self._editing = ''
+
+    def delete_user(self, delete_home):
+        if delete_home == 'Confirm':
+            self.backend.del_user_with_home(self._selected_user)
+        else:
+            self.backend.del_user(self._selected_user)
+        try:
+            self.app.gconfig.remove_option('users', self._selected_user)
+            self.app.gconfig.save()
+        except:
+            pass
+
