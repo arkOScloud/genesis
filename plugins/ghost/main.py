@@ -15,9 +15,6 @@ class Ghost(Plugin):
     name = 'Ghost'
     dpath = 'https://ghost.org/zip/ghost-0.3.3.zip'
     icon = 'gen-earth'
-    dbengine = ''
-    #services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
-    services = []
     php = False
     nomulti = True
     ssl = False
