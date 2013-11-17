@@ -39,9 +39,9 @@ class Ghost(Plugin):
             raise Exception('Invalid Port: %s' % port)
 
     def post_install(self, name, path, vars):
-        port = vars.getvalue('ghost-port', '') or '2368'
-        hostname = vars.getvalue('ghost-host', '') or '127.0.0.1'
-        url = vars.getvalue('ghost-url', '') or 'my-ghost-blog.com'
+        port = vars.getvalue('ghost-port', '2368')
+        hostname = vars.getvalue('ghost-host', '127.0.0.1')
+        url = vars.getvalue('ghost-url', 'my-ghost-blog.com')
 
         replacements = [
             ('2368', port),
