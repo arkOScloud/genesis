@@ -41,8 +41,10 @@ class WebappControl(Plugin):
 			ending = '.tar.gz'
 		elif webapp.dpath.endswith('.tar.bz2'):
 			ending = '.tar.bz2'
+		elif webapp.dpath.endswith('.zip'):
+			ending = '.zip'
 		else:
-			raise InstallError('Only gzip and bzip packages supported for now')
+			raise InstallError('Only gzip, bzip, and zip packages supported for now')
 
 		# Run webapp preconfig, if any
 		try:
@@ -66,10 +68,15 @@ class WebappControl(Plugin):
 				download(webapp.dpath, file=pkg_path)
 			except Exception, e:
 				raise InstallError('Couldn\'t download - %s' % str(e))
-			status = shell_cs('tar '
-				+('xzf' if ending is '.tar.gz' else 'xjf')
-				+' /tmp/'+name+ending+' -C '
-				+target_path+' --strip 1', stderr=True)
+
+			if ending in ['.tar.gz', '.tar.bz2']:
+				extract_cmd = 'tar '
+				extract_cmd += 'xzf' if ending is '.tar.gz' else 'xjf'
+				extract_cmd += ' /tmp/%s -C %s --strip 1' % (name+ending, target_path)
+			else:
+				extract_cmd = 'unzip -d %s %s' (target_path, name+ending)
+
+			status = shell_cs(extract_cmd, stderr=True)
 			if status[0] >= 1:
 				raise InstallError(status[1])
 			os.remove(pkg_path)
