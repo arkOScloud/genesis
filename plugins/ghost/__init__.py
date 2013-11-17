@@ -5,9 +5,6 @@ DEPS =  [
      [
         ('app', 'nodejs', 'nodejs'),
         ('app', 'nginx', 'nginx'),
-        ('app', 'sqlite', 'sqlite'),
-        ('app', 'python2', 'python2'),
-        ('plugin', 'db-sqlite3')
      ])
 ]
 
