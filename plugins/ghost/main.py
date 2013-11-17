@@ -29,7 +29,7 @@ class Ghost(Plugin):
         )
 
     def pre_install(self, name, vars):
-        port = vars.getvalue('ghost-port', '')
+        port = vars.getvalue('ghost-port', '2368')
         try:
             int(port)
         except ValueError:
