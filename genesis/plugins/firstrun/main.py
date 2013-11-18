@@ -1,4 +1,5 @@
 import os
+import re
 
 from genesis.api import *
 from genesis.ui import *
@@ -80,6 +81,8 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self.put_message('err', 'The password can\'t be empty')
             elif self._password != self._password_again:
                 self.put_message('err', 'The passwords don\'t match')
+            elif re.search('[A-Z]|\.|:|[ ]|-$', self._username):
+                self.put_message('err', 'Username must not contain capital letters, dots, colons, spaces, or end with a hyphen')
             else:
                 # add Unix user
                 self.backend = UsersBackend(self.app)
