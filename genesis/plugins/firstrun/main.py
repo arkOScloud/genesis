@@ -34,7 +34,11 @@ class FirstRun(CategoryPlugin, URLHandler):
 
         if self._step == 5:
             self._mgr = RepositoryManager(self.app.config)
-            self._mgr.update_list()
+            try:
+                self._mgr.update_list(crit=True)
+            except Exception, e:
+                self.put_message('err', str(e))
+                self.app.log.error(str(e))
 
             lst = self._mgr.available
 

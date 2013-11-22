@@ -4,7 +4,7 @@ import ntplib
 import platform
 import os
 import mimetypes
-import urllib
+import urllib2
 from datetime import datetime
 from hashlib import sha1
 from base64 import b64encode
@@ -130,7 +130,7 @@ def download(url, file=None, crit=False):
     :rtype:         None or str
     """
     try:
-        data = urllib.urlopen(url).read()
+        data = urllib2.urlopen(url).read()
         if file:
             open(file, 'w').write(data)
         else:

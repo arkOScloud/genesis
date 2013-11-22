@@ -22,7 +22,7 @@ class FeedUpdater (Component):
         while True:
             try:
                 self.feed = []
-                rm.update_list()
+                rm.update_list(crit=False)
                 for e in feed_url.entries:
                     self.feed.append({'title': e.title, 'link': e.link, 
                         'time': e.published_parsed})
