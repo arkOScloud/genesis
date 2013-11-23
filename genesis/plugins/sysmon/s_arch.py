@@ -74,3 +74,15 @@ class ArchServiceManager(Plugin):
             shell("systemctl --no-ask-password restart {}.service".format(name))
         else:
             shell('/etc/rc.d/{} restart'.format(name))
+
+    def enable(self, name):
+        if self.use_systemd:
+            shell("systemctl --no-ask-password enable {}.service".format(name))
+        else:
+            pass
+
+    def disable(self, name):
+        if self.use_systemd:
+            shell("systemctl --no-ask-password disable {}.service".format(name))
+        else:
+            pass
