@@ -1,3 +1,4 @@
+import glob
 import os
 import re
 
@@ -15,17 +16,18 @@ class ArchServiceManager(Plugin):
 
     def list_all(self):
         services = []
+        enlist = []
 
         if self.use_systemd:
+            for x in glob.iglob('/etc/systemd/system/*.wants/*.service'):
+                enlist.append(x.rsplit('/')[5])
             for unit in shell("systemctl --no-ask-password --full -t service --all").splitlines():
                 data = unit.split()
                 if data == [] or not data[0].endswith('.service'):
                     continue
-                if 'inactive' in data[2]:
-                    status = 'stopped'
-                else:
-                    status = 'running'
-                services.append((re.sub('\.service$', '', data[0]), status))
+                status = 'stopped' if 'inactive' in data[2] else 'running'
+                enabled = 'enabled' if data[0] in enlist else 'disabled'
+                services.append((re.sub('\.service$', '', data[0]), status, enabled))
         else:
             services = os.listdir('/etc/rc.d')
 
@@ -34,6 +36,7 @@ class ArchServiceManager(Plugin):
             svc = apis.services.Service()
             svc.name = s[0]
             svc._status = s[1]
+            svc._enabled = s[2]
             svc.mgr = self
             r.append(svc)
 

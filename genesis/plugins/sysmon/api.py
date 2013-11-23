@@ -169,6 +169,12 @@ class Services(API):
                 self._status = self.mgr.get_status(self.name)
             return self._status
 
+        @property
+        def enabled(self):
+            if not hasattr(self, '_enabled'):
+                self._enabled = self.mgr.get_enabled(self.name)
+            return self._enabled
+
         def __cmp__(self, b):
             return 1 if self.name > b.name else -1
 
@@ -327,3 +333,9 @@ class Services(API):
             if params[0] == 'stop':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
                 mgr.stop(params[1])
+            if params[0] == 'enable':
+                mgr = self.app.get_backend(apis.services.IServiceManager)
+                mgr.enable(params[1])
+            if params[0] == 'disable':
+                mgr = self.app.get_backend(apis.services.IServiceManager)
+                mgr.disable(params[1])
