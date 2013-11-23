@@ -15,6 +15,23 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
     iconfont = 'gen-lock-2'
     folder = 'system'
     services = [('Intrusion Prevention', 'fail2ban')]
+    fail2ban_name = 'Genesis'
+    fail2ban_icon = 'gen-arkos-round'
+    fail2ban = [{
+        'custom': True,
+        'name': 'genesis',
+        'jail_opts': [
+            ('enabled', 'true'),
+            ('filter', 'genesis'),
+            ('logpath', '/var/log/genesis.log'),
+            ('action', 'iptables[name=genesis, port=8000, protocol=tcp]')
+        ],
+        'filter_name': 'genesis',
+        'filter_opts': [
+            ('_daemon', 'genesis-panel'),
+            ('failregex', '.*[ERROR] auth: Login failed for user .* from <HOST>$')
+        ]
+    }]
 
     defactions = ['ACCEPT', 'DROP', 'REJECT', 'LOG', 'EXIT', 'MASQUERADE']
 
