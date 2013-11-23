@@ -42,7 +42,6 @@ class ArchServiceManager(Plugin):
     def get_status(self, name):
         if self.use_systemd:
             status = shell_status("systemctl --no-ask-password is-active {}.service".format(name))
-
             if status != 0:
                 return 'stopped'
             else:
@@ -50,6 +49,16 @@ class ArchServiceManager(Plugin):
         else:
             s = shell('/etc/rc.d/{} status'.format(name))
             return 'running' if 'running' in s else 'stopped'
+
+    def get_enabled(self, name):
+        if self.use_systemd:
+            status = shell_status("systemctl --no-ask-password is-enabled {}.service".format(name))
+            if status != 0:
+                return 'disabled'
+            else:
+                return 'enabled'
+        else:
+            return 'unknown'
 
     def start(self, name):
         if self.use_systemd:
