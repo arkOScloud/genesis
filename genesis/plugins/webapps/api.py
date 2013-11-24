@@ -18,7 +18,7 @@ class Webapps(apis.API):
 		icon = 'gen-earth'
 		php = False
 		nomulti = False
-		addtoblock = ''
+		addtoblock = []
 		ssl = False
 
 		def pre_install(self, name, vars):
@@ -67,7 +67,7 @@ class Webapps(apis.API):
 			# Get actual values
 			try:
 				c = nginx.loadf(path)
-				stype = re.match(rtype, c.filter('Comment')[0]).group(1)
+				stype = re.match(rtype, c.filter('Comment')[0].comment).group(1)
 				port, ssl = re.match(rport, c.servers[0].filter('Key', 'listen')[0].value).group(1, 2)
 				addr = c.servers[0].filter('Key', 'server_name')[0].value
 				path = c.servers[0].filter('Key', 'root')[0].value
@@ -99,7 +99,6 @@ class Webapps(apis.API):
 					'class': cls,
 					'enabled': enabled
 				})
-			f.close()
 		return applist
 
 	def get_interface(self, name):

@@ -76,8 +76,12 @@ class WebappControl(Plugin):
 		php = vars.getvalue('php', '')
 		addtoblock = vars.getvalue('addtoblock', '')
 
-		if webapp.name == 'Website' and php == '1':
-			addtoblock.extend([x for x in webapp.phpblock])
+		if addtoblock:
+			addtoblock = nginx.loads(addtoblock, False)
+		else:
+			addtoblock = []
+		if webapp.name == 'Website' and php == '1' and addtoblock:
+			addtoblock.extend(x for x in webapp.phpblock)
 
 		# Setup the webapp and create an nginx serverblock
 		try:
@@ -141,16 +145,16 @@ class WebappControl(Plugin):
 		if path == '':
 			path = os.path.join('/srv/http/webapps/', name)
 		c = nginx.Conf()
+		c.add(nginx.Comment('GENESIS %s %s' % (stype, 'http://'+addr+':'+port)))
 		s = nginx.Server(
 			nginx.Key('listen', port),
 			nginx.Key('server_name', addr),
 			nginx.Key('root', path),
 			nginx.Key('index', 'index.'+('php' if php else 'html'))
 		)
-		# TODO make sure this works
 		if add:
 			s.add(*[x for x in add])
-		c.append(s)
+		c.add(s)
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 
 	def nginx_edit(self, origname, name, stype, path, addr, port, ssl, php=False):
@@ -272,7 +276,7 @@ class Website(Plugin):
 	nomulti = False
 	ssl = True
 
-	addtoblock = ''
+	addtoblock = []
 
 	phpblock = [
 		nginx.Location('~ ^(.+?\.php)(/.*)?$',
