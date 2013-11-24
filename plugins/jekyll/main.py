@@ -17,7 +17,7 @@ class Jekyll(Plugin):
 	nomulti = False
 	ssl = True
 
-	addtoblock = ''
+	addtoblock = []
 
 	def pre_install(self, name, vars):
 		# Make sure Ruby directory is in the PATH.

@@ -11,7 +11,7 @@ setup(
         'gevent',
         'lxml>=2.2.4',
         'python-iptables',
-        'pyparsing',
+        'python-nginx',
     ],
     description='arkOS node management app',
     author='The CitizenWeb Project',

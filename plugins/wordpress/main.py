@@ -5,6 +5,7 @@ from genesis import apis
 from genesis.utils import shell
 
 import hashlib
+import nginx
 import os
 import random
 import urllib
@@ -21,33 +22,29 @@ class WordPress(Plugin):
 	nomulti = True
 	ssl = True
 
-	addtoblock = (
-		'	location = /favicon.ico {\n'
-		'		log_not_found off;\n'
-		'		access_log off;\n'
-		'	}\n'
-		'\n'
-		'	location = /robots.txt {\n'
-		'		allow all;\n'
-		'		log_not_found off;\n'
-		'		access_log off;\n'
-		'	}\n'
-		'\n'
-		'	location / {\n'
-		'		try_files $uri $uri/ /index.php?$args;\n'
-		'	}\n'
-		'\n'
-		'	location ~ \.php$ {\n'
-		'		fastcgi_pass unix:/run/php-fpm/php-fpm.sock;\n'
-		'		fastcgi_index index.php;\n'
-		'		include fastcgi.conf;\n'
-		'}\n'
-		'\n'
-		'	location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {\n'
-		'		expires max;\n'
-		'		log_not_found off;\n'
-		'	}\n'
-		)
+	addtoblock = [
+		nginx.Location('= /favicon.ico',
+			nginx.Key('log_not_found', 'off'),
+			nginx.Key('access_log', 'off')
+			),
+		nginx.Location('= /robots.txt',
+			nginx.Key('allow', 'all'),
+			nginx.Key('log_not_found', 'off'),
+			nginx.Key('access_log', 'off')
+			),
+		nginx.Location('/',
+			nginx.Key('try_files', '$uri $uri/ /index.php?$args')
+			),
+		nginx.Location('~ \.php$',
+			nginx.Key('fastcgi_pass', 'unix:/run/php-fpm/php-fpm.sock'),
+			nginx.Key('fastcgi_index', 'index.php'),
+			nginx.Key('include', 'fastcgi.conf')
+			),
+		nginx.Location('~* \.(js|css|png|jpg|jpeg|gif|ico)$',
+			nginx.Key('expires', 'max'),
+			nginx.Key('log_not_found', 'off')
+			)
+		]
 
 	def pre_install(self, name, vars):
 		dbname = vars.getvalue('wp-dbname', '')

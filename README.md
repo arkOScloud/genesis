@@ -8,7 +8,7 @@ For end-users: Genesis is already downloaded and installed on your arkOS node, r
 
 For more information see the [Getting Started](http://arkos.io/doc/getting-started/) page.
 
-Running Genesis from this Github repo is advised ONLY for development purposes. If you do this you will need the following Python modules: `pyOpenSSL`, `gevent`, `lxml`, `ntplib`, `python-iptables`, and `pyparsing`. Once you've cloned this repo, just run `genesis-panel` with root privileges to run a server live in stdout. `genesis-panel -d` and `genesis-panel -s` manually starts and stops the daemon respectively.
+Running Genesis from this Github repo is advised ONLY for development purposes. If you do this you will need the following Python modules: `pyOpenSSL`, `gevent`, `lxml`, `ntplib`, `python-iptables`, and `python-nginx`. Once you've cloned this repo, just run `genesis-panel` with root privileges to run a server live in stdout. `genesis-panel -d` and `genesis-panel -s` manually starts and stops the daemon respectively.
 
 
 ## Writing Plugins

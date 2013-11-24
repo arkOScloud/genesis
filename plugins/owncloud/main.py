@@ -6,6 +6,7 @@ from genesis.utils import shell, shell_cs, download
 
 import hashlib
 import errno
+import nginx
 import os
 import random
 import shutil
@@ -21,49 +22,43 @@ class ownCloud(Plugin):
 	php = True
 	nomulti = True
 	ssl = True
-	addtoblock = (
-		'	error_page 403 = /core/templates/403.php;\n'
-		'	error_page 404 = /core/templates/404.php;\n'
-		'	client_max_body_size 10G;\n'
-		'	fastcgi_buffers 64 4K;\n'
-		'\n'
-		'	rewrite ^/caldav(.*)$ /remote.php/caldav$1 redirect;\n'
-		'	rewrite ^/carddav(.*)$ /remote.php/carddav$1 redirect;\n'
-		'	rewrite ^/webdav(.*)$ /remote.php/webdav$1 redirect;\n'
-		'\n'
-        '	location = /robots.txt {\n'
-        '		allow all;\n'
-        '		log_not_found off;\n'
-        '		access_log off;\n'
-        '	}\n'
-        '\n'
-        '	location ~ ^/(data|config|\.ht|db_structure\.xml|README) {\n'
-        '		deny all;\n'
-        '	}\n'
-        '\n'
-        '	location / {\n'
-        '		rewrite ^/.well-known/host-meta /public.php?service=host-meta last;\n'
-        '		rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json last;\n'
-        '		rewrite ^/.well-known/carddav /remote.php/carddav/ redirect;\n'
-        '		rewrite ^/.well-known/caldav /remote.php/caldav/ redirect;\n'
-        '		rewrite ^(/core/doc/[^\/]+/)$ $1/index.html;\n'
-        '		try_files $uri $uri/ index.php;\n'
-        '	}\n'
-        '\n'
-        '	location ~ ^(.+?\.php)(/.*)?$ {\n'
-        '		try_files $1 = 404;\n'
-        '		include fastcgi_params;\n'
-        '		fastcgi_param SCRIPT_FILENAME $document_root$1;\n'
-        '		fastcgi_param PATH_INFO $2;\n'
-        '		fastcgi_pass unix:/run/php-fpm/php-fpm.sock;\n'
-        '		fastcgi_read_timeout 900s;\n'
-        '}\n'
-        '\n'
-        '	location ~* ^.+\.(jpg|jpeg|gif|bmp|ico|png|css|js|swf)$ {\n'
-        '		expires 30d;\n'
-        '		access_log off;\n'
-        '	}\n'
-        )
+	addtoblock = [
+		nginx.Key('error_page', '403 = /core/templates/403.php'),
+		nginx.Key('error_page', '404 = /core/templates/404.php'),
+		nginx.Key('client_max_body_size', '10G'),
+		nginx.Key('fastcgi_buffers', '64 4K'),
+		nginx.Key('rewrite', '^/caldav(.*)$ /remote.php/caldav$1 redirect'),
+		nginx.Key('rewrite', '^/carddav(.*)$ /remote.php/carddav$1 redirect'),
+		nginx.Key('rewrite', '^/webdav(.*)$ /remote.php/webdav$1 redirect'),
+		nginx.Location('= /robots.txt',
+			nginx.Key('allow', 'all'),
+			nginx.Key('log_not_found', 'off'),
+			nginx.Key('access_log', 'off')
+			),
+		nginx.Location('~ ^/(data|config|\.ht|db_structure\.xml|README)',
+			nginx.Key('deny', 'all')
+			),
+		nginx.Location('/',
+			nginx.Key('rewrite', '^/.well-known/host-meta /public.php?service=host-meta last'),
+			nginx.Key('rewrite', '^/.well-known/host-meta.json /public.php?service=host-meta-json last'),
+			nginx.Key('rewrite', '^/.well-known/carddav /remote.php/carddav/ redirect'),
+			nginx.Key('rewrite', '^/.well-known/caldav /remote.php/caldav/ redirect'),
+			nginx.Key('rewrite', '^(/core/doc/[^\/]+/)$ $1/index.html'),
+			nginx.Key('try_files', '$uri $uri/ index.php')
+			),
+		nginx.Location('~ ^(.+?\.php)(/.*)?$',
+			nginx.Key('try_files', '$1 = 404'),
+			nginx.Key('include', 'fastcgi_params'),
+			nginx.Key('fastcgi_param', 'SCRIPT_FILENAME $document_root$1'),
+			nginx.Key('fastcgi_param', 'PATH_INFO $2'),
+			nginx.Key('fastcgi_pass', 'unix:/run/php-fpm/php-fpm.sock'),
+			nginx.Key('fastcgi_read_timeout', '900s')
+			),
+		nginx.Location('~* ^.+\.(jpg|jpeg|gif|bmp|ico|png|css|js|swf)$',
+			nginx.Key('expires', '30d'),
+			nginx.Key('access_log', 'off')
+			)
+        ]
 
 	def pre_install(self, name, vars):
 		dbname = vars.getvalue('oc-dbname', '')

@@ -3,6 +3,7 @@ from genesis import apis
 
 import ConfigParser
 import glob
+import nginx
 import os
 import re
 
@@ -58,29 +59,22 @@ class Webapps(apis.API):
 			# Set default values and regexs to use
 			addr = False
 			port = '80'
-			php = False
 			stype = 'Unknown'
 			path = os.path.join('/etc/nginx/sites-available', site)
-			rtype = re.compile('.*?# GENESIS ((?:[a-z][a-z]+))', flags=re.IGNORECASE)
-			rport = re.compile('.*?listen (\\d+)\s*(.*?);')
-			raddr = re.compile('.*?server_name ([^\s]+).*?;', flags=re.IGNORECASE)
-			rpath = re.compile('.*?root ((?:\\/[\\w\\.\\-]+)+).*?;', flags=re.IGNORECASE)
-			rphp = re.compile('.*?index .*?php.*?;', flags=re.IGNORECASE)
+			rtype = re.compile('GENESIS ((?:[a-z][a-z]+))', flags=re.IGNORECASE)
+			rport = re.compile('(\\d+)\s*(.*?)')
 
 			# Get actual values
-			f = open(os.path.join('/etc/nginx/sites-available', site), 'r')
-			for line in f.readlines():
-				if re.match(rtype, line):
-					stype = re.match(rtype, line).group(1)
-				elif re.match(rport, line):
-					port = re.match(rport, line).group(1)
-					ssl = re.match(rport, line).group(2)
-				elif re.match(raddr, line):
-					addr = re.match(raddr, line).group(1)
-				elif re.match(rpath, line):
-					path = re.match(rpath, line).group(1)
-				elif re.match(rphp, line):
-					php = True
+			try:
+				c = nginx.loadf(path)
+				stype = re.match(rtype, c.filter('Comment')[0]).group(1)
+				port, ssl = re.match(rport, c.servers[0].filter('Key', 'listen')[0].value).group(1, 2)
+				addr = c.servers[0].filter('Key', 'server_name')[0].value
+				path = c.servers[0].filter('Key', 'root')[0].value
+				php = True if 'php' in c.servers[0].filter('Key', 'index')[0].value else False
+			except IndexError:
+				pass
+
 			if os.path.exists(os.path.join('/etc/nginx/sites-enabled', site)):
 				enabled = True
 			else:
