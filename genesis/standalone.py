@@ -76,7 +76,7 @@ def make_log(debug=False, log_level=logging.INFO):
 
     log.blackbox = DebugHandler()
     log.blackbox.setLevel(logging.DEBUG)
-    dformatter = logging.Formatter('%(asctime)s %(levelname)-8s %(module)s.%(funcName)s(): %(message)s')
+    dformatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s: %(message)s')
     log.blackbox.setFormatter(dformatter)
     stdout.setFormatter(dformatter)
     log.addHandler(log.blackbox)

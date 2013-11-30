@@ -1,6 +1,7 @@
 var Genesis;
 
 var warning_button_id;
+var isProcessing;
 
 Genesis = (function() {
     var firstPasswordEntry = true;
@@ -87,6 +88,12 @@ Genesis = (function() {
 	    Genesis.Core.requestProgress();
 	},
 
+	checkUnload: function () {
+		if (isProcessing) {
+			return "Genesis is currently processing an operation, if you leave this page you may lose unsaved data.";
+		}
+	},
+
 	Core: {
 	    processResponse: function (data) {
 		$('.modal:not(#warningbox)').each( function (i, e) {
@@ -147,6 +154,7 @@ Genesis = (function() {
 	    setStatusProgress: function (desc) {
 		if (desc.status && $('#pbox-'+desc.id).length) {
 		    $('#pbox-'+desc.id).text(desc.status);
+			isProcessing = true;
 		} else if (desc.status) {
 		    $('html').scrollTop(0);
 		    $('#whiteout').stop(true);
@@ -155,6 +163,7 @@ Genesis = (function() {
 		    $('#pbox-text').append(status);
 		    $('#pbox').show();
 		    $('#pbox').center();
+		    isProcessing = true;
 		} else if ($('#pbox').is(':visible')) {
 		    $('#whiteout').stop(true);
 		    Genesis.UI.wipeOut();
@@ -163,8 +172,10 @@ Genesis = (function() {
 		    $('#whiteout').promise().done(function() {
 			Genesis.query('/handle/nothing');
 		    });
+		    isProcessing = false;
 		} else if (!desc.status) {
 			Genesis.query('/handle/nothing');
+			isProcessing = false;
 		};
 	    },
 
@@ -173,6 +184,7 @@ Genesis = (function() {
 		Genesis.UI.wipeOut();
 		$('#pbox-text').empty();
 		$('#pbox').hide();
+		isProcessing = false;
 	    },
 
 	},
@@ -274,12 +286,14 @@ Genesis = (function() {
 		    $('#whiteout').show().fadeTo(3000, 1);
 		    $('#ajax-loader').show().fadeTo(500, 1);
 		    $('body').css('cursor', 'wait !important');
+		    isProcessing = true;
 		}
 		else {
 		    $('#whiteout').stop().fadeTo(250, 0, function () { $(this).hide() });
 		    $('#ajax-loader').stop().fadeTo(250, 0, function () { $(this).hide() });
 		    $('#ajax-data').text('');
 		    $('body').css('cursor', '');
+		    isProcessing = false;
 		}
 	    },
 
@@ -324,6 +338,8 @@ Genesis = (function() {
 	}
     };
 }());
+
+window.onbeforeunload = Genesis.checkUnload;
 
 jQuery.fn.center = function () {
     this.css("top", (

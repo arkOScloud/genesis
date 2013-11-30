@@ -98,7 +98,11 @@ class F2BManager(Plugin):
 		cfg = self.get_jail_config()
 		fcfg = ConfigParser.SafeConfigParser()
 		for c in self.app.grab_plugins(ICategoryProvider):
-			if hasattr(c, 'fail2ban'):
+			if hasattr(c, 'fail2ban') and hasattr(c, 'fail2ban_name'):
+				lst.append({'name': c.fail2ban_name,
+					'icon': c.fail2ban_icon,
+					'f2b': c.fail2ban})
+			elif hasattr(c, 'fail2ban'):
 				lst.append({'name': c.text,
 					'icon': c.iconfont,
 					'f2b': c.fail2ban})
@@ -121,15 +125,17 @@ class F2BManager(Plugin):
 				else:
 					if not l['name'] in cfg.sections():
 						f = open(self.jailconf, 'w')
-						for o in jail_opts:
+						cfg.add_section(l['name'])
+						for o in l['jail_opts']:
 							cfg.set(l['name'], o[0], o[1])
 						cfg.write(f)
 						f.close()
-					if not os.path.exists(self.filters+'/'+filter_name+'.conf'):
-						f = open(self.filters+'/'+filter_name+'.conf', 'w')
+					if not os.path.exists(self.filters+'/'+l['filter_name']+'.conf'):
+						f = open(self.filters+'/'+l['filter_name']+'.conf', 'w')
 						fcfg = ConfigParser.SafeConfigParser()
-						for o in filter_opts:
-							fcfg.set(l['name'], o[0], o[1])
+						fcfg.add_section('Definition')
+						for o in l['filter_opts']:
+							fcfg.set('Definition', o[0], o[1])
 						fcfg.write(f)
 						f.close()
 		return lst

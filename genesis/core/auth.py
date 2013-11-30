@@ -67,6 +67,7 @@ class AuthManager(object):
         """
         Deauthenticates current user.
         """
+        self.app.log.info('Session closed for user %s' % self.app.session['auth.user'])
         self.app.session['auth.user'] = None
 
     def __call__(self, environ, start_response):
@@ -90,7 +91,7 @@ class AuthManager(object):
                 pwd = self._config.get('users', user)
                 resp = vars.getvalue('response', '')
                 if check_password(resp, pwd):
-                    syslog.syslog('session opened for user %s from %s' % (user, environ['REMOTE_ADDR']))
+                    self.app.log.info('Session opened for user %s from %s' % (user, environ['REMOTE_ADDR']))
                     session['auth.user'] = user
                     start_response('200 OK', [
                         ('Content-type','text/plain'),
@@ -98,8 +99,8 @@ class AuthManager(object):
                     ])
                     return ''
 
-            syslog.syslog('login failed for user %s from %s' % (user, environ['REMOTE_ADDR']))
-            time.sleep(4)
+            self.app.log.error('Login failed for user %s from %s' % (user, environ['REMOTE_ADDR']))
+            time.sleep(2)
 
             start_response('403 Login Failed', [
                 ('Content-type','text/plain'),

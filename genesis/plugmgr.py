@@ -18,6 +18,7 @@ import imp
 import sys
 import traceback
 import weakref
+import urllib2
 
 from genesis.api import *
 from genesis.com import *
@@ -515,14 +516,19 @@ class RepositoryManager:
                 upg += [g]
         self.upgradable = upg
 
-    def update_list(self):
+    def update_list(self, crit=False):
         """
         Downloads fresh list of plugins and rebuilds installed/available lists
         """
         from genesis import generation, version
         if not os.path.exists('/var/lib/genesis'):
             os.mkdir('/var/lib/genesis')
-        data = download('http://%s/genesis/list/%s' % (self.server, PluginLoader.platform))
+        try:
+            data = download('http://%s/genesis/list/%s' % (self.server, PluginLoader.platform), crit=crit)
+        except urllib2.HTTPError, e:
+            raise Exception('Application list retrieval failed with HTTP Error %s' % str(e.code))
+        except urllib2.URLError, e:
+            raise Exception('Application list retrieval failed - Server not found or URL malformed. Please check your Internet settings.')
         try:
             open('/var/lib/genesis/plugins.list', 'w').write(data)
         except:

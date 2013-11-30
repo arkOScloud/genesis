@@ -71,13 +71,17 @@ class ServicesPlugin(CategoryPlugin):
         return ui
 
     def get_row(self, svc):
+        ctl = UI.HContainer()
         if svc.status == 'running':
-            ctl = UI.HContainer(
-                      UI.TipIcon(text='Stop', iconfont='gen-stop', id='stop/' + svc.name),
-                      UI.TipIcon(text='Restart', iconfont='gen-loop-2', id='restart/' + svc.name)
-                  )
+            ctl.append(UI.TipIcon(text='Stop', iconfont='gen-stop', id='stop/' + svc.name))
+            ctl.append(UI.TipIcon(text='Restart', iconfont='gen-loop-2', id='restart/' + svc.name))
         else:
-            ctl = UI.TipIcon(text='Start', iconfont='gen-play-2', id='start/' + svc.name)
+            ctl.append(UI.TipIcon(text='Start', iconfont='gen-play-2', id='start/' + svc.name))
+        if svc.enabled == 'enabled':
+            ctl.append(UI.TipIcon(text='Disable', iconfont='gen-minus-circle', id='disable/' + svc.name))
+        else:
+            ctl.append(UI.TipIcon(text='Enable', iconfont='gen-plus-circle', id='enable/' + svc.name))
+
         fn = 'gen-' + ('play-2' if svc.status == 'running' else 'stop')
         row = UI.DTR(
                 UI.IconFont(iconfont=fn),
@@ -94,6 +98,10 @@ class ServicesPlugin(CategoryPlugin):
             self.svc_mgr.restart(params[1])
         if params[0] == 'stop':
             self.svc_mgr.stop(params[1])
+        if params[0] == 'enable':
+            self.svc_mgr.enable(params[1])
+        if params[0] == 'disable':
+            self.svc_mgr.disable(params[1])
         if params[0] == 'gstart':
             for s in self.groupmgr.groups[params[1]]:
                 self.svc_mgr.start(s)
