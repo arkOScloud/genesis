@@ -74,7 +74,7 @@ class WebappControl(Plugin):
 				extract_cmd += 'xzf' if ending is '.tar.gz' else 'xjf'
 				extract_cmd += ' /tmp/%s -C %s --strip 1' % (name+ending, target_path)
 			else:
-				extract_cmd = 'unzip -d %s %s' % (target_path, name+ending)
+				extract_cmd = 'unzip -d %s /tmp/%s' % (target_path, name+ending)
 
 			status = shell_cs(extract_cmd, stderr=True)
 			if status[0] >= 1:
