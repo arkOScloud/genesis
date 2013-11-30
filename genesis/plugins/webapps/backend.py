@@ -112,6 +112,9 @@ class WebappControl(Plugin):
 			except:
 				raise ReloadError('PHP-FPM')
 
+		# Make sure that nginx is enabled by default
+		cat.app.get_backend(apis.services.IServiceManager).enable('nginx')
+
 		cat.clr_statusmsg()
 
 		if specialmsg:

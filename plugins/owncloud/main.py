@@ -127,7 +127,15 @@ class ownCloud(Plugin):
 		shell('sed -i s/\;extension=gd.so/extension=gd.so/g /etc/php/php.ini')
 		shell('sed -i s/\;extension=iconv.so/extension=iconv.so/g /etc/php/php.ini')
 		shell('sed -i s/\;extension=openssl.so/extension=openssl.so/g /etc/php/php.ini')
-		shell('sed -i s/\;extension=xcache.so/extension=xcache.so/g /etc/php/conf.d/xcache.ini')
+		
+		# Make sure xcache has the correct settings, otherwise ownCloud breaks
+		f = open('/etc/php/conf.d/xcache.ini', 'w')
+		oc = ['extension=xcache.so\n',
+			'xcache.admin.enable_auth = Off\n',
+			'xcache.admin.user = "admin"\n',
+			'xcache.admin.pass = "'+secret_key[8:24]+'"\n']
+		f.writelines(oc)
+		f.close()
 
 		# Return an explicatory message
 		return 'ownCloud takes a long time to set up on the RPi. Once you open the page for the first time, it may take 5-10 minutes for the content to appear. Please do not refresh the page.'

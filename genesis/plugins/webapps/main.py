@@ -5,6 +5,8 @@ from genesis.ui import *
 from genesis import apis
 from genesis.utils import *
 
+import re
+
 from backend import WebappControl
 
 
@@ -208,8 +210,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				name = vars.getvalue('cfgname', '')
 				if name == '':
 					self.put_message('err', 'Must choose a name')
-				elif ' ' in name or '-' in name:
-					self.put_message('err', 'Site name must not contain spaces or dashes')
+				elif re.search('\.|-|[ ]', name):
+					self.put_message('err', 'Site name must not contain spaces, dots or dashes')
 				elif vars.getvalue('cfgaddr', '') == '':
 					self.put_message('err', 'Must choose an address')
 				elif vars.getvalue('cfgport', '') == '':
@@ -245,8 +247,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					self.put_message('err', 'A site with this name already exists')
 				elif port == self.app.gconfig.get('genesis', 'bind_port', ''):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
-				elif ' ' in name or '-' in name:
-					self.put_message('err', 'Site name must not contain spaces or dashes')
+				elif re.search('\.|-|[ ]', name):
+					self.put_message('err', 'Site name must not contain spaces, dots or dashes')
 				else:
 					w = WAWorker(self, 'add', name, self._current, vars)
 					w.start()

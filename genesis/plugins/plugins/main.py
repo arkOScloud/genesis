@@ -118,8 +118,13 @@ class PluginManager(CategoryPlugin, URLHandler):
     @event('button/click')
     def on_click(self, event, params, vars=None):
         if params[0] == 'update':
-            self._mgr.update_list()
-            self.put_message('info', 'Plugin list updated')
+            try:
+                self._mgr.update_list(crit=True)
+            except Exception, e:
+                self.put_message('err', str(e))
+                self.app.log.error(str(e))
+            else:
+                self.put_message('info', 'Plugin list updated')
         if params[0] == 'remove':
             try:
                 self._mgr.check_conflict(params[1], 'remove')

@@ -118,7 +118,7 @@ class LinuxConfig(ModuleConfig):
     cmd_set_user_uid = 'usermod -u {0} {1}'
     cmd_set_user_gid = 'usermod -g {0} {1}'
     cmd_set_user_shell = 'usermod -s {0} {1}'
-    cmd_set_user_home = 'usermod -h {0} {1}'
+    cmd_set_user_home = 'usermod -d {0} {1}'
     cmd_set_group_gname = 'groupmod -n {0} {1}'
     cmd_set_group_ggid = 'groupmod -g {0} {1}'
     cmd_add_to_group = 'adduser {0} {1}'
