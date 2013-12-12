@@ -14,7 +14,7 @@ import shutil
 class ownCloud(Plugin):
 	implements(apis.webapps.IWebapp)
 	name = 'ownCloud'
-	dpath = 'http://download.owncloud.org/community/owncloud-5.0.13.tar.bz2'
+	dpath = 'http://download.owncloud.org/community/owncloud-6.0.0.tar.bz2'
 	icon = 'gen-cloud'
 	dbengine = 'MariaDB'
 	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
@@ -131,6 +131,8 @@ class ownCloud(Plugin):
 		# Make sure xcache has the correct settings, otherwise ownCloud breaks
 		f = open('/etc/php/conf.d/xcache.ini', 'w')
 		oc = ['extension=xcache.so\n',
+			'xcache.size=64M\n',
+			'xcache.var_size=64M\n',
 			'xcache.admin.enable_auth = Off\n',
 			'xcache.admin.user = "admin"\n',
 			'xcache.admin.pass = "'+secret_key[8:24]+'"\n']
