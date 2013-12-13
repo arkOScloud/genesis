@@ -123,6 +123,7 @@ class ownCloud(Plugin):
 
 		# Make sure that the correct PHP settings are enabled
 		shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
+		shell('sed -i s/\;extension=pdo_mysql.so/extension=pdo_mysql.so/g /etc/php/php.ini')
 		shell('sed -i s/\;extension=zip.so/extension=zip.so/g /etc/php/php.ini')
 		shell('sed -i s/\;extension=gd.so/extension=gd.so/g /etc/php/php.ini')
 		shell('sed -i s/\;extension=iconv.so/extension=iconv.so/g /etc/php/php.ini')
