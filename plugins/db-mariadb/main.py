@@ -15,7 +15,7 @@ class MariaDB(Plugin):
     multiuser = True
 
     def add(self, dbname):
-        if re.search('\.|-|`|\\\\|\/|[ ]', dbname):
+        if re.search('\.|-|`|\\\\|\/|^test$|[ ]', dbname):
             raise Exception('Name must not contain spaces, dots, dashes or other special characters')
         elif len(dbname) > 16:
             raise Exception('Database name must be shorter than 16 characters')
@@ -34,7 +34,7 @@ class MariaDB(Plugin):
 
     def usermod(self, user, action, passwd):
         if action == 'add':
-            if re.search('\.|-|`|\\\\|\/|[ ]', user):
+            if re.search('\.|-|`|\\\\|\/|^test$|[ ]', user):
                 raise Exception('Name must not contain spaces, dots, dashes or other special characters')
             status = shell_cs(
                 'mysql -e "CREATE USER \'%s\'@\'localhost\' IDENTIFIED BY \'%s\';"'
