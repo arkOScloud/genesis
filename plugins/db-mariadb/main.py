@@ -4,6 +4,8 @@ from genesis.com import Plugin, Interface, implements
 from genesis import apis
 from genesis.utils import *
 
+import re
+
 
 class MariaDB(Plugin):
     implements(apis.databases.IDatabase)
@@ -13,8 +15,8 @@ class MariaDB(Plugin):
     multiuser = True
 
     def add(self, dbname):
-        if ' ' in dbname or '-' in dbname:
-            raise Exception('Database name must not contain spaces or dashes')
+        if re.search('\.|-|`|\\\\|\/|[ ]', dbname):
+            raise Exception('Name must not contain spaces, dots, dashes or other special characters')
         elif len(dbname) > 16:
             raise Exception('Database name must be shorter than 16 characters')
         status = shell_cs(
@@ -32,6 +34,8 @@ class MariaDB(Plugin):
 
     def usermod(self, user, action, passwd):
         if action == 'add':
+            if re.search('\.|-|`|\\\\|\/|[ ]', user):
+                raise Exception('Name must not contain spaces, dots, dashes or other special characters')
             status = shell_cs(
                 'mysql -e "CREATE USER \'%s\'@\'localhost\' IDENTIFIED BY \'%s\';"'
                 % (user,passwd), stderr=True

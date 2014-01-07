@@ -5,6 +5,7 @@ from genesis import apis
 from genesis.utils import *
 
 import os
+import re
 
 
 class SQLite3(Plugin):
@@ -15,6 +16,8 @@ class SQLite3(Plugin):
     multiuser = False
 
     def add(self, dbname):
+        if re.search('\.|-|`|\\\\|\/|[ ]', dbname):
+            raise Exception('Name must not contain spaces, dots, dashes or other special characters')
         self.chkpath()
         path = '/var/lib/sqlite3/%s.db' % dbname
         status = shell_cs('sqlite3 %s "ATTACH \'%s\' AS %s;"' % (path,path,dbname), stderr=True)

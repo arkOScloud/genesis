@@ -210,8 +210,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				name = vars.getvalue('cfgname', '')
 				if name == '':
 					self.put_message('err', 'Must choose a name')
-				elif re.search('\.|-|[ ]', name):
-					self.put_message('err', 'Site name must not contain spaces, dots or dashes')
+				elif re.search('\.|-|`|\\\\|\/|[ ]', name):
+					self.put_message('err', 'Site name must not contain spaces, dots, dashes or special characters')
 				elif vars.getvalue('cfgaddr', '') == '':
 					self.put_message('err', 'Must choose an address')
 				elif vars.getvalue('cfgport', '') == '':
@@ -247,8 +247,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					self.put_message('err', 'A site with this name already exists')
 				elif port == self.app.gconfig.get('genesis', 'bind_port', ''):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
-				elif re.search('\.|-|[ ]', name):
-					self.put_message('err', 'Site name must not contain spaces, dots or dashes')
+				elif re.search('\.|-|`|\\\\|\/|[ ]', name):
+					self.put_message('err', 'Site name must not contain spaces, dots, dashes or special characters')
 				else:
 					w = WAWorker(self, 'add', name, self._current, vars)
 					w.start()
