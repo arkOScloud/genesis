@@ -91,7 +91,7 @@ class WebappControl(Plugin):
 				path=target_path, 
 				addr=vars.getvalue('addr', 'localhost'), 
 				port=vars.getvalue('port', '80'), 
-				add=(addtoblock if addtoblock is not '' else webapp.addtoblock), 
+				add=(addtoblock if addtoblock else webapp.addtoblock), 
 				php=(True if webapp.php is True or php is '1' else False)
 				)
 		except Exception, e:

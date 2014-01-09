@@ -187,8 +187,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			if hasattr(self.sites[int(params[1])]['class'], 'dbengine') and \
 			self.dbops.get_interface(self.sites[int(params[1])]['class'].dbengine).requires_conn and \
 			not self.dbops.get_dbconn(self.sites[int(params[1])]['class'].dbengine):
-				self._dbauth[0] = self.sites[int(params[1])]
-				self._dbauth[1] = 'drop'
+				self._dbauth = (self.sites[int(params[1])], 'drop')
 			else:
 				w = WAWorker(self, 'drop', self.sites[int(params[1])])
 				w.start()
