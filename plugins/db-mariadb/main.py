@@ -104,15 +104,18 @@ class MariaDB(Plugin):
     def execute(self, dbname, command, conn=None):
         if not self.db and conn:
             self.db = conn
+        cmds = command.split(';')
         if self.db:
             self.db.query('USE %s' % dbname)
-            self.db.query('%s' % command)
-            r = self.db.store_result()
-            out = r.fetch_row(0)
             parse = []
+            for x in cmds:
+                if x.split():
+                    self.db.query('%s' % x)
+                    r = self.db.store_result()
+                    out = r.fetch_row(0)
+                    for line in out:
+                        parse.append(line[0])
             status = ''
-            for line in out:
-                parse.append(line[0].split())
             for line in parse:
                 status += line + '\n'
             return status

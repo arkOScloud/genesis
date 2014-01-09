@@ -1,5 +1,6 @@
 <xml>
 	<dialogbox id="dlgExec">
+		<p id="execmsg" style="max-width: 400px; color: #FF0000; font-weight: bold;"></p>
 	    <formline text="Input">
 	        <textinputarea name="input" id="input" value="" />
 	    </formline>

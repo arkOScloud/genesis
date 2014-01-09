@@ -35,6 +35,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 		self._useradd = None
 		self._chmod = None
 		self._exec = None
+		self._execmsg = ''
 		self._import = None
 		self._input = None
 		self._output = None
@@ -154,6 +155,9 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 
 		if self._exec is not None:
 			edlg = self.app.inflate('databases:execute')
+			if self._execmsg:
+				edlg.insertText('execmsg', self._execmsg)
+				self._execmsg = ''
 			if self._input is not None:
 				elem = edlg.find('input')
 				elem.set('value', self._input)
@@ -269,8 +273,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 				try:
 					self._output = iface.execute(self._exec['name'], self._input)
 				except Exception, e:
-					raise
-					self.put_message('err', 'Execute failed: %s' % str(e))
+					self._execmsg = str(e[1])
 			else:
 				self._exec = None
 		elif params[0] == 'dlgAddUser':
