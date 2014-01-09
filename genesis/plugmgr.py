@@ -407,6 +407,8 @@ class PluginLoader:
             try:
                 exec('import %s'%dep[1])
             except:
+                # Let's try to install it anyway
+                shell('pip2 install %s' % dep[2])
                 raise ModuleRequirementError(*dep[1:])
 
     @staticmethod
