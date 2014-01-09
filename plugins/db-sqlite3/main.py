@@ -36,20 +36,23 @@ class SQLite3(Plugin):
         pass
 
     def execute(self, dbname, command):
-        cmds = command.split(';')
-        conn = sqlite3.connect('/var/lib/sqlite3/%s.db' % dbname)
-        c = conn.cursor()
-        parse = []
-        for x in cmds:
-            if x.split():
-                c.execute('%s' % x)
-                out = c.fetchall()
-                for line in out:
-                    parse.append(line[0])
-        status = ''
-        for line in parse:
-            status += line + '\n'
-        return status
+        try:
+            cmds = command.split(';')
+            conn = sqlite3.connect('/var/lib/sqlite3/%s.db' % dbname)
+            c = conn.cursor()
+            parse = []
+            for x in cmds:
+                if x.split():
+                    c.execute('%s' % x)
+                    out = c.fetchall()
+                    for line in out:
+                        parse.append(line[0])
+            status = ''
+            for line in parse:
+                status += line + '\n'
+            return status
+        except Exception, e:
+            raise Exception('', e)
 
     def get_dbs(self):
         self.chkpath()
