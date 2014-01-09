@@ -2,6 +2,8 @@ from genesis.com import *
 from genesis import apis
 from genesis.utils import shell_status
 
+from utils import *
+
 class Databases(apis.API):
 	def __init__(self, app):
 		self.app = app
@@ -28,6 +30,21 @@ class Databases(apis.API):
 		def get_users(self):
 			pass
 
+	def get_dbconn(self, dbtype):
+		if self.app.session.has_key('dbconns') and \
+		dbtype in self.app.session['dbconns']:
+			return self.app.session['dbconns'][dbtype]
+		elif self.app.session.has_key('dbconns'):
+			return False
+		else:
+			self.app.session['dbconns'] = {}
+			return False
+
+	def clear_dbconn(self, dbtype):
+		if self.app.session.has_key('dbconns') and \
+		dbtype in self.app.session['dbconns']:
+			del self.app.session['dbconns'][dbtype]
+
 	def get_dbtypes(self):
 		dblist = []
 		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
@@ -42,11 +59,22 @@ class Databases(apis.API):
 		return dblist
 
 	def get_databases(self):
-		dblist = []
-		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
-			for item in plugin.get_dbs():
-				dblist.append(item)
-		return dblist
+		try:
+			dblist = []
+			for plugin in self.app.grab_plugins(apis.databases.IDatabase):
+				if plugin.multiuser:
+					try:
+						dbconn = self.app.session['dbconns'][plugin.name]
+						for item in plugin.get_dbs(dbconn):
+							dblist.append(item)
+					except:
+						pass
+				else:
+					for item in plugin.get_dbs():
+						dblist.append(item)
+			return dblist
+		except DBConnFail:
+			return []
 
 	def get_interface(self, name):
 		interface = ''
@@ -56,9 +84,18 @@ class Databases(apis.API):
 		return interface
 
 	def get_users(self):
-		userlist = []
-		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
-			if plugin.multiuser == True:
-				for item in plugin.get_users():
-					userlist.append(item)
-		return userlist
+		try:
+			userlist = []
+			for plugin in self.app.grab_plugins(apis.databases.IDatabase):
+				if plugin.multiuser:
+					try:
+						dbconn = self.app.session['dbconns'][plugin.name]
+						for item in plugin.get_users(dbconn):
+							userlist.append(item)
+					except:
+						pass
+			return userlist
+		except DBConnFail:
+			return []
+
+

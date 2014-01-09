@@ -3,8 +3,11 @@ from genesis.ui import *
 from genesis.com import Plugin, Interface, implements
 from genesis import apis
 from genesis.utils import *
+from genesis.plugins.databases.utils import *
 
 import re
+import _mysql
+import _mysql_exceptions
 
 
 class MariaDB(Plugin):
@@ -13,97 +16,145 @@ class MariaDB(Plugin):
     icon = 'gen-database'
     task = 'mysqld'
     multiuser = True
+    requires_conn = True
+    db = None
 
-    def add(self, dbname):
+    def connect(self, store, user='root', passwd='', db=None):
+        if db:
+            self.db = _mysql.connect('localhost', user, passwd, db)
+            store[self.name] = self.db
+        else:
+            try:
+                self.db = _mysql.connect('localhost', user, passwd)
+            except _mysql_exceptions.OperationalError:
+                raise DBAuthFail(self.name)
+            store[self.name] = self.db
+
+    def checkpwstat(self):
+        try:
+            _mysql.connect('localhost', 'root', '')
+            return False
+        except:
+            return True
+
+    def chpwstat(self, newpasswd, conn=None):
+        if not self.db and conn:
+            self.db = conn
+        self.db.query('USE mysql')
+        self.db.query('UPDATE user SET password=PASSWORD("'+newpasswd+'") WHERE User=\'root\'')
+        self.db.query('FLUSH PRIVILEGES')
+
+    def add(self, dbname, conn=None):
         if re.search('\.|-|`|\\\\|\/|^test$|[ ]', dbname):
             raise Exception('Name must not contain spaces, dots, dashes or other special characters')
         elif len(dbname) > 16:
             raise Exception('Database name must be shorter than 16 characters')
-        status = shell_cs(
-            'mysql -e "CREATE DATABASE %s;"' % dbname, stderr=True
-        )
-        if status[0] >= 1:
-            raise Exception(status[1])
+        self.db.query('CREATE DATABASE %s' % dbname)
 
-    def remove(self, dbname):
-        status = shell_cs(
-            'mysql -e "DROP DATABASE %s;"' % dbname, stderr=True
-        )
-        if status[0] >= 1:
-            raise Exception(status[1])
+    def remove(self, dbname, conn=None):
+        if not self.db and conn:
+            self.db = conn
+        if self.db:
+            self.db.query('DROP DATABASE %s' % dbname)
+        else:
+            raise DBConnFail(self.name)
 
-    def usermod(self, user, action, passwd):
-        if action == 'add':
+    def usermod(self, user, action, passwd, conn=None):
+        if not self.db and conn:
+            self.db = conn
+        if action == 'add' and self.db:
             if re.search('\.|-|`|\\\\|\/|^test$|[ ]', user):
                 raise Exception('Name must not contain spaces, dots, dashes or other special characters')
-            status = shell_cs(
-                'mysql -e "CREATE USER \'%s\'@\'localhost\' IDENTIFIED BY \'%s\';"'
-                % (user,passwd), stderr=True
-            )
-        elif action == 'del':
-            status = shell_cs(
-                'mysql -e "DROP USER \'%s\'@\'localhost\';"'
-                % user, stderr=True
-            )
-        if status[0] >= 1:
-            raise Exception(status[1])
+            self.db.query('CREATE USER \'%s\'@\'localhost\' IDENTIFIED BY \'%s\''
+                % (user,passwd))
+        elif action == 'del' and self.db:
+            self.db.query('DROP USER \'%s\'@\'localhost\'' % user)
+        else:
+            raise Exception('Unknown input or database connection failure')
 
-    def chperm(self, dbname, user, action):
-        if action == 'check':
-            out = shell_cs(
-                'mysql -e "SHOW GRANTS FOR \'%s\'@\'localhost\';"'
-                % user, stderr=True
-            )
+    def chperm(self, dbname, user, action, conn=None):
+        if not self.db and conn:
+            self.db = conn
+        if action == 'check' and self.db:
+            self.db.query('SHOW GRANTS FOR \'%s\'@\'localhost\''
+                % user)
+            r = self.db.store_result()
+            out = r.fetch_row(0)
             parse = []
             status = ''
-            for line in out[1].split('\n'):
-                if line.startswith('Grants for'):
+            for line in out:
+                if line[0].startswith('Grants for'):
                     continue
-                elif line is '' or line is ' ':
+                elif line[0] is '' or line[0] is ' ':
                     continue
                 else:
-                    parse.append(line.split(' IDENT')[0])
+                    parse.append(line[0].split(' IDENT')[0])
             for line in parse:
                 status += line + '\n'
             return status
-        elif action == 'grant':
-            status = shell_cs(
-                'mysql -e "GRANT ALL ON %s.* TO \'%s\'@\'localhost\';"' 
-                % (dbname,user), stderr=True
-            )
-        elif action == 'revoke':
-            status = shell_cs(
-                'mysql -e "REVOKE ALL ON %s.* FROM \'%s\'@\'localhost\';"' 
-                % (dbname,user), stderr=True
-            )
-        if status[0] >= 1:
-            raise Exception(status[1])
+        elif action == 'grant' and self.db:
+            self.db.query('GRANT ALL ON %s.* TO \'%s\'@\'localhost\'' 
+                % (dbname, user))
+        elif action == 'revoke' and self.db:
+            self.db.query('REVOKE ALL ON %s.* FROM \'%s\'@\'localhost\'' 
+                % (dbname, user))
+        else:
+            raise Exception('Unknown input or database connection failure')
 
-    def execute(self, dbname, command):
-        return shell('mysql -e "%s" %s' % (command, dbname), stderr=True)
+    def execute(self, dbname, command, conn=None):
+        if not self.db and conn:
+            self.db = conn
+        if self.db:
+            self.db.query('USE %s' % dbname)
+            self.db.query('%s' % command)
+            r = self.db.store_result()
+            out = r.fetch_row(0)
+            parse = []
+            status = ''
+            for line in out:
+                parse.append(line[0].split())
+            for line in parse:
+                status += line + '\n'
+            return status
+        else:
+            raise DBConnFail(self.name)
 
-    def get_dbs(self):
+    def get_dbs(self, conn=None):
         dblist = []
         excludes = ['Database', 'information_schema', 
             'mysql', 'performance_schema']
-        dbs = shell('mysql -e "SHOW DATABASES;"')
-        for line in dbs.split('\n'):
-            if not line in excludes and line.split():
+        if not self.db and conn:
+            self.db = conn
+        if self.db:
+            self.db.query('SHOW DATABASES')
+            r = self.db.store_result()
+            dbs = r.fetch_row(0)
+        else:
+            raise DBConnFail(self.name)
+        for db in dbs:
+            if not db[0] in excludes and db[0].split():
                 dblist.append({
-                    'name': line,
+                    'name': db[0],
                     'type': 'MariaDB',
                     'class': self.__class__
                 })
         return dblist
 
-    def get_users(self):
+    def get_users(self, conn=None):
         userlist = []
         excludes = ['root', ' ', '']
-        output = shell('mysql -e "SELECT user FROM mysql.user;"')
-        for line in output.split('\n')[1:]:
-            if not line in userlist and not line in excludes:
+        if not self.db and conn:
+            self.db = conn
+        if self.db:
+            self.db.query('SELECT user FROM mysql.user')
+            r = self.db.store_result()
+            output = r.fetch_row(0)
+        else:
+            raise DBConnFail(self.name)
+        for usr in output:
+            if not usr[0] in userlist and not usr[0] in excludes:
                 userlist.append({
-                    'name': line,
+                    'name': usr[0],
                     'type': 'MariaDB',
                     'class': self.__class__
                 })

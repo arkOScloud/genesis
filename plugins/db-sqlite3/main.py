@@ -14,6 +14,7 @@ class SQLite3(Plugin):
     icon = 'gen-database'
     task = ''
     multiuser = False
+    requires_conn = False
 
     def add(self, dbname):
         if re.search('\.|-|`|\\\\|\/|[ ]', dbname):
@@ -41,7 +42,7 @@ class SQLite3(Plugin):
         dblist = []
         for thing in os.listdir('/var/lib/sqlite3'):
             if thing.endswith('.db'):
-                dblist.append({'name': thing.rstrip('.db'), 'type': 'SQLite3', 'class': self.__class__})
+                dblist.append({'name': thing.split('.db')[0], 'type': 'SQLite3', 'class': self.__class__})
         return dblist
 
     def get_users(self):
