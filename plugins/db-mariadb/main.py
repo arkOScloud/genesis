@@ -45,6 +45,8 @@ class MariaDB(Plugin):
         self.db.query('FLUSH PRIVILEGES')
 
     def add(self, dbname, conn=None):
+        if not self.db and conn:
+            self.db = conn
         if re.search('\.|-|`|\\\\|\/|^test$|[ ]', dbname):
             raise Exception('Name must not contain spaces, dots, dashes or other special characters')
         elif len(dbname) > 16:

@@ -4,6 +4,7 @@ from genesis.plugins.core.api import *
 from genesis.ui import *
 from genesis import apis
 from genesis.utils import *
+from genesis.plugins.databases.utils import *
 
 import re
 
@@ -26,6 +27,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			self._relsec = None
 		self.services = []
 		self.apiops = apis.webapps(self.app)
+		self.dbops = apis.databases(self.app)
 		self.mgr = WebappControl(self.app)
 		self.sites = sorted(self.apiops.get_sites(), 
 			key=lambda st: st['name'])
@@ -56,6 +58,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		self._edit = None
 		self._setup = None
 		self._relsec = None
+		self._dbauth = ('','')
 
 	def get_main_ui(self):
 		ui = self.app.inflate('webapps:main')
@@ -137,14 +140,13 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				if self._setup.name == 'Website':
 					cfgui = self.app.inflate('webapps:conf')
 					type_sel = [UI.SelectOption(text='None', value='None')]
-					for x in sorted(apis.databases(self.app).get_dbtypes()):
+					for x in sorted(self.dbops.get_dbtypes()):
 						type_sel.append(UI.SelectOption(text=x[0], value=x[0]))
 					cfgui.appendAll('ws-dbsel', *type_sel)
 				else:
 					cfgui = self.app.inflate(self._setup.__class__.__name__.lower() + ':conf')
 				ui.append('app-config', cfgui)
 			except:
-				raise
 				ui.find('app-config').append(UI.Label(text="No config options available for this app"))
 		else:
 			ui.remove('dlgSetup')
@@ -161,6 +163,15 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		else:
 			ui.remove('dlgEdit')
 
+		if self._dbauth[0] and self._dbauth[1] == 'add':
+			ui.append('main', UI.InputBox(id='dlgAuth%s' % self._dbauth[0], 
+				text='Enter the database password for %s' 
+				% self._dbauth[0], password=True))
+		elif self._dbauth[0]:
+			ui.append('main', UI.InputBox(id='dlgAuth%s' % self._dbauth[0]['class'].dbengine, 
+				text='Enter the database password for %s' 
+				% self._dbauth[0]['class'].dbengine, password=True))
+
 		return ui
 
 	@event('button/click')
@@ -173,8 +184,14 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		elif params[0] == 'config':
 			self._edit = self.sites[int(params[1])]
 		elif params[0] == 'drop':
-			w = WAWorker(self, 'drop', self.sites[int(params[1])])
-			w.start()
+			if hasattr(self.sites[int(params[1])]['class'], 'dbengine') and \
+			self.dbops.get_interface(self.sites[int(params[1])]['class'].dbengine).requires_conn and \
+			not self.dbops.get_dbconn(self.sites[int(params[1])]['class'].dbengine):
+				self._dbauth[0] = self.sites[int(params[1])]
+				self._dbauth[1] = 'drop'
+			else:
+				w = WAWorker(self, 'drop', self.sites[int(params[1])])
+				w.start()
 		elif params[0] == 'enable':
 			dt = self.sites[int(params[1])]
 			self.mgr.nginx_enable(dt['name'])
@@ -193,13 +210,17 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			if vars.getvalue('action', '') == 'OK':
 				if hasattr(self._current, 'dbengine'):
 					on = False
-					for dbtype in apis.databases(self.app).get_dbtypes():
+					for dbtype in self.dbops.get_dbtypes():
 						if self._current.dbengine == dbtype[0] and dbtype[2] == True:
 							on = True
 						elif self._current.dbengine == dbtype[0] and dbtype[2] == None:
 							on = True
 					if on:
-						self._setup = self._current
+						if self.dbops.get_interface(self._current.dbengine).requires_conn and \
+						not self.dbops.get_dbconn(self._current.dbengine):
+							self._dbauth = (self._current.dbengine, 'add')
+						else:
+							self._setup = self._current
 					else:
 						self.put_message('err', 'The database engine for %s is not running. Please start it via the Status button.' % self._current.dbengine)
 				else:
@@ -252,8 +273,27 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				else:
 					w = WAWorker(self, 'add', name, self._current, vars)
 					w.start()
-					
 			self._setup = None
+		if params[0].startswith('dlgAuth'):
+			dbtype = params[0].split('dlgAuth')[1]
+			if vars.getvalue('action', '') == 'OK':
+				login = vars.getvalue('value', '')
+				try:
+					dbauth = self._dbauth
+					self._dbauth = ('','')
+					self.dbops.get_interface(dbtype).connect(
+						store=self.app.session['dbconns'],
+						passwd=login)
+					if dbauth[1] == 'drop':
+						w = WAWorker(self, 'drop', dbauth[0])
+						w.start()
+					elif dbauth[1] == 'add':
+						self._setup = self._current
+				except DBAuthFail, e:
+					self.put_message('err', str(e))
+			else:
+				self.put_message('info', 'Website %s cancelled' % self._dbauth[1])
+				self._dbauth = ('','')
 
 	@event('listitem/click')
 	def on_list_click(self, event, params, vars=None):

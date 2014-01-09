@@ -14,13 +14,14 @@ import shutil
 class ownCloud(Plugin):
 	implements(apis.webapps.IWebapp)
 	name = 'ownCloud'
-	dpath = 'http://download.owncloud.org/community/owncloud-6.0.0.tar.bz2'
+	dpath = 'https://download.owncloud.org/community/owncloud-6.0.0a.tar.bz2'
 	icon = 'gen-cloud'
 	dbengine = 'MariaDB'
 	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
 	php = True
 	nomulti = True
 	ssl = True
+
 	addtoblock = (
 		'	error_page 403 = /core/templates/403.php;\n'
 		'	error_page 404 = /core/templates/404.php;\n'
@@ -78,6 +79,7 @@ class ownCloud(Plugin):
 
 	def post_install(self, name, path, vars):
 		dbase = apis.databases(self.app).get_interface('MariaDB')
+		conn = apis.databases(self.app).get_dbconn('MariaDB')
 		if vars.getvalue('oc-dbname', '') == '':
 			dbname = name
 		else:
@@ -91,9 +93,9 @@ class ownCloud(Plugin):
 		logpasswd = vars.getvalue('oc-logpasswd')
 
 		# Request a database and user to interact with it
-		dbase.add(dbname)
-		dbase.usermod(dbname, 'add', passwd)
-		dbase.chperm(dbname, dbname, 'grant')
+		dbase.add(dbname, conn)
+		dbase.usermod(dbname, 'add', passwd, conn)
+		dbase.chperm(dbname, dbname, 'grant', conn)
 
 		# Set ownership as necessary
 		os.makedirs(os.path.join(path, 'data'))
@@ -162,8 +164,9 @@ class ownCloud(Plugin):
 					break
 			f.close()
 		dbase = apis.databases(self.app).get_interface('MariaDB')
-		dbase.remove(dbname)
-		dbase.usermod(dbname, 'del', '')
+		conn = apis.databases(self.app).get_dbconn('MariaDB')
+		dbase.remove(dbname, conn)
+		dbase.usermod(dbname, 'del', '', conn)
 
 	def post_remove(self, name):
 		pass

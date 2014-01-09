@@ -13,7 +13,7 @@ import urllib
 class WordPress(Plugin):
 	implements(apis.webapps.IWebapp)
 	name = 'WordPress'
-	dpath = 'https://wordpress.org/latest.tar.gz'
+	dpath = 'https://wordpress.org/wordpress-3.8.tar.gz'
 	icon = 'gen-earth'
 	dbengine = 'MariaDB'
 	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
@@ -59,6 +59,7 @@ class WordPress(Plugin):
 	def post_install(self, name, path, vars):
 		# Get the database object, and determine proper values
 		dbase = apis.databases(self.app).get_interface('MariaDB')
+		conn = apis.databases(self.app).get_dbconn('MariaDB')
 		if vars.getvalue('wp-dbname', '') == '':
 			dbname = name
 		else:
@@ -70,9 +71,9 @@ class WordPress(Plugin):
 			passwd = vars.getvalue('wp-dbpasswd')
 
 		# Request a database and user to interact with it
-		dbase.add(dbname)
-		dbase.usermod(dbname, 'add', passwd)
-		dbase.chperm(dbname, dbname, 'grant')
+		dbase.add(dbname, conn)
+		dbase.usermod(dbname, 'add', passwd, conn)
+		dbase.chperm(dbname, dbname, 'grant', conn)
 
 		# Use the WordPress key generators as first option
 		# If connection fails, use the secret_key as fallback
@@ -131,8 +132,9 @@ class WordPress(Plugin):
 				break
 		f.close()
 		dbase = apis.databases(self.app).get_interface('MariaDB')
-		dbase.remove(dbname)
-		dbase.usermod(dbname, 'del', '')
+		conn = apis.databases(self.app).get_dbconn('MariaDB')
+		dbase.remove(dbname, conn)
+		dbase.usermod(dbname, 'del', '', conn)
 
 	def post_remove(self, name):
 		pass

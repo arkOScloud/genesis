@@ -98,6 +98,8 @@ class WebappControl(Plugin):
 			cat.put_statusmsg('Running post-install configuration...')
 			specialmsg = webapp.post_install(name, target_path, vars)
 		except Exception, e:
+			shutil.rmtree(target_path, True)
+			self.nginx_remove(name, False)
 			raise InstallError('Webapp config - '+str(e))
 
 		if enable is True:
