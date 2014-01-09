@@ -64,8 +64,8 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 					self.put_message('err', '%s does not have a root password set. '
 						'Please add this via the Settings tab.' % dbtype[0])
 					ubutton = True
-				elif self.dbops.get_interface(dbtype[0]).requires_conn == True and \
-				not dbtype[0] in self._cancelauth and \
+				elif not dbtype[0] in self._cancelauth and \
+				self.dbops.get_interface(dbtype[0]).requires_conn == True and \
 				not self.dbops.get_dbconn(dbtype[0]):
 					ui.append('main', 
 						UI.InputBox(id='dlgAuth%s' % dbtype[0], 
@@ -79,15 +79,6 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 					ubutton = True
 				else:
 					self._rootpwds[dbtype[0]] = True
-			
-		if ubutton == True:
-			tlbr.append(
-				UI.Button(
-					id="adduser",
-					text="Add user",
-					iconfont="gen-user-plus"
-					)
-				)
 
 		for d in self.dbs:
 			t.append(UI.DTR(
@@ -146,10 +137,16 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 			if self.dbops.get_interface(dbtype[0]).requires_conn:
 				st.append(UI.Formline(UI.Button(text='Reauthenticate', id='reauth/'+dbtype[0])))
 
+		type_sel_all = [UI.SelectOption(text = x[0], value = x[0])
+			for x in self.dbtypes if x[0] not in self._cancelauth]
+		type_sel_multiuser = [UI.SelectOption(text = x[0], value = x[0])
+			for x in self.dbtypes if x[0] not in self._cancelauth and \
+			self.dbops.get_interface(x[0]).multiuser]
+		if not type_sel_multiuser:
+			ubutton = False
+
 		if self._add is not None:
-			type_sel = [UI.SelectOption(text = x[0], value = x[0])
-                    for x in self.dbtypes]
-			ui.appendAll('type', *type_sel)
+			ui.appendAll('type', *type_sel_all)
 		else:
 			ui.remove('dlgAdd')
 
@@ -167,11 +164,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 			ui.append('main', edlg)
 
 		if self._useradd is not None:
-			type_sel = []
-			for x in self.dbtypes:
-				if self.dbops.get_interface(x[0]).multiuser == True:
-					type_sel.append(UI.SelectOption(text=x[0], value=x[0]))
-			ui.appendAll('usertype', *type_sel)
+			ui.appendAll('usertype', *type_sel_multiuser)
 		else:
 			ui.remove('dlgAddUser')
 
@@ -184,6 +177,15 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 			ui.appendAll('dblist', *dblist)
 		else:
 			ui.remove('dlgChmod')
+
+		if ubutton == True:
+			tlbr.append(
+				UI.Button(
+					id="adduser",
+					text="Add user",
+					iconfont="gen-user-plus"
+					)
+				)
 
 		return ui
 
@@ -326,7 +328,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 			else:
 				self.put_message('err', 'You refused to authenticate to %s. '
 					'You will not be able to perform operations with this database type. '
-					'Go to Settings and click Reauthenticate to retry.'% dbtype)
+					'Go to Settings and click Reauthenticate to retry.' % dbtype)
 				self._cancelauth.append(dbtype)
 		elif params[0].startswith('frmPasswd'):
 			dbtype = params[0].split('frmPasswd')[1]
