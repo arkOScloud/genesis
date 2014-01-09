@@ -6,6 +6,7 @@ from genesis.utils import *
 
 import os
 import re
+import sqlite3
 
 
 class SQLite3(Plugin):
@@ -35,7 +36,20 @@ class SQLite3(Plugin):
         pass
 
     def execute(self, dbname, command):
-        return shell('sqlite3 /var/lib/sqlite3/%s.db "%s"' % (dbname, command), stderr=True)
+        cmds = command.split(';')
+        conn = sqlite3.connect('/var/lib/sqlite3/%s.db' % dbname)
+        c = conn.cursor()
+        parse = []
+        for x in cmds:
+            if x.split():
+                c.execute('%s' % x)
+                out = c.fetchall()
+                for line in out:
+                    parse.append(line[0])
+        status = ''
+        for line in parse:
+            status += line + '\n'
+        return status
 
     def get_dbs(self):
         self.chkpath()

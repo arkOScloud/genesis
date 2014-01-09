@@ -4,6 +4,7 @@ DEPS =  [
     (['any'],
      [
     	('app', 'mariadb', 'mysqld'),
+    	('module', '_mysql', 'mysql-python')
      ])
 ]
 
@@ -11,7 +12,7 @@ NAME = 'Database - MariaDB'
 ICON = 'gen-database'
 PLATFORMS = ['any']
 DESCRIPTION = 'Add MariaDB support to Databases'
-VERSION = '1'
+VERSION = '2'
 GENERATION = 1
 AUTHOR = 'arkOS'
-HOMEPAGE = 'http://arkos.io'
+HOMEPAGE = 'https://arkos.io'
