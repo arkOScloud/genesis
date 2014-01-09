@@ -3,7 +3,7 @@ MODULES = ['main']
 DEPS =  [
     (['any'],
      [
-        ('module', 'psutil'),
+        ('module', 'psutil', 'psutil'),
      ])
 ]
 
@@ -11,7 +11,7 @@ NAME = 'Task Monitor'
 ICON = 'gen-enter'
 PLATFORMS = ['any']
 DESCRIPTION = 'View and/or kill running processes'
-VERSION = '2'
+VERSION = '3'
 GENERATION = 1
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
