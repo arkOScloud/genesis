@@ -59,6 +59,12 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 				self.dbtypes.remove(dbtype)
 			else:
 				if self.dbops.get_interface(dbtype[0]).requires_conn == True and \
+				not self.dbops.get_interface(dbtype[0]).checkpwstat():
+					self._rootpwds[dbtype[0]] = False
+					self.put_message('err', '%s does not have a root password set. '
+						'Please add this via the Settings tab.' % dbtype[0])
+					ubutton = True
+				elif self.dbops.get_interface(dbtype[0]).requires_conn == True and \
 				not dbtype[0] in self._cancelauth and \
 				not self.dbops.get_dbconn(dbtype[0]):
 					ui.append('main', 
@@ -68,12 +74,6 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 							password=True)
 					)
 					self._rootpwds[dbtype[0]] = True
-				elif self.dbops.get_interface(dbtype[0]).requires_conn == True and \
-				not self.dbops.get_interface(dbtype[0]).checkpwstat():
-					self._rootpwds[dbtype[0]] = False
-					self.put_message('err', '%s does not have a root password set. '
-						'Please add this via the Settings tab.' % dbtype[0])
-					ubutton = True
 				elif self.dbops.get_interface(dbtype[0]).multiuser == True:
 					self._rootpwds[dbtype[0]] = True
 					ubutton = True
@@ -335,6 +335,12 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 				self.put_message('err', 'Passwords must match')
 			else:
 				try:
+					if not self.app.session.has_key('dbconns'):
+						self.app.session['dbconns'] = {}
+					if not self.dbops.get_interface(dbtype).checkpwstat():
+						self.dbops.get_interface(dbtype).connect(
+							store=self.app.session['dbconns'],
+							passwd='')
 					self.dbops.get_interface(dbtype).chpwstat(
 						vars.getvalue('newpasswd'),
 						self.app.session['dbconns'][dbtype]

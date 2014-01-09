@@ -58,7 +58,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		self._edit = None
 		self._setup = None
 		self._relsec = None
-		self._dbauth = ('','')
+		self._dbauth = ('','','')
 
 	def get_main_ui(self):
 		ui = self.app.inflate('webapps:main')
@@ -163,14 +163,14 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		else:
 			ui.remove('dlgEdit')
 
-		if self._dbauth[0] and self._dbauth[1] == 'add':
+		if self._dbauth[0] and not self.dbops.get_interface(self._dbauth[0]).checkpwstat():
+			self.put_message('err', '%s does not have a root password set. '
+				'Please add this via the Databases screen.' % self._dbauth[0])
+			self._dbauth = ('','','')
+		if self._dbauth[0]:
 			ui.append('main', UI.InputBox(id='dlgAuth%s' % self._dbauth[0], 
 				text='Enter the database password for %s' 
 				% self._dbauth[0], password=True))
-		elif self._dbauth[0]:
-			ui.append('main', UI.InputBox(id='dlgAuth%s' % self._dbauth[0]['class'].dbengine, 
-				text='Enter the database password for %s' 
-				% self._dbauth[0]['class'].dbengine, password=True))
 
 		return ui
 
@@ -187,7 +187,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			if hasattr(self.sites[int(params[1])]['class'], 'dbengine') and \
 			self.dbops.get_interface(self.sites[int(params[1])]['class'].dbengine).requires_conn and \
 			not self.dbops.get_dbconn(self.sites[int(params[1])]['class'].dbengine):
-				self._dbauth = (self.sites[int(params[1])], 'drop')
+				self._dbauth = (self.sites[int(params[1])]['class'].dbengine, 
+					self.sites[int(params[1])], 'drop')
 			else:
 				w = WAWorker(self, 'drop', self.sites[int(params[1])])
 				w.start()
@@ -217,7 +218,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					if on:
 						if self.dbops.get_interface(self._current.dbengine).requires_conn and \
 						not self.dbops.get_dbconn(self._current.dbengine):
-							self._dbauth = (self._current.dbengine, 'add')
+							self._dbauth = (self._current.dbengine, '', 'add')
 						else:
 							self._setup = self._current
 					else:
@@ -279,20 +280,20 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				login = vars.getvalue('value', '')
 				try:
 					dbauth = self._dbauth
-					self._dbauth = ('','')
+					self._dbauth = ('','','')
 					self.dbops.get_interface(dbtype).connect(
 						store=self.app.session['dbconns'],
 						passwd=login)
-					if dbauth[1] == 'drop':
+					if dbauth[2] == 'drop':
 						w = WAWorker(self, 'drop', dbauth[0])
 						w.start()
-					elif dbauth[1] == 'add':
+					elif dbauth[2] == 'add':
 						self._setup = self._current
 				except DBAuthFail, e:
 					self.put_message('err', str(e))
 			else:
-				self.put_message('info', 'Website %s cancelled' % self._dbauth[1])
-				self._dbauth = ('','')
+				self.put_message('info', 'Website %s cancelled' % self._dbauth[2])
+				self._dbauth = ('','','')
 
 	@event('listitem/click')
 	def on_list_click(self, event, params, vars=None):
