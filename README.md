@@ -20,12 +20,12 @@ For information on developing plugins for use with Genesis, see the development 
 * [Icon Reference](https://arkos.io/dev/genesis/iconref) - Choosing iconfont classes to use in your plugins
 * [General API Reference](https://arkos.io/dev/genesis/api) - The big book of all classes and functions
 
-Once you have a plugin, feel free to let @jacook know and testing can be arranged. If the plugin works well and contributes to arkOS' mission, it may then be included in the central plugin repository.
+Once you have a plugin, feel free to let Jacob (@peakwinter) know and testing can be arranged. If the plugin works well and contributes to arkOS' mission, it may then be included in the central plugin repository.
 
 
 ## Acknowledgments
 Genesis is developed by:
-* Jacob Cook @jacook
+* Jacob Cook @peakwinter
 
 With a big thanks to those who have made contributions!
 * AJ Bahnken @ajvb
