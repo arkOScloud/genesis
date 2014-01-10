@@ -17,24 +17,83 @@
             <tabheader text="Broken" id="broken" />
             <tabheader text="Search" id="search" />
             <tabheader text="Pending" id="pending" />
-        </tabcontrol>
 
-        <scrollcontainer width="765" height="520" >
-            <dt id="list" noborder="True" width="100%">
-                <dtr header="True">
-                    <dth width="20" />
-                    <dth>
-                        <label text="Name" />
-                    </dth>
-                    <dth>
-                        <label text="Version" />
-                    </dth>
-                    <dth>
-                        <label text="Description" />
-                    </dth>
-                    <dth width="1" />
-                </dtr>
-            </dt>
-        </scrollcontainer>
+            <tabbody id="upgrades">
+                <scrollcontainer width="765" height="520" >
+                    <dt id="uplist" noborder="True" width="100%">
+                        <dtr header="True">
+                            <dth width="20" />
+                            <dth>
+                                <label text="Name" />
+                            </dth>
+                            <dth>
+                                <label text="Version" />
+                            </dth>
+                            <dth>
+                                <label text="Description" />
+                            </dth>
+                            <dth width="1" />
+                        </dtr>
+                    </dt>
+                </scrollcontainer>
+            </tabbody>
+            <tabbody id="broken">
+                <scrollcontainer width="765" height="520" >
+                    <dt id="brlist" noborder="True" width="100%">
+                        <dtr header="True">
+                            <dth width="20" />
+                            <dth>
+                                <label text="Name" />
+                            </dth>
+                            <dth>
+                                <label text="Version" />
+                            </dth>
+                            <dth>
+                                <label text="Description" />
+                            </dth>
+                            <dth width="1" />
+                        </dtr>
+                    </dt>
+                </scrollcontainer>
+            </tabbody>
+            <tabbody id="search">
+                <scrollcontainer width="765" height="520" >
+                    <dt id="selist" noborder="True" width="100%">
+                        <dtr header="True">
+                            <dth width="20" />
+                            <dth>
+                                <label text="Name" />
+                            </dth>
+                            <dth>
+                                <label text="Version" />
+                            </dth>
+                            <dth>
+                                <label text="Description" />
+                            </dth>
+                            <dth width="1" />
+                        </dtr>
+                    </dt>
+                </scrollcontainer>
+            </tabbody>
+            <tabbody id="pending">
+                <scrollcontainer width="765" height="520" >
+                    <dt id="pelist" noborder="True" width="100%">
+                        <dtr header="True">
+                            <dth width="20" />
+                            <dth>
+                                <label text="Name" />
+                            </dth>
+                            <dth>
+                                <label text="Version" />
+                            </dth>
+                            <dth>
+                                <label text="Description" />
+                            </dth>
+                            <dth width="1" />
+                        </dtr>
+                    </dt>
+                </scrollcontainer>
+            </tabbody>
+        </tabcontrol>
     </pad>
 </xml>

@@ -94,87 +94,85 @@ class PackageManagerPlugin(CategoryPlugin):
         if self._info is not None:
             pnl.append(self.get_ui_info())
 
-        tbl_pkgs = ui.find('list')
-
-        if self._current == 'upgrades':
-            for p in sorted(self._status.upgradeable.keys()):
-                p = self._status.upgradeable[p]
-                stat = self._get_icon(p.name)
-                if p.name == 'genesis':
-                    continue
-                r = UI.DTR(
-                        UI.IconFont(iconfont=stat),
-                        UI.Label(text=p.name),
-                        UI.Label(text=p.version),
-                        UI.Label(text=p.description),
-                            UI.HContainer(
-                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p.name),
-                                UI.TipIcon(iconfont='gen-minus', text='Deselect', id='cancel/'+p.name)
-                                    if p.name in self._status.pending else
-                                UI.TipIcon(iconfont='gen-checkmark-circle', text='Select', id='upgrade/'+p.name),
-                                spacing=0
-                            ),
-                    )
-                tbl_pkgs.append(r)
-
-        if self._current == 'broken':
-            for p in sorted(self._status.full.keys()):
-                p = self._status.full[p]
-                if p.state != 'broken': continue
-                stat = self._get_icon(p.name)
-                r = UI.DTR(
-                        UI.IconFont(iconfont=stat),
-                        UI.Label(text=p.name),
-                        UI.Label(text=p.version),
-                        UI.Label(text=p.description),
-                            UI.HContainer(
-                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p.name),
-                                UI.TipIcon(iconfont='gen-loop-2', text='Reinstall', id='install/'+p.name),
-                                UI.TipIcon(iconfont='gen-minus', text='Remove', id='remove/'+p.name),
-                                spacing=0
-                            ),
-                    )
-                tbl_pkgs.append(r)
-
-        if self._current == 'search':
-            for p in self._search.keys()[:50]:
-                stat = self._get_icon(p)
-                r = UI.DTR(
-                        UI.IconFont(iconfont=stat),
-                        UI.Label(text=p),
-                        UI.Label(text=self._search[p].version),
-                        UI.Label(text=self._search[p].description),
-                            UI.HContainer(
-                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p) if self._search[p].state == 'installed' else None,
-                                UI.TipIcon(iconfont='gen-checkmark', text='Install', id='install/'+p) if self._search[p].state == 'removed' else
-                                UI.TipIcon(iconfont='gen-minus', text='Remove', id='remove/'+p),
-                                spacing=0
-                            ),
+        tbl_pkgs = ui.find('uplist')
+        for p in sorted(self._status.upgradeable.keys()):
+            p = self._status.upgradeable[p]
+            stat = self._get_icon(p.name)
+            if p.name == 'genesis':
+                continue
+            r = UI.DTR(
+                    UI.IconFont(iconfont=stat),
+                    UI.Label(text=p.name),
+                    UI.Label(text=p.version),
+                    UI.Label(text=p.description),
+                        UI.HContainer(
+                            UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p.name),
+                            UI.TipIcon(iconfont='gen-minus', text='Deselect', id='cancel/'+p.name)
+                                if p.name in self._status.pending else
+                            UI.TipIcon(iconfont='gen-checkmark-circle', text='Select', id='upgrade/'+p.name),
+                            spacing=0
+                        ),
                 )
-                tbl_pkgs.append(r)
-            if len(self._search.keys()) > 50:
-                tbl_pkgs.append(UI.DTR(
-                    UI.DTD(
-                        UI.Label(text='Too much packages. Try to use more precise search query'),
-                        colspan=5
-                    )
-                ))
+            tbl_pkgs.append(r)
 
-        if self._current == 'pending':
-            for p in sorted(self._status.pending.keys()):
-                stat = self._get_icon(p)
-                r = UI.DTR(
-                        UI.IconFont(iconfont=stat),
-                        UI.Label(text=p),
-                        UI.Label(),
-                        UI.Label(),
-                            UI.HContainer(
-                                UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p),
-                                UI.TipIcon(iconfont='gen-cancel-circle', text='Cancel', id='cancel/'+p),
-                                spacing=0
-                            ),
-                    )
-                tbl_pkgs.append(r)
+        tbl_pkgs = ui.find('brlist')
+        for p in sorted(self._status.full.keys()):
+            p = self._status.full[p]
+            if p.state != 'broken': continue
+            stat = self._get_icon(p.name)
+            r = UI.DTR(
+                    UI.IconFont(iconfont=stat),
+                    UI.Label(text=p.name),
+                    UI.Label(text=p.version),
+                    UI.Label(text=p.description),
+                        UI.HContainer(
+                            UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p.name),
+                            UI.TipIcon(iconfont='gen-loop-2', text='Reinstall', id='install/'+p.name),
+                            UI.TipIcon(iconfont='gen-minus', text='Remove', id='remove/'+p.name),
+                            spacing=0
+                        ),
+                )
+            tbl_pkgs.append(r)
+
+        tbl_pkgs = ui.find('selist')
+        for p in self._search.keys()[:50]:
+            stat = self._get_icon(p)
+            r = UI.DTR(
+                    UI.IconFont(iconfont=stat),
+                    UI.Label(text=p),
+                    UI.Label(text=self._search[p].version),
+                    UI.Label(text=self._search[p].description),
+                        UI.HContainer(
+                            UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p) if self._search[p].state == 'installed' else None,
+                            UI.TipIcon(iconfont='gen-checkmark', text='Install', id='install/'+p) if self._search[p].state == 'removed' else
+                            UI.TipIcon(iconfont='gen-minus', text='Remove', id='remove/'+p),
+                            spacing=0
+                        ),
+            )
+            tbl_pkgs.append(r)
+        if len(self._search.keys()) > 50:
+            tbl_pkgs.append(UI.DTR(
+                UI.DTD(
+                    UI.Label(text='Too many packages. Try to use a more precise search query'),
+                    colspan=5
+                )
+            ))
+
+        tbl_pkgs = ui.find('pelist')
+        for p in sorted(self._status.pending.keys()):
+            stat = self._get_icon(p)
+            r = UI.DTR(
+                    UI.IconFont(iconfont=stat),
+                    UI.Label(text=p),
+                    UI.Label(),
+                    UI.Label(),
+                        UI.HContainer(
+                            UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p),
+                            UI.TipIcon(iconfont='gen-cancel-circle', text='Cancel', id='cancel/'+p),
+                            spacing=0
+                        ),
+                )
+            tbl_pkgs.append(r)
 
         return ui
 
