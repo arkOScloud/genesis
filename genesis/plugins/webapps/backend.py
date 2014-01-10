@@ -167,10 +167,10 @@ class WebappControl(Plugin):
 			path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', name))
 		c = nginx.loadf('/etc/nginx/sites-available/'+name)
 		c.filter('Comment')[0].comment = 'GENESIS %s %s' % (stype, (('https://' if ssl else 'http://')+addr+':'+port))
-		c.server[0].filter('Key', 'listen')[0].value = port+' ssl' if ssl else port
-		c.server[0].filter('Key', 'server_name')[0].value = addr
-		c.server[0].filter('Key', 'root')[0].value = path
-		c.server[0].filter('Key', 'index')[0].value = 'index.php' if php else 'index.html'
+		c.servers[0].filter('Key', 'listen')[0].value = port+' ssl' if ssl else port
+		c.servers[0].filter('Key', 'server_name')[0].value = addr
+		c.servers[0].filter('Key', 'root')[0].value = path
+		c.servers[0].filter('Key', 'index')[0].value = 'index.php' if php else 'index.html'
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 		# If the name was changed, rename the folder and files
 		if name != origname:
@@ -224,20 +224,20 @@ class WebappControl(Plugin):
 		name, stype = data['name'], data['type']
 		port = '443'
 		c = nginx.loadf('/etc/nginx/sites-available/'+name)
-		l = c.server[0].filter('Key', 'listen')[0]
+		l = c.servers[0].filter('Key', 'listen')[0]
 		if l.value == '80':
 			l.value = '443 ssl'
 			port = '443'
 		else:
 			port = l.value
 			l.value = l.value + ' ssl'
-		c.server[0].add(
+		c.servers[0].add(
 			nginx.Key('ssl_certificate', cpath),
 			nginx.Key('ssl_certificate_key', kpath),
 			nginx.Key('ssl_protocols', 'SSLv3 TLSv1 TLSv1.1 TLSv1.2'),
 			nginx.Key('ssl_ciphers', 'HIGH:!aNULL:!MD5')
 			)
-		c.server[0].filter('Comment')[0].comment = 'GENESIS %s https://%s:%s' \
+		c.filter('Comment')[0].comment = 'GENESIS %s https://%s:%s' \
 			% (stype, data['addr'], port)
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 		apis.webapps(self.app).get_interface(stype).ssl_enable(
@@ -248,20 +248,20 @@ class WebappControl(Plugin):
 		name, stype = data['name'], data['type']
 		port = '80'
 		c = nginx.loadf('/etc/nginx/sites-available/'+name)
-		l = c.server[0].filter('Key', 'listen')[0].value
+		l = c.servers[0].filter('Key', 'listen')[0].value
 		if l.value == '443 ssl':
 			l.value = '80'
 			port = '80'
 		else:
 			l.value = l.value.rstrip(' ssl')
 			port = l.value
-		c.server[0].remove(
-			c.server[0].filter('Key', 'ssl_certificate')[0],
-			c.server[0].filter('Key', 'ssl_certificate_key')[0],
-			c.server[0].filter('Key', 'ssl_protocols')[0],
-			c.server[0].filter('Key', 'ssl_ciphers')[0]
+		c.servers[0].remove(
+			c.servers[0].filter('Key', 'ssl_certificate')[0],
+			c.servers[0].filter('Key', 'ssl_certificate_key')[0],
+			c.servers[0].filter('Key', 'ssl_protocols')[0],
+			c.servers[0].filter('Key', 'ssl_ciphers')[0]
 			)
-		c.server[0].filter('Comment')[0].comment = 'GENESIS %s http://%s:%s' \
+		c.filter('Comment')[0].comment = 'GENESIS %s http://%s:%s' \
 			% (stype, data['addr'], port)
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 		apis.webapps(self.app).get_interface(stype).ssl_disable(
