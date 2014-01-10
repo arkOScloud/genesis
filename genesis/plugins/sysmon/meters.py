@@ -90,7 +90,10 @@ class DiskUsageMeter(LinearMeter):
         return self._get_stats(lambda m: m.group('dev').endswith(self.variant))
 
     def get_variants(self):
-        return sorted(set([ m.group('dev') for m in self._get_stats()])) + ['total']
+        if 'arkos' in self._platform or 'arch' in self._platform:
+            return sorted(set([ m.group('dev') for m in self._get_stats()]))
+        else:
+            return sorted(set([ m.group('dev') for m in self._get_stats()])) + ['total']
 
     def get_mountpoints(self):
         devmatches = self._get_stats_for_this_device()
