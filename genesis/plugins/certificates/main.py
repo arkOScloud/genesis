@@ -44,7 +44,7 @@ class CertificatesPlugin(CategoryPlugin):
 
 		if self._gen:
 			self._wal, self._pal = self._cc.get_ssl_capable()
-			alist = []
+			alist, wlist, plist = [], [], []
 			for cert in self.certs:
 				for i in cert['assign']:
 					if i != '':
@@ -58,11 +58,15 @@ class CertificatesPlugin(CategoryPlugin):
 					ui.find('certassign').append(
 						UI.Checkbox(text=x['name'], name='wassign[]', value=x['name'], checked=False),
 					)
+					wlist.append(x)
+			self._wal = wlist
 			for x in self._pal:
 				if not x.text in alist:
 					ui.find('certassign').append(
 						UI.Checkbox(text=x.text, name='passign[]', value=x.text, checked=False),
 					)
+					plist.append(x)
+			self._pal = plist
 		else:
 			ui.remove('dlgGen')
 
