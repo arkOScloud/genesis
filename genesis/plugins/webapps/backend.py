@@ -248,7 +248,7 @@ class WebappControl(Plugin):
 		name, stype = data['name'], data['type']
 		port = '80'
 		c = nginx.loadf('/etc/nginx/sites-available/'+name)
-		l = c.servers[0].filter('Key', 'listen')[0].value
+		l = c.servers[0].filter('Key', 'listen')[0]
 		if l.value == '443 ssl':
 			l.value = '80'
 			port = '80'
