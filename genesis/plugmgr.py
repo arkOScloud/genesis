@@ -455,10 +455,15 @@ class RepositoryManager:
                         raise ImSorryDave(pdata[dep[1]].name, pdata[i].name, op)
         elif op == 'install':
             t = self.list_available()
-            for i in eval(t[id].deps):
-                for dep in i[1]:
-                    if dep[0] == 'plugin' and dep[1] not in [x.id for x in self.installed]:
-                        raise ImSorryDave(t[id].name, t[dep[1]].name, op)
+            try:
+                for i in eval(t[id].deps):
+                    for dep in i[1]:
+                        if dep[0] == 'plugin' and dep[1] not in [x.id for x in self.installed]:
+                            raise ImSorryDave(t[id].name, t[dep[1]].name, op)
+            except KeyError:
+                raise Exception('There was a problem in checking dependencies. '
+                    'Please try again after refreshing the plugin list. '
+                    'If this problem persists, please contact Genesis maintainers.')
 
     def refresh(self):
         """

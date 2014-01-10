@@ -132,7 +132,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                 lr.start()
                 self._nc.remove(params[1])
             except ImSorryDave, e:
-                self.put_message('err', e)
+                self.put_message('err', str(e))
         if params[0] == 'reload':
             try:
                 PluginLoader.unload(params[1])
@@ -151,5 +151,5 @@ class PluginManager(CategoryPlugin, URLHandler):
                 li = LiveInstall(self._mgr, params[1], 
                     True, self)
                 li.start()
-            except ImSorryDave, e:
-                self.put_message('err', e)
+            except Exception, e:
+                self.put_message('err', str(e))
