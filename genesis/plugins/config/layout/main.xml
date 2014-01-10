@@ -36,6 +36,16 @@
     <pad id="main">
     </pad>
 
+    <label size="5" text="arkOS Tools" />
+    <pad id="tools">
+        <formline text="Logrunner" help="Manages logs in memory to reduce SD card wear." id="fllogrunner">
+            <label id="logrunner" text="" />
+        </formline>
+        <formline text="Beacon" help="Shows your arkOS server on the network and allows you to remotely shutdown/reboot/reload." id="flbeacon">
+            <label id="beacon" text="" />
+        </formline>
+    </pad>
+
     <label size="5" text="Plugin Options" />
 
     <pad>
