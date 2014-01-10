@@ -3,6 +3,7 @@ from genesis.api import *
 from genesis.ui import *
 from genesis import apis
 from genesis.utils import *
+from genesis.plugins.network.backend import IHostnameManager
 
 from backend import CertControl
 
@@ -233,7 +234,8 @@ class CertGenWorker(BackgroundWorker):
 	def run(self, cat, name, vars, assign):
 		cat.put_statusmsg('Generating a certificate and key...')
 		try:
-			CertControl(cat.app).gencert(name, vars)
+			CertControl(cat.app).gencert(name, vars, 
+				cat.app.get_backend(IHostnameManager).gethostname())
 		except Exception, e:
 			cat.clr_statusmsg()
 			cat.put_message('err', str(e))

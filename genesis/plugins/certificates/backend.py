@@ -52,7 +52,7 @@ class CertControl(Plugin):
 		cfg.set('cert', 'assign', '\n'.join(assign))
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
 
-	def gencert(self, name, vars):
+	def gencert(self, name, vars, hostname):
 		# Make sure our folders are in place
 		if not os.path.exists('/etc/ssl/certs/genesis'):
 			os.mkdir('/etc/ssl/certs/genesis')
@@ -67,12 +67,21 @@ class CertControl(Plugin):
 		except:
 			raise SystemTimeError('UNKNOWN')
 
+		# Check to see that we have a CA ready
+		ca_cert_path = '/etc/ssl/certs/'+hostname+'-ca.pem'
+		ca_key_path = '/etc/ssl/private/'+hostname+'-ca.key'
+		if not os.path.exists(ca_cert_path) and not os.path.exists(ca_key_path):
+			self.create_authority(hostname)
+		ca_cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, open(ca_cert_path).read())
+		ca_key = OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, open(ca_key_path).read())
+
 		# Generate a key, then use it to sign a new cert
 		# We'll use 2048-bit RSA until pyOpenSSL supports ECC
 		try:
 			key = OpenSSL.crypto.PKey()
 			key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
 			crt = OpenSSL.crypto.X509()
+			crt.set_version(3)
 			if vars.getvalue('certcountry', '') != '':
 				crt.get_subject().C = vars.getvalue('certcountry')
 			if vars.getvalue('certsp', '') != '':
@@ -86,6 +95,7 @@ class CertControl(Plugin):
 			crt.set_serial_number(int(SystemTime().get_serial_time()))
 			crt.gmtime_adj_notBefore(0)
 			crt.gmtime_adj_notAfter(2*365*24*60*60)
+			crt.set_issuer(ca_cert.get_subject())
 			crt.set_pubkey(key)
 			crt.sign(key, 'sha1')
 		except Exception, e:
@@ -108,6 +118,37 @@ class CertControl(Plugin):
 		cfg.set('cert', 'domain', crt.get_subject().CN)
 		cfg.set('cert', 'assign', '')
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
+
+	def create_authority(self, hostname):
+		key = OpenSSL.crypto.PKey()
+		key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
+
+		ca = OpenSSL.crypto.X509()
+		ca.set_version(3)
+		ca.set_serial_number(int(SystemTime().get_serial_time()))
+		ca.get_subject().CN = hostname
+		ca.gmtime_adj_notBefore(0)
+		ca.gmtime_adj_notAfter(24 * 60 * 60)
+		ca.set_issuer(ca.get_subject())
+		ca.set_pubkey(key)
+		ca.add_extensions([
+		  OpenSSL.crypto.X509Extension("basicConstraints", True,
+		                               "CA:TRUE, pathlen:0"),
+		  OpenSSL.crypto.X509Extension("keyUsage", True,
+		                               "keyCertSign, cRLSign"),
+		  OpenSSL.crypto.X509Extension("subjectKeyIdentifier", False, "hash",
+		                               subject=ca),
+		  ])
+		ca.sign(key, 'sha1')
+		open('/etc/ssl/certs/'+hostname+'-ca.pem', "wt").write(
+			OpenSSL.crypto.dump_certificate(
+				OpenSSL.crypto.FILETYPE_PEM, ca)
+			)
+		os.chmod('/etc/ssl/certs/'+hostname+'-ca.pem', 0660)
+		open('/etc/ssl/private/'+hostname+'-ca.key', "wt").write(
+			OpenSSL.crypto.dump_privatekey(
+				OpenSSL.crypto.FILETYPE_PEM, key)
+			)
 
 	def assign(self, name, assign):
 		# Assign a certificate to plugins/webapps as listed
