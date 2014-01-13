@@ -190,7 +190,7 @@ class CertificatesPlugin(CategoryPlugin):
 			self._cinfo = None
 		elif params[0] == 'uc' and params[2] == 'g':
 			self._cc.unassign(self._cinfo['name'], [[('genesis')]])
-			self.put_message('info', 'Certificate removed and SSL disabled for Genesis. Restart Genesis for changes to take effect')
+			self.put_message('info', 'Certificate removed and SSL disabled for Genesis. Reload Genesis for changes to take effect')
 			self._cinfo = None
 
 	@event('dialog/submit')
