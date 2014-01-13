@@ -204,6 +204,8 @@ class CertificatesPlugin(CategoryPlugin):
 					self.put_message('err', 'Certificate name is mandatory')
 				elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
 					self.put_message('err', 'You already have a certificate with that name.')
+				elif len(vars.getvalue('certcountry', '')) != 2:
+					self.put_message('err', 'The country field must be a two-letter abbreviation')
 				else:
 					lst = []
 					if vars.getvalue('genesis', '') == '1':
@@ -240,11 +242,11 @@ class CertGenWorker(BackgroundWorker):
 		try:
 			CertControl(cat.app).gencert(name, vars, 
 				cat.app.get_backend(IHostnameManager).gethostname())
+			cat.put_statusmsg('Assigning new certificate...')
+			CertControl(cat.app).assign(name, assign)
 		except Exception, e:
 			cat.clr_statusmsg()
 			cat.put_message('err', str(e))
 			cat.app.log.error(str(e))
-		cat.put_statusmsg('Assigning new certificate...')
-		CertControl(cat.app).assign(name, assign)
 		cat.clr_statusmsg()
 		cat.put_message('info', 'Certificate successfully generated')
