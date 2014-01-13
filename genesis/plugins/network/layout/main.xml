@@ -54,7 +54,6 @@
             <pad id="hosts">
                 <toolbar>
                     <button id="add" text="Add host" iconfont="gen-plus-circle" />
-                    <button id="hostname" text="Change hostname" iconfont="gen-tag-2" />
                 </toolbar>
                 <br />
                 <dt id="hostlist" width="100%">
