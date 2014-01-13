@@ -15,7 +15,6 @@ class NetworkPlugin(CategoryPlugin):
     def on_init(self):
         be = backend.Config(self.app)
         self.hosts = be.read()
-        self.hostname = be.gethostname()
         self.dns_config = self.app.get_backend(IDNSConfig)
         self.net_config = self.app.get_backend(INetworkConfig)
         self.conn_config = self.app.get_backend(IConnConfig)
@@ -27,7 +26,6 @@ class NetworkPlugin(CategoryPlugin):
         self._conninfo = None
         self._editing_conn = None
         self._editing = None
-        self._editing_self = False
         self._editing_ns = None
         
     def get_ui(self):
@@ -172,11 +170,6 @@ class NetworkPlugin(CategoryPlugin):
         else:
             ui.remove('dlgEdit')
 
-        if self._editing_self:
-            ui.find('dlgSelf').set('value', self.hostname)
-        else:
-            ui.remove('dlgSelf')
-
         """
         DNS Config
         """
@@ -270,9 +263,6 @@ class NetworkPlugin(CategoryPlugin):
             self._tab = 1
             self.hosts.pop(int(params[1]))
             backend.Config(self.app).save(self.hosts)
-        if params[0] == 'hostname':
-            self._tab = 1
-            self._editing_self = True
         if params[0] == 'editns':
             self._tab = 2
             self._editing_ns = int(params[1])
@@ -350,11 +340,6 @@ class NetworkPlugin(CategoryPlugin):
                     self.hosts.append(h)
                 backend.Config(self.app).save(self.hosts)
             self._editing = None
-        if params[0] == 'dlgSelf':
-            v = vars.getvalue('value', '')
-            if vars.getvalue('action', '') == 'OK':
-                backend.Config(self.app).sethostname(v)
-            self._editing_self = None
         if params[0] == 'dlgEditDNS':
             if vars.getvalue('action', '') == 'OK':
                 try:

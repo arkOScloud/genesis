@@ -92,9 +92,6 @@ class UsersBackend(Plugin):
     def add_to_group(self, u, v):
         shell(self.cfg.cmd_add_to_group.format(u,v))
 
-    def remove_from_group(self, u, v):
-        shell(self.cfg.cmd_remove_from_group.format(u,v))
-
     def change_user_param(self, u, p, l):
         shell(getattr(self.cfg, 'cmd_set_user_'+p).format(l,u))
 
@@ -121,8 +118,7 @@ class LinuxConfig(ModuleConfig):
     cmd_set_user_home = 'usermod -d {0} {1}'
     cmd_set_group_gname = 'groupmod -n {0} {1}'
     cmd_set_group_ggid = 'groupmod -g {0} {1}'
-    cmd_add_to_group = 'adduser {0} {1}'
-    cmd_remove_from_group = 'deluser {0} {1}'
+    cmd_add_to_group = 'usermod -a -G {1} {0}'
 
 
 class BSDConfig(ModuleConfig):

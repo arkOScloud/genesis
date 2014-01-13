@@ -1,0 +1,28 @@
+<xml>
+    <label size="5" text="System Settings" />
+    <br />
+        <simpleform id="frmGeneral">
+            <formline text="Hostname" help="Set the hostname for your system.">
+                <textinput name="hostname" id="hostname"/>
+            </formline>
+            <formline text="Timezone">
+                <select id="zoneselect" name="zoneselect" />
+            </formline>
+            <formline>
+                <button onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
+            </formline>
+        </simpleform>
+
+    <pad id="main">
+    </pad>
+
+    <label size="5" text="arkOS Tools" />
+    <pad id="tools">
+        <formline text="Logrunner" help="Manages logs in memory to reduce SD card wear." id="fllogrunner">
+            <label id="logrunner" text="" />
+        </formline>
+        <formline text="Beacon" help="Shows your arkOS server on the network and allows you to remotely shutdown/reboot/reload." id="flbeacon">
+            <label id="beacon" text="" />
+        </formline>
+    </pad>
+</xml>

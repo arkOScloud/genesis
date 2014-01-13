@@ -13,7 +13,8 @@ from genesis.plugins.network import *
 from genesis.plugins.databases import *
 from genesis.plugins.webapps import *
 from genesis.plugins.certificates import *
+from genesis.plugins.sysconfig import *
 
 plist = ['resources', 'core', 'advancedcontrols', 'dashboard', 
-'firstrun', 'databases', 'config', 'plugins', 'network', 'recovery', 
+'firstrun', 'databases', 'sysconfig', 'config', 'plugins', 'network', 'recovery', 
 'security', 'sysmon', 'sysalerts', 'users', 'webapps', 'certificates']

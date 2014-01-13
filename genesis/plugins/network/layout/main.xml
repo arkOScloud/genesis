@@ -108,8 +108,6 @@
         </formline>
     </dialogbox>
 
-    <inputbox id="dlgSelf" text="Hostname" />
-
     <dialogbox id="dlgEditDNS">
         <formline text="Type">
             <select name="cls">

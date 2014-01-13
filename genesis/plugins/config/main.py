@@ -14,10 +14,8 @@ class ConfigPlugin(CategoryPlugin):
 
     def on_session_start(self):
         self._config = None
-        self._restart = False
         self._updstat = (False, '')
         self._update = None
-        self._mgr = self.app.get_backend(apis.services.IServiceManager)
 
     def get_ui(self):
         ui = self.app.inflate('config:main')
@@ -45,40 +43,6 @@ class ConfigPlugin(CategoryPlugin):
                 UI.TipIcon(text='Edit', iconfont="gen-pencil-2", id='editconfig/'+c.target.__name__),
             ))
 
-        # Tools
-        if shell_cs('which logrunnerd')[0] != 0:
-            lrstat = 'Not installed'
-        else:
-            if self._mgr.get_status('logrunner') == 'running':
-                lrstat = 'Running'
-                ui.find('fllogrunner').append(UI.Button(text="Stop", id="svc/logrunner/stop"))
-            else:
-                lrstat = 'Not running'
-                ui.find('fllogrunner').append(UI.Button(text="Start", id="svc/logrunner/start"))
-            if self._mgr.get_enabled('logrunner') == 'enabled':
-                lrstat += ' and enabled on boot'
-                ui.find('fllogrunner').append(UI.Button(text="Disable on boot", id="svc/logrunner/disable"))
-            else:
-                lrstat += ' and not enabled on boot'
-                ui.find('fllogrunner').append(UI.Button(text="Enable on boot", id="svc/logrunner/enable"))
-        if shell_cs('which beacond')[0] != 0:
-            bestat = 'Not installed'
-        else:
-            if self._mgr.get_status('beacon') == 'running':
-                lrstat = 'Running'
-                ui.find('flbeacon').append(UI.Button(text="Stop", id="svc/beacon/stop"))
-            else:
-                lrstat = 'Not running'
-                ui.find('flbeacon').append(UI.Button(text="Start", id="svc/beacon/start"))
-            if self._mgr.get_enabled('beacon') == 'enabled':
-                lrstat += ' and enabled on boot'
-                ui.find('flbeacon').append(UI.Button(text="Disable on boot", id="svc/beacon/disable"))
-            else:
-                lrstat += ' and not enabled on boot'
-                ui.find('flbeacon').append(UI.Button(text="Enable on boot", id="svc/beacon/enable"))
-        ui.find('logrunner').set('text', lrstat)
-        ui.find('beacon').set('text', bestat)
-
         # Updates
         self._updstat = UpdateCheck.get().get_status()
         if self._updstat[0] == True:
@@ -99,7 +63,7 @@ class ConfigPlugin(CategoryPlugin):
             ui.remove('dlgUpdate')
 
         if self._changed:
-            self.put_message('warn', 'Restart required')
+            self.put_message('warn', 'A restart is required for this setting change to take effect.')
 
         return ui
 
@@ -118,15 +82,6 @@ class ConfigPlugin(CategoryPlugin):
             shell('shutdown -P now')
         if params[0] == 'reboot':
             shell('reboot')
-        if params[0] == 'svc':
-            if params[2] == 'start':
-                self._mgr.start(params[1])
-            elif params[2] == 'stop':
-                self._mgr.stop(params[1])
-            elif params[2] == 'enable':
-                self._mgr.enable(params[1])
-            elif params[2] == 'disable':
-                self._mgr.disable(params[1])
 
     @event('form/submit')
     @event('dialog/submit')

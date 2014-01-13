@@ -48,10 +48,11 @@
                 <div class="popover bottom">
                   <div id="settings-pop-content" class="popover-inner">
                     <ul>
-                        <li><a class="default top-link" onclick="return Genesis.selectCategory('configplugin');"><i class="gen-arkos-round"></i> Genesis Settings</a></li>
+                        <li><a class="default top-link" onclick="return Genesis.selectCategory('pluginmanager');"><i class="gen-box-add"></i> Applications</a></li>
+                        <li><a class="default" onclick="return Genesis.selectCategory('recoveryplugin');"><i class="gen-history"></i> Recovery</a></li>
+                        <li><a class="default" onclick="return Genesis.selectCategory('configplugin');"><i class="gen-arkos-round"></i> Genesis Settings</a></li>
                         <li><a class="default" onclick="return Genesis.selectCategory('networkplugin');"><i class="gen-network"></i> Network Settings</a></li>
-                        <li><a class="default" onclick="return Genesis.selectCategory('pluginmanager');"><i class="gen-box-add"></i> Applications</a></li>
-                        <li><a class="default bottom-link" onclick="return Genesis.selectCategory('recoveryplugin');"><i class="gen-history"></i> Recovery</a></li>
+                        <li><a class="default bottom-link" onclick="return Genesis.selectCategory('sysconfigplugin');"><i class="gen-cog"></i> System Settings</a></li>
                     </ul>
                   </div>
                 </div>
