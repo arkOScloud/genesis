@@ -285,7 +285,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						store=self.app.session['dbconns'],
 						passwd=login)
 					if dbauth[2] == 'drop':
-						w = WAWorker(self, 'drop', dbauth[0])
+						w = WAWorker(self, 'drop', dbauth[1])
 						w.start()
 					elif dbauth[2] == 'add':
 						self._setup = self._current
