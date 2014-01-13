@@ -62,11 +62,15 @@ class ownCloud(Plugin):
 
 	def pre_install(self, name, vars):
 		dbname = vars.getvalue('oc-dbname', '')
-		if ' ' in dbname or '-' in dbname:
-			raise Exception('Database name must not contain spaces or dashes')
-		elif len(dbname) > 16:
-			raise Exception('Database name must be shorter than 16 characters')
-		elif vars.getvalue('oc-username', '') == '':
+		dbpasswd = vars.getvalue('oc-dbpasswd', '')
+		if dbname and dbpasswd:
+			apis.databases(self.app).get_interface('MariaDB').validate(
+				dbname, dbname, dbpasswd)
+		elif dbname:
+			raise Exception('You must enter a database password if you specify a database name!')
+		elif dbpasswd:
+			raise Exception('You must enter a database name if you specify a database password!')
+		if vars.getvalue('oc-username', '') == '':
 			raise Exception('Must choose an ownCloud username')
 		elif vars.getvalue('oc-logpasswd', '') == '':
 			raise Exception('Must choose an ownCloud password')

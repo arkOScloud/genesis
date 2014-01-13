@@ -44,13 +44,23 @@ class MariaDB(Plugin):
         self.db.query('UPDATE user SET password=PASSWORD("'+newpasswd+'") WHERE User=\'root\'')
         self.db.query('FLUSH PRIVILEGES')
 
+    def validate(self, name='', user='', passwd=''):
+        if name and re.search('\.|-|`|\\\\|\/|^test$|[ ]', name):
+            raise Exception('Database name must not contain spaces, dots, dashes or other special characters')
+        elif name and len(name) > 16:
+            raise Exception('Database name must be shorter than 16 characters')
+        if user and re.search('\.|-|`|\\\\|\/|^test$|[ ]', user):
+            raise Exception('Database username must not contain spaces, dots, dashes or other special characters')
+        elif user and len(user) > 16:
+            raise Exception('Database username must be shorter than 16 characters')
+        if passwd and len(passwd) < 8:
+            raise Exception('Database password must be longer than 8 characters')
+        return True
+
     def add(self, dbname, conn=None):
         if not self.db and conn:
             self.db = conn
-        if re.search('\.|-|`|\\\\|\/|^test$|[ ]', dbname):
-            raise Exception('Name must not contain spaces, dots, dashes or other special characters')
-        elif len(dbname) > 16:
-            raise Exception('Database name must be shorter than 16 characters')
+        self.validate(name=dbname, user=dbname)
         self.db.query('CREATE DATABASE %s' % dbname)
 
     def remove(self, dbname, conn=None):
@@ -65,8 +75,7 @@ class MariaDB(Plugin):
         if not self.db and conn:
             self.db = conn
         if action == 'add' and self.db:
-            if re.search('\.|-|`|\\\\|\/|^test$|[ ]', user):
-                raise Exception('Name must not contain spaces, dots, dashes or other special characters')
+            self.validate(user=user, passwd=passwd)
             self.db.query('CREATE USER \'%s\'@\'localhost\' IDENTIFIED BY \'%s\''
                 % (user,passwd))
         elif action == 'del' and self.db:
