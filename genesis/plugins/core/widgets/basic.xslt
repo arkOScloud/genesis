@@ -27,8 +27,14 @@
             </xsl:when>
 
             <xsl:when test="@onclick = 'form'">
-                return Genesis.submit('<xsl:value-of select="@form" />',
-                    '<xsl:value-of select="@action" />');
+                <xsl:choose>
+                    <xsl:when test="@mp != ''">
+                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', true);
+                    </xsl:when>
+                    <xsl:otherwise>
+                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />');
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
 
             <xsl:when test="@onclick = '' or not (@onclick)">

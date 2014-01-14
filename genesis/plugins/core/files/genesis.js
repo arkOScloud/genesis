@@ -7,10 +7,12 @@ Genesis = (function() {
 	var firstPasswordEntry = true;
 
 	return {
-		query: function (_uri, _data, _noupdate) {
+		query: function (_uri, _data, _mp, _noupdate) {
 			$.ajax({
 				url: _uri,
 				data: _data,
+				contentType: _mp?false:'application/x-www-form-urlencoded; charset=UTF-8',
+				processData: _mp?false:true,
 				success: _noupdate?undefined:Genesis.Core.processResponse,
 				error: Genesis.Core.processOffline,
 				type: _data?'POST':'GET',
@@ -40,9 +42,9 @@ Genesis = (function() {
 			return match;
 		},
 
-		submit: function (fid, action) {
+		submit: function (fid, action, mp) {
 			form = $('#'+fid);
-			if (form) {
+			if (form && !mp) {
 				params = 'action=' + encodeURIComponent(action);
 				url = $('input[type=hidden]', form)[0].value;
 
@@ -77,6 +79,46 @@ Genesis = (function() {
 				});
 
 				Genesis.query(url, params);
+			} else {
+				url = $('input[type=hidden]', form)[0].value;
+				var fData = new FormData()
+				fData.append('action', action);
+
+				$('input[type=text], input[type=password], input[type=hidden]', form).each(function (i,e) {
+					if (e.name != '__url')
+						fData.append(e.name, e.value);
+				});
+
+				$('input[type=checkbox]', form).each(function (i,e) {
+					fData.append(e.name, (e.checked?1:0));
+				});
+
+				$('input[type=radio]', form).each(function (i,e) {
+					if (e.checked)
+						fData.append(e.name, e.value);
+				});
+
+				$('select:not([id$="-hints"])', form).each(function (i,e) {
+					fData.append(e.name, e.options[e.selectedIndex].value);
+				});
+
+				$('textarea', form).each(function (i,e) {
+					fData.append(e.name, e.value);
+				});
+
+				$('.ui-el-sortlist', form).each(function (i,e) {
+					var r = '';
+					$('>*', $(e)).each(function(i,e) {
+						r += '|' + e.id;
+					});
+					fData.append(e.id, r);
+				});
+
+				$('input[type=file]').each(function (i,e) {
+					fData.append(e.name, e.files[0], e.value);
+				});
+
+				Genesis.query(url, fData, true);
 			}
 			return false;
 		},
@@ -308,7 +350,7 @@ Genesis = (function() {
 
 			toggleTreeNode: function (id) {
 				$('*[id=\''+id+'\']').toggle();
-				Genesis.query('/handle/treecontainer/click/'+id, null, true);
+				Genesis.query('/handle/treecontainer/click/'+id, null, null, true);
 
 				x = $('*[id=\''+id+'-btn\']');
 				if (x.attr('src').indexOf('/dl/core/ui/tree-minus.png') < 0){
