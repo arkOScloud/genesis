@@ -10,6 +10,7 @@ import grp, pwd
 import shutil
 import threading
 from acl import *
+import utils
 
 
 class FMPlugin(CategoryPlugin):
@@ -28,6 +29,7 @@ class FMPlugin(CategoryPlugin):
         self._cbs = None
         self._renaming = None
         self._upload = None
+        self._archupl = []
         self.add_tab()
 
     def get_ui(self):
@@ -84,7 +86,16 @@ class FMPlugin(CategoryPlugin):
                 idx += 1
 
         if self._upload:
-            ui.append('main', UI.UploadBox(id='dlgUpload'))
+            ui.append('main', UI.UploadBox(id='dlgUpload', 
+                text="Select file(s) to upload",
+                location=self._tabs[self._tab]))
+
+        if self._archupl:
+            ui.append('main', UI.DialogBox(
+                UI.Label(text='The file you just uploaded, %s, appears to be a compressed archive. '
+                    'Do you want to extract its contents to %s?' % (self._archupl[0][1], self._archupl[0][0]),
+                    lbreak=True, bold=True),
+                id='dlgArchUpl', yesno=True))
 
         return ui
 
@@ -314,10 +325,36 @@ class FMPlugin(CategoryPlugin):
             self._editing_acl = None
         if params[0] == 'dlgUpload':
             if vars.getvalue('action', '') == 'OK':
-                f = vars['file']
-                open(os.path.join(self._tabs[self._tab], f.filename), 'w').write(f.value)
-                self.put_message('info', 'Uploaded %s to %s' % (f.filename, self._tabs[self._tab]))
+                files = []
+                if type(vars['file']) == list:
+                    names = []
+                    for x in vars['file']:
+                        open(os.path.join(self._tabs[self._tab], x.filename), 'w').write(x.value)
+                        names.append(x.filename)
+                        files.append((self._tabs[self._tab], x.filename))
+                    self.put_message('info', 'Uploaded the following files to %s: %s'
+                        % (self._tabs[self._tab], ', '.join(names)))
+                else:
+                    f = vars['file']
+                    open(os.path.join(self._tabs[self._tab], f.filename), 'w').write(f.value)
+                    self.put_message('info', 'Uploaded %s to %s'
+                        % (f.filename, self._tabs[self._tab]))
+                    files.append((self._tabs[self._tab], f.filename))
+                for x in files:
+                    archives = ['.tar.gz', '.tgz', '.gz', '.tar.bz2', '.tbz2', '.bz2', '.zip']
+                    for y in archives:
+                        if x[1].endswith(y):
+                            self._archupl.append((x[0], x[1], y))
+                            break
             self._upload = None
+        if params[0] == 'dlgArchUpl':
+            f = self._archupl[0]
+            if vars.getvalue('action', '') == 'OK':
+                try:
+                    utils.extract(os.path.join(f[0], f[1]), f[0], False)
+                except Exception, e:
+                    self.put_message('err', 'Failed to extract %s: %s' % (f[1], str(e)))
+            self._archupl.remove(f)
         if params[0] == 'frmAddAcl':
             if vars.getvalue('action', None) == 'OK':
                 set_acl(self._editing_acl,

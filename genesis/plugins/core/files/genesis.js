@@ -115,7 +115,9 @@ Genesis = (function() {
 				});
 
 				$('input[type=file]').each(function (i,e) {
-					fData.append(e.name, e.files[0], e.value);
+					for (var x=0;x<e.files.length;x++) {
+						fData.append(e.name, e.files[x], e.files[x].name);
+					};
 				});
 
 				Genesis.query(url, fData, true);

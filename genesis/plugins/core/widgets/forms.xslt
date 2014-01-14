@@ -42,15 +42,36 @@
             <xsl:if test="not(@hideok = 'True')">
                 <xsl:choose>
                     <xsl:when test="@mp != ''">
-                        <button text="OK" onclick="form" action="OK" form="{@id}" design="primary" mp="True" />
+                        <xsl:choose>
+                            <xsl:when test="@yesno != ''">
+                                <button text="Yes" onclick="form" action="OK" form="{@id}" design="primary" mp="True" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <button text="OK" onclick="form" action="OK" form="{@id}" design="primary" mp="True" />
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
-                        <button text="OK" onclick="form" action="OK" form="{@id}" design="primary" />
+                        <xsl:choose>
+                            <xsl:when test="@yesno != ''">
+                                <button text="Yes" onclick="form" action="OK" form="{@id}" design="primary" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <button text="OK" onclick="form" action="OK" form="{@id}" design="primary" />
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>
             <xsl:if test="not(@hidecancel = 'True')">
-                <button text="Cancel" onclick="form" action="Cancel" form="{@id}"/>
+                <xsl:choose>
+                    <xsl:when test="@yesno != ''">
+                        <button text="No" onclick="form" action="Cancel" form="{@id}"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <button text="Cancel" onclick="form" action="Cancel" form="{@id}"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:if>
             <xsl:if test="@miscbtn">
                 <button text="{@miscbtn}" id="{@miscbtnid}"/>
@@ -128,8 +149,18 @@
 <div>
     <div id="{@id}" class="modal fade">
         <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
+        <div class="modal-header">
+            <h3><xsl:value-of select="@text" /></h3>
+        </div>
         <div class="modal-body">
-            <input type="file" name="file" />
+            <xsl:if test="@location != ''">
+                <formline text="Uploading to">
+                    <label text="{@location}" />
+                </formline> 
+            </xsl:if>
+            <formline>
+                <input type="file" name="file" multiple="multiple"/>
+            </formline>
         </div>
 
         <div class="modal-footer">
