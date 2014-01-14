@@ -1,6 +1,7 @@
 <xml>
     <toolbar id="path">
         <button id="paste" text="Paste here" iconfont="gen-paste" />
+        <button id="upload" text="Upload here" iconfont="gen-upload" />
         <button id="newfld" text="New folder" iconfont="gen-folder-plus" />
         <button id="close" text="Close tab" iconfont="gen-cancel-circle" />
     </toolbar>

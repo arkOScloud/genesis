@@ -27,6 +27,7 @@ class FMPlugin(CategoryPlugin):
         self._clipboard = []
         self._cbs = None
         self._renaming = None
+        self._upload = None
         self.add_tab()
 
     def get_ui(self):
@@ -81,6 +82,9 @@ class FMPlugin(CategoryPlugin):
                     )
                 ))
                 idx += 1
+
+        if self._upload:
+            ui.append('main', UI.UploadBox(id='dlgUpload'))
 
         return ui
 
@@ -247,6 +251,8 @@ class FMPlugin(CategoryPlugin):
             self._tab = int(params[1])
             path = self._tabs[int(params[1])]
             self.work(self._cbs, self._clipboard, path)
+        if params[0] == 'upload':
+            self._upload = True
         if params[0] == 'newfld':
             self._tab = int(params[1])
             path = self._tabs[int(params[1])]
@@ -306,6 +312,12 @@ class FMPlugin(CategoryPlugin):
             self._renaming = None
         if params[0] == 'dlgAcl':
             self._editing_acl = None
+        if params[0] == 'dlgUpload':
+            if vars.getvalue('action', '') == 'OK':
+                f = vars['file']
+                open(os.path.join(self._tabs[self._tab], f.filename), 'w').write(f.value)
+                self.put_message('info', 'Uploaded %s to %s' % (f.filename, self._tabs[self._tab]))
+            self._upload = None
         if params[0] == 'frmAddAcl':
             if vars.getvalue('action', None) == 'OK':
                 set_acl(self._editing_acl,
@@ -328,7 +340,6 @@ class FMPlugin(CategoryPlugin):
 
 
 class FMWorker(BackgroundWorker):
-
     def __init__(self, *args):
         self.action = ''
         BackgroundWorker.__init__(self, *args)
