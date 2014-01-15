@@ -11,9 +11,8 @@
 
 
 <xsl:template match="toolbar">
-    <div class="ui-el-toolbar">
-        <xsl:apply-templates />
-    </div>
+    <xsl:apply-templates />
+    <hr />
 </xsl:template>
 
 <!-- Button magic -->
@@ -35,10 +34,10 @@
             <xsl:when test="@onclick = 'form'">
                 <xsl:choose>
                     <xsl:when test="@mp != ''">
-                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', true);
+                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', true, <xsl:value-of select="@modal" />);
                     </xsl:when>
                     <xsl:otherwise>
-                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />');
+                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', null, <xsl:value-of select="x:attr(@modal, 'false')" />);
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
@@ -70,13 +69,20 @@
             <xsl:when test="@design != ''">
                 <xsl:value-of select="@design" />
             </xsl:when>
-            <xsl:otherwise>
-                default
-            </xsl:otherwise>
+            <xsl:otherwise>default</xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
 
-    <a href="{@href}" onclick="{$onclickjs}" class="ui-el-button btn {$design}">
+    <xsl:variable name="size">
+        <xsl:choose>
+            <xsl:when test="@size != ''">
+                <xsl:value-of select="@size" />
+            </xsl:when>
+            <xsl:otherwise>sm</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <a href="{@href}" onclick="{$onclickjs}" class="btn btn-{$design} btn-{$size}">
         <xsl:choose>
             <xsl:when test="@iconfont != ''">
                 <i class="{@iconfont}"></i>

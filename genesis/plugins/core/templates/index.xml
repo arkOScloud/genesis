@@ -2,26 +2,25 @@
 <head id="_head">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <headstylesheets/>
-    <link rel="stylesheet/less" href="/core/styles.less" />
     <headscripts/>
     <link rel="shortcut icon" href="/dl/core/ui/favicon.png" />
 </head>
-<body id="main" style="background:#eee">
+<body id="main">
 
 <div id="page">
-    <div id="topbar">
+    <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
-            <img class="logo" src="/dl/core/ui/logo.png" />
-            Genesis
+            <div class="navbar-header">
+                <a class="navbar-brand"><img class="logo" src="/dl/core/ui/logo.png" /> Genesis</a>
+            </div>
         </div>
     </div>
-
-    <div id="topbar2">
+    <div id="ui-lower-bar">
         <div class="container">
-            <div class="dropdown">
-                <span id="topplaceholder-top"/>
-                <span id="topplaceholder-bottom"/>
-                <popover id="power-pop" placement="bottom" styles="float:right;" class="ui-el-top-category gen-switch"></popover>
+            <span id="topplaceholder-top"/>
+            <span id="topplaceholder-bottom"/>
+            <div class="pull-right">
+                <popover id="power-pop" placement="bottom" class="ui-el-top-category gen-switch"></popover>
                 <div class="popover bottom">
                   <div id="power-pop-content" class="popover-inner">
                     <ul>
@@ -59,13 +58,12 @@
             </div>
         </div>
     </div>
-
-    <div id="whiteout" style="display:none;opacity:0" />
-    <img id="ajax-loader" src="/dl/core/ui/ajax.gif" style="display:none;opacity:0" />
     
-    <div class="main-container">
-        <div class="sidebar" id="leftplaceholder" />
-   	    <div class="content" id="rightplaceholder" />
+    <div class="container">
+        <div class="row">
+            <div class="sidebar col-md-2" id="leftplaceholder" />
+       	    <div class="content col-md-10" id="rightplaceholder" />
+        </div>
     </div>
 
     <div class="footer">

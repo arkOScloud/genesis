@@ -1,0 +1,141 @@
+@import 'bootstrap/bootstrap.less';
+
+html, body {
+    font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', sans-serif;
+}
+
+#ajax-loader {
+    padding: 10px;
+    background: rgba(0,0,0,0.5);
+    margin: -30px 0 0 -30px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    border-radius: 7px;
+    border: 1px solid #666;
+    z-index: 1000001;
+}
+
+#pbox {
+    display: none;
+    position: fixed;
+    top: 50%;
+    background: rgba(0,0,0,0.5);
+    padding: 20px;
+    width: 500px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 0 5px;
+    z-index: 1000001;
+}
+
+a:link, a:focus, a:active {
+    outline: 0;
+}
+
+.navbar-inverse .navbar-brand {
+    color: #FFF;
+}
+
+.navbar-static-top {
+    margin-bottom: 0;
+}
+
+#ui-lower-bar {
+    background-color: #FFF;
+    border-bottom: 1px solid #DDD;
+    margin-bottom: 20px;
+    height: 28px;
+}
+
+.ui-el-top-category {
+    display: inline-block;
+    float: left;
+    margin: 0 2px 0;
+    padding: 2px 8px;
+    height: 28px;
+
+    color: #2C3E50;
+    font-size: 13px;
+    text-decoration: none;
+    line-height: 28px;
+
+    img {
+        float: left;
+        padding: 5px 5px 0;
+    }
+
+    &.selected,
+    &:hover {
+        background: #CFD9DB;
+        color: #2C3E50;
+    }
+}
+
+.ui-el-categoryfolder {
+    width: 152px;
+    height: 24px;
+    border-top: none;
+    line-height: 26px;
+    color: #B4BCC2;
+    padding: 0 0 0 2px;
+    font-size: 10px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 #ffffff;
+}
+
+.ui-el-categoryfolder-children {
+    padding: 0 0 10px;
+}
+
+.ui-el-category {
+    width: 130px;
+    line-height: 26px;
+    margin: 3px 0;
+    .transition(none);
+
+    * {
+        .transition(none);
+    }
+
+    &:hover {
+        background: @brand-primary;
+    }
+
+    &.selected {
+        background: @brand-primary;
+        border-radius: 2px;
+    }
+
+    .text {
+        color: @brand-primary;
+        font-size: 13px;
+        display: inline-block;
+        line-height: 16px;
+        padding: 0 0 2px;
+    }
+
+    &.selected .text {
+        color: white;
+        line-height: 16px;
+        font-weight: bold;
+    }
+
+    &.selected i {
+        color: white;
+        line-height: 16px;
+        padding: 5px 0 0 5px;
+    }
+
+    &:hover .text, &:hover i {
+       color: #ECF0F1;
+    }
+
+    i {
+        width: 16px;
+        height: 16px;
+        padding: 0 0 0 5px;
+        float: left;
+        color: @brand-primary;
+    }
+}

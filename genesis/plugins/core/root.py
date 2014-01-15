@@ -48,10 +48,18 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
 
         if self.app.session.has_key('messages'):
             for msg in self.app.session['messages']:
+                if 'info' in msg[0]:
+                    msgcls = 'info'
+                elif 'warn' in msg[0]:
+                    msgcls = 'warning'
+                elif 'success' in msg[0]:
+                    msgcls = 'success'
+                else:
+                    msgcls = 'danger'
                 templ.append(
                     'system-messages',
                     UI.SystemMessage(
-                        cls=msg[0],
+                        cls=msgcls,
                         text=msg[1],
                     )
                 )
@@ -96,13 +104,6 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
                     'can_abort': p.can_abort
                 })
         return json.dumps(r)
-
-    @url('^/core/styles.less$')
-    def serve_styles(self, req, sr):
-        r = ''
-        for s in sorted(self.app.less_styles):
-            r += '@import "%s";\n'%s
-        return r
     
     @url('^/$')
     def process(self, req, start_response):
