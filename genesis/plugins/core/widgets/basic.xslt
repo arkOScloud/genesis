@@ -17,6 +17,12 @@
 </xsl:template>
 
 <!-- Button magic -->
+<xsl:template match="buttongroup">
+    <div class="btn-group">
+        <xsl:apply-templates />
+    </div>
+</xsl:template>
+
 <xsl:template match="button">
     <xsl:variable name="onclickjs">
         <xsl:choose>
