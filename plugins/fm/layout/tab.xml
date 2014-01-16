@@ -1,10 +1,31 @@
 <xml>
-    <toolbar id="path">
-        <button id="paste" text="Paste here" iconfont="gen-paste" />
-        <button id="upload" text="Upload here" iconfont="gen-upload" />
-        <button id="newfld" text="New folder" iconfont="gen-folder-plus" />
-        <button id="close" text="Close tab" iconfont="gen-cancel-circle" />
-    </toolbar>
+    <div id="path">
+        <buttongroup>
+            <dbutton text="File">
+                <dbuttonitem id="newfile" text="New file..." iconfont="gen-file-plus" />
+                <dbuttonitem id="newfld" text="New folder..." iconfont="gen-folder-plus" />
+                <dbuttonitem id="close" text="Close tab" iconfont="gen-cancel-circle" />
+                <dbuttonitem id="closeall" text="Close all tabs" iconfont="gen-cancel-circle" />
+            </dbutton>
+            <dbutton text="Edit">
+                <dbuttonitem text="Rename..." form="files" onclick="form" action="rename" iconfont="gen-tag-2" />
+                <dbuttonitem text="Cut" form="files" onclick="form" action="cut" iconfont="gen-file-minus" />
+                <dbuttonitem text="Copy" form="files" onclick="form" action="copy" iconfont="gen-copy" />
+                <dbuttonitem id="paste" text="Paste" iconfont="gen-paste" />
+                <dbuttonitem text="Delete" form="files" onclick="form" action="delete" iconfont="gen-file-remove" />
+            </dbutton>
+            <dbutton text="View">
+                <dbuttonitem id="reload" text="Reload" iconfont="gen-loop-2" />
+                <dbuttonitem id="hidden" text="Show hidden files" iconfont="gen-eye" />
+            </dbutton>
+            <dbutton text="Go" id="gomenu">
+            </dbutton>
+            <dbutton text="Tools">
+                <dbuttonitem id="upload" text="Upload here" iconfont="gen-upload" />
+                <dbuttonitem id="download" text="Download..." iconfont="gen-download" />
+            </dbutton>
+        </buttongroup>
+    </div>
 
     <spacer height="10" />
 
