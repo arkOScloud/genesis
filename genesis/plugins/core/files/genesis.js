@@ -146,7 +146,7 @@ Genesis = (function() {
 
 				Genesis.UI.hideModal('warningbox');
 
-				$('.twipsy').remove();
+				// $('.ui-tooltip').tooltip('hide');
 
 				$('#rightplaceholder').empty();
 				$('#rightplaceholder').html(data);
@@ -156,6 +156,7 @@ Genesis = (function() {
 					} catch (err) { }
 					$(e).text('');
 				});
+				$('.ui-tooltip').tooltip();
 				Genesis.UI.showLoader(false);
 			},
 

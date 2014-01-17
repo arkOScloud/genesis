@@ -58,8 +58,8 @@ a:link, a:focus, a:active {
   height: 28px;
   color: #2C3E50;
   font-size: 13px;
-  text-decoration: none;
   line-height: 28px;
+  text-decoration: none;
 }
 
 .ui-el-top-category img {

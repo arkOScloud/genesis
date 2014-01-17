@@ -239,21 +239,9 @@
 
 <xsl:template match="tooltip">
     <xsl:variable name="id" select="x:id(@id)" />
-    <div style="display:inline-block; {@styles}" id="{$id}">
+    <div style="display:inline-block; {@styles}" id="{$id}" class="ui-tooltip" data-animation="true" data-placement="{x:attr(@placement, 'right')}" data-html="true" data-delay="{x:attr(@delay, '0')}" data-title="{x:jsesc(x:attr(@text, ''))}" data-trigger="{x:attr(@trigger, 'hover')}">
         <xsl:apply-templates />
     </div>
-    <script>
-        $('#<xsl:value-of select="$id" />').twipsy({
-            animate: true,
-            placement: '<xsl:value-of select="x:attr(@placement, 'right')" />',
-            html: true,
-            live: true,
-            delayIn: <xsl:value-of select="x:attr(@delay, '0')" />,
-            offset: <xsl:value-of select="x:attr(@offset, '0')" />,
-            title: '<xsl:value-of select="x:jsesc(x:attr(@text, ''))" />',
-            trigger: '<xsl:value-of select="x:attr(@trigger, 'hover')" />',
-        });
-    </script>
 </xsl:template>
 
 <xsl:template match="popover">
