@@ -82,6 +82,12 @@ def make_report(app, err):
     # Finalize the reported log
     app.log.blackbox.stop()
 
+    buf = app.log.blackbox.buffer.split('\n')
+    if len(buf) >= 50:
+      buf = buf[-50:]
+      buf.insert(0, '(Showing only the last 50 entries)\n')
+    buf = '\n'.join(buf)
+
     return (('Genesis %s bug report\n' +
            '--------------------\n\n' +
            'System: %s\n' +
@@ -101,5 +107,5 @@ def make_report(app, err):
                app.config.filename,
                err,
                pr,
-               app.log.blackbox.buffer,
+               buf,
               ))
