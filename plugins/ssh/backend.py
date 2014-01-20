@@ -90,7 +90,10 @@ class PKeysConfig(Plugin):
     def list_files(self):
         filelist = []
         for user in self.app.gconfig.options('users'):
-            filelist.extend('/home/' + user + '/.ssh/authorized_keys')
+            if user == 'root':
+                filelist.extend('/root/.ssh/authorized_keys')
+            else:
+                filelist.extend(os.path.join('/home', user, '.ssh', 'authorized_keys'))
         return filelist
 
     def read(self):
@@ -100,18 +103,22 @@ class PKeysConfig(Plugin):
             self.currentuser = self.app.auth.user
 
         for user in self.app.gconfig.options('users'):
-            uid = pwd.getpwnam(user).pw_uid
-            user_home = ('/root' if user == 'root' else '/home/' + user)
-            if not os.path.exists(user_home + '/.ssh'):
-                os.makedirs(user_home + '/.ssh')
-                os.chown(user_home + '/.ssh', uid, 100)
-            if not os.path.exists(user_home + '/.ssh/authorized_keys'):
-                f = open(user_home + '/.ssh/authorized_keys', 'w')
+            try:
+                uid = pwd.getpwnam(user).pw_uid
+            except KeyError:
+                continue
+            user_home = '/root' if user == 'root' else os.path.join('/home', user)
+            if not os.path.exists(os.path.join(user_home, '.ssh')):
+                os.makedirs(os.path.join(user_home, '.ssh'))
+                os.chown(os.path.join(user_home, '.ssh'), uid, 100)
+            if not os.path.exists(os.path.join(user_home, '.ssh', 'authorized_keys')):
+                f = open(os.path.join(user_home, '.ssh', 'authorized_keys'), 'w')
                 f.write('')
                 f.close()
-                os.chown(user_home + '/.ssh/authorized_keys', uid, 100)
+                os.chown(os.path.join(user_home, '.ssh', 'authorized_keys'), uid, 100)
 
-        ss = ConfManager.get().load('ssh_pkeys', ('/root' if self.currentuser == 'root' else '/home/' + self.currentuser) + '/.ssh/authorized_keys').split('\n')
+        ss = ConfManager.get().load('ssh_pkeys', 
+            os.path.join('/root' if self.currentuser == 'root' else os.path.join('/home', self.currentuser), '.ssh', 'authorized_keys')).split('\n')
         r = []
 
         for s in ss:
@@ -134,8 +141,15 @@ class PKeysConfig(Plugin):
         else:
             self.currentuser = self.app.auth.user
 
+        try:
+            pwd.getpwnam(self.currentuser)
+        except KeyError:
+            raise Exception('%s not a valid system user' % self.currentuser)
+
         d = ''
         for k in data:
             d += '%s %s %s\n' % (k.type, k.key, k.name)
-        ConfManager.get().save('ssh_pkeys', ('/root' if self.currentuser == 'root' else '/home/' + self.currentuser) + '/.ssh/authorized_keys', d)
+        ConfManager.get().save('ssh_pkeys', 
+            os.path.join('/root' if self.currentuser == 'root' else os.path.join('/home/', self.currentuser), 
+                '.ssh', 'authorized_keys'), d)
         ConfManager.get().commit('ssh_pkeys')
