@@ -326,7 +326,7 @@ class FMPlugin(CategoryPlugin):
         if params[0] == 'dlgAcl':
             self._editing_acl = None
         if params[0] == 'dlgUpload':
-            if vars.getvalue('action', '') == 'OK':
+            if vars.getvalue('action', '') == 'OK' and vars.has_key('file'):
                 files = []
                 if type(vars['file']) == list:
                     names = []
