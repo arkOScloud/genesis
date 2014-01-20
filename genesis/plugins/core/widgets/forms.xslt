@@ -159,14 +159,7 @@
                 </formline> 
             </xsl:if>
             <formline>
-                <xsl:choose>
-                    <xsl:when test="@multiple != ''">
-                        <input type="file" name="file" />
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <input type="file" name="file" multiple="True"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <fileinput id="file" multiple="{@multiple}" />
             </formline>
         </div>
 

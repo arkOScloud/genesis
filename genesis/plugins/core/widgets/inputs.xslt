@@ -101,3 +101,14 @@
         <input type="submit" class="ui-el-button" value="{x:attr(@text, 'Upload')}"/>
     </form>
 </xsl:template>
+
+<xsl:template match="fileinput">
+    <xsl:choose>
+        <xsl:when test="@multiple != ''">
+            <input type="file" name="{@id}" multiple="True" />
+        </xsl:when>
+        <xsl:otherwise>
+            <input type="file" name="{@id}" />
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
