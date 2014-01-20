@@ -77,15 +77,33 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
     @url('^/core/progress$')
     def serve_progress(self, req, sr):
         r = []
+        rm = []
         if self.app.session.has_key('statusmsg'):
+            clear = None
+            # Look for new messages pushed to the queue
             for msg in self.app.session['statusmsg']:
-                r.append({
-                    'id': msg[0],
-                    'type': 'statusbox',
-                    'owner': msg[0],
-                    'status': msg[1]
-                })
-            del self.app.session['statusmsg']
+                if msg[1]:
+                    r.append({
+                        'id': msg[0],
+                        'type': 'statusbox',
+                        'owner': msg[0],
+                        'status': msg[1]
+                    })
+                    clear = False
+                    rm.append(msg)
+            # Remove messages from queue when they are shown
+            for x in rm:
+                self.app.session['statusmsg'].remove(x)
+            # If a clear command is sent and no messages waiting, clear
+            for msg in self.app.session['statusmsg']:
+                if clear == None and msg[1] == False:
+                    r.append({
+                        'id': msg[0],
+                        'type': 'statusbox',
+                        'owner': msg[0],
+                        'status': msg[1]
+                    })
+                    del self.app.session['statusmsg']
         for p in sorted(self.app.grab_plugins(IProgressBoxProvider)):
             if p.has_progress():
                 r.append({
