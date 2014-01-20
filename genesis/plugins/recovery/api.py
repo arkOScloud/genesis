@@ -3,13 +3,11 @@ import glob
 import tempfile
 import shutil
 import time
+import tempfile
 
 from genesis.com import *
 from genesis.api import *
 from genesis.utils import shell, shell_status
-
-from tempfile import mkdtemp
-from os import path, listdir
 
 
 class BackupRevision:
@@ -110,30 +108,39 @@ class Manager(Plugin):
         dir = '/var/backups/genesis/'
 
         # Get the backup then read its metadata
-        tempdir = mkdtemp()
-        temparch = path.join(tempdir, 'backup.tar.gz')
-        open(temparch, 'wb').write(file)
+        tempdir = tempfile.mkdtemp()
+        temparch = os.path.join(tempdir, 'backup.tar.gz')
+        open(temparch, 'wb').write(file.value)
 
         shell('tar xzf ' + temparch + ' -C ' + tempdir)
-        bfile = open(path.join(tempdir, 'genesis-backup'), 'r')
+        bfile = open(os.path.join(tempdir, 'genesis-backup'), 'r')
         name = bfile.readline()
         bfile.close()
 
-        # Make sure the appropriate plugin is installed
-        if not path.exists(dir + name):
-            shell('rm -r ' + tempdir)
-            raise Exception()
-
         # Name the file and do some work
-        priors = listdir(dir + name)
+        if not os.path.exists(os.path.join(dir, name)):
+            os.makedirs(os.path.join(dir, name))
+        priors = os.listdir(dir + name)
         thinglist = []
         for thing in priors:
             thing = thing.split('.')
             thinglist.append(thing[0])
-        newver = int(max(thinglist)) + 1
+        newver = int(max(thinglist)) + 1 if thinglist else 0
 
-        shell('cp %s %s' % (temparch, dir + name + '/' + str(newver) + '.tar.gz'))
+        shell('cp %s %s' % (temparch, os.path.join(dir, name, str(newver) + '.tar.gz')))
         shell('rm -r ' + tempdir)
+
+    def get_backups(self):
+        dir = tempfile.mkdtemp()
+        temparch = os.path.join(dir, 'backup-all.tar.gz')
+        shell('tar czf ' + temparch + ' -C /var/backups/ genesis')
+        size = os.path.getsize(temparch)
+
+        f = open(temparch, 'rb')
+        arch = f.read()
+        f.close()
+        shell('rm -r ' + dir)
+        return (size, arch)
 
 class RecoveryHook (ConfMgrHook):
     def finished(self, cfg):

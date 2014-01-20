@@ -5,7 +5,7 @@
         <button id="upload" iconfont="gen-upload" text="Upload Backup" design="default pull-right" />
         <button id="downloadall" iconfont="gen-download" text="Download All" design="default pull-right" onclick="window.open('/recovery/all', '_blank')" />
     </toolbar>
-    <pad>
+    <pad id="main">
         <hcontainer>
             <list id="provs" width="200" height="400" />
             <scrollcontainer width="550" height="400">
@@ -23,6 +23,4 @@
             </scrollcontainer>
         </hcontainer>
     </pad>
-
-    <uploadbox id="dlgUpload" url="/recovery/upload" />
 </xml>

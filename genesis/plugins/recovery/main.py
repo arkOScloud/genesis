@@ -81,9 +81,9 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
         ui.find('btnBackup').set('id', 'backup/%s'%self._current)
 
         if self._uploader:
-            pass
-        else:
-            ui.remove('dlgUpload')
+            ui.append('main', UI.UploadBox(id='dlgUpload',
+                text="Select archive to upload",
+                multiple=False))
 
         return ui
 
@@ -92,7 +92,7 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
         params = req['PATH_INFO'].split('/')[3:] + ['']
         filename = '/var/backups/genesis/' + params[0] + '/' + params[1] + '.tar.gz'
         f = open(filename, 'rb')
-        size = path.getsize(filename)
+        size = os.path.getsize(filename)
 
         start_response('200 OK', [
             ('Content-type', 'application/gzip'),
@@ -103,36 +103,13 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
 
     @url('^/recovery/all$')
     def get_backups(self, req, start_response):
-        dir = mkdtemp()
-        temparch = path.join(dir, 'backup-all.tar.gz')
-        shell('tar czf ' + temparch + ' -C /var/backups/ genesis')
-        size = path.getsize(temparch)
-
-        f = open(temparch, 'rb')
-        arch = f.read()
-        f.close()
-        shell('rm -r ' + dir)
-
+        data = Manager(self.app).get_backups()
         start_response('200 OK', [
             ('Content-type', 'application/gzip'),
-            ('Content-length', str(size)),
+            ('Content-length', str(data[0])),
             ('Content-Disposition', 'attachment; filename=backup-all.tar.gz')
         ])
-        return arch
-
-    @url('^/recovery/upload$')
-    def send_upload(self, req, start_response):
-        self.manager = Manager(self.app)
-        vars = get_environment_vars(req)
-        f = vars.getvalue('file', None)
-        try:
-            self.manager.upload(f)
-            self.put_message('info', 'Upload successful.')
-        except:
-            self.put_message('err', 'Failed to upload. Make sure the plugin is installed.')
-        self._uploader = None
-        start_response('200 OK', [('Refresh', '0; URL=/')])
-        return ''
+        return data[1]
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
@@ -171,3 +148,16 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
             if p.id == params[0]:
                 self._current = p.id
                 self._current_name = p.name
+
+    @event('form/submit')
+    @event('dialog/submit')
+    def on_submit(self, event, params, vars=None):
+        if params[0] == 'dlgUpload':
+            if vars.getvalue('action', '') == 'OK' and vars.has_key('file'):
+                f = vars['file']
+                try:
+                    self.manager.upload(f)
+                    self.put_message('info', 'Upload successful.')
+                except Exception, e:
+                    self.put_message('err', 'Failed to upload backup: %s' % str(e))
+        self._uploader = None
