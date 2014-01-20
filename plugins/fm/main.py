@@ -28,6 +28,7 @@ class FMPlugin(CategoryPlugin):
         self._clipboard = []
         self._cbs = None
         self._renaming = None
+        self._newfolder = None
         self._upload = None
         self._archupl = []
         self.add_tab()
@@ -96,6 +97,13 @@ class FMPlugin(CategoryPlugin):
                     'Do you want to extract its contents to %s?' % (self._archupl[0][1], self._archupl[0][0]),
                     lbreak=True, bold=True),
                 id='dlgArchUpl', yesno=True))
+
+        if self._newfolder:
+            ui.append('main', UI.InputBox(
+                text='Enter path for folder',
+                value='',
+                id='dlgNewFolder'
+            ))
 
         return ui
 
@@ -266,13 +274,7 @@ class FMPlugin(CategoryPlugin):
             self._upload = True
         if params[0] == 'newfld':
             self._tab = int(params[1])
-            path = self._tabs[int(params[1])]
-            try:
-                p = os.path.join(path, 'new folder')
-                os.mkdir(p)
-            except:
-                pass
-            self._renaming = p
+            self._newfolder = self._tabs[int(params[1])]
         if params[0] == 'delete':
             self._tab = int(params[1])
             f = self.dec_file(params[2])
@@ -355,6 +357,17 @@ class FMPlugin(CategoryPlugin):
                 except Exception, e:
                     self.put_message('err', 'Failed to extract %s: %s' % (f[1], str(e)))
             self._archupl.remove(f)
+        if params[0] == 'dlgNewFolder':
+            if vars.getvalue('action', '') == 'OK' and vars.getvalue('value', ''):
+                fld = vars.getvalue('value', '')
+                if fld[0] != '/':
+                    fld = os.path.join(self._newfolder, fld)
+                try:
+                    os.makedirs(fld)
+                    self.put_message('info', 'Folder(s) created: %s' % fld)
+                except Exception, e:
+                    self.put_message('err', 'Folder creation failed: %s' % str(e))
+            self._newfolder = None
         if params[0] == 'frmAddAcl':
             if vars.getvalue('action', None) == 'OK':
                 set_acl(self._editing_acl,
