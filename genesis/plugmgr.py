@@ -409,7 +409,7 @@ class PluginLoader:
             except:
                 # Let's try to install it anyway
                 shell('pip2 install %s' % dep[2])
-                raise ModuleRequirementError(*dep[1:])
+                raise ModuleRequirementError(dep[1])
 
     @staticmethod
     def get_plugin_path(app, id):
