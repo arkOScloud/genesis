@@ -229,8 +229,16 @@ class WebappControl(Plugin):
 			l.value = '443 ssl'
 			port = '443'
 		else:
-			port = l.value
-			l.value = l.value + ' ssl'
+			port = l.value.split(' ssl')[0]
+			l.value = l.value.split(' ssl')[0] + ' ssl'
+		if c.servers[0].filter('Key', 'ssl_certificate'):
+			c.servers[0].remove(c.servers[0].filter('Key', 'ssl_certificate'))
+		if c.servers[0].filter('Key', 'ssl_certificate_key'):
+			c.servers[0].remove(c.servers[0].filter('Key', 'ssl_certificate_key'))
+		if c.servers[0].filter('Key', 'ssl_protocols'):
+			c.servers[0].remove(c.servers[0].filter('Key', 'ssl_protocols'))
+		if c.servers[0].filter('Key', 'ssl_ciphers'):
+			c.servers[0].remove(c.servers[0].filter('Key', 'ssl_ciphers'))
 		c.servers[0].add(
 			nginx.Key('ssl_certificate', cpath),
 			nginx.Key('ssl_certificate_key', kpath),
