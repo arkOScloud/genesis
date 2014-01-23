@@ -256,6 +256,8 @@ class CertificatesPlugin(CategoryPlugin):
 					self.put_message('err', 'Please select a key file')
 				elif not vars.getvalue('certname', ''):
 					self.put_message('err', 'Must choose a certificate name')
+				elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
+					self.put_message('err', 'You already have a certificate with that name.')
 				elif re.search('\.|-|`|\\\\|\/|[ ]', vars.getvalue('certname')):
 					self.put_message('err', 'Certificate name must not contain spaces, dots, dashes or special characters')
 				else:
