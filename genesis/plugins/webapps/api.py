@@ -62,7 +62,7 @@ class Webapps(apis.API):
 			stype = 'Unknown'
 			path = os.path.join('/etc/nginx/sites-available', site)
 			rtype = re.compile('GENESIS ((?:[a-z][a-z]+))', flags=re.IGNORECASE)
-			rport = re.compile('(\\d+)\s*(.*?)')
+			rport = re.compile('(\\d+)\s*(.*)')
 
 			# Get actual values
 			try:
@@ -90,7 +90,7 @@ class Webapps(apis.API):
 			applist.append({
 					'name': site,
 					'type': stype,
-					'ssl': (True if ssl == 'ssl' else False),
+					'ssl': (True if ssl else False),
 					'ssl_able': ssl_able,
 					'addr': addr, 
 					'port': port,

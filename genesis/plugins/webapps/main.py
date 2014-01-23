@@ -65,9 +65,9 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		t = ui.find('list')
 
 		for s in self.sites:
-			if s['addr'] is not False and s['ssl']:
+			if s['addr'] and s['ssl']:
 				addr = 'https://' + s['addr'] + (':'+s['port'] if s['port'] is not '443' else '')
-			elif s['addr'] is not False:
+			elif s['addr']:
 				addr = 'http://' + s['addr'] + (':'+s['port'] if s['port'] is not '80' else '')
 			else:
 				addr = False
