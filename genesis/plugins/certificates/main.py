@@ -7,6 +7,8 @@ from genesis.plugins.network.backend import IHostnameManager
 
 from backend import CertControl
 
+import re
+
 
 class CertificatesPlugin(CategoryPlugin):
 	text = 'Certificates'
@@ -22,6 +24,7 @@ class CertificatesPlugin(CategoryPlugin):
 		self._gen = None
 		self._wal = []
 		self._pal = []
+		self._upload = None
 
 	def get_ui(self):
 		ui = self.app.inflate('certificates:main')
@@ -74,6 +77,7 @@ class CertificatesPlugin(CategoryPlugin):
 			self._wal, self._pal = self._cc.get_ssl_capable()
 			ui.find('certname').set('text', self._cinfo['name'])
 			ui.find('domain').set('text', self._cinfo['domain'])
+			ui.find('keytype').set('text', self._cinfo['keylength']+'-bit '+self._cinfo['keytype'])
 			exp = self._cinfo['expiry']
 			exp = exp[0:4] + '-' + exp[4:6] + '-' + exp[6:8] + ', ' + exp[8:10] + ':' + exp[10:12]
 			ui.find('expires').set('text', exp)
@@ -151,6 +155,15 @@ class CertificatesPlugin(CategoryPlugin):
 		else:
 			ui.remove('dlgInfo')
 
+		if self._upload:
+			ui.append('main', UI.DialogBox(
+				UI.FormLine(UI.TextInput(name='certname'), text='Name'),
+				UI.FormLine(UI.FileInput(id='certfile'), text='Certificate file'),
+				UI.FormLine(UI.FileInput(id='keyfile'), text='Certificate keyfile'),
+				UI.FormLine(UI.FileInput(id='chainfile'), text='Certificate chainfile', 
+					help='This is optional, only put it if you know you need one.'),
+				id='dlgUpload', mp=True))
+
 		return ui
 
 	@event('button/click')
@@ -192,6 +205,8 @@ class CertificatesPlugin(CategoryPlugin):
 			self._cc.unassign(self._cinfo['name'], [[('genesis')]])
 			self.put_message('info', 'Certificate removed and SSL disabled for Genesis. Reload Genesis for changes to take effect')
 			self._cinfo = None
+		elif params[0] == 'upl':
+			self._upload = True
 
 	@event('dialog/submit')
 	def on_submit(self, event, params, vars = None):
@@ -231,6 +246,28 @@ class CertificatesPlugin(CategoryPlugin):
 			self._cinfo = None
 			self._wal = []
 			self._pal = []
+		elif params[0] == 'dlgUpload':
+			if vars.getvalue('action', '') == 'OK':
+				if not vars.has_key('certfile') and not vars.has_key('keyfile'):
+					self.put_message('err', 'Please select at least a certificate and private key')
+				elif not vars.has_key('certfile'):
+					self.put_message('err', 'Please select a certificate file')
+				elif not vars.has_key('keyfile'):
+					self.put_message('err', 'Please select a key file')
+				elif not vars.getvalue('certname', ''):
+					self.put_message('err', 'Must choose a certificate name')
+				elif re.search('\.|-|`|\\\\|\/|[ ]', vars.getvalue('certname')):
+					self.put_message('err', 'Certificate name must not contain spaces, dots, dashes or special characters')
+				else:
+					try:
+						self._cc.add_ext_cert(vars.getvalue('certname'), 
+							vars['certfile'].value, vars['keyfile'].value,
+							vars['chainfile'].value if vars.has_key('chainfile') else None)
+						self.put_message('info', 'Certificate %s installed' % vars.getvalue('certname'))
+					except Exception, e:
+						self.put_message('err', 'Couldn\'t add certificate: %s' % str(e[0]))
+						self.app.log.error('Couldn\'t add certificate: %s - Error: %s' % (str(e[0]), str(e[1])))
+			self._upload = None
 
 
 class CertGenWorker(BackgroundWorker):

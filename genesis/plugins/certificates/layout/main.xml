@@ -1,6 +1,7 @@
 <xml>
     <toolbar>
         <button id="gen" text="Generate certificate" iconfont="gen-certificate" />
+        <button id="upl" text="Upload certificate" iconfont="gen-file-upload" />
     </toolbar>
 
     <label size="5" text="My Certificates" />
@@ -45,6 +46,9 @@
     <dialogbox id="dlgInfo" hidecancel="True">
         <formline text="Certificate name">
             <label name="certname" id="certname" />
+        </formline>
+        <formline text="Key type">
+            <label name="keytype" id="keytype" />
         </formline>
         <formline text="Serves domain">
             <label name="domain" id="domain" />

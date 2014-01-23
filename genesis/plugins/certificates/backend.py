@@ -22,9 +22,11 @@ class CertControl(Plugin):
 			cfg = ConfigParser.ConfigParser()
 			cfg.read(x)
 			certs.append({'name': cfg.get('cert', 'name'),
-				'expiry': cfg.get('cert', 'expiry'),
-				'domain': cfg.get('cert', 'domain'),
-				'assign': cfg.get('cert', 'assign').split('\n')})
+				'expiry': cfg.get('cert', 'expiry') if cfg.has_option('cert', 'expiry') else 'Unknown',
+				'domain': cfg.get('cert', 'domain') if cfg.has_option('cert', 'domain') else 'Unknown',
+				'keytype': cfg.get('cert', 'keytype') if cfg.has_option('cert', 'keytype') else 'Unknown',
+				'keylength': cfg.get('cert', 'keylength') if cfg.has_option('cert', 'keylength') else 'Unknown',
+				'assign': cfg.get('cert', 'assign').split('\n') if cfg.has_option('cert', 'assign') else 'Unknown'})
 		return certs
 
 	def get_ssl_capable(self):
@@ -40,17 +42,43 @@ class CertControl(Plugin):
 		crt = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, c)
 		return crt.has_expired()
 
-	def add_ext_cert(self, name, chain='', assign=[]):
+	def add_ext_cert(self, name, cert, key, chain='', assign=[]):
+		# Save the file streams as we get them, and
 		# Add a .gcinfo file for a certificate uploaded externally
-		# TODO accept and write file objs
-		c = open('/etc/ssl/certs/genesis/'+name+'.crt', 'r').read()
-		crt = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, c)
+		try:
+			crt = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
+		except Exception, e:
+			raise Exception('Could not read certificate file. Please make sure you\'ve selected the proper file.', e)
+		try:
+			ky = OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, key)
+		except Exception, e:
+			raise Exception('Could not read private keyfile. Please make sure you\'ve selected the proper file.', e)
+		
+		x = open(os.path.join('/etc/ssl/certs/genesis', name + '.crt'), 'w')
+		x.write(cert)
+		if chain:
+			x.write('\n') if not cert.endswith('\n') else None
+			x.write(chain)
+		x.close()
+		open(os.path.join('/etc/ssl/private/genesis', name + '.key'), 'w').write(key)
+
+		if ky.type() == OpenSSL.crypto.TYPE_RSA:
+			keytype = 'RSA'
+		elif ky.type() == OpenSSL.crypto.TYPE_DSA:
+			keytype = 'DSA'
+		else:
+			keytype = 'Unknown'
 		cfg = ConfigParser.ConfigParser()
 		cfg.add_section('cert')
 		cfg.set('cert', 'name', name)
 		cfg.set('cert', 'expiry', crt.get_notAfter())
+		cfg.set('cert', 'keytype', keytype)
+		cfg.set('cert', 'keylength', str(int(ky.bits())))
+		cfg.set('cert', 'domain', crt.get_subject().CN)
 		cfg.set('cert', 'assign', '\n'.join(assign))
-		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
+		cfg.write(open(os.path.join('/etc/ssl/certs/genesis', name + '.gcinfo'), 'w'))
+		os.chmod(os.path.join('/etc/ssl/certs/genesis', name + '.crt'), 0660)
+		os.chmod(os.path.join('/etc/ssl/private/genesis', name + '.key'), 0660)
 
 	def gencert(self, name, vars, hostname):
 		# Make sure our folders are in place
@@ -111,11 +139,19 @@ class CertControl(Plugin):
 			)
 		os.chmod('/etc/ssl/private/genesis/'+name+'.key', 0660)
 
+		if key.type() == OpenSSL.crypto.TYPE_RSA:
+			keytype = 'RSA'
+		elif key.type() == OpenSSL.crypto.TYPE_DSA:
+			keytype = 'DSA'
+		else:
+			keytype = 'Unknown'
 		cfg = ConfigParser.ConfigParser()
 		cfg.add_section('cert')
 		cfg.set('cert', 'name', name)
 		cfg.set('cert', 'expiry', crt.get_notAfter())
 		cfg.set('cert', 'domain', crt.get_subject().CN)
+		cfg.set('cert', 'keytype', keytype)
+		cfg.set('cert', 'keylength', str(int(ky.bits())))
 		cfg.set('cert', 'assign', '')
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
 
