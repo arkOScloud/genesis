@@ -109,8 +109,8 @@ class ArchConnConfig(LinuxIp):
                 else:
                     conn.enabled = False
                 if conn.interface[:-1] in ['wlan', 'ra', 'wifi', 'ath']:
-                    conn.essid = data['ESSID']
-                    conn.security = data['Security']
+                    conn.essid = data['ESSID'] if data.has_key('ESSID') else 'Unknown'
+                    conn.security = data['Security'] if data.has_key('Security') else 'Unknown'
                     if conn.security != 'none' and conn.security != 'wpa-configsection':
                         conn.key = data['Key']
                 cxnfile.close()

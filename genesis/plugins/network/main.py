@@ -27,6 +27,7 @@ class NetworkPlugin(CategoryPlugin):
         self._editing_conn = None
         self._editing = None
         self._editing_ns = None
+        self._newconn = None
         
     def get_ui(self):
         self.ifacelist = []
@@ -114,22 +115,70 @@ class NetworkPlugin(CategoryPlugin):
                     hidecancel=True
                 ))
 
-        if self._editing_conn is not None:
-            if self._editing_conn is not True:
-                ce = self._editing_conn
-                ui.find('name').set('value', ce.name)
-                ui.find('name').set('disabled', 'true')
-                ui.find('devclass').set('value', ce.devclass)
-                ui.find('interface').set('value', ce.interface)
-                ui.find('description').set('value', ce.description)
-                ui.find('addressing').set('value', ce.addressing)
-                ui.find('address').set('value', ce.address)
-                ui.find('gateway').set('value', ce.gateway)
-                if ce.interface[:-1] in ['wlan', 'ra', 'wifi', 'ath']:
-                    ui.find('security').set('value', ce.security)
-                    ui.find('essid').set('value', ce.essid)
-                    if ce.security != 'none' and ce.security != 'wpa-configsection':
-                        ui.find('key').set('value', ce.key)
+        if self._newconn == True:
+            c.append(
+                UI.DialogBox(
+                    UI.FormLine(
+                        UI.SelectInput(
+                            UI.SelectOption(value="ethernet", text="Wired (Ethernet)"),
+                            UI.SelectOption(value="wireless", text="Wireless"),
+                            id="devclass", name="devclass"
+                        ),
+                        text="Network type"
+                    ),
+                    UI.FormLine(
+                        UI.SelectInput(
+                            UI.SelectOption(value="dhcp", text="Automatic (DHCP)"),
+                            UI.SelectOption(value="static", text="Manual (Static)"),
+                            id="addressing", name="addressing"
+                        ),
+                        text="Addressing"
+                    ), id="dlgNewConn"
+                ))
+
+        if self._editing_conn and type(self._editing_conn) == dict:
+            ifaces_list = [x for x in self.net_config.interfaces]
+            ui.appendAll('interface', 
+                *[UI.SelectOption(id='iface-'+x, text=x, value=x) for x in ifaces_list])
+            if self._editing_conn['devclass'] == 'ethernet':
+                ui.find('dc-ethernet').set('selected', True)
+                ui.find('devclass').set('disabled', True)
+                ui.remove('fl-security')
+                ui.remove('fl-essid')
+                ui.remove('fl-key')
+                if 'eth0' in ifaces_list:
+                    ui.find('iface-eth0').set('selected', True)
+            elif self._editing_conn['devclass'] == 'wireless':
+                ui.find('dc-wireless').set('selected', True)
+                ui.find('devclass').set('disabled', True)
+                if 'wlan0' in ifaces_list:
+                    ui.find('iface-wlan0').set('selected', True)
+            if self._editing_conn['addressing'] == 'dhcp':
+                ui.find('ad-dhcp').set('selected', True)
+                ui.find('addressing').set('disabled', True)
+                ui.remove('fl-address')
+                ui.remove('fl-gateway')
+            elif self._editing_conn['addressing'] == 'static':
+                ui.find('ad-static').set('selected', True)
+                ui.find('addressing').set('disabled', True)
+        elif self._editing_conn and self._editing_conn != True:
+            ifaces_list = [x for x in self.net_config.interfaces]
+            ui.appendAll('interface', 
+                *[UI.SelectOption(id='iface-'+x, text=x, value=x) for x in ifaces_list])
+            ce = self._editing_conn
+            ui.find('name').set('value', ce.name)
+            ui.find('name').set('disabled', 'true')
+            ui.find('devclass').set('value', ce.devclass)
+            ui.find('interface').set('value', ce.interface)
+            ui.find('description').set('value', ce.description)
+            ui.find('addressing').set('value', ce.addressing)
+            ui.find('address').set('value', ce.address)
+            ui.find('gateway').set('value', ce.gateway)
+            if ce.interface[:-1] in ['wlan', 'ra', 'wifi', 'ath']:
+                ui.find('security').set('value', ce.security)
+                ui.find('essid').set('value', ce.essid)
+                if ce.security != 'none' and ce.security != 'wpa-configsection':
+                    ui.find('key').set('value', ce.key)
         else:
             ui.remove('dlgEditConn')
 
@@ -241,7 +290,7 @@ class NetworkPlugin(CategoryPlugin):
             self.conn_config.rescan()
         if params[0] == 'addconn':
             self._tab = 0
-            self._editing_conn = True
+            self._newconn = True
         if params[0] == 'delconn':
             self._tab = 0
             shell('rm /etc/netctl/' + params[1])
@@ -352,3 +401,8 @@ class NetworkPlugin(CategoryPlugin):
                 i.address = vars.getvalue('address', '127.0.0.1')
                 self.dns_config.save()
             self._editing_ns = None
+        if params[0] == 'dlgNewConn':
+            if vars.getvalue('action', '') == 'OK':
+                self._editing_conn = {'addressing': vars.getvalue('addressing'),
+                    'devclass': vars.getvalue('devclass')}
+            self._newconn = None

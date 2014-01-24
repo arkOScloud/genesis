@@ -123,34 +123,44 @@
     </dialogbox>
 
     <dialogbox id="dlgEditConn">
-        <formline text="Connection Name">
+        <formline text="Connection Name" help="This is an internal name for referring to your network within Genesis.">
             <textinput id="name" name="name" />
         </formline>
-        <formline text="Connection Type">
-            <textinput id="devclass" name="devclass" />
+        <formline id="fl-devclass" text="Connection Type">
+            <selectinput id="devclass" name="devclass">
+                <selectoption id="dc-ethernet" value="ethernet" text="Ethernet" />
+                <selectoption id="dc-wireless" value="wireless" text="Wireless" />
+            </selectinput>
         </formline>
         <formline text="Interface">
-            <textinput id="interface" name="interface" />
+            <selectinput id="interface" name="interface">
+            </selectinput>
         </formline>
-        <formline text="Description">
+        <formline text="Description" help="An internal description to describe this network (optional)">
             <textinput id="description" name="description" />
         </formline>
-        <formline text="Addressing">
-            <textinput id="addressing" name="addressing" />
+        <formline id="fl-addressing" text="Addressing">
+            <selectinput id="addressing" name="addressing">
+                <selectoption id="ad-dhcp" value="dhcp" text="Automatic (DHCP)" />
+                <selectoption id="ad-static" value="static" text="Manual (Static)" />
+            </selectinput>
         </formline>
-        <formline text="Address/Netmask (Static Only)">
+        <formline id="fl-address" text="Address/Netmask" help="Static only. (i.e. 192.168.0.5/24)">
             <textinput id="address" name="address" />
         </formline>
-        <formline text="Gateway (Static Only)">
+        <formline id="fl-gateway" text="Gateway" help="Static only. (i.e. 192.168.0.1)">
             <textinput id="gateway" name="gateway" />
         </formline>
-        <formline text="Security (Wireless Only)">
-            <textinput id="security" name="security" />
+        <formline id="fl-security" text="Security" help="Wireless only.">
+            <selectinput id="security" name="security">
+                <selectoption value="wep" text="WEP" />
+                <selectoption value="wpa" text="WPA (or WPA2)" />
+            </selectinput>
         </formline>
-        <formline text="ESSID (Wireless Only)">
+        <formline id="fl-essid" text="ESSID" help="Wireless only. The name of your wireless network.">
             <textinput id="essid" name="essid" />
         </formline>
-        <formline text="Key (Wireless Only)">
+        <formline id="fl-key" text="Key" help="Wireless only. The passphrase to access your wireless network.">
             <textinput id="key" name="key" password="True" />
         </formline>
     </dialogbox>

@@ -44,6 +44,9 @@
 
 <xsl:template match="selectinput">
     <select name="{@name}" id="{@id}" class="{@design}">
+        <xsl:if test="@disabled != ''">
+            <xsl:attribute name="disabled" />
+        </xsl:if>
         <xsl:apply-templates />
     </select>
 </xsl:template>
