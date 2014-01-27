@@ -3,7 +3,7 @@ from genesis.ui import *
 from genesis.utils import shell
 
 from api import Manager
-from os import path
+import os
 
 class RecoveryPlugin(CategoryPlugin, URLHandler):
     text = 'Recovery'
