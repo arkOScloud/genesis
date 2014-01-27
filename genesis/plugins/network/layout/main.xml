@@ -43,6 +43,12 @@
                         <dth>
                             <label text="Address" />
                         </dth>
+                        <dth>
+                            <label text="Traffic Up" />
+                        </dth>
+                        <dth>
+                            <label text="Traffic Down" />
+                        </dth>
                         <dth width="1" />
                     </dtr>
                 </dt>
@@ -124,7 +130,7 @@
 
     <dialogbox id="dlgEditConn">
         <formline text="Connection Name" help="This is an internal name for referring to your network within Genesis.">
-            <textinput id="name" name="name" />
+            <textinput id="connname" name="connname" />
         </formline>
         <formline id="fl-devclass" text="Connection Type">
             <selectinput id="devclass" name="devclass">
@@ -153,8 +159,9 @@
         </formline>
         <formline id="fl-security" text="Security" help="Wireless only.">
             <selectinput id="security" name="security">
-                <selectoption value="wep" text="WEP" />
-                <selectoption value="wpa" text="WPA (or WPA2)" />
+                <selectoption id="se-none" value="none" text="None" />
+                <selectoption id="se-wep" value="wep" text="WEP" />
+                <selectoption id="se-wpa" value="wpa" text="WPA (or WPA2)" />
             </selectinput>
         </formline>
         <formline id="fl-essid" text="ESSID" help="Wireless only. The name of your wireless network.">

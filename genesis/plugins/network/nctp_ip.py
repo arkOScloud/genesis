@@ -7,111 +7,23 @@ from genesis.utils import shell, str_fsize
 
 class LinuxIp(Plugin):
     platform = ['Arch', 'arkos']
-
-    def get_info(self, iface):
-        ui = UI.Container( 
-            UI.Formline(
-                UI.HContainer(
-                    UI.Image(file='/dl/network/%s.png'%('up' if iface.up else 'down')),
-                    UI.Label(text=iface.name, bold=True)
-                ),
-                text='Interface',
-            ),
-            UI.Formline(
-                UI.Label(text=self.get_ip(iface.name)),
-                text='Address',
-            ),
-            UI.Formline(
-                UI.Label(text='Up %s, down %s' % (
-                    str_fsize(self.get_tx(iface)),
-                    str_fsize(self.get_rx(iface)),
-                )),
-                text='Traffic',
-            ),
-        )
-        return ui
-
-    def get_conn_info(self, conn):
-        if conn.interface[:-1] in ['wlan', 'ra', 'wifi', 'ath']:
-            ui = UI.Container( 
-                UI.Formline(
-                    UI.HContainer(
-                        UI.Image(file='/dl/network/%s.png'%('up' if conn.up else 'down')),
-                        UI.Label(text=conn.name, bold=True)
-                    ),
-                    text='Connection Name',
-                ),
-                UI.Formline(
-                    UI.Label(text=conn.interface),
-                    text='Interface',
-                ),
-                UI.Formline(
-                    UI.Label(text=conn.description),
-                    text='Description',
-                ),
-                UI.Formline(
-                    UI.Label(text=(self.get_ip(conn.interface) if conn.up else '0.0.0.0')),
-                    text='Address',
-                ),
-                UI.Formline(
-                    UI.Label(text=conn.essid),
-                    text='ESSID',
-                ),
-                UI.Formline(
-                    UI.Label(text=conn.security),
-                    text='Security',
-                ),
-            )
-        else:
-            ui = UI.Container( 
-                UI.Formline(
-                    UI.HContainer(
-                        UI.Image(file='/dl/network/%s.png'%('up' if conn.up else 'down')),
-                        UI.Label(text=conn.name, bold=True)
-                    ),
-                    text='Connection Name',
-                ),
-                UI.Formline(
-                    UI.Label(text=conn.interface),
-                    text='Description',
-                ),
-                UI.Formline(
-                    UI.Label(text=conn.interface),
-                    text='Interface',
-                ),
-                UI.Formline(
-                    UI.Label(text=(self.get_ip(conn.interface) if conn.up else '0.0.0.0')),
-                    text='Address',
-                ),
-            )
-        return ui
         
     def get_tx(self, iface):
         s = shell('ip -s link ls %s' % iface.name)
         s = s.split('\n')[5]
-        try:
-            s = s.split()[0]
-        except:
-            s = '0'
+        s = s.split()[0] if len(s.split()) > 1 else '0'
         return int(s)
     
     def get_rx(self, iface):
         s = shell('ip -s link ls %s' % iface.name)
         s = s.split('\n')[3]
-        try:
-            s = s.split()[0]
-        except:
-            s = '0'
+        s = s.split()[0] if len(s.split()) > 1 else '0'
         return int(s)
         
     def get_ip(self, iface):
         s = shell('ip addr list %s | grep \'inet\''%iface)
-        try:
-            s = s.split()[1]
-        except:
-            s = '0.0.0.0'
-        return s    
-        
+        s = s.split()[1] if len(s.split()) > 2 else '0.0.0.0'
+        return s
 
     def detect_dev_class(self, iface):
         if iface.name[:-1] in ['ppp', 'wvdial']:

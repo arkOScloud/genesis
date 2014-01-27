@@ -15,7 +15,7 @@
 
 <xsl:template match="textinput">
         <input name="{@name}" value="{@value}" id="{@id}" class="{@design}" onkeypress="return noenter()" type="{x:iif(@password, 'password', 'text')}">
-            <xsl:if test="@disabled='true'">
+            <xsl:if test="@disabled != ''">
                 <xsl:attribute name="disabled">true</xsl:attribute>
             </xsl:if>
         </input>
