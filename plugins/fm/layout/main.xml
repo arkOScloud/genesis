@@ -4,6 +4,7 @@
         <button text="Rename" form="files" onclick="form" action="rename" iconfont="gen-tag-2" />
         <button text="Cut" form="files" onclick="form" action="cut" iconfont="gen-file-minus" />
         <button text="Copy" form="files" onclick="form" action="copy" iconfont="gen-copy" />
+        <button id="hidden" text="Show hidden" iconfont="gen-eye" />
       </buttongroup>
     </toolbar>
 

@@ -31,11 +31,17 @@ class FMPlugin(CategoryPlugin):
         self._newfolder = None
         self._upload = None
         self._archupl = []
+        self._showhidden = False if not self.app.config.has_option('fm', 'showhidden') \
+        or self.app.config.get('fm', 'showhidden') == 'no' else True
         self.add_tab()
 
     def get_ui(self):
         ui = self.app.inflate('fm:main')
         tc = UI.TabControl(active=self._tab)
+
+        if self._showhidden:
+            ui.find('hidden').set('text', 'Hide hidden')
+            ui.find('hidden').set('iconfont', 'gen-eye-blocked')
 
         idx = 0
         for tab in self._tabs:
@@ -140,10 +146,16 @@ class FMPlugin(CategoryPlugin):
         lst = []
 
         for x in sorted(templist):
-            if os.path.isdir(os.path.join(path, x)):
+            if self._showhidden and os.path.isdir(os.path.join(path, x)):
+                lst.append(x)
+            elif not self._showhidden and not x.startswith('.') \
+            and os.path.isdir(os.path.join(path, x)):
                 lst.append(x)
         for x in sorted(templist):
-            if not os.path.isdir(os.path.join(path, x)):
+            if self._showhidden and not os.path.isdir(os.path.join(path, x)):
+                lst.append(x)
+            elif not self._showhidden and not x.startswith('.') \
+            and not os.path.isdir(os.path.join(path, x)):
                 lst.append(x)
 
         for f in lst:
@@ -203,6 +215,14 @@ class FMPlugin(CategoryPlugin):
                 UI.Label(text=self.mode_string(mode), monospace=True),
                 UI.HContainer(
                     UI.TipIcon(
+                        iconfont='gen-download',
+                        text='Download',
+                        id='download/%i/%s'%(
+                            tidx,
+                            self.enc_file(np)
+                        ),
+                    ),
+                    UI.TipIcon(
                         iconfont='gen-lock',
                         text='ACLs',
                         id='acls/%i/%s'%(
@@ -253,6 +273,10 @@ class FMPlugin(CategoryPlugin):
     @event('button/click')
     @event('linklabel/click')
     def on_btn_click(self, event, params, vars=None):
+        if params[0] == 'hidden':
+            self.app.config.set('fm', 'showhidden', 'yes' if self._showhidden else 'no')
+            self._showhidden = False if self._showhidden else True
+            self.app.config.save()
         if params[0] == 'breadcrumb':
             self._tabs[int(params[1])] = self.dec_file(params[2])
         if params[0] == 'goto':
@@ -286,6 +310,8 @@ class FMPlugin(CategoryPlugin):
                 self.put_message('info', 'Deleted %s'%f)
             except Exception, e:
                 self.put_message('err', str(e))
+        if params[0] == 'download':
+            pass
         if params[0] == 'acls':
             self._tab = int(params[1])
             self._editing_acl = self.dec_file(params[2])
