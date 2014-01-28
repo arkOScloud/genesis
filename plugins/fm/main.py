@@ -11,9 +11,11 @@ import shutil
 import threading
 from acl import *
 import utils
+import sys
+import tempfile
 
 
-class FMPlugin(CategoryPlugin):
+class FMPlugin(CategoryPlugin, URLHandler):
     text = 'File Manager'
     iconfont = 'gen-files'
     folder = 'tools'
@@ -217,9 +219,9 @@ class FMPlugin(CategoryPlugin):
                     UI.TipIcon(
                         iconfont='gen-download',
                         text='Download',
-                        id='download/%i/%s'%(
+                        onclick='window.open("/fm/s/%i/%s", "_blank")'%(
                             tidx,
-                            self.enc_file(np)
+                            self.enc_file(f)
                         ),
                     ),
                     UI.TipIcon(
@@ -237,10 +239,10 @@ class FMPlugin(CategoryPlugin):
                         id='delete/%i/%s'%(
                             tidx,
                             self.enc_file(np)
+                            ),
                         ),
-                    ),
+                    )
                 )
-            )
 
             ui.append('list', row)
         return ui
@@ -266,6 +268,29 @@ class FMPlugin(CategoryPlugin):
            ('w' if mode & 2 else '-') + \
            ('x' if mode & 1 else '-')
 
+    @url('^/fm/s/.*$')
+    def download(self, req, start_response):
+        params = req['PATH_INFO'].split('/')[3:] + ['']
+        filename = self.dec_file(params[1])
+        path = os.path.join(self._tabs[int(params[0])], filename)
+        if os.path.isdir(path):
+            t = utils.compress([path])
+            size = os.path.getsize(t)
+            f = open(t, 'rb')
+            start_response('200 OK', [
+                ('Content-length', str(size)),
+                ('Content-type', 'application/gzip'),
+                ('Content-Disposition', 'attachment; filename=%s' % filename+'.tar.gz')
+            ])
+        else:
+            f = open(path, 'rb')
+            size = os.path.getsize(path)
+            start_response('200 OK', [
+                ('Content-length', str(size)),
+                ('Content-Disposition', 'attachment; filename=%s' % filename)
+            ])
+        return f.read()
+
     @event('tab/click')
     def on_tab_click(self, event, params, vars=None):
         self.add_tab()
@@ -274,8 +299,8 @@ class FMPlugin(CategoryPlugin):
     @event('linklabel/click')
     def on_btn_click(self, event, params, vars=None):
         if params[0] == 'hidden':
-            self.app.config.set('fm', 'showhidden', 'yes' if self._showhidden else 'no')
             self._showhidden = False if self._showhidden else True
+            self.app.config.set('fm', 'showhidden', 'yes' if self._showhidden else 'no')
             self.app.config.save()
         if params[0] == 'breadcrumb':
             self._tabs[int(params[1])] = self.dec_file(params[2])

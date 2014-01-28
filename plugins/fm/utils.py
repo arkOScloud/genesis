@@ -2,7 +2,24 @@ import bz2
 import gzip
 import os
 import tarfile
+import tempfile
 import zipfile
+
+
+def compress(pin, pout='', format='tgz', delete=False):
+    if format == 'tgz':
+        pout = tempfile.mkstemp('.tar.gz')[1] if not pout else pout
+        a = tarfile.open(pout, 'w:gz')
+        for x in pin:
+            a.add(x, os.path.split(x)[1])
+        a.close()
+    elif format == 'zip':
+        pout = tempfile.mkstemp('.zip')[1] if not pout else pout
+        a = zipfile.ZipFile(pout, 'w')
+        for x in pin:
+            a.write(x)
+        a.close()
+    return pout
 
 def extract(pin, pout, delete=False):
     name = os.path.basename(pin)
