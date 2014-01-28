@@ -7,8 +7,10 @@ class GeneralConfig(ModuleConfig):
     platform = ['any']
     
     labels = {
-        'dir': 'Initial directory'
+        'dir': 'Initial directory',
+        'showhidden': 'Show hidden files?'
     }
     
     dir = '/'
+    showhidden = False
    

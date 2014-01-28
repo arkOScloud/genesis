@@ -11,8 +11,6 @@ import shutil
 import threading
 from acl import *
 import utils
-import sys
-import tempfile
 
 
 class FMPlugin(CategoryPlugin, URLHandler):
@@ -24,7 +22,8 @@ class FMPlugin(CategoryPlugin, URLHandler):
         self._has_acls = shell_status('which getfacl')==0
 
     def on_session_start(self):
-        self._root = self.app.get_config(self).dir
+        self._config = self.app.get_config(self)
+        self._root = self._config.dir
         self._tabs = []
         self._tab = 0
         self._clipboard = []
@@ -33,8 +32,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
         self._newfolder = None
         self._upload = None
         self._archupl = []
-        self._showhidden = False if not self.app.config.has_option('fm', 'showhidden') \
-        or self.app.config.get('fm', 'showhidden') == 'no' else True
+        self._showhidden = self._config.showhidden
         self.add_tab()
 
     def get_ui(self):
@@ -299,9 +297,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
     @event('linklabel/click')
     def on_btn_click(self, event, params, vars=None):
         if params[0] == 'hidden':
-            self._showhidden = False if self._showhidden else True
-            self.app.config.set('fm', 'showhidden', 'yes' if self._showhidden else 'no')
-            self.app.config.save()
+            self._showhidden = not self._showhidden
+            self._config.showhidden = self._showhidden
+            self._config.save()
         if params[0] == 'breadcrumb':
             self._tabs[int(params[1])] = self.dec_file(params[2])
         if params[0] == 'goto':
