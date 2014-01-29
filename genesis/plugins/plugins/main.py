@@ -10,7 +10,7 @@ class PluginManager(CategoryPlugin, URLHandler):
     folder = None
 
     def on_session_start(self):
-        self._mgr = RepositoryManager(self.app.config)
+        self._mgr = RepositoryManager(self.app.log, self.app.config)
         self._nc = apis.networkcontrol(self.app)
         self._reloadfw = False
 

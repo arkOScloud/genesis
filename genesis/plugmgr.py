@@ -15,6 +15,7 @@ __all__ = [
 
 import os
 import imp
+import json
 import sys
 import traceback
 import weakref
@@ -432,8 +433,9 @@ class RepositoryManager:
       and have other version in the repository
     """
 
-    def __init__(self, cfg):
+    def __init__(self, log, cfg):
         self.config = cfg
+        self.log = log
         self.server = cfg.get('genesis', 'update_server')
         self.refresh()
 
@@ -456,7 +458,7 @@ class RepositoryManager:
         elif op == 'install':
             t = self.list_available()
             try:
-                for i in eval(t[id].deps):
+                for i in t[id].deps:
                     for dep in i[1]:
                         if dep[0] == 'plugin' and dep[1] not in [x.id for x in self.installed]:
                             raise ImSorryDave(t[id].name, t[dep[1]].name, op)
@@ -480,9 +482,14 @@ class RepositoryManager:
         Re-reads saved list of available plugins
         """
         try:
-            data = eval(open('/var/lib/genesis/plugins.list').read())
-        except:
-            return
+            data = json.load(open('/var/lib/genesis/plugins.list', 'r'))
+        except IOError, e:
+            self.log.error('Could not load plugin list file: %s' % str(e))
+            data = []
+        except ValueError, e:
+            self.log.error('Could not parse plugin list file: %s' % str(e))
+            data = []
+
         self.available = []
         for item in data:
             inst = False
@@ -532,17 +539,17 @@ class RepositoryManager:
             os.mkdir('/var/lib/genesis')
         try:
             data = download('http://%s/genesis/list/%s' % (self.server, PluginLoader.platform), crit=crit)
-        except urllib2.HTTPError, e:
-            raise Exception('Application list retrieval failed with HTTP Error %s' % str(e.code))
-        except urllib2.URLError, e:
-            raise Exception('Application list retrieval failed - Server not found or URL malformed. Please check your Internet settings.')
-        try:
             open('/var/lib/genesis/plugins.list', 'w').write(data)
-        except:
-            pass
-        self.update_installed()
-        self.update_available()
-        self.update_upgradable()
+        except urllib2.HTTPError, e:
+            self.log.error('Application list retrieval failed with HTTP Error %s' % str(e.code))
+        except urllib2.URLError, e:
+            self.log.error('Application list retrieval failed - Server not found or URL malformed. Please check your Internet settings.')
+        except IOError, e:
+            self.log.error('Failed to write application list to disk.')
+        else:
+            self.update_installed()
+            self.update_available()
+            self.update_upgradable()
 
     def remove(self, id, cat=''):
         """
