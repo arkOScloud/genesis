@@ -9,6 +9,7 @@ from genesis.plugins.databases.utils import *
 import re
 
 from backend import WebappControl
+from api import Webapp
 
 
 class WebAppsPlugin(apis.services.ServiceControlPlugin):
@@ -30,7 +31,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		self.dbops = apis.databases(self.app)
 		self.mgr = WebappControl(self.app)
 		self.sites = sorted(self.apiops.get_sites(), 
-			key=lambda st: st['name'])
+			key=lambda st: st.name)
 		ats = sorted(self.apiops.get_apptypes(), key=lambda x: x.name.lower())
 		self.apptypes = sorted(ats, key=lambda x: (hasattr(x, 'sort')))
 		if len(self.sites) != 0:
@@ -40,7 +41,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		for apptype in self.apptypes:
 			ok = False
 			for site in self.sites:
-				if site['type'] == apptype.name:
+				if site.stype == apptype.name:
 					ok = True
 			if ok == False:
 				continue
@@ -65,26 +66,26 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		t = ui.find('list')
 
 		for s in self.sites:
-			if s['addr'] and s['ssl']:
-				addr = 'https://' + s['addr'] + (':'+s['port'] if s['port'] is not '443' else '')
-			elif s['addr']:
-				addr = 'http://' + s['addr'] + (':'+s['port'] if s['port'] is not '80' else '')
+			if s.addr and s.ssl:
+				addr = 'https://' + s.addr + (':'+s.port if s.port != '443' else '')
+			elif s.addr:
+				addr = 'http://' + s.addr + (':'+s.port if s.port != '80' else '')
 			else:
 				addr = False
 
 			t.append(UI.DTR(
 				UI.Iconfont(iconfont="gen-earth"),
 				(UI.OutLinkLabel(
-					text=s['name'],
+					text=s.name,
 					url=addr
-					) if s['addr'] is not False else UI.Label(text=s['name'])
+					) if s.addr is not False else UI.Label(text=s.name)
 				),
-				UI.Label(text=s['type']),
+				UI.Label(text=s.stype),
 				UI.HContainer(
 					UI.TipIcon(
-						iconfont='gen-minus-circle' if s['enabled'] else 'gen-checkmark-circle',
-						id=('disable/' if s['enabled'] else 'enable/') + str(self.sites.index(s)),
-						text='Disable' if s['enabled'] else 'Enable'
+						iconfont='gen-minus-circle' if s.enabled else 'gen-checkmark-circle',
+						id=('disable/' if s.enabled else 'enable/') + str(self.sites.index(s)),
+						text='Disable' if s.enabled else 'Enable'
 					),
 					UI.TipIcon(
 						iconfont='gen-tools',
@@ -95,7 +96,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						iconfont='gen-cancel-circle',
 						id='drop/' + str(self.sites.index(s)),
 						text='Delete',
-						warning='Are you sure you wish to delete site %s? This action is irreversible.'%s['name']
+						warning='Are you sure you wish to delete site %s? This action is irreversible.'%s.name
 						)
 					),
 				))
@@ -130,7 +131,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		if self._setup is not None:
 			if self._setup.nomulti is True:
 				for site in self.sites:
-					if self._setup.name in site['type']:
+					if self._setup.name in site.stype:
 						ui.remove('dlgSetup')
 						ui.remove('dlgEdit')
 						self.put_message('err', 'Only one site of this type at any given time')
@@ -153,13 +154,13 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
 		if self._edit is not None:
 			try:
-				edgui = self.app.inflate(self._edit['type'].lower() + ':edit')
+				edgui = self.app.inflate(self._edit.stype.lower() + ':edit')
 				ui.append('dlgEdit', edgui)
 			except:
 				pass
-			ui.find('cfgname').set('value', self._edit['name'])
-			ui.find('cfgaddr').set('value', self._edit['addr'])
-			ui.find('cfgport').set('value', self._edit['port'])
+			ui.find('cfgname').set('value', self._edit.name)
+			ui.find('cfgaddr').set('value', self._edit.addr)
+			ui.find('cfgport').set('value', self._edit.port)
 		else:
 			ui.remove('dlgEdit')
 
@@ -184,20 +185,18 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		elif params[0] == 'config':
 			self._edit = self.sites[int(params[1])]
 		elif params[0] == 'drop':
-			if hasattr(self.sites[int(params[1])]['class'], 'dbengine') and \
-			self.dbops.get_interface(self.sites[int(params[1])]['class'].dbengine).requires_conn and \
-			not self.dbops.get_dbconn(self.sites[int(params[1])]['class'].dbengine):
-				self._dbauth = (self.sites[int(params[1])]['class'].dbengine, 
+			if hasattr(self.sites[int(params[1])].sclass, 'dbengine') and \
+			self.dbops.get_interface(self.sites[int(params[1])].sclass.dbengine).requires_conn and \
+			not self.dbops.get_dbconn(self.sites[int(params[1])].sclass.dbengine):
+				self._dbauth = (self.sites[int(params[1])].sclass.dbengine, 
 					self.sites[int(params[1])], 'drop')
 			else:
 				w = WAWorker(self, 'drop', self.sites[int(params[1])])
 				w.start()
 		elif params[0] == 'enable':
-			dt = self.sites[int(params[1])]
-			self.mgr.nginx_enable(dt['name'])
+			self.mgr.nginx_enable(self.sites[int(params[1])])
 		elif params[0] == 'disable':
-			dt = self.sites[int(params[1])]
-			self.mgr.nginx_disable(dt['name'])
+			self.mgr.nginx_disable(self.sites[int(params[1])])
 		else: 
 			for x in self.apptypes:
 				if x.name.lower() == params[0]:
@@ -240,19 +239,16 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				elif vars.getvalue('cfgport') == self.app.gconfig.get('genesis', 'bind_port', ''):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
 				else:
-					self.mgr.nginx_edit(
-						origname=self._edit['name'], 
-						name=vars.getvalue('cfgname'), 
-						stype=self._edit['type'], 
-						path=self._edit['path'], 
-						addr=vars.getvalue('cfgaddr'), 
-						port=vars.getvalue('cfgport'),
-						ssl=self._edit['ssl'],
-						php=self._edit['php']
-						)
-					apis.networkcontrol(self.app).change_webapp(
-						self._edit['name'], vars.getvalue('cfgname'), 
-						self._edit['type'], vars.getvalue('cfgport'))
+					w = Webapp()
+					w.name = vars.getvalue('cfgname')
+					w.stype = self._edit.stype
+					w.path = self._edit.path
+					w.addr = vars.getvalue('cfgaddr') 
+					w.port = vars.getvalue('cfgport')
+					w.ssl = self._edit.ssl
+					w.php = self._edit.php
+					self.mgr.nginx_edit(self._edit, w)
+					apis.networkcontrol(self.app).change_webapp(self._edit, w)
 			self._edit = None
 		if params[0] == 'dlgSetup':
 			if vars.getvalue('action', '') == 'OK':
@@ -260,7 +256,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				port = vars.getvalue('port', '80')
 				samename = False
 				for site in self.sites:
-					if name == site['name']:
+					if name == site.name:
 						samename = True
 				if not name or not self._setup:
 					self.put_message('err', 'Name or type not selected')
@@ -303,28 +299,28 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
 
 class WAWorker(BackgroundWorker):
-	def run(self, cat, action, name, current='', vars=None):
+	def run(self, cat, action, site, current='', vars=None):
 		if action == 'add':
 			try:
 				spmsg = WebappControl(cat.app).add(
-					cat, name, current, vars, True)
+					cat, site, current, vars, True)
 			except Exception, e:
 				cat.clr_statusmsg()
 				cat.put_message('err', str(e))
 				cat.app.log.error(str(e))
 			else:
 				cat.put_message('info', 
-					'%s added sucessfully' % name)
-				cat._relsec = ('add', (name, current, vars))
+					'%s added sucessfully' % site)
+				cat._relsec = ('add', (site, current, vars))
 				if spmsg:
 					cat.put_message('info', spmsg)
 		elif action == 'drop':
 			try:
-				WebappControl(cat.app).remove(cat, name)
+				WebappControl(cat.app).remove(cat, site)
 			except Exception, e:
 				cat.clr_statusmsg()
 				cat.put_message('err', 'Website removal failed: ' + str(e))
 				cat.app.log.error('Website removal failed: ' + str(e))
 			else:
 				cat.put_message('info', 'Website successfully removed')
-				cat._relsec = ('del', name['name'])
+				cat._relsec = ('del', site.name)

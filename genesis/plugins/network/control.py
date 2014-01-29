@@ -31,14 +31,15 @@ class NetworkControl(apis.API):
         FWMonitor(self.app).regen()
         FWMonitor(self.app).save()
 
-    def change_webapp(self, old_id, new_id, type, port):
+    def change_webapp(self, oldsite, newsite):
         servers = ServerManager(self.app)
         rm = RuleManager(self.app)
-        s = servers.get(old_id)[0]
+        s = servers.get(oldsite.name)[0]
         r = rm.get(s)
         rm.remove(s)
-        servers.update(old_id, new_id, new_id + ' (' + type + ')',
-            'gen-earth', [('tcp', port)])
+        servers.update(oldsite.name, newsite.name, 
+            newsite.name + ' (' + newsite.stype + ')',
+            'gen-earth', [('tcp', newsite.port)])
         rm.set(s, r)
         FWMonitor(self.app).regen()
         FWMonitor(self.app).save()

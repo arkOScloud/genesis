@@ -1,6 +1,7 @@
 from genesis.com import Plugin, Interface, implements
 from genesis.utils import shell, shell_cs, download
 from genesis import apis
+from api import Webapp
 
 import nginx
 import os
@@ -85,14 +86,15 @@ class WebappControl(Plugin):
 
 		# Setup the webapp and create an nginx serverblock
 		try:
-			self.nginx_add(
-				name=name, 
-				stype=webapp.name, 
-				path=target_path, 
-				addr=vars.getvalue('addr', 'localhost'), 
-				port=vars.getvalue('port', '80'), 
-				add=(addtoblock if addtoblock else webapp.addtoblock), 
-				php=(True if webapp.php is True or php is '1' else False)
+			w = Webapp()
+			w.name = name
+			w.stype = webapp.name
+			w.path = target_path
+			w.addr = vars.getvalue('addr', 'localhost')
+			w.port = vars.getvalue('port', '80')
+			w.php = True if webapp.php is True or php is '1' else False
+			self.nginx_add(site=w, 
+				add=addtoblock if addtoblock else webapp.addtoblock, 
 				)
 		except Exception, e:
 			raise PartialError('nginx serverblock couldn\'t be written - '+str(e))
@@ -102,12 +104,12 @@ class WebappControl(Plugin):
 			specialmsg = webapp.post_install(name, target_path, vars)
 		except Exception, e:
 			shutil.rmtree(target_path, True)
-			self.nginx_remove(name, False)
+			self.nginx_remove(w, False)
 			raise InstallError('Webapp config - '+str(e))
 
 		if enable is True:
 			try:
-				self.nginx_enable(name)
+				self.nginx_enable(w)
 			except:
 				raise ReloadError('nginx')
 		if enable is True and webapp.php is True:
@@ -126,81 +128,81 @@ class WebappControl(Plugin):
 			return specialmsg
 
 	def remove(self, cat, site):
-		if site['class'] != '':
+		if site.sclass != '':
 			cat.put_statusmsg('Preparing for removal...')
-			site['class'].pre_remove(site['name'], site['path'])
+			site.sclass.pre_remove(site.name, site.path)
 		cat.put_statusmsg('Removing website...')
-		if site['path'].endswith('_site'):
-			shutil.rmtree(site['path'].rstrip('/_site'))
+		if site.path.endswith('_site'):
+			shutil.rmtree(site.path.rstrip('/_site'))
 		else:
-			shutil.rmtree(site['path'])
-		self.nginx_remove(site['name'])
-		apis.webapps(self.app).cert_remove_notify(site['name'],
-			site['type'])
-		if site['class'] != '':
+			shutil.rmtree(site.path)
+		self.nginx_remove(site)
+		apis.webapps(self.app).cert_remove_notify(site.name,
+			site.stype)
+		if site.sclass != '':
 			cat.put_statusmsg('Cleaning up...')
-			site['class'].post_remove(site['name'])
+			site.sclass.post_remove(site.name)
 
 		cat.clr_statusmsg()
 
-	def nginx_add(self, name, stype, path, addr, port, add='', php=False):
-		if path == '':
-			path = os.path.join('/srv/http/webapps/', name)
+	def nginx_add(self, site, add):
+		if site.path == '':
+			site.path = os.path.join('/srv/http/webapps/', site.name)
 		c = nginx.Conf()
-		c.add(nginx.Comment('GENESIS %s %s' % (stype, 'http://'+addr+':'+port)))
+		c.add(nginx.Comment('GENESIS %s %s' % (site.stype, 'http://'+site.addr+':'+site.port)))
 		s = nginx.Server(
-			nginx.Key('listen', port),
-			nginx.Key('server_name', addr),
-			nginx.Key('root', path),
-			nginx.Key('index', 'index.'+('php' if php else 'html'))
+			nginx.Key('listen', site.port),
+			nginx.Key('server_name', site.addr),
+			nginx.Key('root', site.path),
+			nginx.Key('index', 'index.'+('php' if site.php else 'html'))
 		)
 		if add:
 			s.add(*[x for x in add])
 		c.add(s)
-		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
+		nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', site.name))
 
-	def nginx_edit(self, origname, name, stype, path, addr, port, ssl, php=False):
+	def nginx_edit(self, oldsite, site):
 		# Update the nginx serverblock
-		if path.endswith('_site'):
-			path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', name, '_site'))
+		if site.path.endswith('_site'):
+			site.path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', site.name, '_site'))
 		else:
-			path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', name))
-		c = nginx.loadf('/etc/nginx/sites-available/'+name)
-		c.filter('Comment')[0].comment = 'GENESIS %s %s' % (stype, (('https://' if ssl else 'http://')+addr+':'+port))
-		c.servers[0].filter('Key', 'listen')[0].value = port+' ssl' if ssl else port
-		c.servers[0].filter('Key', 'server_name')[0].value = addr
-		c.servers[0].filter('Key', 'root')[0].value = path
-		c.servers[0].filter('Key', 'index')[0].value = 'index.php' if php else 'index.html'
-		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
+			site.path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', site.name))
+		c = nginx.loadf(os.path.join('/etc/nginx/sites-available', oldsite.name))
+		c.filter('Comment')[0].comment = 'GENESIS %s %s' % (site.stype, (('https://' if site.ssl else 'http://')+site.addr+':'+site.port))
+		c.servers[0].filter('Key', 'listen')[0].value = site.port+' ssl' if site.ssl else site.port
+		c.servers[0].filter('Key', 'server_name')[0].value = site.addr
+		c.servers[0].filter('Key', 'root')[0].value = site.path
+		c.servers[0].filter('Key', 'index')[0].value = 'index.php' if site.php else 'index.html'
+		nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', oldsite.name))
 		# If the name was changed, rename the folder and files
-		if name != origname:
-			if os.path.exists(os.path.join('/srv/http/webapps', name)):
-				shutil.rmtree(os.path.join('/srv/http/webapps', name))
-			shutil.move(os.path.join('/srv/http/webapps', origname), 
-				os.path.join('/srv/http/webapps', name))
-			shutil.move(os.path.join('/etc/nginx/sites-available', origname),
-				os.path.join('/etc/nginx/sites-available', name))
-			self.nginx_disable(origname, reload=False)
-			self.nginx_enable(name)
+		if site.name != oldsite.name:
+			if os.path.exists(os.path.join('/srv/http/webapps', site.name)):
+				shutil.rmtree(os.path.join('/srv/http/webapps', site.name))
+			shutil.move(os.path.join('/srv/http/webapps', oldsite.name), 
+				os.path.join('/srv/http/webapps', site.name))
+			shutil.move(os.path.join('/etc/nginx/sites-available', oldsite.name),
+				os.path.join('/etc/nginx/sites-available', site.name))
+			self.nginx_disable(oldsite, reload=False)
+			self.nginx_enable(site)
 		self.nginx_reload()
 
-	def nginx_remove(self, sitename, reload=True):
+	def nginx_remove(self, site, reload=True):
 		try:
-			self.nginx_disable(sitename, reload)
+			self.nginx_disable(site, reload)
 		except:
 			pass
-		os.unlink(os.path.join('/etc/nginx/sites-available', sitename))
+		os.unlink(os.path.join('/etc/nginx/sites-available', site.name))
 
-	def nginx_enable(self, sitename, reload=True):
-		origin = os.path.join('/etc/nginx/sites-available', sitename)
-		target = os.path.join('/etc/nginx/sites-enabled', sitename)
+	def nginx_enable(self, site, reload=True):
+		origin = os.path.join('/etc/nginx/sites-available', site.name)
+		target = os.path.join('/etc/nginx/sites-enabled', site.name)
 		if not os.path.exists(target):
 			os.symlink(origin, target)
 		if reload == True:
 			self.nginx_reload()
 
-	def nginx_disable(self, sitename, reload=True):
-		os.unlink(os.path.join('/etc/nginx/sites-enabled', sitename))
+	def nginx_disable(self, site, reload=True):
+		os.unlink(os.path.join('/etc/nginx/sites-enabled', site.name))
 		if reload == True:
 			self.nginx_reload()
 

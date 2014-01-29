@@ -94,8 +94,8 @@ class ServerManager(Plugin):
 			if x[1].plugin_id == 'webapps':
 				self.servers.pop(x[0])
 		for s in apis.webapps(self.app).get_sites():
-			self.add('webapps', s['name'], s['name'] + ' (' + s['type'] + ')',
-				'gen-earth', [('tcp', s['port'])])
+			self.add('webapps', s.name, s.name + ' (' + s.stype + ')',
+				'gen-earth', [('tcp', s.port)])
 
 	def remove(self, id):
 		for s in enumerate(self.servers):
