@@ -1,12 +1,21 @@
-MODULES = ['main', 'config']
-
-DEPS =  []
-
+# Plugin metadata
 NAME = 'Notepad'
+TYPE = 'plugin'
 ICON = 'gen-file-2'
-PLATFORMS = ['any']
 DESCRIPTION = 'Note creator and config files editor'
+CATEGORIES = [
+    {
+        "primary": "Utilities",
+        "secondary": []
+    }
+]
 VERSION = '1'
-GENERATION = 1
+
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
+
+# Plugin parameters
+MODULES = ['main', 'config']
+PLATFORMS = ['any']
+DEPENDENCIES = {}
+GENERATION = 1

@@ -1,18 +1,32 @@
-MODULES = ['backend', 'main']
-
-DEPS =  [
-    (['any'],
-     [
-    	('app', 'samba', 'smbd'),
-        ('plugin'),
-     ])
-]
-
-NAME = 'File Shares (Windows)'
+# Plugin metadata
+NAME = 'Fileshares (Windows)'
+TYPE = 'plugin'
 ICON = 'gen-upload-2'
-PLATFORMS = ['any']
 DESCRIPTION = 'Add, remove and manage Samba (SMB/CIFS) shares'
+CATEGORIES = [
+    {
+        "primary": "File Storage",
+        "secondary": ["Documents", "Music", "Photos"]
+    }
+]
 VERSION = '5'
-GENERATION = 1
+
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
+APP_AUTHOR = "The Samba Team"
+APP_HOMEPAGE = "https://www.samba.org/"
+
+# Plugin parameters
+MODULES = ["main", "backend"]
+PLATFORMS = ["any"]
+DEPENDENCIES = {
+    "any": [
+        {
+            "type": "app",
+            "name": "Samba",
+            "package": "samba",
+            "binary": "smbd"
+        }
+    ]
+}
+GENERATION = 1

@@ -1,12 +1,21 @@
-MODULES = ['main', 'config', 'utils']
-
-DEPS =  []
-
+# Plugin metadata
 NAME = 'File Manager'
+TYPE = 'plugin'
 ICON = 'gen-files'
-PLATFORMS = ['any']
 DESCRIPTION = 'Simple remote file manager'
+CATEGORIES = [
+    {
+        "primary": "Utilities",
+        "secondary": ["Filesystems"]
+    }
+]
 VERSION = '2'
-GENERATION = 1
+
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
+
+# Plugin parameters
+MODULES = ['main', 'config', 'utils']
+PLATFORMS = ['any']
+DEPENDENCIES = {}
+GENERATION = 1

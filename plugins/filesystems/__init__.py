@@ -1,12 +1,21 @@
-MODULES = ['main', 'backend']
-
-DEPS =  []
-
+# Plugin metadata
 NAME = 'Filesystems'
+TYPE = 'plugin'
 ICON = 'gen-storage'
-PLATFORMS = ['any']
 DESCRIPTION = 'Edit file system record'
+CATEGORIES = [
+    {
+        "primary": "Utilities",
+        "secondary": ["System Management", "Filesystems"]
+    }
+]
 VERSION = '1'
-GENERATION = 1
+
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
+
+# Plugin parameters
+MODULES = ['main', 'backend']
+PLATFORMS = ['any']
+DEPENDENCIES = {}
+GENERATION = 1

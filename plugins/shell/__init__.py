@@ -1,12 +1,21 @@
-MODULES = ['main']
-
-DEPS =  []
-
+# Plugin metadata
 NAME = 'Execute'
+TYPE = 'plugin'
 ICON = 'gen-target'
-PLATFORMS = ['any']
 DESCRIPTION = 'Execute commands remotely'
+CATEGORIES = [
+    {
+        "primary": "Utilities",
+        "secondary": ["Advanced", "Command line (CLI)"]
+    }
+]
 VERSION = '2'
-GENERATION = 1
+
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
+
+# Plugin parameters
+MODULES = ["main"]
+PLATFORMS = ["any"]
+DEPENDENCIES = {}
+GENERATION = 1

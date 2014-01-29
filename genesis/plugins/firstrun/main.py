@@ -37,7 +37,7 @@ class FirstRun(CategoryPlugin, URLHandler):
             ui.appendAll('zoneselect', *tz_sel)
 
         if self._step == 5:
-            self._mgr = RepositoryManager(self.app.config)
+            self._mgr = RepositoryManager(self.app.log, self.app.config)
             try:
                 self._mgr.update_list(crit=True)
             except Exception, e:

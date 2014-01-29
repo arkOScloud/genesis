@@ -70,9 +70,10 @@ class PluginRequirementError(BaseRequirementError):
     required plugin being unavailable
     """
 
-    def __init__(self, name):
+    def __init__(self, dep):
         BaseRequirementError.__init__(self)
-        self.name = name
+        self.name = dep['name']
+        self.package = dep['package']
 
     def __str__(self):
         return 'requires plugin "%s"' % self.name
@@ -84,12 +85,16 @@ class ModuleRequirementError(BaseRequirementError):
     required Python module being unavailable
     """
 
-    def __init__(self, name):
+    def __init__(self, dep, restart):
         BaseRequirementError.__init__(self)
-        self.name = name
+        self.name = dep['name'] if type(dep) == dict else dep
+        self.restart = restart
 
     def __str__(self):
-        return 'requires Python module "%s"' % self.name
+        if self.restart:
+            return 'Dependency "%s" has been installed. Please reload Genesis to use this plugin.' % self.name
+        else:
+            return 'requires Python module "%s"' % self.name
 
 
 class SoftwareRequirementError(BaseRequirementError):
@@ -98,13 +103,14 @@ class SoftwareRequirementError(BaseRequirementError):
     required software being unavailable
     """
 
-    def __init__(self, name, bin):
+    def __init__(self, dep):
         BaseRequirementError.__init__(self)
-        self.name = name
-        self.bin = bin
+        self.name = dep['name']
+        self.pack = dep['package']
+        self.bin = dep['binary']
 
     def __str__(self):
-        return 'requires application "%s" (executable: %s)' % (self.name, self.bin)
+        return 'requires application "%s" (package: %s, executable: %s)' % (self.name, self.pack, self.bin)
 
 
 class CrashedError(BaseRequirementError):
@@ -221,6 +227,7 @@ class PluginLoader:
         if cat:
             cat.put_statusmsg('Loading plugin %s...' % plugin)
         log.debug('Loading plugin %s' % plugin)
+
         try:
             mod = imp.load_module(plugin, *imp.find_module(plugin, [path]))
             log.debug('  -- version ' + mod.VERSION)
@@ -235,6 +242,9 @@ class PluginLoader:
             info.iconfont = mod.ICON
             info.name, info.desc, info.version = mod.NAME, mod.DESCRIPTION, mod.VERSION
             info.author, info.homepage = mod.AUTHOR, mod.HOMEPAGE
+            info.app_author, info.app_homepage = mod.APP_AUTHOR if hasattr(mod, 'APP_AUTHOR') else None, \
+                mod.APP_HOMEPAGE if hasattr(mod, 'APP_HOMEPAGE') else None
+            info.cats = mod.CATEGORIES
             info.deps = []
             info.problem = None
             info.installed = True
@@ -247,15 +257,15 @@ class PluginLoader:
                 raise PlatformRequirementError(mod.PLATFORMS)
 
             # Verify version
-            if not 'GENERATION' in mod.__dict__ or mod.GENERATION != generation:
+            if not hasattr(mod, 'GENERATION') or mod.GENERATION != generation:
                 raise GenesisVersionRequirementError('other Genesis platform generation')
 
             # Verify dependencies
-            if hasattr(mod, 'DEPS'):
+            if hasattr(mod, 'DEPENDENCIES'):
                 deps = []
-                for k in mod.DEPS:
-                    if platform.lower() in k[0] or 'any' in k[0]:
-                        deps = k[1]
+                for k in mod.DEPENDENCIES:
+                    if platform.lower() in k or 'any' in k:
+                        deps = mod.DEPENDENCIES[k]
                         break
                 info.deps = deps
                 for req in deps:
@@ -278,7 +288,7 @@ class PluginLoader:
                     setattr(mod, submod, m)
                 except ImportError, e:
                     del mod
-                    raise ModuleRequirementError(e.message.split()[-1])
+                    raise ModuleRequirementError(e.message.split()[-1], False)
                 except Exception:
                     del mod
                     raise
@@ -324,9 +334,9 @@ class PluginLoader:
                     log.error('Circular dependency between %s and %s. Aborting' % (plugin,e.name))
                     sys.exit(1)
                 try:
-                    queue.remove(e.name)
-                    queue.append(e.name)
-                    if (e.name in PluginLoader.__plugins) and (PluginLoader.__plugins[e.name].problem is not None):
+                    queue.remove(e.package)
+                    queue.append(e.package)
+                    if (e.package in PluginLoader.__plugins) and (PluginLoader.__plugins[e.package].problem is not None):
                         raise e
                 except:
                     log.warn('Plugin %s requires plugin %s, which is not available.' % (plugin,e.name))
@@ -368,49 +378,50 @@ class PluginLoader:
         """
         platform = PluginLoader.platform
 
-        if dep[0] == 'app':
-            if shell_status('which '+dep[2]) != 0 and shell_status('pacman -Q '+dep[1]) != 0:
+        if dep['type'] == 'app':
+            if (dep['binary'] and shell_status('which '+dep['binary']) != 0) \
+            and shell_status('pacman -Q '+dep['package']) != 0:
                 if platform == 'arch' or platform == 'arkos':
                     try:
                         if cat:
-                            cat.put_statusmsg('Installing dependency %s...' % dep[1])
-                        shell('pacman -Sy --noconfirm --needed '+dep[1])
-                        shell('systemctl enable '+dep[2])
+                            cat.put_statusmsg('Installing dependency %s...' % dep['name'])
+                        shell('pacman -Sy --noconfirm --needed '+dep['package'])
+                        shell('systemctl enable '+dep['binary'])
                     except:
-                        raise SoftwareRequirementError(*dep[1:])
+                        raise SoftwareRequirementError(dep)
                 elif platform == 'debian':
                     try:
-                        shell('apt-get -y --force-yes install '+dep[2])
+                        shell('apt-get -y --force-yes install '+dep['package'])
                     except:
-                        raise SoftwareRequirementError(*dep[1:])
+                        raise SoftwareRequirementError(dep)
                 elif platform == 'gentoo':
                     try:
-                        shell('emerge '+dep[2])
+                        shell('emerge '+dep['package'])
                     except:
-                        raise SoftwareRequirementError(*dep[1:])
+                        raise SoftwareRequirementError(dep)
                 elif platform == 'freebsd':
                     try:
-                        shell('portupgrade -R '+dep[2])
+                        shell('portupgrade -R '+dep['package'])
                     except:
-                        raise SoftwareRequirementError(*dep[1:])
+                        raise SoftwareRequirementError(dep)
                 elif platform == 'centos' or platform == 'fedora':
                     try:
-                        shell('yum -y install  '+dep[2])
+                        shell('yum -y install  '+dep['package'])
                     except:
-                        raise SoftwareRequirementError(*dep[1:])
+                        raise SoftwareRequirementError(dep)
                 else:
-                    raise SoftwareRequirementError(*dep[1:])
-        if dep[0] == 'plugin':
-            if not dep[1] in PluginLoader.list_plugins() or \
-                    PluginLoader.__plugins[dep[1]].problem:
-                raise PluginRequirementError(*dep[1:])
-        if dep[0] == 'module':
+                    raise SoftwareRequirementError(dep)
+        if dep['type'] == 'plugin':
+            if not dep['package'] in PluginLoader.list_plugins() or \
+                    PluginLoader.__plugins[dep['package']].problem:
+                raise PluginRequirementError(dep)
+        if dep['type'] == 'module':
             try:
-                exec('import %s'%dep[1])
+                exec('import %s'%dep['binary'])
             except:
                 # Let's try to install it anyway
-                shell('pip2 install %s' % dep[2])
-                raise ModuleRequirementError(dep[1])
+                shell('pip2 install %s' % dep['package'])
+                raise ModuleRequirementError(dep, True)
 
     @staticmethod
     def get_plugin_path(app, id):
@@ -564,7 +575,7 @@ class RepositoryManager:
         except:
             self.purge = '1'
 
-        exclude = ['openssl', 'nginx']
+        exclude = ['openssl', 'openssh', 'nginx']
 
         if cat:
             cat.put_statusmsg('Removing plugin...')
