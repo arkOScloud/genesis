@@ -2,7 +2,7 @@ pyOpenSSL
 gevent
 lxml
 ntplib
-python-iptables
-python-nginx
+python-iptables>=0.3.0
+python-nginx>=0.1.1
 passlib
 feedparser
