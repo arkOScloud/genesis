@@ -239,9 +239,12 @@ class PluginLoader:
         try:
             # Save info
             info.id = plugin
+            info.ptype = mod.TYPE
             info.iconfont = mod.ICON
-            info.name, info.desc, info.version = mod.NAME, mod.DESCRIPTION, mod.VERSION
-            info.author, info.homepage = mod.AUTHOR, mod.HOMEPAGE
+            info.services = mod.SERVICES if hasattr(mod, 'SERVICES') else []
+            info.name, info.version = mod.NAME, mod.VERSION
+            info.desc, info.longdesc = mod.DESCRIPTION, mod.LONG_DESCRIPTION if hasattr(mod, 'LONG_DESCRIPTION') else ''
+            info.author, info.homepage, info.logo = mod.AUTHOR, mod.HOMEPAGE, mod.LOGO if hasattr(mod, 'LOGO') else False
             info.app_author, info.app_homepage = mod.APP_AUTHOR if hasattr(mod, 'APP_AUTHOR') else None, \
                 mod.APP_HOMEPAGE if hasattr(mod, 'APP_HOMEPAGE') else None
             info.cats = mod.CATEGORIES
@@ -249,6 +252,15 @@ class PluginLoader:
             info.problem = None
             info.installed = True
             info.descriptor = mod
+
+            # Add special information
+            if info.ptype == 'webapp':
+                info.wa_plugin, info.dpath = mod.WA_PLUGIN, mod.DPATH
+                info.dbengine = mod.DBENGINE if hasattr(mod, 'DBENGINE') else None
+                info.php, info.nomulti, info.ssl = mod.PHP, mod.NOMULTI, mod.SSL
+            elif info.ptype == 'database':
+                info.db_name, info.db_plugin, info.db_task = mod.DB_NAME, mod.DB_PLUGIN, mod.DB_TASK
+                info.multiuser, info.requires_conn = mod.MULTIUSER, mod.REQUIRES_CONN
 
             PluginLoader.__plugins[plugin] = info
 

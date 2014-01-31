@@ -12,23 +12,18 @@ import _mysql_exceptions
 
 class MariaDB(Plugin):
     implements(apis.databases.IDatabase)
-    name = 'MariaDB'
-    icon = 'gen-database'
-    task = 'mysqld'
-    multiuser = True
-    requires_conn = True
     db = None
 
     def connect(self, store, user='root', passwd='', db=None):
         if db:
             self.db = _mysql.connect('localhost', user, passwd, db)
-            store[self.name] = self.db
+            store[self.plugin_info.db_name] = self.db
         else:
             try:
                 self.db = _mysql.connect('localhost', user, passwd)
             except _mysql_exceptions.OperationalError:
-                raise DBAuthFail(self.name)
-            store[self.name] = self.db
+                raise DBAuthFail(self.plugin_info.db_name)
+            store[self.plugin_info.db_name] = self.db
 
     def checkpwstat(self):
         try:
@@ -69,7 +64,7 @@ class MariaDB(Plugin):
         if self.db:
             self.db.query('DROP DATABASE %s' % dbname)
         else:
-            raise DBConnFail(self.name)
+            raise DBConnFail(self.plugin_info.db_name)
 
     def usermod(self, user, action, passwd, conn=None):
         if not self.db and conn:
@@ -131,7 +126,7 @@ class MariaDB(Plugin):
                 status += line + '\n'
             return status
         else:
-            raise DBConnFail(self.name)
+            raise DBConnFail(self.plugin_info.db_name)
 
     def get_dbs(self, conn=None):
         dblist = []
@@ -144,7 +139,7 @@ class MariaDB(Plugin):
             r = self.db.store_result()
             dbs = r.fetch_row(0)
         else:
-            raise DBConnFail(self.name)
+            raise DBConnFail(self.plugin_info.db_name)
         for db in dbs:
             if not db[0] in excludes and db[0].split():
                 dblist.append({
@@ -164,7 +159,7 @@ class MariaDB(Plugin):
             r = self.db.store_result()
             output = r.fetch_row(0)
         else:
-            raise DBConnFail(self.name)
+            raise DBConnFail(self.plugin_info.db_name)
         for usr in output:
             if not usr[0] in userlist and not usr[0] in excludes:
                 userlist.append({

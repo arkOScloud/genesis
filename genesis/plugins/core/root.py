@@ -157,7 +157,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
                     if c == self.selected_category:
                         exp = True
                     cat_vc.append(UI.Category(
-                        iconfont=c.iconfont,
+                        iconfont=c.plugin_info.iconfont if hasattr(c.plugin_info, 'iconfont') else c.iconfont,
                         name=c.text,
                         id=c.plugin_id,
                         counter=c.get_counter(),

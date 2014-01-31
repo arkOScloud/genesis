@@ -3,6 +3,14 @@ NAME = 'ownCloud'
 TYPE = 'webapp'
 ICON = 'gen-cloud'
 DESCRIPTION = 'Host calendar, files, contacts, and sync across devices'
+LONG_DESCRIPTION = ('ownCloud gives you universal access to your files '
+    'through a web interface or WebDAV. It also provides a '
+    'platform to easily view & sync your contacts, '
+    'calendars and bookmarks across all your devices and '
+    'enables basic editing right on the web. Installation '
+    'has minimal server requirements, doesn\'t need special '
+    'permissions and is quick. ownCloud is extendable via a '
+    'simple but powerful API for applications and plugins.')
 CATEGORIES = [
     {
         "primary": "Websites",
@@ -20,6 +28,20 @@ AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
 APP_AUTHOR = "ownCloud"
 APP_HOMEPAGE = "https://www.owncloud.org"
+LOGO = True
+
+SERVICES = [
+    {
+        "name": "MariaDB",
+        "binary": "mysqld",
+        "ports": []
+    },
+    {
+        "name": "PHP FastCGI",
+        "binary": "php-fpm",
+        "ports": []
+    }
+]
 
 # Plugin parameters
 MODULES = ['main']
@@ -76,3 +98,11 @@ DEPENDENCIES = {
     ]
 }
 GENERATION = 1
+
+# Webapp metadata
+WA_PLUGIN = 'ownCloud'
+DPATH = 'https://download.owncloud.org/community/owncloud-6.0.0a.tar.bz2'
+DBENGINE = 'MariaDB'
+PHP = True
+NOMULTI = True
+SSL = True

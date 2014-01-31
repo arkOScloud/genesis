@@ -10,12 +10,6 @@ import os
 
 class Jekyll(Plugin):
 	implements(apis.webapps.IWebapp)
-	name = 'Jekyll'
-	dpath = 'https://uspx.arkos.io/resources/jekyll-sample.tar.gz'
-	icon = 'gen-earth'
-	php = False
-	nomulti = False
-	ssl = True
 
 	addtoblock = []
 
@@ -63,17 +57,3 @@ class Jekyll(Plugin):
 
 	def regenerate_site(self, site):
 		shell('jekyll build --source '+site['path'].rstrip('_site')+' --destination '+os.path.join(site['path']))
-
-	def get_info(self):
-		return {
-			'name': 'Jekyll',
-			'short': 'Transform your plain text into static websites and blogs.',
-			'long': ('Jekyll is a simple, blog-aware, static site '
-				'generator. It takes a template directory containing raw '
-				'text files in various formats, runs it through Markdown '
-				'(or Textile) and Liquid converters, and spits out a '
-				'complete, ready-to-publish static website suitable for '
-				'serving with your favorite web server.'),
-			'site': 'http://jekyllrb.com',
-			'logo': True
-		}

@@ -206,36 +206,37 @@ class Services(API):
 
             alert = False
 
-            for s in self.services:
+            services = self.plugin_info.services if hasattr(self.plugin_info, 'services') else self.services
+            for s in services:
                 ctl = UI.HContainer()
 
                 try:
-                    st = mgr.get_status(s[1])
+                    st = mgr.get_status(s['binary'])
                 except:
                     st = 'failed'
                     alert = True
                 try:
-                    en = mgr.get_enabled(s[1])
+                    en = mgr.get_enabled(s['binary'])
                 except:
                     en = 'failed'
 
                 if st == 'running':
-                    ctl.append(UI.TipIcon(text='Stop', cls='servicecontrol', iconfont='gen-stop', id='stop/' + s[1]))
-                    ctl.append(UI.TipIcon(text='Restart', cls='servicecontrol', iconfont='gen-loop-2', id='restart/' + s[1]))
+                    ctl.append(UI.TipIcon(text='Stop', cls='servicecontrol', iconfont='gen-stop', id='stop/' + s['binary']))
+                    ctl.append(UI.TipIcon(text='Restart', cls='servicecontrol', iconfont='gen-loop-2', id='restart/' + s['binary']))
                 else:
-                    ctl.append(UI.TipIcon(text='Start', cls='servicecontrol', iconfont='gen-play-2', id='start/' + s[1]))
+                    ctl.append(UI.TipIcon(text='Start', cls='servicecontrol', iconfont='gen-play-2', id='start/' + s['binary']))
                     alert = True
                 if en == 'enabled':
-                    ctl.append(UI.TipIcon(text='Disable', cls='servicecontrol', iconfont='gen-minus-circle', id='disable/' + s[1]))
+                    ctl.append(UI.TipIcon(text='Disable', cls='servicecontrol', iconfont='gen-minus-circle', id='disable/' + s['binary']))
                 else:
-                    ctl.append(UI.TipIcon(text='Enable', cls='servicecontrol', iconfont='gen-plus-circle', id='enable/' + s[1]))
+                    ctl.append(UI.TipIcon(text='Enable', cls='servicecontrol', iconfont='gen-plus-circle', id='enable/' + s['binary']))
                 
                 t = UI.DTR(
                         UI.HContainer(
                             UI.IconFont(iconfont='gen-' + ('play-2' if st == 'running' else 'stop')),
                             UI.IconFont(iconfont='gen-' + ('checkmark' if en == 'enabled' else 'close-2')),
                         ),
-                        UI.Label(text='%s (%s)'%(s[0], s[1])),
+                        UI.Label(text='%s (%s)'%(s['name'], s['binary'])),
                         ctl
                     )
                 res.append(t)

@@ -16,6 +16,14 @@ HOMEPAGE = 'http://arkos.io'
 APP_AUTHOR = "Transmission Project"
 APP_HOMEPAGE = "http://www.transmissionbt.com/"
 
+SERVICES = [
+    {
+        "name": "Transmission Client",
+        "binary": "transmission",
+        "ports": [('tcp', '9091')]
+    }
+]
+
 # Plugin parameters
 MODULES = ["main", "backend"]
 PLATFORMS = ["any"]

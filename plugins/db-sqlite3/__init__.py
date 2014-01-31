@@ -3,6 +3,7 @@ NAME = 'Database - SQLite3'
 TYPE = 'database'
 ICON = 'gen-database'
 DESCRIPTION = 'Manage SQLite3 databases'
+LONG_DESCRIPTION = ''
 CATEGORIES = [
     {
         "primary": "Databases",
@@ -15,6 +16,7 @@ AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
 APP_AUTHOR = "SQLite Consortium"
 APP_HOMEPAGE = "https://www.sqlite.org/"
+LOGO = False
 
 # Plugin parameters
 MODULES = ['main']
@@ -30,3 +32,10 @@ DEPENDENCIES = {
     ]
 }
 GENERATION = 1
+
+# Database metadata
+DB_NAME = 'SQLite3'
+DB_PLUGIN = 'SQLite3'
+DB_TASK = ''
+MULTIUSER = False
+REQUIRES_CONN = False

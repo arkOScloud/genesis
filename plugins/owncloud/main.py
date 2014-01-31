@@ -14,14 +14,7 @@ import shutil
 
 class ownCloud(Plugin):
 	implements(apis.webapps.IWebapp)
-	name = 'ownCloud'
-	dpath = 'https://download.owncloud.org/community/owncloud-6.0.0a.tar.bz2'
-	icon = 'gen-cloud'
-	dbengine = 'MariaDB'
-	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
-	php = True
-	nomulti = True
-	ssl = True
+
 	addtoblock = [
 		nginx.Key('error_page', '403 = /core/templates/403.php'),
 		nginx.Key('error_page', '404 = /core/templates/404.php'),
@@ -238,19 +231,3 @@ class ownCloud(Plugin):
 					oc.insert(x[0] + 1, '"forcessl" => false,\n')
 		f.writelines(oc)
 		f.close()
-
-	def get_info(self):
-		return {
-			'name': 'ownCloud',
-			'short': 'Host your calendar, contacts, photos, files and more',
-			'long': ('ownCloud gives you universal access to your files '
-					'through a web interface or WebDAV. It also provides a '
-					'platform to easily view & sync your contacts, '
-					'calendars and bookmarks across all your devices and '
-					'enables basic editing right on the web. Installation '
-					'has minimal server requirements, doesn\'t need special '
-					'permissions and is quick. ownCloud is extendable via a '
-					'simple but powerful API for applications and plugins.'),
-			'site': 'http://owncloud.org',
-			'logo': True
-		}

@@ -278,6 +278,7 @@ class WebappControl(Plugin):
 			os.path.join('/srv/http/webapps', name))
 		self.nginx_reload()
 
+"""
 class Website(Plugin):
 	implements(apis.webapps.IWebapp)
 	name = 'Website'
@@ -373,3 +374,4 @@ class Website(Plugin):
 			'site': None,
 			'logo': False
 		}
+"""

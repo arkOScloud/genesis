@@ -26,14 +26,6 @@ class Webapps(apis.API):
 		self.app = app
 
 	class IWebapp(Interface):
-		name = ''
-		dpath = ''
-		icon = 'gen-earth'
-		php = False
-		nomulti = False
-		addtoblock = []
-		ssl = False
-
 		def pre_install(self, name, vars):
 			pass
 
@@ -44,9 +36,6 @@ class Webapps(apis.API):
 			pass
 
 		def post_remove(self, name):
-			pass
-
-		def get_info(self):
 			pass
 
 		def ssl_enable(self, path, cfile, kfile):

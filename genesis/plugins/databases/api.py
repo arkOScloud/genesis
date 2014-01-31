@@ -49,22 +49,22 @@ class Databases(apis.API):
 		dblist = []
 		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
 			active = None
-			if plugin.task is not '':
-				status = shell_status('systemctl is-active %s' % plugin.task)
+			if plugin.plugin_info.db_task:
+				status = shell_status('systemctl is-active %s' % plugin.plugin_info.db_task)
 				if status is 0:
 					active = True
 				else:
 					active = False
-			dblist.append((plugin.name, plugin.task, active))
+			dblist.append((plugin.plugin_info.db_name, plugin.plugin_info.db_task, active))
 		return dblist
 
 	def get_databases(self):
 		try:
 			dblist = []
 			for plugin in self.app.grab_plugins(apis.databases.IDatabase):
-				if plugin.multiuser:
+				if plugin.plugin_info.multiuser:
 					try:
-						dbconn = self.app.session['dbconns'][plugin.name]
+						dbconn = self.app.session['dbconns'][plugin.plugin_info.db_name]
 						for item in plugin.get_dbs(dbconn):
 							dblist.append(item)
 					except:
@@ -87,9 +87,9 @@ class Databases(apis.API):
 		try:
 			userlist = []
 			for plugin in self.app.grab_plugins(apis.databases.IDatabase):
-				if plugin.multiuser:
+				if plugin.plugin_info.multiuser:
 					try:
-						dbconn = self.app.session['dbconns'][plugin.name]
+						dbconn = self.app.session['dbconns'][plugin.plugin_info.db_name]
 						for item in plugin.get_users(dbconn):
 							userlist.append(item)
 					except:

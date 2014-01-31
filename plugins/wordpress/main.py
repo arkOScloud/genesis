@@ -13,14 +13,6 @@ import urllib
 
 class WordPress(Plugin):
 	implements(apis.webapps.IWebapp)
-	name = 'WordPress'
-	dpath = 'https://wordpress.org/wordpress-3.8.tar.gz'
-	icon = 'gen-earth'
-	dbengine = 'MariaDB'
-	services = [('MariaDB', 'mysqld'), ('PHP FastCGI', 'php-fpm')]
-	php = True
-	nomulti = True
-	ssl = True
 
 	addtoblock = [
 		nginx.Location('= /favicon.ico',
@@ -173,16 +165,3 @@ class WordPress(Plugin):
 			oc.append('define(\'FORCE_SSL_ADMIN\', false);\n')
 		f.writelines(oc)
 		f.close()
-
-	def get_info(self):
-		return {
-			'name': 'WordPress',
-			'short': 'Open-source CMS and blogging platform',
-			'long': ('WordPress started as just a blogging system, '
-					'but has evolved to be used as full content management system '
-					'and so much more through the thousands of plugins, widgets, '
-					'and themes, WordPress is limited only by your imagination. '
-					'(And tech chops.)'),
-			'site': 'http://wordpress.org',
-			'logo': True
-		}

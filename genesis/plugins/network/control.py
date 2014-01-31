@@ -57,17 +57,17 @@ class NetworkControl(apis.API):
         rm = RuleManager(self.app)
         for p in s.services:
             try:
-                if p[2] != [] and sm.get(p[1]) != []:
-                    sg = sm.get(p[1])[0]
+                if p['ports'] != [] and sm.get(p['binary']) != []:
+                    sg = sm.get(p['binary'])[0]
                     r = rm.get(sg)
                     rm.remove(sg)
-                    sm.update(p[1], p[1], p[0], 
-                        s.iconfont, p[2])
+                    sm.update(p['binary'], p['binary'], p['name'], 
+                        s.iconfont, p['ports'])
                     rm.set(sg, r)
-                elif p[2] != []:
-                    sg = sm.get(p[1])[0]
-                    sm.add(s.plugin_id, p[1], p[0], 
-                        s.iconfont, p[2])
+                elif p['ports'] != []:
+                    sg = sm.get(p['binary'])[0]
+                    sm.add(s.plugin_id, p['binary'], p['name'], 
+                        s.iconfont, p['ports'])
                     rm.set(sg, 2)
                 FWMonitor(self.app).regen()
                 FWMonitor(self.app).save()

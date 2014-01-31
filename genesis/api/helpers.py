@@ -241,7 +241,7 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
                 'before continuing.' % service), hidecancel=True)
 
     def update_services(self):
-        apis.networkcontrol(self.app).port_changed(self)
+        apis.networkcontrol(self.app).port_changed(self.plugin_info)
 
 
 class ModuleConfig(Plugin):

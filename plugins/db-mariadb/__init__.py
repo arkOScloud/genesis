@@ -3,6 +3,7 @@ NAME = 'Database - MariaDB'
 TYPE = 'database'
 ICON = 'gen-database'
 DESCRIPTION = 'Manage MariaDB/MySQL databases'
+LONG_DESCRIPTION = ''
 CATEGORIES = [
     {
         "primary": "Databases",
@@ -15,6 +16,7 @@ AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
 APP_AUTHOR = "MariaDB Foundation"
 APP_HOMEPAGE = "https://mariadb.org/"
+LOGO = False
 
 # Plugin parameters
 MODULES = ['main']
@@ -36,3 +38,10 @@ DEPENDENCIES = {
     ]
 }
 GENERATION = 1
+
+# Database metadata
+DB_NAME = 'MariaDB'
+DB_PLUGIN = 'MariaDB'
+DB_TASK = 'mysqld'
+MULTIUSER = True
+REQUIRES_CONN = True

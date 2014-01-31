@@ -2,7 +2,12 @@
 NAME = 'WordPress'
 TYPE = 'webapp'
 ICON = 'gen-earth'
-DESCRIPTION = 'Host a blog with WordPress CMS'
+DESCRIPTION = 'Open-source CMS and blogging platform'
+LONG_DESCRIPTION = ('WordPress started as just a blogging system, '
+    'but has evolved to be used as full content management system '
+    'and so much more through the thousands of plugins, widgets, '
+    'and themes, WordPress is limited only by your imagination. '
+    '(And tech chops.)')
 CATEGORIES = [
     {
         "primary": "Websites",
@@ -15,6 +20,20 @@ AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
 APP_AUTHOR = "Automattic"
 APP_HOMEPAGE = "https://wordpress.org"
+LOGO = True
+
+SERVICES = [
+    {
+        "name": "MariaDB",
+        "binary": "mysqld",
+        "ports": []
+    },
+    {
+        "name": "PHP FastCGI",
+        "binary": "php-fpm",
+        "ports": []
+    }
+]
 
 # Plugin parameters
 MODULES = ['main']
@@ -59,3 +78,11 @@ DEPENDENCIES = {
     ]
 }
 GENERATION = 1
+
+# Webapp metadata
+WA_PLUGIN = 'WordPress'
+DPATH = 'https://wordpress.org/wordpress-3.8.tar.gz'
+DBENGINE = 'MariaDB'
+PHP = True
+NOMULTI = True
+SSL = True

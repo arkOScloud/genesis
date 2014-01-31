@@ -11,11 +11,6 @@ import sqlite3
 
 class SQLite3(Plugin):
     implements(apis.databases.IDatabase)
-    name = 'SQLite3'
-    icon = 'gen-database'
-    task = ''
-    multiuser = False
-    requires_conn = False
 
     def add(self, dbname):
         if re.search('\.|-|`|\\\\|\/|[ ]', dbname):

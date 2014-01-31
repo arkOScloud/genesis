@@ -32,10 +32,16 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		self.mgr = WebappControl(self.app)
 		self.sites = sorted(self.apiops.get_sites(), 
 			key=lambda st: st.name)
-		ats = sorted(self.apiops.get_apptypes(), key=lambda x: x.name.lower())
+		ats = sorted([x.plugin_info for x in self.apiops.get_apptypes()], key=lambda x: x.name.lower())
 		self.apptypes = sorted(ats, key=lambda x: (hasattr(x, 'sort')))
 		if len(self.sites) != 0:
-			self.services.append(('Web Server', 'nginx'))
+			self.services.append(
+				{
+					"name": 'Web Server',
+					"binary": 'nginx',
+					"ports": []
+				}
+			)
 		if not self._current:
 			self._current = self.apptypes[0]
 		for apptype in self.apptypes:
@@ -49,10 +55,10 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				for dep in apptype.services:
 					post = True
 					for svc in self.services:
-						if svc[1] == dep[1]:
+						if svc['binary'] == dep['binary']:
 							post = False
 					if post == True:
-						self.services.append((dep[0], dep[1]))
+						self.services.append({"name": dep['name'], "binary": dep['binary'], "ports": []})
 
 	def on_session_start(self):
 		self._add = None
@@ -74,7 +80,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				addr = False
 
 			t.append(UI.DTR(
-				UI.Iconfont(iconfont="gen-earth"),
+				UI.Iconfont(iconfont=s.sclass.plugin_info.iconfont if s.sclass and hasattr(s.sclass.plugin_info, 'iconfont') else 'gen-earth'),
 				(UI.OutLinkLabel(
 					text=s.name,
 					url=addr
@@ -112,18 +118,18 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					)
 				)
 
-		info = self._current.get_info()
-		if info['logo'] is True:
+		info = self._current
+		if info.logo is True:
 			ui.find('logo').set('file', '/dl/'+self._current.__class__.__name__.lower()+'/logo.png')
-		ui.find('appname').set('text', info['name'])
-		ui.find('short').set('text', info['short'])
-		if info['site'] is None:
+		ui.find('appname').set('text', info.name)
+		ui.find('short').set('text', info.desc)
+		if info.app_homepage is None:
 			ui.find('website').set('text', 'None')
 			ui.find('website').set('url', 'http://localhost')
 		else:
-			ui.find('website').set('text', info['site'])
-			ui.find('website').set('url', info['site'])
-		ui.find('desc').set('text', info['long'])
+			ui.find('website').set('text', info.app_homepage)
+			ui.find('website').set('url', info.app_homepage)
+		ui.find('desc').set('text', info.longdesc)
 
 		if self._add is None:
 			ui.remove('dlgAdd')

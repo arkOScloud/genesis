@@ -1,6 +1,7 @@
 from genesis import apis
 from genesis.com import *
 from genesis.api import *
+from genesis.plugmgr import PluginLoader
 
 from api import *
 
@@ -75,17 +76,18 @@ class ServerManager(Plugin):
 		return ranges
 
 	def scan_plugins(self):
-		for c in self.app.grab_plugins(ICategoryProvider):
-			if hasattr(c, 'services'):
+		lst = PluginLoader.list_plugins()
+		for c in lst:
+			if hasattr(lst[c], 'services'):
 				for s in self.servers:
-					if c.plugin_id == s.plugin_id:
+					if lst[c].id == s.plugin_id:
 						break
 				else:
-					for p in c.services:
+					for p in lst[c].services:
 						try:
-							if p[2] != []:
-								self.add(c.plugin_id, p[1], p[0], 
-									c.iconfont, p[2])
+							if p['ports'] != []:
+								self.add(lst[c].id, p['binary'], p['name'], 
+									lst[c].iconfont, p['ports'])
 						except IndexError:
 							pass
 
