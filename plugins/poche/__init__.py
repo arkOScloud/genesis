@@ -13,6 +13,13 @@ DEPS =  [
      ])
 ]
 
+CATEGORIES = [
+    {
+        'primary': 'Websites',
+        'secondary': ['Websites']
+    }
+]
+
 NAME = 'Poche'
 ICON = 'gen-earth'
 PLATFORMS = ['any']
