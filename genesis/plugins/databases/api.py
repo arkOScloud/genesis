@@ -76,6 +76,13 @@ class Databases(apis.API):
 		except DBConnFail:
 			return []
 
+	def get_info(self, name):
+		info = ''
+		for plugin in self.app.grab_plugins(apis.databases.IDatabase):
+			if plugin.__class__.__name__ == name:
+				info = plugin.plugin_info
+		return info
+
 	def get_interface(self, name):
 		interface = ''
 		for plugin in self.app.grab_plugins(apis.databases.IDatabase):

@@ -82,10 +82,18 @@ class Webapps(apis.API):
 			w.enabled = True if os.path.exists(os.path.join('/etc/nginx/sites-enabled', site)) else False
 
 			w.sclass = self.get_interface(w.stype)
+			w.dbengine = self.get_interface(w.stype).plugin_info.dbengine
 			w.ssl_able = w.sclass.ssl if hasattr(w.sclass, 'ssl') else False
 
 			applist.append(w)
 		return applist
+
+	def get_info(self, name):
+		info = ''
+		for plugin in self.app.grab_plugins(apis.webapps.IWebapp):
+			if plugin.__class__.__name__ == name:
+				interface = plugin.plugin_info
+		return info
 
 	def get_interface(self, name):
 		interface = ''

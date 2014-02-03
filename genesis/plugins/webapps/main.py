@@ -144,14 +144,9 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						self._setup = None
 						return ui
 			try:
-				if self._setup.name == 'Website':
-					cfgui = self.app.inflate('webapps:conf')
-					type_sel = [UI.SelectOption(text='None', value='None')]
-					for x in sorted(self.dbops.get_dbtypes()):
-						type_sel.append(UI.SelectOption(text=x[0], value=x[0]))
-					cfgui.appendAll('ws-dbsel', *type_sel)
-				else:
-					cfgui = self.app.inflate(self._setup.__class__.__name__.lower() + ':conf')
+				cfgui = self.app.inflate(self._setup.id + ':conf')
+				if hasattr(self.apiops.get_interface(self._setup.wa_plugin), 'show_opts_add'):
+					self.apiops.get_interface(self._setup.wa_plugin).show_opts_add(cfgui)
 				ui.append('app-config', cfgui)
 			except:
 				ui.find('app-config').append(UI.Label(text="No config options available for this app"))
@@ -191,10 +186,10 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		elif params[0] == 'config':
 			self._edit = self.sites[int(params[1])]
 		elif params[0] == 'drop':
-			if hasattr(self.sites[int(params[1])].sclass, 'dbengine') and \
-			self.dbops.get_interface(self.sites[int(params[1])].sclass.dbengine).requires_conn and \
-			not self.dbops.get_dbconn(self.sites[int(params[1])].sclass.dbengine):
-				self._dbauth = (self.sites[int(params[1])].sclass.dbengine, 
+			if hasattr(self.sites[int(params[1])], 'dbengine') and \
+			self.dbops.get_info(self.sites[int(params[1])].dbengine).requires_conn and \
+			not self.dbops.get_dbconn(self.sites[int(params[1])].dbengine):
+				self._dbauth = (self.sites[int(params[1])].dbengine, 
 					self.sites[int(params[1])], 'drop')
 			else:
 				w = WAWorker(self, 'drop', self.sites[int(params[1])])
@@ -213,7 +208,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 	def on_submit(self, event, params, vars = None):
 		if params[0] == 'dlgAdd':
 			if vars.getvalue('action', '') == 'OK':
-				if hasattr(self._current, 'dbengine'):
+				if hasattr(self._current, 'dbengine') and self._current.dbengine:
 					on = False
 					for dbtype in self.dbops.get_dbtypes():
 						if self._current.dbengine == dbtype[0] and dbtype[2] == True:
@@ -221,7 +216,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						elif self._current.dbengine == dbtype[0] and dbtype[2] == None:
 							on = True
 					if on:
-						if self.dbops.get_interface(self._current.dbengine).requires_conn and \
+						if self.dbops.get_info(self._current.dbengine).requires_conn and \
 						not self.dbops.get_dbconn(self._current.dbengine):
 							self._dbauth = (self._current.dbengine, '', 'add')
 						else:

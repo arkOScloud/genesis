@@ -32,14 +32,15 @@ class ReloadError(Exception):
 
 
 class WebappControl(Plugin):
-	def add(self, cat, name, webapp, vars, enable=True):
+	def add(self, cat, name, wa, vars, enable=True):
 		specialmsg = ''
+		webapp = apis.webapps(self.app).get_interface(wa.wa_plugin)
 
-		if webapp.dpath is None:
+		if not wa.dpath:
 			ending = ''
-		elif webapp.dpath.endswith('.tar.gz'):
+		elif wa.dpath.endswith('.tar.gz'):
 			ending = '.tar.gz'
-		elif webapp.dpath.endswith('.tar.bz2'):
+		elif wa.dpath.endswith('.tar.bz2'):
 			ending = '.tar.bz2'
 		else:
 			raise InstallError('Only gzip and bzip packages supported for now')
@@ -60,10 +61,10 @@ class WebappControl(Plugin):
 		os.makedirs(target_path)
 
 		# Download and extract the source package
-		if webapp.dpath is not None:
+		if wa.dpath:
 			try:
 				cat.put_statusmsg('Downloading webapp package...')
-				download(webapp.dpath, file=pkg_path)
+				download(wa.dpath, file=pkg_path)
 			except Exception, e:
 				raise InstallError('Couldn\'t download - %s' % str(e))
 			status = shell_cs('tar '
@@ -81,18 +82,18 @@ class WebappControl(Plugin):
 			addtoblock = nginx.loads(addtoblock, False)
 		else:
 			addtoblock = []
-		if webapp.name == 'Website' and php == '1' and addtoblock:
+		if wa.name == 'Basic Website' and php == '1' and addtoblock:
 			addtoblock.extend(x for x in webapp.phpblock)
 
 		# Setup the webapp and create an nginx serverblock
 		try:
 			w = Webapp()
 			w.name = name
-			w.stype = webapp.name
+			w.stype = wa.name
 			w.path = target_path
 			w.addr = vars.getvalue('addr', 'localhost')
 			w.port = vars.getvalue('port', '80')
-			w.php = True if webapp.php is True or php is '1' else False
+			w.php = True if wa.php is True or php is '1' else False
 			self.nginx_add(site=w, 
 				add=addtoblock if addtoblock else webapp.addtoblock, 
 				)
@@ -112,7 +113,7 @@ class WebappControl(Plugin):
 				self.nginx_enable(w)
 			except:
 				raise ReloadError('nginx')
-		if enable is True and webapp.php is True:
+		if enable is True and wa.php is True:
 			try:
 				self.php_enable()
 				self.php_reload()
@@ -163,10 +164,6 @@ class WebappControl(Plugin):
 
 	def nginx_edit(self, oldsite, site):
 		# Update the nginx serverblock
-		if site.path.endswith('_site'):
-			site.path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', site.name, '_site'))
-		else:
-			site.path = re.sub('/', '\/', os.path.join('/srv/http/webapps/', site.name))
 		c = nginx.loadf(os.path.join('/etc/nginx/sites-available', oldsite.name))
 		c.filter('Comment')[0].comment = 'GENESIS %s %s' % (site.stype, (('https://' if site.ssl else 'http://')+site.addr+':'+site.port))
 		c.servers[0].filter('Key', 'listen')[0].value = site.port+' ssl' if site.ssl else site.port
@@ -277,101 +274,3 @@ class WebappControl(Plugin):
 		apis.webapps(self.app).get_interface(stype).ssl_disable(
 			os.path.join('/srv/http/webapps', name))
 		self.nginx_reload()
-
-"""
-class Website(Plugin):
-	implements(apis.webapps.IWebapp)
-	name = 'Website'
-	dpath = None
-	icon = 'gen-earth'
-	sort = 'bottom'
-	php = False
-	nomulti = False
-	ssl = True
-
-	addtoblock = []
-
-	phpblock = [
-		nginx.Location('~ ^(.+?\.php)(/.*)?$',
-			nginx.Key('include', 'fastcgi_params'),
-			nginx.Key('fastcgi_param', 'SCRIPT_FILENAME $document_root$1'),
-			nginx.Key('fastcgi_param', 'PATH_INFO $2'),
-			nginx.Key('fastcgi_pass', 'unix:/run/php-fpm/php-fpm.sock'),
-			nginx.Key('fastcgi_read_timeout', '900s'),
-			)
-		]
-
-	def pre_install(self, name, vars):
-		if vars.getvalue('ws-dbsel', 'None') == 'None':
-			if vars.getvalue('ws-dbname', '') != '':
-				raise Exception('Must choose a database type if you want to create one')
-			elif vars.getvalue('ws-dbpass', '') != '':
-				raise Exception('Must choose a database type if you want to create one')
-		if vars.getvalue('ws-dbsel', 'None') != 'None':
-			if vars.getvalue('ws-dbname', '') == '':
-				raise Exception('Must choose a database name if you want to create one')
-			elif vars.getvalue('ws-dbpass', '') == '':
-				raise Exception('Must choose a database password if you want to create one')
-			elif ' ' in vars.getvalue('ws-dbname') or '-' in vars.getvalue('ws-dbname'):
-				raise Exception('Database name must not contain spaces or dashes')
-			elif vars.getvalue('ws-dbname') > 16 and vars.getvalue('ws-dbsel') == 'MariaDB':
-				raise Exception('Database name must be shorter than 16 characters')
-
-	def post_install(self, name, path, vars):
-		# Create a database if the user wants one
-		if vars.getvalue('ws-dbsel', 'None') != 'None':
-			dbtype = vars.getvalue('ws-dbsel', '')
-			dbname = vars.getvalue('ws-dbname', '')
-			passwd = vars.getvalue('ws-dbpass', '')
-			dbase = apis.databases(self.app).get_interface(dbtype)
-			dbase.add(dbname)
-			dbase.usermod(dbname, 'add', passwd)
-			dbase.chperm(dbname, dbname, 'grant')
-			shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
-
-		# Write a basic index file showing that we are here
-		if vars.getvalue('php', '0') == '1':
-			php = True
-		else:
-			php = False
-		f = open(os.path.join(path, 'index.'+('php' if php is True else 'html')), 'w')
-		f.write(
-			'<html>\n'
-			'<body>\n'
-			'<h1>Genesis - Custom Site</h1>\n'
-			'<p>Your site is online and available at '+path+'</p>\n'
-			'<p>Feel free to paste your site files here</p>\n'
-			'</body>\n'
-			'</html>\n'
-			)
-		f.close()
-
-		# Give access to httpd
-		shell('chown -R http:http '+path)
-
-		# Enable xcache if PHP is set
-		if php:
-			shell('sed -i s/\;extension=xcache.so/extension=xcache.so/g /etc/php/conf.d/xcache.ini')
-
-	def pre_remove(self, name, path):
-		pass
-
-	def post_remove(self, name):
-		pass
-
-	def ssl_enable(self, path, cfile, kfile):
-		pass
-
-	def ssl_disable(self, path):
-		pass
-
-	def get_info(self):
-		return {
-			'name': 'Website',
-			'short': 'Upload your own HTML/PHP files',
-			'long': ('Create a custom website with your own HTML or PHP '
-					'files.'),
-			'site': None,
-			'logo': False
-		}
-"""

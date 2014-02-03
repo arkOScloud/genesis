@@ -64,14 +64,14 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 					'appear until you start the process.' % dbtype[0])
 				self.dbtypes.remove(dbtype)
 			else:
-				if self.dbops.get_interface(dbtype[0]).plugin_info.requires_conn == True and \
+				if self.dbops.get_info(dbtype[0]).requires_conn == True and \
 				not self.dbops.get_interface(dbtype[0]).checkpwstat():
 					self._rootpwds[dbtype[0]] = False
 					self.put_message('err', '%s does not have a root password set. '
 						'Please add this via the Settings tab.' % dbtype[0])
 					ubutton = True
 				elif not dbtype[0] in self._cancelauth and \
-				self.dbops.get_interface(dbtype[0]).plugin_info.requires_conn == True and \
+				self.dbops.get_info(dbtype[0]).requires_conn == True and \
 				not self.dbops.get_dbconn(dbtype[0]):
 					ui.append('main', 
 						UI.InputBox(id='dlgAuth%s' % dbtype[0], 
@@ -80,7 +80,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 							password=True)
 					)
 					self._rootpwds[dbtype[0]] = True
-				elif self.dbops.get_interface(dbtype[0]).plugin_info.multiuser == True:
+				elif self.dbops.get_info(dbtype[0]).multiuser == True:
 					self._rootpwds[dbtype[0]] = True
 					ubutton = True
 				else:
@@ -127,11 +127,11 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 				))
 
 		for dbtype in self.dbtypes:
-			if self.dbops.get_interface(dbtype[0]).plugin_info.multiuser:
+			if self.dbops.get_info(dbtype[0]).multiuser:
 				st.append(UI.Label(text=dbtype[0], size='5'))
-			if self.dbops.get_interface(dbtype[0]).plugin_info.multiuser and dbtype[0] in self._cancelauth:
+			if self.dbops.get_info(dbtype[0]).multiuser and dbtype[0] in self._cancelauth:
 				st.append(UI.Label(text='You must authenticate before changing these settings.'))
-			elif self.dbops.get_interface(dbtype[0]).plugin_info.multiuser:
+			elif self.dbops.get_info(dbtype[0]).multiuser:
 				st.append(UI.SimpleForm(
 					UI.Formline(UI.EditPassword(id='newpasswd', value='Click to change'),
 						text="New root password"
@@ -140,14 +140,14 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 						design="primary", action="OK", text="Change Password")),
 					id="frmPasswd%s" % dbtype[0]
 				))
-			if self.dbops.get_interface(dbtype[0]).plugin_info.requires_conn:
+			if self.dbops.get_info(dbtype[0]).requires_conn:
 				st.append(UI.Formline(UI.Button(text='Reauthenticate', id='reauth/'+dbtype[0])))
 
 		type_sel_all = [UI.SelectOption(text = x[0], value = x[0])
 			for x in self.dbtypes if x[0] not in self._cancelauth]
 		type_sel_multiuser = [UI.SelectOption(text = x[0], value = x[0])
 			for x in self.dbtypes if x[0] not in self._cancelauth and \
-			self.dbops.get_interface(x[0]).plugin_info.multiuser]
+			self.dbops.get_info(x[0]).multiuser]
 		if not type_sel_multiuser:
 			ubutton = False
 

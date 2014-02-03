@@ -4,7 +4,7 @@ class DBConnFail(Exception):
 		self.op = op
 
 	def __str__(self):
-		if op:
+		if self.op:
 			return 'The database connection for %s failed, while performing %s' % (self.dbtype, self.op)
 		else:
 			return 'The database connection for %s failed generally' % self.dbtype
