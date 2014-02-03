@@ -286,12 +286,18 @@ class ModuleConfig(Plugin):
                 lbl = k
                 if k in self.labels:
                     lbl = self.labels[k]
-                if type(val) is bool:
+                if type(val) is str and hasattr(self, k+'_opts'):
+                    t.append(UI.Formline(
+                        UI.Select(*[UI.SelectOption(text=x, value=x, selected=x==val) for x in getattr(self, k+'_opts')], 
+                            id=k, name=k),
+                        text=lbl
+                    ))
+                elif type(val) is bool:
                     t.append(UI.Formline(
                         UI.CheckBox(name=k, checked=val),
                         text=lbl
                     ))
-                if type(val) is str:
+                elif type(val) is str:
                     t.append(UI.Formline(
                         UI.TextInput(name=k, value=val),
                         text=lbl,
@@ -305,5 +311,5 @@ class ModuleConfig(Plugin):
                 oval = getattr(self, k)
                 if type(oval) is str:
                     setattr(self, k, nval)
-                if type(oval) is bool:
+                elif type(oval) is bool:
                     setattr(self, k, nval=='1')

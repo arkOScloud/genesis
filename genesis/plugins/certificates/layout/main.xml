@@ -4,20 +4,48 @@
         <button id="upl" text="Upload certificate" iconfont="gen-file-upload" />
     </toolbar>
 
-    <label size="5" text="My Certificates" />
     <pad id="main">
-        <dt id="certlist" width="100%">
-            <dtr header="True">
-                <dth width="1" />
-                <dth>
-                    <label text="Name" />
-                </dth>
-                <dth>
-                    <label text="Attached to" />
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
+    <tabcontrol id="tabs" active="0">
+        <tabheader text="My Certificates" id="0"/>
+        <tabheader text="Settings" id="1"/>
+
+        <tabbody id="0">
+            <dt id="certlist" width="100%">
+                <dtr header="True">
+                    <dth width="1" />
+                    <dth>
+                        <label text="Name" />
+                    </dth>
+                    <dth>
+                        <label text="Attached to" />
+                    </dth>
+                    <dth width="1" />
+                </dtr>
+            </dt>
+        </tabbody>
+
+        <tabbody id="1">
+            <simpleform id="frmCertSettings">
+                <formline text="Certificate Type" help="Set the type and length of keys that Genesis will generate">
+                    <select id="keylength" name="keylength">
+                        <selectoption id="kl1024" value="1024" text="1024-bit" />
+                        <selectoption id="kl2048" value="2048" text="2048-bit" />
+                        <selectoption id="kl4096" value="4096" text="4096-bit" />
+                    </select>
+                    <select id="keytype" name="keytype">
+                        <selectoption id="ktdsa" value="DSA" text="DSA" />
+                        <selectoption id="ktrsa" value="RSA" text="RSA" />
+                    </select>
+                </formline>
+                <formline>
+                    <button onclick="form" form="frmCertSettings" design="primary" action="OK" text="Save" />
+                </formline>
+            </simpleform>
+            <label size="5" text="Certificate Authority" />
+            <pad id="certauth">
+            </pad>
+        </tabbody>
+    </tabcontrol>
     </pad>
 
     <dialogbox id="dlgGen">
@@ -48,7 +76,7 @@
             <label name="certname" id="certname" />
         </formline>
         <formline text="Key type">
-            <label name="keytype" id="keytype" />
+            <label name="ikeytype" id="ikeytype" />
         </formline>
         <formline text="Serves domain">
             <label name="domain" id="domain" />

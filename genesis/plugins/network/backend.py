@@ -85,7 +85,7 @@ class ArchHostnameManager(Plugin):
     platform = ['arch', 'arkos']
 
     def gethostname(self):
-        return open('/etc/hostname').read()
+        return open('/etc/hostname').read().rstrip('\n')
 
     def sethostname(self, hn):
         open('/etc/hostname', 'w').write(hn)
