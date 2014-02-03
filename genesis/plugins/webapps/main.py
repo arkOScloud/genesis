@@ -5,6 +5,7 @@ from genesis.ui import *
 from genesis import apis
 from genesis.utils import *
 from genesis.plugins.databases.utils import *
+from genesis.plugins.network.backend import IHostnameManager
 
 import re
 
@@ -47,7 +48,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		for apptype in self.apptypes:
 			ok = False
 			for site in self.sites:
-				if site.stype == apptype.name:
+				if site.stype == apptype.wa_plugin:
 					ok = True
 			if ok == False:
 				continue
@@ -135,9 +136,10 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			ui.remove('dlgAdd')
 
 		if self._setup is not None:
+			ui.find('addr').set('value', self.app.get_backend(IHostnameManager).gethostname())
 			if self._setup.nomulti is True:
 				for site in self.sites:
-					if self._setup.name in site.stype:
+					if self._setup.wa_plugin in site.stype:
 						ui.remove('dlgSetup')
 						ui.remove('dlgEdit')
 						self.put_message('err', 'Only one site of this type at any given time')
@@ -187,6 +189,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			self._edit = self.sites[int(params[1])]
 		elif params[0] == 'drop':
 			if hasattr(self.sites[int(params[1])], 'dbengine') and \
+			self.sites[int(params[1])].dbengine and \
 			self.dbops.get_info(self.sites[int(params[1])].dbengine).requires_conn and \
 			not self.dbops.get_dbconn(self.sites[int(params[1])].dbengine):
 				self._dbauth = (self.sites[int(params[1])].dbengine, 

@@ -10,6 +10,7 @@ from genesis.utils.error import SystemTimeError
 from genesis.plugins.core.api import ISSLPlugin
 from genesis.plugins.webapps.backend import WebappControl
 
+
 class CertControl(Plugin):
 	def get_certs(self):
 		# Find all certs added by Genesis and return basic information
@@ -32,7 +33,7 @@ class CertControl(Plugin):
 	def get_ssl_capable(self):
 		lst = []
 		for x in apis.webapps(self.app).get_sites():
-			if x['ssl_able']:
+			if x.ssl_able:
 				lst.append(x)
 		return lst, self.app.grab_plugins(ISSLPlugin)
 
@@ -151,7 +152,7 @@ class CertControl(Plugin):
 		cfg.set('cert', 'expiry', crt.get_notAfter())
 		cfg.set('cert', 'domain', crt.get_subject().CN)
 		cfg.set('cert', 'keytype', keytype)
-		cfg.set('cert', 'keylength', str(int(ky.bits())))
+		cfg.set('cert', 'keylength', str(int(key.bits())))
 		cfg.set('cert', 'assign', '')
 		cfg.write(open('/etc/ssl/certs/genesis/'+name+'.gcinfo', 'w'))
 
@@ -207,7 +208,7 @@ class CertControl(Plugin):
 				WebappControl(self.app).ssl_enable(x[1],
 					'/etc/ssl/certs/genesis/'+name+'.crt',
 					'/etc/ssl/private/genesis/'+name+'.key')
-				alist.append(x[1]['name'] + ' ('+x[1]['type']+')')
+				alist.append(x[1].name + ' ('+x[1].stype+')')
 			elif x[0] == 'plugin':
 				x[1].enable_ssl()
 				alist.append(x[1].text)
@@ -230,7 +231,7 @@ class CertControl(Plugin):
 				self.app.gconfig.save()
 			elif x[0] == 'webapp':
 				WebappControl(self.app).ssl_disable(x[1])
-				alist.remove(x[1]['name'] + ' ('+x[1]['type']+')')
+				alist.remove(x[1].name + ' ('+x[1].stype+')')
 			elif x[0] == 'plugin':
 				x[1].disable_ssl()
 				alist.remove(x[1].text)
@@ -259,7 +260,7 @@ class CertControl(Plugin):
 		alist = cfg.get('cert', 'assign').split('\n')
 		wal, pal = self.get_ssl_capable()
 		for x in wal:
-			if (x['name']+' ('+x['type']+')') in alist:
+			if (x.name+' ('+x.stype+')') in alist:
 				WebappControl(self.app).ssl_disable(x)
 		for y in pal:
 			if y.text in alist:

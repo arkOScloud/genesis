@@ -1,6 +1,6 @@
 <xml>
 	<scrollcontainer width="700" height="300">
-		<formline text="PHP" help="If your site uses PHP, please check this box. Don't forget to add nginx fastcgi options in your serverblock.">
+		<formline text="PHP" help="If your site uses PHP, please check this box. FastCGI options will automatically be added to the nginx serverblock.">
 		    <checkbox name="php" id="php" checked="False" text="Yes"/>
 		</formline>
 		<formline text="Database Type" help="If you need a database for your site, select the type here. If not, leave at None.">

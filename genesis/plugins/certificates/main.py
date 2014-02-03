@@ -46,6 +46,7 @@ class CertificatesPlugin(CategoryPlugin):
 			   ))
 
 		if self._gen:
+			ui.find('certcn').set('value', self.app.get_backend(IHostnameManager).gethostname())
 			self._wal, self._pal = self._cc.get_ssl_capable()
 			alist, wlist, plist = [], [], []
 			for cert in self.certs:
@@ -57,9 +58,9 @@ class CertificatesPlugin(CategoryPlugin):
 					UI.Checkbox(text='Genesis SSL', name='genesis', value='genesis', checked=False),
 				)
 			for x in self._wal:
-				if not (x['name']+' ('+x['type']+')') in alist:
+				if not (x.name+' ('+x.stype+')') in alist:
 					ui.find('certassign').append(
-						UI.Checkbox(text=x['name'], name='wassign[]', value=x['name'], checked=False),
+						UI.Checkbox(text=x.name, name='wassign[]', value=x.name, checked=False),
 					)
 					wlist.append(x)
 			self._wal = wlist
@@ -111,8 +112,8 @@ class CertificatesPlugin(CategoryPlugin):
 					)
 				)
 			for x in self._wal:
-				if not (x['name']+' ('+x['type']+')') in alist:
-					if (x['name']+' ('+x['type']+')') in self._cinfo['assign']:
+				if not (x.name+' ('+x.stype+')') in alist:
+					if (x.name+' ('+x.stype+')') in self._cinfo['assign']:
 						ic, ict, show = 'gen-checkmark-circle', 'Assigned', 'd'
 					else:
 						ic, ict, show = None, None, 'e'
@@ -120,7 +121,7 @@ class CertificatesPlugin(CategoryPlugin):
 						UI.DTR(
 							UI.IconFont(iconfont=ic, text=ict),
 							UI.IconFont(iconfont='gen-earth'),
-							UI.Label(text=x['name']),
+							UI.Label(text=x.name),
 							UI.HContainer(
 								(UI.TipIcon(iconfont='gen-checkmark-circle',
 									text='Assign', id='ac/'+self._cinfo['name']+'/w/'+str(self._wal.index(x))) if show == 'e' else None),
@@ -185,7 +186,7 @@ class CertificatesPlugin(CategoryPlugin):
 		elif params[0] == 'ac' and params[2] == 'w':
 			self._cc.assign(self._cinfo['name'],
 				[('webapp', self._wal[int(params[3])])])
-			self.put_message('info', '%s added to %s webapp' % (self._cinfo['name'], self._wal[int(params[3])]['name']))
+			self.put_message('info', '%s added to %s webapp' % (self._cinfo['name'], self._wal[int(params[3])].name))
 			self._cinfo = None
 		elif params[0] == 'ac' and params[2] == 'g':
 			self._cc.assign(self._cinfo['name'], [[('genesis')]])
@@ -199,7 +200,7 @@ class CertificatesPlugin(CategoryPlugin):
 		elif params[0] == 'uc' and params[2] == 'w':
 			self._cc.unassign(self._cinfo['name'],
 				[('webapp', self._wal[int(params[3])])])
-			self.put_message('info', '%s removed from %s webapp, and SSL disabled.' % (self._cinfo['name'], self._wal[int(params[3])]['name']))
+			self.put_message('info', '%s removed from %s webapp, and SSL disabled.' % (self._cinfo['name'], self._wal[int(params[3])].name))
 			self._cinfo = None
 		elif params[0] == 'uc' and params[2] == 'g':
 			self._cc.unassign(self._cinfo['name'], [[('genesis')]])

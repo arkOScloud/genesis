@@ -82,14 +82,14 @@ class WebappControl(Plugin):
 			addtoblock = nginx.loads(addtoblock, False)
 		else:
 			addtoblock = []
-		if wa.name == 'Basic Website' and php == '1' and addtoblock:
+		if wa.wa_plugin == 'Website' and php == '1' and addtoblock:
 			addtoblock.extend(x for x in webapp.phpblock)
 
 		# Setup the webapp and create an nginx serverblock
 		try:
 			w = Webapp()
 			w.name = name
-			w.stype = wa.name
+			w.stype = wa.wa_plugin
 			w.path = target_path
 			w.addr = vars.getvalue('addr', 'localhost')
 			w.port = vars.getvalue('port', '80')
@@ -220,7 +220,7 @@ class WebappControl(Plugin):
 			raise Exception('nginx failed to reload.')
 
 	def ssl_enable(self, data, cpath, kpath):
-		name, stype = data['name'], data['type']
+		name, stype = data.name, data.stype
 		port = '443'
 		c = nginx.loadf('/etc/nginx/sites-available/'+name)
 		l = c.servers[0].filter('Key', 'listen')[0]
@@ -245,14 +245,14 @@ class WebappControl(Plugin):
 			nginx.Key('ssl_ciphers', 'HIGH:!aNULL:!MD5')
 			)
 		c.filter('Comment')[0].comment = 'GENESIS %s https://%s:%s' \
-			% (stype, data['addr'], port)
+			% (stype, data.addr, port)
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 		apis.webapps(self.app).get_interface(stype).ssl_enable(
 			os.path.join('/srv/http/webapps', name), cpath, kpath)
 		self.nginx_reload()
 
 	def ssl_disable(self, data):
-		name, stype = data['name'], data['type']
+		name, stype = data.name, data.stype
 		port = '80'
 		c = nginx.loadf('/etc/nginx/sites-available/'+name)
 		l = c.servers[0].filter('Key', 'listen')[0]
@@ -269,7 +269,7 @@ class WebappControl(Plugin):
 			c.servers[0].filter('Key', 'ssl_ciphers')[0]
 			)
 		c.filter('Comment')[0].comment = 'GENESIS %s http://%s:%s' \
-			% (stype, data['addr'], port)
+			% (stype, data.addr, port)
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 		apis.webapps(self.app).get_interface(stype).ssl_disable(
 			os.path.join('/srv/http/webapps', name))
