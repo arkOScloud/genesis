@@ -36,7 +36,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
         self.add_tab()
 
     def get_ui(self):
-        ui = self.app.inflate('fm:main')
+        ui = self.app.inflate('fileman:main')
         tc = UI.TabControl(active=self._tab)
 
         if self._showhidden:
@@ -76,7 +76,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
             ))
 
         if self._editing_acl is not None:
-            dlg = self.app.inflate('fm:acl')
+            dlg = self.app.inflate('fileman:acl')
             ui.append('main', dlg)
             acls = get_acls(self._editing_acl)
             idx = 0
@@ -114,7 +114,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
         return ui
 
     def get_tab(self, tab, tidx):
-        ui = self.app.inflate('fm:tab')
+        ui = self.app.inflate('fileman:tab')
 
         ui.find('paste').set('id', 'paste/%i'%tidx)
         ui.find('newfld').set('id', 'newfld/%i'%tidx)
