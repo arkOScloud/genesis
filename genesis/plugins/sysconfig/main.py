@@ -1,7 +1,7 @@
 from genesis.api import *
 from genesis.ui import *
 from genesis import apis
-from genesis.utils import shell_cs
+from genesis.utils import shell_cs, SystemTime
 from genesis.plugins.network import backend
 
 import os
@@ -18,10 +18,18 @@ class SysConfigPlugin(CategoryPlugin):
     def on_init(self):
         self._mgr = self.app.get_backend(apis.services.IServiceManager)
         self._be = backend.Config(self.app)
+        self._st = SystemTime()
         self.hostname = self._be.gethostname()
 
     def get_ui(self):
         ui = self.app.inflate('sysconfig:main')
+        systime = self._st.get_datetime('%d %B %Y, %H:%M:%S')
+        offset = 0
+        try:
+            offset = self._st.get_offset()
+        except Exception, e:
+            self.app.log.error('Could not get Internet time. Please check your connection. Error: %s' % str(e))
+            self.put_message('err', 'Could not get Internet time. Please check your connection.')
 
         # General
         ui.find('hostname').set('value', self.hostname)
@@ -31,6 +39,10 @@ class SysConfigPlugin(CategoryPlugin):
             selected=True if tz_active in x else False)
             for x in zonelist.zones]
         ui.appendAll('zoneselect', *tz_sel)
+
+        # Time
+        ui.find('systime').set('text', systime)
+        ui.find('offset').set('text', '%s seconds' % offset)
 
         # Tools
         if shell_cs('which logrunnerd')[0] != 0:
@@ -82,6 +94,13 @@ class SysConfigPlugin(CategoryPlugin):
                 self._mgr.enable(params[1])
             elif params[2] == 'disable':
                 self._mgr.disable(params[1])
+        if params[0] == 'settime':
+            try:
+                self._st.set_datetime()
+                self.put_message('info', 'System time updated successfully')
+            except Exception, e:
+                self.app.log.error('Could not set time. Please check your connection. Error: %s' % str(e))
+                self.put_message('err', 'Could not set time. Please check your connection.')
 
     @event('form/submit')
     @event('dialog/submit')

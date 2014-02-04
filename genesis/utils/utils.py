@@ -18,6 +18,15 @@ class SystemTime:
         else:
             return time.localtime()
 
+    def get_idatetime(self):
+        ntp = ntplib.NTPClient()
+        resp = ntp.request('0.pool.ntp.org', version=3)
+        return resp.tx_time
+
+    def set_datetime(self, datetime=''):
+        datetime = datetime if datetime else self.get_idatetime()
+        shell('date -s %s' % datetime)
+
     def get_serial_time(self):
             return time.strftime('%Y%m%d%H%M%S')
 

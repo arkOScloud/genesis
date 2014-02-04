@@ -16,6 +16,19 @@
     <pad id="main">
     </pad>
 
+    <label size="5" text="System Time" />
+    <pad id="time">
+        <formline text="Current system time">
+            <label id="systime" />
+        </formline>
+        <formline text="Offset from Internet time">
+            <label id="offset" />
+        </formline>
+        <formline>
+            <button id="settime" iconfont="gen-clock" text="Update time" />
+        </formline>
+    </pad>
+
     <label size="5" text="arkOS Tools" />
     <pad id="tools">
         <formline text="Logrunner" help="Manages logs in memory to reduce SD card wear." id="fllogrunner">

@@ -14,7 +14,6 @@ class Dashboard(CategoryPlugin):
     folder = 'top'
 
     def on_session_start(self):
-        apis.networkcontrol(self.app).session_start()
         self._adding_widget = None
         self._failed = []
 

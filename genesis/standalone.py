@@ -124,6 +124,24 @@ def run_server(log_level=logging.INFO, config_file=''):
     PluginLoader.register_mgr(app) # Register permanent app
     ComponentManager.create(app)
 
+    # Check system time
+    log.info('Verifying system time...')
+    os = 0
+    try:
+        st = genesis.utils.SystemTime()
+        os = st.get_offset()
+    except Exception, e:
+        log.error('System time could not be retrieved. Error: %s' % str(e))
+    if os < -3600 or os > 3600:
+        log.info('System time was off by %s secs - updating' % str(os))
+        try:
+            st.set_datetime()
+        except Exception, e:
+            log.error('System time could not be set. Error: %s' % str(e))
+
+    # Load and verify security rules
+    log.info('Starting security plugin...')
+    genesis.apis.networkcontrol(app).session_start()
     # Make sure correct kernel modules are enabled
     genesis.utils.shell('modprobe ip_tables')
 
