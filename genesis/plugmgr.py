@@ -261,6 +261,9 @@ class PluginLoader:
             elif info.ptype == 'database':
                 info.db_name, info.db_plugin, info.db_task = mod.DB_NAME, mod.DB_PLUGIN, mod.DB_TASK
                 info.multiuser, info.requires_conn = mod.MULTIUSER, mod.REQUIRES_CONN
+            info.f2b = mod.F2B if hasattr(mod, 'F2B') else None
+            info.f2b_name = mod.F2B_NAME if hasattr(mod, 'F2B_NAME') else None
+            info.f2b_icon = mod.F2B_ICON if hasattr(mod, 'F2B_ICON') else None
 
             PluginLoader.__plugins[plugin] = info
 

@@ -15,6 +15,7 @@ AUTHOR = 'will'
 HOMEPAGE = 'http://arkos.io'
 APP_AUTHOR = "Transmission Project"
 APP_HOMEPAGE = "http://www.transmissionbt.com/"
+LOGO = False
 
 SERVICES = [
     {

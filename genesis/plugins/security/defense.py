@@ -98,19 +98,21 @@ class F2BManager(Plugin):
 		cfg = self.get_jail_config()
 		fcfg = ConfigParser.SafeConfigParser()
 		for c in self.app.grab_plugins(ICategoryProvider):
-			if hasattr(c, 'fail2ban') and hasattr(c, 'fail2ban_name'):
-				lst.append({'name': c.fail2ban_name,
-					'icon': c.fail2ban_icon,
-					'f2b': c.fail2ban})
-			elif hasattr(c, 'fail2ban'):
+			if hasattr(c.plugin_info, 'f2b') and \
+			hasattr(c.plugin_info, 'f2b_name') and \
+			c.plugin_info.f2b and c.plugin_info.f2b_name:
+				lst.append({'name': c.plugin_info.f2b_name,
+					'icon': c.plugin_info.f2b_icon,
+					'f2b': c.plugin_info.f2b})
+			elif hasattr(c.plugin_info, 'f2b') and c.plugin_info.f2b:
 				lst.append({'name': c.text,
-					'icon': c.iconfont,
-					'f2b': c.fail2ban})
+					'icon': c.plugin_info.iconfont,
+					'f2b': c.plugin_info.f2b})
 		for s in apis.webapps(self.app).get_apptypes():
-			if hasattr(s, 'fail2ban'):
-				lst.append({'name': s.name, 
+			if hasattr(s.plugin_info, 'f2b') and s.plugin_info.f2b:
+				lst.append({'name': s.plugin_info.name, 
 					'icon': 'gen-earth',
-					'f2b': s.fail2ban})
+					'f2b': s.plugin_info.f2b})
 		for p in lst:
 			for l in p['f2b']:
 				if not 'custom' in l:

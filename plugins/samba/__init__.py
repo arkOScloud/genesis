@@ -15,6 +15,15 @@ AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
 APP_AUTHOR = "The Samba Team"
 APP_HOMEPAGE = "https://www.samba.org/"
+LOGO = False
+
+SERVICES = [
+    {
+        "name": "Samba",
+        "binary": "smbd",
+        "ports": [('tcp', '137'), ('tcp', '138'), ('tcp', '139')]
+    }
+]
 
 # Plugin parameters
 MODULES = ["main", "backend"]

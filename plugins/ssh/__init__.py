@@ -16,6 +16,21 @@ AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
 APP_AUTHOR = "OpenSSH"
 APP_HOMEPAGE = "http://www.openssh.com/"
+LOGO = False
+
+SERVICES = [
+    {
+        "name": "SSH Server",
+        "binary": "sshd",
+        "ports": [('tcp', '22')]
+    }
+]
+
+F2B = [
+    {
+        "name": "ssh-iptables"
+    }
+]
 
 # Plugin parameters
 MODULES = ["main", "backend"]
