@@ -1,0 +1,108 @@
+<xml>
+    <toolbar>
+        <button id="adisk" text="Create virtual disk" iconfont="gen-storage" />
+        <button id="aedisk" text="Create encrypted disk" iconfont="gen-lock" />
+        <button id="add" text="Add new mountpoint" iconfont="gen-plus-circle" />
+    </toolbar>
+
+    <pad id='main'>
+        <tabcontrol id="tabs" active="0">
+            <tabheader text="Virtual Disks" id="0" />
+            <tabheader text="Physical Disks" id="1" />
+            <tabheader text="FS Record" id="2" />
+            <tabheader text="Settings" id="3" />
+
+            <tabbody id="0">
+                <dt id="vdlist" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Name" />
+                        </dth>
+                        <dth>
+                            <label text="Type" />
+                        </dth>
+                        <dth>
+                            <label text="Size" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </tabbody>
+
+            <tabbody id="1">
+                <dt id="pdlist" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Name" />
+                        </dth>
+                        <dth>
+                            <label text="Type" />
+                        </dth>
+                        <dth>
+                            <label text="Size" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </tabbody>
+
+            <tabbody id="2">
+                <dt id="list" width="100%">
+                    <dtr header="True">
+                        <dth>
+                            <label text="Source" />
+                        </dth>
+                        <dth>
+                            <label text="Mountpoint" />
+                        </dth>
+                        <dth width="60">
+                            <label text="FS type" />
+                        </dth>
+                        <dth>
+                            <label text="Options" />
+                        </dth>
+                        <dth with="1" />
+                        <dth with="1" />
+                        <dth with="1" />
+                    </dtr>
+                </dt>
+            </tabbody>
+
+            <tabbody id="3">
+            </tabbody>
+        </tabcontrol>
+    </pad>
+
+    <dialogbox id="dlgEdit">
+        <formline text="Source" id="sources" iid="source" />
+        <formline iid="src">
+            <textinput id="src" name="src" design="xlarge" />
+        </formline>
+        <formline text="Mount point" iid="mp">
+            <textinput id="mp" name="mp" design="xlarge" />
+        </formline>
+        <formline text="Filesystem" iid="mp">
+            <textinput id="fs" name="fs" />
+        </formline>
+        <formline text="Options" iid="opts">
+            <textinput id="opts" name="opts" design="xlarge" />
+        </formline>
+        <formline text="Read-only" iid="ro">
+            <checkbox id="ro" name="ro" />
+        </formline>
+        <formline text="Bind" iid="bind">
+            <checkbox id="bind" name="bind" />
+        </formline>
+        <formline text="Loop" iid="loop">
+            <checkbox id="loop" name="loop" />
+        </formline>
+        <formline text="Dump order" iid="dump_p">
+            <textinput id="dump_p" name="dump_p" />
+        </formline>
+        <formline text="fsck order" iid="fsck_p">
+            <textinput id="fsck_p" name="fsck_p" />
+        </formline>
+    </dialogbox>
+</xml>

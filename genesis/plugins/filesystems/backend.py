@@ -1,9 +1,76 @@
 import re
 import os
+import glob
 
 from genesis.api import *
 from genesis.com import *
 from genesis.utils import *
+
+
+class Filesystem(object):
+    name = ''
+    dev = ''
+    fstype = 'disk'
+    icon = ''
+    size = 0
+    mount = ''
+    parent = None
+    delete = True
+
+
+class FSControl(Plugin):
+    def get_filesystems(self):
+        devs, vdevs = [],[]
+        fdisk = shell('lsblk -pbl').split('\n')
+
+        for x in fdisk:
+            if x.startswith('NAME') or not x.split():
+                continue
+            x = x.split()
+
+            f = Filesystem()
+            f.name = x[0].split('/')[-1]
+            f.dev = x[0]
+            f.size = int(x[3])
+            f.fstype = x[5]
+            if x[5] == 'part':
+                f.icon = 'gen-arrow-down'
+            elif x[5] == 'rom':
+                f.icon = 'gen-cd'
+            elif x[5] == 'crypt':
+                f.icon = 'gen-lock'
+                f.delete = False
+            else:
+                f.icon = 'gen-storage'
+            f.mount = x[6] if len(x) >= 7 else ''
+            for y in devs:
+                if y.dev in f.dev:
+                    f.parent = y
+                    break
+            if f.fstype == 'crypt':
+                vdevs.append(f)
+            else:
+                devs.append(f)
+
+        if not os.path.exists('/vdisk'):
+            os.mkdir('/vdisk')
+        for x in glob.glob('/vdisk/*.img'):
+            f = Filesystem()
+            f.name = os.path.splitext(os.path.split(x)[1])[0]
+            f.dev = x
+            f.fstype = 'vdisk'
+            f.icon = 'gen-embed'
+            f.size = os.path.getsize(x)
+            vdevs.append(f)
+        for x in glob.glob('/vdisk/*.crypt'):
+            f = Filesystem()
+            f.name = os.path.splitext(os.path.split(x)[1])[0]
+            f.dev = x
+            f.fstype = 'crypt'
+            f.icon = 'gen-lock'
+            f.size = os.path.getsize(x)
+            vdevs.append(f)
+        return devs, vdevs
 
 
 class Entry:

@@ -13,12 +13,44 @@ class FSPlugin(CategoryPlugin):
 
     def on_init(self):
         self.fstab = backend.read()
+        self.devs, self.vdevs = self._fsc.get_filesystems()
 
     def on_session_start(self):
         self._editing = -1
+        self._tab = 0
+        self._fsc = backend.FSControl(self.app)
+        self._add = None
 
     def get_ui(self):
         ui = self.app.inflate('filesystems:main')
+
+        t = ui.find('vdlist')
+
+        for x in self.vdevs:
+            t.append(UI.DTR(
+                UI.Iconfont(iconfont=x.icon),
+                UI.Label(text=x.name, bold=False if x.parent else True),
+                UI.Label(text='Encrypted Disk' if x.fstype == 'crypt' else 'Virtual Disk'),
+                UI.Label(text=str_fsize(x.size))
+            ))
+
+        t = ui.find('pdlist')
+
+        for x in self.devs:
+            if x.fstype == 'disk':
+                fstype = 'Physical Disk'
+            elif x.fstype == 'rom':
+                fstype = 'Optical Disk Drive'
+            elif x.fstype == 'part':
+                fstype = 'Disk Partition'
+            else:
+                fstype = 'Unknown'
+            t.append(UI.DTR(
+                UI.Iconfont(iconfont=x.icon),
+                UI.Label(text=x.name, bold=False if x.parent else True),
+                UI.Label(text=fstype),
+                UI.Label(text=str_fsize(x.size))
+            ))
 
         t = ui.find('list')
 
@@ -48,9 +80,21 @@ class FSPlugin(CategoryPlugin):
                 e.dump_p = 0
                 e.fsck_p = 0
             self.setup_ui_edit(ui, e)
-
         else:
             ui.remove('dlgEdit')
+
+        if self._add:
+            ui.append('main', UI.DialogBox(
+                UI.FormLine(
+                    UI.TextInput(name='addname', id='addname'),
+                    text='Virtual disk name'
+                ),
+                UI.FormLine(
+                    UI.TextInput(name='addsize', id='addsize'),
+                    text='Disk size (in MB)'
+                ),
+                id='dlgAdd'
+            ))
 
         return ui
 
@@ -110,6 +154,12 @@ class FSPlugin(CategoryPlugin):
     @event('button/click')
     @event('linklabel/click')
     def on_click(self, event, params, vars=None):
+        if params[0] == 'adisk':
+            self._tab = 0
+            self._add = 'reg'
+        if params[0] == 'aedisk':
+            self._tab = 0
+            self._add = 'enc'
         if params[0] == 'add':
             self._editing = len(self.fstab)
         if params[0] == 'edit':
@@ -120,6 +170,8 @@ class FSPlugin(CategoryPlugin):
 
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):
+        if params[0] == 'dlgAdd':
+            self._add = None
         if params[0] == 'dlgEdit':
             v = vars.getvalue('value', '')
             if vars.getvalue('action', '') == 'OK':
