@@ -17,20 +17,16 @@ class SambaConfig(Plugin):
     general_defaults = {
         'server string': '',
         'workgroup': 'WORKGROUP',
-        'interfaces': '',
-        'socket options': 'TCP_NODELAY',
-        'password server': '',
-        'security': 'user'
+        'interfaces': ''
     }
 
     defaults = {
-        'available': 'yes',
         'browseable': 'yes',
         'valid users': '',
-        'path': '/dev/null',
+        'path': '',
         'read only': 'yes',
         'guest ok': 'yes',
-        'guest only': 'no'
+        'only guest': 'no'
     }
 
     editable = {
@@ -68,7 +64,10 @@ class SambaConfig(Plugin):
                 if s[0] != '#' and s[0] != ';':
                     if s[0] == '[':
                         cs = s[1:-1]
-                        self.shares[cs] = self.new_share() if cs != 'global' else self.general_defaults.copy()
+                        if cs == 'homes' or cs == 'printers':
+                            continue
+                        else:
+                            self.shares[cs] = self.new_share() if cs != 'global' else self.general_defaults.copy()
                     else:
                         s = s.split('=')
                         self.shares[cs][s[0].strip()] = s[1].strip()
