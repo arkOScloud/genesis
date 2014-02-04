@@ -84,6 +84,8 @@ class WebappControl(Plugin):
 			addtoblock = []
 		if wa.wa_plugin == 'Website' and php == '1' and addtoblock:
 			addtoblock.extend(x for x in webapp.phpblock)
+		elif wa.wa_plugin == 'Website' and php == '1':
+			addtoblock = webapp.phpblock
 
 		# Setup the webapp and create an nginx serverblock
 		try:
@@ -135,6 +137,8 @@ class WebappControl(Plugin):
 		cat.put_statusmsg('Removing website...')
 		if site.path.endswith('_site'):
 			shutil.rmtree(site.path.rstrip('/_site'))
+		elif site.path.endswith('htdocs'):
+			shutil.rmtree(site.path.rstrip('/htdocs'))
 		else:
 			shutil.rmtree(site.path)
 		self.nginx_remove(site)

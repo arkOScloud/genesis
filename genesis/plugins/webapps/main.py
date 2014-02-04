@@ -43,6 +43,16 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					"ports": []
 				}
 			)
+			for x in self.sites:
+				if x.php:
+					self.services.append(
+						{
+							"name": 'PHP FastCGI',
+							"binary": 'php-fpm',
+							"ports": []
+						}
+					)
+					break
 		if not self._current:
 			self._current = self.apptypes[0]
 		for apptype in self.apptypes:
@@ -121,7 +131,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
 		info = self._current
 		if info.logo is True:
-			ui.find('logo').set('file', '/dl/'+self._current.__class__.__name__.lower()+'/logo.png')
+			ui.find('logo').set('file', '/dl/'+self._current.id+'/logo.png')
 		ui.find('appname').set('text', info.name)
 		ui.find('short').set('text', info.desc)
 		if info.app_homepage is None:
