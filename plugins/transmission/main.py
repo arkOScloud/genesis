@@ -38,6 +38,10 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
                     UI.Checkbox( name='rpc-whitelist-enabled', checked=self._config.get('rpc-whitelist-enabled')),
                     text='RPC Whitelist Enabled',
                 ),
+                UI.Formline(
+                    UI.TextInput(name='rpc-whitelist', value=self._config.get('rpc-whitelist')),
+                    text='RPC IP Whitelist',
+                ),
                 id="frmBasic"
             )
             ui.append('tab0', basic)
@@ -68,6 +72,7 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
                 self._config.set('rpc-port', int(vars.getvalue('rpc-port', '')))
                 self._config.set('rpc-whitelist-enabled', vars.getvalue('rpc-whitelist-enabled', '')=='1')
                 self._config.set('download-dir', vars.getvalue('download-dir', ''))
+                self._config.set('rpc-whitelist', vars.getvalue('rpc-whitelist', ''))
                 self._config.save()
             elif vars.getvalue('action', '') == 'Cancel':
                 self._config.load()
