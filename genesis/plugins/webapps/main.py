@@ -242,23 +242,31 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		if params[0] == 'dlgEdit':
 			if vars.getvalue('action', '') == 'OK':
 				name = vars.getvalue('cfgname', '')
+				addr = vars.getvalue('cfgaddr', '')
+				port = vars.getvalue('cfgport', '')
+				vaddr = True
+				for site in self.sites:
+					if addr == site.addr and port == site.port:
+						vaddr = False
 				if name == '':
 					self.put_message('err', 'Must choose a name')
 				elif re.search('\.|-|`|\\\\|\/|^test$|[ ]', name):
 					self.put_message('err', 'Site name must not contain spaces, dots, dashes or special characters')
-				elif vars.getvalue('cfgaddr', '') == '':
+				elif addr == '':
 					self.put_message('err', 'Must choose an address')
-				elif vars.getvalue('cfgport', '') == '':
+				elif port == '':
 					self.put_message('err', 'Must choose a port (default 80)')
-				elif vars.getvalue('cfgport') == self.app.gconfig.get('genesis', 'bind_port', ''):
+				elif port == self.app.gconfig.get('genesis', 'bind_port', ''):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
+				elif not vaddr:
+					self.put_message('err', 'Site must have either a different domain/subdomain or a different port')
 				else:
 					w = Webapp()
-					w.name = vars.getvalue('cfgname')
+					w.name = name
 					w.stype = self._edit.stype
 					w.path = self._edit.path
-					w.addr = vars.getvalue('cfgaddr') 
-					w.port = vars.getvalue('cfgport')
+					w.addr = addr
+					w.port = port
 					w.ssl = self._edit.ssl
 					w.php = self._edit.php
 					self.mgr.nginx_edit(self._edit, w)
@@ -267,19 +275,28 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		if params[0] == 'dlgSetup':
 			if vars.getvalue('action', '') == 'OK':
 				name = vars.getvalue('name', '').lower()
+				addr = vars.getvalue('addr', '')
 				port = vars.getvalue('port', '80')
-				samename = False
+				vname, vaddr = True, True
 				for site in self.sites:
 					if name == site.name:
-						samename = True
+						vname = False
+					if addr == site.addr and port == site.port:
+						vaddr = False
 				if not name or not self._setup:
 					self.put_message('err', 'Name or type not selected')
-				elif samename is True:
-					self.put_message('err', 'A site with this name already exists')
-				elif port == self.app.gconfig.get('genesis', 'bind_port', ''):
-					self.put_message('err', 'Can\'t use the same port number as Genesis')
 				elif re.search('\.|-|`|\\\\|\/|^test$|[ ]', name):
 					self.put_message('err', 'Site name must not contain spaces, dots, dashes or special characters')
+				elif addr == '':
+					self.put_message('err', 'Must choose an address')
+				elif port == '':
+					self.put_message('err', 'Must choose a port (default 80)')
+				elif port == self.app.gconfig.get('genesis', 'bind_port', ''):
+					self.put_message('err', 'Can\'t use the same port number as Genesis')
+				elif not vaddr:
+					self.put_message('err', 'Site must have either a different domain/subdomain or a different port')
+				elif not vname:
+					self.put_message('err', 'A site with this name already exists')
 				else:
 					w = WAWorker(self, 'add', name, self._current, vars)
 					w.start()
