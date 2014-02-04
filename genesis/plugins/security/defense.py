@@ -108,6 +108,15 @@ class F2BManager(Plugin):
 				lst.append({'name': c.text,
 					'icon': c.plugin_info.iconfont,
 					'f2b': c.plugin_info.f2b})
+			elif hasattr(c, 'f2b') and hasattr(c, 'f2b_name') and \
+			c.f2b and c.f2b_name:
+				lst.append({'name': c.f2b_name,
+					'icon': c.f2b_icon,
+					'f2b': c.f2b})
+			elif hasattr(c, 'f2b') and c.f2b:
+				lst.append({'name': c.text,
+					'icon': c.iconfont,
+					'f2b': c.f2b})
 		for s in apis.webapps(self.app).get_apptypes():
 			if hasattr(s.plugin_info, 'f2b') and s.plugin_info.f2b:
 				lst.append({'name': s.plugin_info.name, 
@@ -132,6 +141,15 @@ class F2BManager(Plugin):
 							cfg.set(l['name'], o[0], o[1])
 						cfg.write(f)
 						f.close()
+					else:
+						jail_opts = cfg.items(l['name'])
+						filter_name = cfg.get(l['name'], 'filter')
+						fcfg.read([self.filters+'/common.conf', 
+							self.filters+'/'+filter_name+'.conf'])
+						filter_opts = fcfg.items('Definition')
+						l['jail_opts'] = jail_opts
+						l['filter_name'] = filter_name
+						l['filter_opts'] = filter_opts
 					if not os.path.exists(self.filters+'/'+l['filter_name']+'.conf'):
 						f = open(self.filters+'/'+l['filter_name']+'.conf', 'w')
 						fcfg = ConfigParser.SafeConfigParser()

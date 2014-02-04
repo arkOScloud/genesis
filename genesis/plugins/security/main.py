@@ -15,9 +15,9 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
     iconfont = 'gen-lock-2'
     folder = 'system'
     services = [{"name": 'Intrusion Prevention', "binary": 'fail2ban', "ports": []}]
-    fail2ban_name = 'Genesis'
-    fail2ban_icon = 'gen-arkos-round'
-    fail2ban = [{
+    f2b_name = 'Genesis'
+    f2b_icon = 'gen-arkos-round'
+    f2b = [{
         'custom': True,
         'name': 'genesis',
         'jail_opts': [
