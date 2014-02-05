@@ -83,19 +83,21 @@ class Webapps(apis.API):
 
             w.sclass = self.get_interface(w.stype)
             w.sinfo = self.get_info(w.stype)
-            w.dbengine = w.sinfo.dbengine
+            w.dbengine = w.sinfo.dbengine if hasattr(w.sinfo, 'dbengine') else None
             w.ssl_able = w.sinfo.ssl if hasattr(w.sinfo, 'ssl') else False
 
             applist.append(w)
         return applist
 
     def get_info(self, name):
-        return filter(lambda x: x.__class__.__name__ == name,
-            self.app.grab_plugins(apis.webapps.IWebapp))[0].plugin_info
+        cs = filter(lambda x: x.__class__.__name__ == name,
+            self.app.grab_plugins(apis.webapps.IWebapp))
+        return cs[0].plugin_info if len(cs) else None
 
     def get_interface(self, name):
-        return filter(lambda x: x.__class__.__name__ == name,
-            self.app.grab_plugins(apis.webapps.IWebapp))[0]
+        cs = filter(lambda x: x.__class__.__name__ == name,
+            self.app.grab_plugins(apis.webapps.IWebapp))
+        return cs[0] if len(cs) else None
 
     def cert_remove_notify(self, name, stype):
         # Called by webapp when removed.

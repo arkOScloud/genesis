@@ -64,16 +64,16 @@ class SysConfigPlugin(CategoryPlugin):
             bestat = 'Not installed'
         else:
             if self._mgr.get_status('beacon') == 'running':
-                lrstat = 'Running'
+                bestat = 'Running'
                 ui.find('flbeacon').append(UI.Button(text="Stop", id="svc/beacon/stop"))
             else:
-                lrstat = 'Not running'
+                bestat = 'Not running'
                 ui.find('flbeacon').append(UI.Button(text="Start", id="svc/beacon/start"))
             if self._mgr.get_enabled('beacon') == 'enabled':
-                lrstat += ' and enabled on boot'
+                bestat += ' and enabled on boot'
                 ui.find('flbeacon').append(UI.Button(text="Disable on boot", id="svc/beacon/disable"))
             else:
-                lrstat += ' and not enabled on boot'
+                bestat += ' and not enabled on boot'
                 ui.find('flbeacon').append(UI.Button(text="Enable on boot", id="svc/beacon/enable"))
         ui.find('logrunner').set('text', lrstat)
         ui.find('beacon').set('text', bestat)

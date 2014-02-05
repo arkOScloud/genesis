@@ -54,7 +54,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					)
 					break
 		if not self._current:
-			self._current = self.apptypes[0]
+			self._current = self.apptypes[0] if len(self.apptypes) else None
 		for apptype in self.apptypes:
 			ok = False
 			for site in self.sites:
@@ -130,17 +130,18 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				)
 
 		info = self._current
-		if info.logo is True:
-			ui.find('logo').set('file', '/dl/'+self._current.id+'/logo.png')
-		ui.find('appname').set('text', info.name)
-		ui.find('short').set('text', info.desc)
-		if info.app_homepage is None:
-			ui.find('website').set('text', 'None')
-			ui.find('website').set('url', 'http://localhost')
-		else:
-			ui.find('website').set('text', info.app_homepage)
-			ui.find('website').set('url', info.app_homepage)
-		ui.find('desc').set('text', info.longdesc)
+		if info:
+			if info.logo is True:
+				ui.find('logo').set('file', '/dl/'+self._current.id+'/logo.png')
+			ui.find('appname').set('text', info.name)
+			ui.find('short').set('text', info.desc)
+			if info.app_homepage is None:
+				ui.find('website').set('text', 'None')
+				ui.find('website').set('url', 'http://localhost')
+			else:
+				ui.find('website').set('text', info.app_homepage)
+				ui.find('website').set('url', info.app_homepage)
+			ui.find('desc').set('text', info.longdesc)
 
 		if self._add is None:
 			ui.remove('dlgAdd')
