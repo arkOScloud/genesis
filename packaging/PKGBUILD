@@ -15,7 +15,7 @@ optdepends=('python2-pillow: Terminal plugin')
 provides=('genesis')
 conflicts=('genesis-git')
 source=("$pkgname-$pkgver.tar.gz"::"http://pkg.arkos.io/resources/$pkgname-$pkgver.tar.gz")
-md5sums=('40e4bc3ec7f5ba4f4395e4251753e574')
+md5sums=('58dd0a8631d8e6df695d1fad5ba3dd71')
 backup=('etc/genesis/genesis.conf' 'etc/genesis/users/admin.conf')
 
 build() {

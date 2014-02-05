@@ -163,7 +163,7 @@ class FirstRun(CategoryPlugin, URLHandler):
 
             t = self._mgr.list_available()
             for y in toinst:
-                for i in eval(t[y].deps):
+                for i in t[y].deps:
                     for dep in i[1]:
                         if dep[0] == 'plugin' and dep[1] not in toinst:
                             self.put_message('err', ('%s can\'t be installed, as it depends on %s. Please '
