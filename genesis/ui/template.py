@@ -79,11 +79,14 @@ class BasicTemplate(Layout):
                 filename = os.path.join(p, filename)
         Layout.__init__(self, filename)
 
+        def core_first(path):
+            return ((1 if path.startswith('/dl/core') else 2), path)
+
         # Fill in CSS and JS refs
         try:
-            for x in sorted(styles):
+            for x in sorted(styles, key=core_first):
                 self._dom.find('.//headstylesheets').append(etree.Element('headstylesheet', href=x))
-            for x in sorted(scripts):
+            for x in sorted(scripts, key=core_first):
                 self._dom.find('.//headscripts').append(etree.Element('headscript', href=x))
         except:
             pass
