@@ -136,9 +136,9 @@ class WebappControl(Plugin):
 			site.sclass.pre_remove(site.name, site.path)
 		cat.put_statusmsg('Removing website...')
 		if site.path.endswith('_site'):
-			shutil.rmtree(site.path.rstrip('/_site'))
+			shutil.rmtree(site.path.split('/_site')[0])
 		elif site.path.endswith('htdocs'):
-			shutil.rmtree(site.path.rstrip('/htdocs'))
+			shutil.rmtree(site.path.split('/htdocs')[0])
 		else:
 			shutil.rmtree(site.path)
 		self.nginx_remove(site)
