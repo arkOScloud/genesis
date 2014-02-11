@@ -21,7 +21,7 @@ class LinuxIp(Plugin):
         return int(s)
         
     def get_ip(self, iface):
-        s = shell('ip addr list %s | grep \'inet\''%iface)
+        s = shell('ip addr list %s | grep \'inet \''%iface)
         s = s.split()[1] if len(s.split()) > 2 else '0.0.0.0'
         return s
 
