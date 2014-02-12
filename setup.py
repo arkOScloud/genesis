@@ -17,7 +17,7 @@ setup(
     author='The CitizenWeb Project',
     author_email='jacob@citizenweb.is',
     url='http://arkos.io/',
-    packages = find_packages(),
+    packages=find_packages(),
     package_data={'': ['files/*.*', 'files/*/*.*', 'files/*/*/*.*', 'templates/*.*', 'widgets/*.*', 'layout/*.*']},
     scripts=['genesis-panel', 'genesis-pkg'],
     data_files=[
