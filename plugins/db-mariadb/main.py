@@ -118,9 +118,10 @@ class MariaDB(Plugin):
                 if x.split():
                     self.db.query('%s' % x)
                     r = self.db.store_result()
-                    out = r.fetch_row(0)
-                    for line in out:
-                        parse.append(line[0])
+                    if r:
+                        out = r.fetch_row(0)
+                        for line in out:
+                            parse.append(line[0])
             status = ''
             for line in parse:
                 status += line + '\n'

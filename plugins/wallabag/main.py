@@ -53,6 +53,7 @@ class Wallabag(Plugin):
     def post_install(self, name, path, vars):
         # Get the database object, and determine proper values
         dbase = apis.databases(self.app).get_interface('MariaDB')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
         if vars.getvalue('wb-dbname', '') == '':
             dbname = name
         else:
@@ -64,15 +65,15 @@ class Wallabag(Plugin):
             passwd = vars.getvalue('wb-dbpasswd')
 
         # Request a database and user to interact with it
-        dbase.add(dbname)
-        dbase.usermod(dbname, 'add', passwd)
-        dbase.chperm(dbname, dbname, 'grant')
+        dbase.add(dbname, conn)
+        dbase.usermod(dbname, 'add', passwd, conn)
+        dbase.chperm(dbname, dbname, 'grant', conn)
 
         # Write a standard Wallabag config file
-        shutil.copy(os.path.join(path, 'inc/wallabag/config.inc.php.new'),
-            os.path.join(path, 'inc/wallabag/config.inc.php'))
-        ic = open(os.path.join(path, 'inc/wallabag/config.inc.php'), 'r').readlines()
-        f = open(os.path.join(path, 'inc/wallabag/config.inc.php'), 'w')
+        shutil.copy(os.path.join(path, 'inc/poche/config.inc.php.new'),
+            os.path.join(path, 'inc/poche/config.inc.php'))
+        ic = open(os.path.join(path, 'inc/poche/config.inc.php'), 'r').readlines()
+        f = open(os.path.join(path, 'inc/poche/config.inc.php'), 'w')
         oc = []
         for l in ic:
             if 'define (\'SALT\'' in l:
@@ -102,7 +103,8 @@ class Wallabag(Plugin):
         shell('sed -i s/\;extension=xcache.so/extension=xcache.so/g /etc/php/conf.d/xcache.ini')
 
         # Set up Composer and install the proper modules
-        os.mkdir('/root/.composer')
+        if not os.path.exists('/root/.composer'):
+            os.mkdir('/root/.composer')
         ic = open('/etc/php/php.ini', 'r').readlines()
         f = open('/etc/php/php.ini', 'w')
         oc = []
@@ -118,7 +120,9 @@ class Wallabag(Plugin):
         shell('cd '+os.path.join(path)+'; php composer.phar install', stderr=True)
 
         # Finish setting up the database then delete the install folder
-        shell('mysql '+dbname+' < '+os.path.join(path, 'install/mysql.sql'))
+        dbase.execute(dbname, 
+            open(os.path.join(path, 'install/mysql.sql')).read(), conn)
+        #shell('mysql '+dbname+' < '+os.path.join(path, 'install/mysql.sql'))
         shutil.rmtree(os.path.join(path, 'install'))
 
         # Finally, make sure that permissions are set so that Poche
@@ -128,7 +132,7 @@ class Wallabag(Plugin):
             +os.path.join(path, 'db/'))
 
     def pre_remove(self, name, path):
-        f = open(os.path.join(path, 'inc/wallabag/config.inc.php'), 'r')
+        f = open(os.path.join(path, 'inc/poche/config.inc.php'), 'r')
         for line in f.readlines():
             if 'STORAGE_DB' in line:
                 data = line.split('\'')[1::2]
@@ -136,8 +140,9 @@ class Wallabag(Plugin):
                 break
         f.close()
         dbase = apis.databases(self.app).get_interface('MariaDB')
-        dbase.remove(dbname)
-        dbase.usermod(dbname, 'del', '')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase.remove(dbname, conn)
+        dbase.usermod(dbname, 'del', '', conn)
 
     def post_remove(self, name):
         pass
