@@ -117,7 +117,6 @@ class WebappControl(Plugin):
 				raise ReloadError('nginx')
 		if enable is True and wa.php is True:
 			try:
-				self.php_enable()
 				self.php_reload()
 			except:
 				raise ReloadError('PHP-FPM')
