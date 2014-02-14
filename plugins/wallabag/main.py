@@ -97,6 +97,9 @@ class Wallabag(Plugin):
         f.close()
 
         # Make sure that the correct PHP settings are enabled
+        shell('sed -i s/\;extension=zip.so/extension=zip.so/g /etc/php/php.ini')
+        shell('sed -i s/\;extension=openssl.so/extension=openssl.so/g /etc/php/php.ini')
+        shell('sed -i s/\;extension=pdo_mysql.so/extension=pdo_mysql.so/g /etc/php/php.ini')
         shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
         shell('sed -i s/\;extension=tidy.so/extension=tidy.so/g /etc/php/php.ini')
         shell('sed -i s/\;extension=phar.so/extension=phar.so/g /etc/php/php.ini')
@@ -117,19 +120,19 @@ class Wallabag(Plugin):
         f.writelines(oc)
         f.close()
         shell('cd '+os.path.join(path)+'; curl -s http://getcomposer.org/installer | php')
-        shell('cd '+os.path.join(path)+'; php composer.phar install', stderr=True)
+        shell('cd '+os.path.join(path)+'; COMPOSER_HOME=\'/root/.composer\' php composer.phar install', stderr=True)
 
         # Finish setting up the database then delete the install folder
         dbase.execute(dbname, 
             open(os.path.join(path, 'install/mysql.sql')).read(), conn)
-        #shell('mysql '+dbname+' < '+os.path.join(path, 'install/mysql.sql'))
         shutil.rmtree(os.path.join(path, 'install'))
 
         # Finally, make sure that permissions are set so that Poche
         # can make adjustments and save plugins when need be.
-        shell('chmod -R 777 http:http '+os.path.join(path, 'assets/')+' '
+        shell('chmod -R 755 '+os.path.join(path, 'assets/')+' '
             +os.path.join(path, 'cache/')+' '
             +os.path.join(path, 'db/'))
+        shell('chown -R http:http '+path)
 
     def pre_remove(self, name, path):
         f = open(os.path.join(path, 'inc/poche/config.inc.php'), 'r')
