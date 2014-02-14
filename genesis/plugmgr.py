@@ -160,7 +160,7 @@ class PluginLoader:
     path = None
 
     @staticmethod
-    def initialize(log, path, platform):
+    def initialize(log, path, arch, platform):
         """
         Initializes the PluginLoader
 
@@ -174,6 +174,7 @@ class PluginLoader:
 
         PluginLoader.log = log
         PluginLoader.path = path
+        PluginLoader.arch = arch
         PluginLoader.platform = platform
 
     @staticmethod

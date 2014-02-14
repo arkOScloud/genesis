@@ -79,6 +79,16 @@ def netmask_to_cidr(mask):
         binary_str += bin(int(octet))[2:].zfill(8)
     return len(binary_str.rstrip('0'))
 
+def detect_architecture():
+    """
+    Returns a text shortname of the current system architecture.
+    :rtype:             str
+    """
+    for x in shell('lscpu').split('\n'):
+        if 'Architecture' in x.split()[0]: 
+            return x.split()[1]
+    return 'Unknown'
+
 def detect_platform(mapping=True):
     """
     Returns a text shortname of the current system platform.

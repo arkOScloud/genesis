@@ -112,11 +112,14 @@ def run_server(log_level=logging.INFO, config_file=''):
     # Start recording log for the bug reports
     log.blackbox.start()
 
+    arch = genesis.utils.detect_architecture()
+    log.info('Detected architecture: %s'%arch)
+
     platform = genesis.utils.detect_platform()
     log.info('Detected platform: %s'%platform)
 
     # Load external plugins
-    PluginLoader.initialize(log, config.get('genesis', 'plugins'), platform)
+    PluginLoader.initialize(log, config.get('genesis', 'plugins'), arch, platform)
     PluginLoader.load_plugins()
 
     # Start components
