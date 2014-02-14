@@ -274,6 +274,8 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             if vars.getvalue('action', '') == 'OK':
                 if vars.getvalue('certname', '') == '':
                     self.put_message('err', 'Certificate name is mandatory')
+                elif re.search('\.|-|`|\\\\|\/|[ ]', vars.getvalue('certname')):
+                    self.put_message('err', 'Certificate name must not contain spaces, dots, dashes or special characters')
                 elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
                     self.put_message('err', 'You already have a certificate with that name.')
                 elif len(vars.getvalue('certcountry', '')) != 2:
