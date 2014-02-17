@@ -25,7 +25,9 @@ class SystemTime:
 
     def set_datetime(self, datetime=''):
         datetime = datetime if datetime else self.get_idatetime()
-        shell('date -s %s' % datetime)
+        e = shell_cs('date -s %s' % datetime)
+        if e[0] != 0:
+            raise Exception('System time could not be set. Error: %s' % str(e))
 
     def get_serial_time(self):
             return time.strftime('%Y%m%d%H%M%S')
