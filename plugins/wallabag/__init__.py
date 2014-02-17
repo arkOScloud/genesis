@@ -13,7 +13,7 @@ CATEGORIES = [
         "secondary": ["News Readers (RSS)"]
     }
 ]
-VERSION = '1.5.0-1'
+VERSION = '1.5.0-2'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'

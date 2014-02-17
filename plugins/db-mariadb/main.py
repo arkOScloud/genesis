@@ -39,7 +39,9 @@ class MariaDB(Plugin):
         self.db.query('UPDATE user SET password=PASSWORD("'+newpasswd+'") WHERE User=\'root\'')
         self.db.query('FLUSH PRIVILEGES')
 
-    def validate(self, name='', user='', passwd=''):
+    def validate(self, name='', user='', passwd='', conn=None):
+        if not self.db and conn:
+            self.db = conn
         if name and re.search('\.|-|`|\\\\|\/|^test$|[ ]', name):
             raise Exception('Database name must not contain spaces, dots, dashes or other special characters')
         elif name and len(name) > 16:
@@ -50,6 +52,14 @@ class MariaDB(Plugin):
             raise Exception('Database username must be shorter than 16 characters')
         if passwd and len(passwd) < 8:
             raise Exception('Database password must be longer than 8 characters')
+        if name:
+            for x in self.get_dbs():
+                if x['name'] == name:
+                    raise Exception('You already have a database named %s - please remove that one or choose a new name!' % name)
+        if user:
+            for x in self.get_users():
+                if x['name'] == user:
+                    raise Exception('You already have a database user named %s - please remove that one or choose a new name!' % user)
         return True
 
     def add(self, dbname, conn=None):
