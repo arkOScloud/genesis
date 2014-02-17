@@ -67,7 +67,11 @@ class ServerManager(Plugin):
 			r = nc.get_ip(i.name)
 			if '127.0.0.1' in r or '0.0.0.0' in r:
 				continue
-			ri, rr = r.split('/')
+			if not '/' in r:
+			    ri = r
+			    rr = '32'
+			else:
+				ri, rr = r.split('/')
 			ri = ri.split('.')
 			ri[3] = '0'
 			ri = ".".join(ri)
