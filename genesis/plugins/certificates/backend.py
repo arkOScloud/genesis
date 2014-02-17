@@ -234,6 +234,7 @@ class CertControl(Plugin):
 					'/etc/ssl/certs/genesis/'+name+'.crt',
 					'/etc/ssl/private/genesis/'+name+'.key')
 				alist.append(x[1].name + ' ('+x[1].stype+')')
+				WebappControl(self.app).nginx_reload()
 			elif x[0] == 'plugin':
 				x[1].enable_ssl()
 				alist.append(x[1].text)
@@ -257,6 +258,7 @@ class CertControl(Plugin):
 			elif x[0] == 'webapp':
 				WebappControl(self.app).ssl_disable(x[1])
 				alist.remove(x[1].name + ' ('+x[1].stype+')')
+				WebappControl(self.app).nginx_reload()
 			elif x[0] == 'plugin':
 				x[1].disable_ssl()
 				alist.remove(x[1].text)

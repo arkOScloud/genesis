@@ -234,13 +234,13 @@ class WebappControl(Plugin):
 			port = l.value.split(' ssl')[0]
 			l.value = l.value.split(' ssl')[0] + ' ssl'
 		if c.servers[0].filter('Key', 'ssl_certificate'):
-			c.servers[0].remove(c.servers[0].filter('Key', 'ssl_certificate'))
+			c.servers[0].remove(*c.servers[0].filter('Key', 'ssl_certificate'))
 		if c.servers[0].filter('Key', 'ssl_certificate_key'):
-			c.servers[0].remove(c.servers[0].filter('Key', 'ssl_certificate_key'))
+			c.servers[0].remove(*c.servers[0].filter('Key', 'ssl_certificate_key'))
 		if c.servers[0].filter('Key', 'ssl_protocols'):
-			c.servers[0].remove(c.servers[0].filter('Key', 'ssl_protocols'))
+			c.servers[0].remove(*c.servers[0].filter('Key', 'ssl_protocols'))
 		if c.servers[0].filter('Key', 'ssl_ciphers'):
-			c.servers[0].remove(c.servers[0].filter('Key', 'ssl_ciphers'))
+			c.servers[0].remove(*c.servers[0].filter('Key', 'ssl_ciphers'))
 		c.servers[0].add(
 			nginx.Key('ssl_certificate', cpath),
 			nginx.Key('ssl_certificate_key', kpath),
@@ -252,7 +252,6 @@ class WebappControl(Plugin):
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 		apis.webapps(self.app).get_interface(stype).ssl_enable(
 			os.path.join('/srv/http/webapps', name), cpath, kpath)
-		self.nginx_reload()
 
 	def ssl_disable(self, data):
 		name, stype = data.name, data.stype
@@ -276,4 +275,3 @@ class WebappControl(Plugin):
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 		apis.webapps(self.app).get_interface(stype).ssl_disable(
 			os.path.join('/srv/http/webapps', name))
-		self.nginx_reload()
