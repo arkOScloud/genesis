@@ -67,8 +67,10 @@ class AuthManager(object):
         """
         Deauthenticates current user.
         """
-        self.app.log.info('Session closed for user %s' % self.app.session['auth.user'])
-        self.app.session['auth.user'] = None
+        if self.app.config.has_option('genesis', 'auth_enabled') \
+        and self.app.config.get('genesis', 'auth_enabled') == '1':
+            self.app.log.info('Session closed for user %s' % self.app.session['auth.user'])
+            self.app.session['auth.user'] = None
 
     def __call__(self, environ, start_response):
         session = environ['app.session']
