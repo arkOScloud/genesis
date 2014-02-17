@@ -23,11 +23,11 @@ class SystemTime:
         resp = ntp.request('0.pool.ntp.org', version=3)
         return resp.tx_time
 
-    def set_datetime(self, datetime=''):
-        datetime = datetime if datetime else self.get_idatetime()
-        e = shell_cs('date -s %s' % datetime)
+    def set_datetime(self, dt=''):
+        dt = dt if dt else self.get_idatetime()
+        e = shell_cs('date -s @%s' % dt)
         if e[0] != 0:
-            raise Exception('System time could not be set. Error: %s' % str(e))
+            raise Exception('System time could not be set. Error: %s' % str(e[1]))
 
     def get_serial_time(self):
             return time.strftime('%Y%m%d%H%M%S')
