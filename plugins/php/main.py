@@ -18,14 +18,14 @@ class PHP(Plugin):
         os.chmod('/usr/bin/composer', 755)
         self.open_basedir('add', '/usr/local/bin')
 
-    def composer_verify(self):
+    def verify_composer(self):
         if not shell_status('which composer') == 0:
             self.install_composer()
         if not shell_status('which composer') == 0:
             raise Exception('Composer was not installed successfully.')
 
     def composer_install(self, path):
-        self.composer_verify()
+        self.verify_composer()
         shell('cd %s; composer install'%path)
 
     def enable_mod(self, mod):
