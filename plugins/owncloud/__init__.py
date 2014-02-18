@@ -22,7 +22,7 @@ CATEGORIES = [
             "Contacts"]
     }
 ]
-VERSION = '6.0.1-1'
+VERSION = '6.0.1-2'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
@@ -94,6 +94,11 @@ DEPENDENCIES = {
             "type": "plugin",
             "name": "MariaDB",
             "package": "db-mariadb"
+        },
+        {
+            "type": "plugin",
+            "name": "PHP",
+            "package": "php"
         }
     ]
 }

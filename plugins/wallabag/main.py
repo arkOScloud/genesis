@@ -56,6 +56,7 @@ class Wallabag(Plugin):
 
     def post_install(self, name, path, vars):
         # Get the database object, and determine proper values
+        phpctl = apis.langassist(self.app).get_interface('PHP')
         dbase = apis.databases(self.app).get_interface('MariaDB')
         conn = apis.databases(self.app).get_dbconn('MariaDB')
         if vars.getvalue('wb-dbname', '') == '':
@@ -101,30 +102,15 @@ class Wallabag(Plugin):
         f.close()
 
         # Make sure that the correct PHP settings are enabled
-        shell('sed -i s/\;extension=zip.so/extension=zip.so/g /etc/php/php.ini')
-        shell('sed -i s/\;extension=openssl.so/extension=openssl.so/g /etc/php/php.ini')
-        shell('sed -i s/\;extension=pdo_mysql.so/extension=pdo_mysql.so/g /etc/php/php.ini')
-        shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
-        shell('sed -i s/\;extension=tidy.so/extension=tidy.so/g /etc/php/php.ini')
-        shell('sed -i s/\;extension=phar.so/extension=phar.so/g /etc/php/php.ini')
-        shell('sed -i s/\;extension=xcache.so/extension=xcache.so/g /etc/php/conf.d/xcache.ini')
+        phpctl.enable_mod('mysql')
+        phpctl.enable_mod('pdo_mysql')
+        phpctl.enable_mod('zip')
+        phpctl.enable_mod('tidy')
+        phpctl.enable_mod('xcache')
+        phpctl.enable_mod('openssl')
 
         # Set up Composer and install the proper modules
-        if not os.path.exists('/root/.composer'):
-            os.mkdir('/root/.composer')
-        ic = open('/etc/php/php.ini', 'r').readlines()
-        f = open('/etc/php/php.ini', 'w')
-        oc = []
-        for l in ic:
-            if 'open_basedir = ' in l and '/root/.composer' not in l:
-                l = l.rstrip('\n') + ':/root/.composer\n'
-                oc.append(l)
-            else:
-                oc.append(l)
-        f.writelines(oc)
-        f.close()
-        shell('cd '+os.path.join(path)+'; curl -s http://getcomposer.org/installer | php')
-        shell('cd '+os.path.join(path)+'; COMPOSER_HOME=\'/root/.composer\' php composer.phar install', stderr=True)
+        phpctl.composer_install(path)
 
         # Finish setting up the database then delete the install folder
         dbase.execute(dbname, 

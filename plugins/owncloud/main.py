@@ -69,6 +69,7 @@ class ownCloud(Plugin):
 			raise Exception('Must choose an ownCloud password')
 
 	def post_install(self, name, path, vars):
+		phpctl = apis.langassist(self.app).get_interface('PHP')
 		dbase = apis.databases(self.app).get_interface('MariaDB')
 		conn = apis.databases(self.app).get_dbconn('MariaDB')
 		if vars.getvalue('oc-dbname', '') == '':
@@ -115,12 +116,13 @@ class ownCloud(Plugin):
 		shell('chown http:http '+os.path.join(path, 'config', 'autoconfig.php'))
 
 		# Make sure that the correct PHP settings are enabled
-		shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
-		shell('sed -i s/\;extension=pdo_mysql.so/extension=pdo_mysql.so/g /etc/php/php.ini')
-		shell('sed -i s/\;extension=zip.so/extension=zip.so/g /etc/php/php.ini')
-		shell('sed -i s/\;extension=gd.so/extension=gd.so/g /etc/php/php.ini')
-		shell('sed -i s/\;extension=iconv.so/extension=iconv.so/g /etc/php/php.ini')
-		shell('sed -i s/\;extension=openssl.so/extension=openssl.so/g /etc/php/php.ini')
+		phpctl.enable_mod('mysql')
+		phpctl.enable_mod('pdo_mysql')
+		phpctl.enable_mod('zip')
+		phpctl.enable_mod('gd')
+		phpctl.enable_mod('iconv')
+		phpctl.enable_mod('openssl')
+		phpctl.enable_mod('xcache')
 		
 		# Make sure xcache has the correct settings, otherwise ownCloud breaks
 		f = open('/etc/php/conf.d/xcache.ini', 'w')

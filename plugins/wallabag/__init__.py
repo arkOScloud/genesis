@@ -13,7 +13,7 @@ CATEGORIES = [
         "secondary": ["News Readers (RSS)"]
     }
 ]
-VERSION = '1.5.0-2'
+VERSION = '1.5.0-3'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
@@ -79,6 +79,11 @@ DEPENDENCIES = {
             "type": "plugin",
             "name": "MariaDB",
             "package": "db-mariadb"
+        },
+        {
+            "type": "plugin",
+            "name": "PHP",
+            "package": "php"
         }
     ]
 }
