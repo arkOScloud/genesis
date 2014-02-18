@@ -54,6 +54,10 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                     ),
                 ))
 
+        ui.find('allow_registration').set('checked', True if self._config.config['allow_registration'] else False)
+        ui.find('c2s_require_encryption').set('checked', True if self._config.config['c2s_require_encryption'] else False)
+        ui.find('s2s_secure_auth').set('checked', True if self._config.config['s2s_secure_auth'] else False)
+
         if self._adduser:
             doms = [UI.SelectOption(text=x, value=x) for x in self._domains]
             ui.append('main',
@@ -174,3 +178,10 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                         self.app.log.error('XMPP password for %s@%s could not be changed. Error: %s' % (self._chpasswd[0],self._chpasswd[1],str(e)))
                         self.put_message('err', 'Password could not be changed')
             self._chpasswd = None
+        elif params[0] == 'frmOptions':
+            if vars.getvalue('action', '') == 'OK':
+                self._config.config['allow_registration'] = True if vars.getvalue('allow_registration', '') == '1' else False
+                self._config.config['c2s_require_encryption'] = True if vars.getvalue('c2s_require_encryption', '') == '1' else False
+                self._config.config['s2s_secure_auth'] = True if vars.getvalue('s2s_secure_auth', '') == '1' else False
+                self._config.save()
+                self.put_message('info', 'Settings saved')

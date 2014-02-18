@@ -118,7 +118,7 @@ class XMPPConfig(Plugin):
         for x in sorted(data):
             if type(data[x]) == str:
                 conf += '%s = "%s"\n' % (x, data[x])
-            if type(data[x]) == bool:
+            elif type(data[x]) == bool:
                 conf += '%s = %s\n' % (x, 'true' if data[x] else 'false')
             elif type(data[x]) == dict and x.startswith('_'):
                 conf += '%s "%s"\n' % (x.split('_')[1], x.split('_')[2])
