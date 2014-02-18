@@ -47,6 +47,13 @@ class XMPPConfig(Plugin):
     def list_files(self):
         return [self.configFile]
 
+    def domains(self):
+        d = []
+        for x in self.config:
+            if x.startswith('_VirtualHost'):
+                d.append(x.split('_VirtualHost_')[1])
+        return d
+
     def loads(self, data):
         # Decode the Prosody lua configuration to a manageable Python object
         conf = {}
@@ -108,8 +115,10 @@ class XMPPConfig(Plugin):
         # Dumps the data back to Lua-readable format and returns as string
         conf = ''
         for x in sorted(data):
-            if type(data[x]) == str or type(data[x]) == bool:
-                conf += '%s = %s\n' % (x, data[x])
+            if type(data[x]) == str:
+                conf += '%s = "%s"\n' % (x, data[x])
+            if type(data[x]) == bool:
+                conf += '%s = %s\n' % (x, 'true' if data[x] else 'false')
             elif type(data[x]) == dict and x.startswith('_'):
                 conf += '%s "%s"\n' % (x.split('_')[1], x.split('_')[2])
                 for y in data[x]:

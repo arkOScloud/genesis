@@ -23,7 +23,7 @@ LOGO = False
 
 SERVICES = [
     {
-        "name": "XMPP Chat Server (Prosody)",
+        "name": "XMPP Chat Server",
         "binary": "prosody",
         "ports": [('tcp', '5222'), ('tcp', '5269')]
     }

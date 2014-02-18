@@ -1,6 +1,7 @@
 <xml>
     <toolbar>
         <button id="add" text="Add user" iconfont="gen-user-plus" />
+        <button id="adddom" text="Add domain" iconfont="gen-plus-circle" />
     </toolbar>
 
     <label size="5" text="User Accounts" />
@@ -13,6 +14,22 @@
                 </dth>
                 <dth>
                     <label text="Domain" />
+                </dth>
+                <dth width="1" />
+            </dtr>
+        </dt>
+    </pad>
+
+    <label size="5" text="Domains" />
+    <pad>
+        <dt id="dlist" width="100%">
+            <dtr header="True">
+                <dth width="1" />
+                <dth>
+                    <label text="Domain" />
+                </dth>
+                <dth>
+                    <label text="Status" />
                 </dth>
                 <dth width="1" />
             </dtr>
