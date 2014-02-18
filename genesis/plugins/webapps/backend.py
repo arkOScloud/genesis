@@ -64,7 +64,7 @@ class WebappControl(Plugin):
 		if wa.dpath:
 			try:
 				cat.put_statusmsg('Downloading webapp package...')
-				download(wa.dpath, file=pkg_path)
+				download(wa.dpath, file=pkg_path, crit=True)
 			except Exception, e:
 				raise InstallError('Couldn\'t download - %s' % str(e))
 			status = shell_cs('tar '
