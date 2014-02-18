@@ -5,6 +5,7 @@ import urllib
 from genesis.api import *
 from genesis.com import *
 from genesis import apis
+from genesis.plugins.core.api import ISSLPlugin
 from genesis.utils import shell_cs
 
 
@@ -174,6 +175,25 @@ class XMPPUserControl:
         x = shell_cs('echo -e "%s\n%s\n" | prosodyctl passwd %s@%s' % (passwd,passwd,name,dom))
         if x[0] != 0:
             raise Exception('XMPP Password change failed: %s' % x[1])
+
+
+class XMPPSSLPlugin(Plugin):
+    implements(ISSLPlugin)
+    text = 'XMPP Chat'
+    iconfont = 'gen-bubbles'
+    cert_type = 'cert-key'
+
+    def enable_ssl(self, cert, key):
+        config = XMPPConfig(self.app)
+        config.load()
+        config.config['ssl'] = {'certificate': cert, 'key': key}
+        config.save()
+
+    def disable_ssl(self):
+        config = XMPPConfig(self.app)
+        config.load()
+        config.config['ssl'] = {}
+        config.save()
 
 
 #class GeneralConfig(ModuleConfig):

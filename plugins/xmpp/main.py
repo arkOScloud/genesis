@@ -46,7 +46,7 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                     UI.Label(text=x),
                     UI.Label(text='Enabled' if self._config.config['_VirtualHost_'+x]['enabled'] else 'Disabled'),
                     UI.HContainer(
-                        UI.TipIcon(iconfont='gen-pencil', id='editdom/'+str(self._domains.index(x)), text='Edit Domain'),
+                        #UI.TipIcon(iconfont='gen-pencil', id='editdom/'+str(self._domains.index(x)), text='Edit Domain'),
                         UI.TipIcon(iconfont='gen-%s'%('link' if not self._config.config['_VirtualHost_'+x]['enabled'] else 'link-2'), 
                             id='togdom/'+str(self._domains.index(x)), text=('Disable' if self._config.config['_VirtualHost_'+x]['enabled'] else 'Enable')),
                         UI.TipIcon(iconfont='gen-cancel-circle', id='deldom/'+str(self._domains.index(x)), text='Delete Domain',
