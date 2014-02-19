@@ -28,11 +28,13 @@ class PHP(Plugin):
         self.verify_composer()
         shell('cd %s; composer install'%path)
 
-    def enable_mod(self, mod):
-        shell('sed -i s/\;extension=%s.so/extension=%s.so/g /etc/php/php.ini'%(mod,mod))
+    def enable_mod(self, *mod):
+        for x in mod:
+            shell('sed -i s/\;extension=%s.so/extension=%s.so/g /etc/php/php.ini'%(x,x))
 
-    def disable_mod(self, mod):
-        shell('sed -i s/extension=%s.so/\;extension=%s.so/g /etc/php/php.ini'%(mod,mod))
+    def disable_mod(self, *mod):
+        for x in mod:
+            shell('sed -i s/extension=%s.so/\;extension=%s.so/g /etc/php/php.ini'%(x,x))
 
     def open_basedir(self, op, path):
         if op == 'add':

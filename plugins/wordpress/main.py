@@ -110,8 +110,7 @@ class WordPress(Plugin):
 		f.close()
 
 		# Make sure that the correct PHP settings are enabled
-		phpctl.enable_mod('mysql')
-		phpctl.enable_mod('xcache')
+		phpctl.enable_mod('mysql', 'xcache')
 
 		# Finally, make sure that permissions are set so that Wordpress
 		# can make adjustments and save plugins when need be.

@@ -102,12 +102,8 @@ class Wallabag(Plugin):
         f.close()
 
         # Make sure that the correct PHP settings are enabled
-        phpctl.enable_mod('mysql')
-        phpctl.enable_mod('pdo_mysql')
-        phpctl.enable_mod('zip')
-        phpctl.enable_mod('tidy')
-        phpctl.enable_mod('xcache')
-        phpctl.enable_mod('openssl')
+        phpctl.enable_mod('mysql', 'pdo_mysql', 'zip', 
+            'tidy', 'xcache', 'openssl')
 
         # Set up Composer and install the proper modules
         phpctl.composer_install(path)

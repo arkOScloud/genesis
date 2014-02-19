@@ -116,13 +116,8 @@ class ownCloud(Plugin):
 		shell('chown http:http '+os.path.join(path, 'config', 'autoconfig.php'))
 
 		# Make sure that the correct PHP settings are enabled
-		phpctl.enable_mod('mysql')
-		phpctl.enable_mod('pdo_mysql')
-		phpctl.enable_mod('zip')
-		phpctl.enable_mod('gd')
-		phpctl.enable_mod('iconv')
-		phpctl.enable_mod('openssl')
-		phpctl.enable_mod('xcache')
+		phpctl.enable_mod('mysql', 'pdo_mysql', 'zip', 'gd',
+			'iconv', 'openssl', 'xcache')
 		
 		# Make sure xcache has the correct settings, otherwise ownCloud breaks
 		f = open('/etc/php/conf.d/xcache.ini', 'w')
