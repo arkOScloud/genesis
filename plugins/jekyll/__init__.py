@@ -39,6 +39,11 @@ DEPENDENCIES = {
             "name": "ruby",
             "package": "ruby",
             "binary": "ruby"
+        },
+        {
+            "type": "plugin",
+            "name": "Ruby",
+            "package": "ruby"
         }
     ]
 }

@@ -15,26 +15,8 @@ class Jekyll(Plugin):
 	addtoblock = []
 
 	def pre_install(self, name, vars):
-		# Make sure Ruby directory is in the PATH.
-		# This should work until there is a viable Ruby (RVM) plugin for Genesis
-		profile = []
-		f = open('/etc/profile', 'r')
-		for l in f.readlines():
-			if l.startswith('PATH="') and not '/usr/lib/ruby/gems/bin' in l:
-				l = l.rstrip('"\n')
-				l += ':/usr/lib/ruby/gems/bin"\n'
-				profile.append(l)
-				os.environ['PATH'] = os.environ['PATH'] + ':/usr/lib/ruby/gems/bin'
-			else:
-				profile.append(l)
-		f.close()
-		open('/etc/profile', 'w').writelines(profile)
-
-		# Install the Jekyll and rdiscount gems required.
-		if not any('jekyll' in s for s in shell('gem list').split('\n')):
-			shell('gem install --no-user-install jekyll')
-		if not any('rdiscount' in s for s in shell('gem list').split('\n')):
-			shell('gem install --no-user-install rdiscount')
+		rubyctl = apis.langassist(self.app).get_interface('Ruby')
+		rubyctl.install_gem('jekyll', 'rdiscount')
 
 	def post_install(self, name, path, vars):
 		# Make sure the webapps config points to the _site directory and generate it.
