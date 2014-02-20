@@ -23,7 +23,8 @@
             <hcontainer>
                 <list id="provs" width="200" height="300" />
                 <scrollcontainer width="400" height="300">
-                    <image id="logo" />
+                    <div id="logo" style="text-align:center;">
+                    </div>
                     <formline text="Name">
                         <label name="appname" id="appname" />
                     </formline>

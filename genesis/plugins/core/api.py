@@ -1,4 +1,5 @@
 from genesis.com import *
+from genesis import apis
 
 
 class IProgressBoxProvider(Interface):
@@ -45,3 +46,15 @@ class ISSLPlugin(Interface):
 
     def disable_ssl(self):
         pass
+
+
+class LangAssist(apis.API):
+    def __init__(self, app):
+        self.app = app
+
+    class ILangMgr(Interface):
+        name = ''
+
+    def get_interface(self, name):
+        return filter(lambda x: x.__class__.__name__ == name,
+            self.app.grab_plugins(apis.langassist.ILangMgr))[0]

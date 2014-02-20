@@ -33,8 +33,7 @@ class SysConfigPlugin(CategoryPlugin):
 
         # General
         ui.find('hostname').set('value', self.hostname)
-        if os.path.exists('/etc/localtime'):
-            tz_active = os.path.realpath('/etc/localtime').split('/usr/share/zoneinfo/')[1]
+        tz_active = os.path.realpath('/etc/localtime').split('/usr/share/zoneinfo/')[1] if os.path.exists('/etc/localtime') else ''
         tz_sel = [UI.SelectOption(text=x, value=x, 
             selected=True if tz_active in x else False)
             for x in zonelist.zones]

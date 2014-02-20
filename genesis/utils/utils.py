@@ -23,9 +23,11 @@ class SystemTime:
         resp = ntp.request('0.pool.ntp.org', version=3)
         return resp.tx_time
 
-    def set_datetime(self, datetime=''):
-        datetime = datetime if datetime else self.get_idatetime()
-        shell('date -s %s' % datetime)
+    def set_datetime(self, dt=''):
+        dt = dt if dt else self.get_idatetime()
+        e = shell_cs('date -s @%s' % dt)
+        if e[0] != 0:
+            raise Exception('System time could not be set. Error: %s' % str(e[1]))
 
     def get_serial_time(self):
             return time.strftime('%Y%m%d%H%M%S')
@@ -78,6 +80,16 @@ def netmask_to_cidr(mask):
     for octet in mask:
         binary_str += bin(int(octet))[2:].zfill(8)
     return len(binary_str.rstrip('0'))
+
+def detect_architecture():
+    """
+    Returns a text shortname of the current system architecture.
+    :rtype:             str
+    """
+    for x in shell('lscpu').split('\n'):
+        if 'Architecture' in x.split()[0]: 
+            return x.split()[1]
+    return 'Unknown'
 
 def detect_platform(mapping=True):
     """

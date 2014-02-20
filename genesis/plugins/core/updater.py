@@ -62,6 +62,6 @@ class UpdateCheck(Component):
             status = '1'
         if status == '1':
             platform = detect_platform()
-            if platform == 'arkos' or platform == 'arch':
+            if platform == 'arkos':
                 self.check_updates()
                 time.sleep(60*60*24) # check once every day

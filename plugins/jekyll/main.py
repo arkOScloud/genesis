@@ -20,11 +20,11 @@ class Jekyll(Plugin):
 		profile = []
 		f = open('/etc/profile', 'r')
 		for l in f.readlines():
-			if l.startswith('PATH="') and not 'ruby/2.0.0/bin' in l:
+			if l.startswith('PATH="') and not '/usr/lib/ruby/gems/bin' in l:
 				l = l.rstrip('"\n')
-				l += ':/root/.gem/ruby/2.0.0/bin"\n'
+				l += ':/usr/lib/ruby/gems/bin"\n'
 				profile.append(l)
-				os.environ['PATH'] = os.environ['PATH'] + ':/root/.gem/ruby/2.0.0/bin'
+				os.environ['PATH'] = os.environ['PATH'] + ':/usr/lib/ruby/gems/bin'
 			else:
 				profile.append(l)
 		f.close()
@@ -32,9 +32,9 @@ class Jekyll(Plugin):
 
 		# Install the Jekyll and rdiscount gems required.
 		if not any('jekyll' in s for s in shell('gem list').split('\n')):
-			shell('gem install --user-install jekyll')
+			shell('gem install --no-user-install jekyll')
 		if not any('rdiscount' in s for s in shell('gem list').split('\n')):
-			shell('gem install --user-install rdiscount')
+			shell('gem install --no-user-install rdiscount')
 
 	def post_install(self, name, path, vars):
 		# Make sure the webapps config points to the _site directory and generate it.

@@ -51,6 +51,7 @@ class WordPress(Plugin):
 
 	def post_install(self, name, path, vars):
 		# Get the database object, and determine proper values
+		phpctl = apis.langassist(self.app).get_interface('PHP')
 		dbase = apis.databases(self.app).get_interface('MariaDB')
 		conn = apis.databases(self.app).get_dbconn('MariaDB')
 		if vars.getvalue('wp-dbname', '') == '':
@@ -109,8 +110,7 @@ class WordPress(Plugin):
 		f.close()
 
 		# Make sure that the correct PHP settings are enabled
-		shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
-		shell('sed -i s/\;extension=xcache.so/extension=xcache.so/g /etc/php/conf.d/xcache.ini')
+		phpctl.enable_mod('mysql', 'xcache')
 
 		# Finally, make sure that permissions are set so that Wordpress
 		# can make adjustments and save plugins when need be.

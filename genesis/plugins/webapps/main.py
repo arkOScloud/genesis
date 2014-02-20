@@ -131,8 +131,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
 		info = self._current
 		if info:
-			if info.logo is True:
-				ui.find('logo').set('file', '/dl/'+self._current.id+'/logo.png')
+			if info.logo:
+				ui.find('logo').append(UI.Image(file='/dl/'+self._current.id+'/logo.png'))
 			ui.find('appname').set('text', info.name)
 			ui.find('short').set('text', info.desc)
 			if info.app_homepage is None:

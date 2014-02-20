@@ -160,7 +160,7 @@ class PluginLoader:
     path = None
 
     @staticmethod
-    def initialize(log, path, platform):
+    def initialize(log, path, arch, platform):
         """
         Initializes the PluginLoader
 
@@ -174,6 +174,7 @@ class PluginLoader:
 
         PluginLoader.log = log
         PluginLoader.path = path
+        PluginLoader.arch = arch
         PluginLoader.platform = platform
 
     @staticmethod
@@ -392,17 +393,21 @@ class PluginLoader:
         Verifies that given plugin dependency is satisfied. Returns bool
         """
         platform = PluginLoader.platform
+        log = PluginLoader.log
 
         if dep['type'] == 'app':
-            if (dep['binary'] and shell_status('which '+dep['binary']) != 0) \
-            and shell_status('pacman -Q '+dep['package']) != 0:
+            if ((dep['binary'] and shell_status('which '+dep['binary']) != 0) \
+            or not dep['binary']) and shell_status('pacman -Q '+dep['package']) != 0:
                 if platform == 'arch' or platform == 'arkos':
                     try:
                         if cat:
                             cat.put_statusmsg('Installing dependency %s...' % dep['name'])
+                        log.warn('Missing %s, which is required by a plugin. Attempting to install...' % dep['name'])
                         shell('pacman -Sy --noconfirm --needed '+dep['package'])
-                        shell('systemctl enable '+dep['binary'])
-                    except:
+                        if dep['binary']:
+                            shell('systemctl enable '+dep['binary'])
+                    except Exception, e:
+                        log.error('Failed to install %s - %s' % (dep['name'], str(e)))
                         raise SoftwareRequirementError(dep)
                 elif platform == 'debian':
                     try:

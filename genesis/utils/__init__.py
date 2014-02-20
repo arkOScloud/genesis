@@ -7,6 +7,7 @@ from interlocked import *
 __all__ = [
     'enquote',
     'fix_unicode',
+    'detect_architecture',
     'detect_platform',
     'detect_distro',
     'download',
