@@ -45,7 +45,7 @@ DEPENDENCIES = {
 GENERATION = 1
 
 # Webapp metadata
-WA_PLUGIN = 'ownCloud'
+WA_PLUGIN = 'Jekyll'
 DPATH = 'https://pkg.arkos.io/resources/jekyll-sample.tar.gz'
 DBENGINE = ''
 PHP = False

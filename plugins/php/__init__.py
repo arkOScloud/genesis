@@ -2,7 +2,7 @@
 NAME = 'PHP'
 TYPE = 'plugin'
 ICON = 'gen-code'
-DESCRIPTION = 'Change SSH settings and manage public keys'
+DESCRIPTION = 'Extension functions for PHP websites'
 CATEGORIES = [
     {
         "primary": "Management",

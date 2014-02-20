@@ -215,7 +215,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		else: 
 			for x in self.apptypes:
 				if x.name.lower() == params[0]:
-					speccall = getattr(x, params[1])
+					speccall = getattr(self.apiops.get_interface(x.wa_plugin), params[1])
 					speccall(self._edit)
 
 	@event('dialog/submit')
