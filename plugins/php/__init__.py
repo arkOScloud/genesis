@@ -20,5 +20,20 @@ SERVICES = []
 # Plugin parameters
 MODULES = ["main"]
 PLATFORMS = ["any"]
-DEPENDENCIES = {}
+DEPENDENCIES = {
+    "any": [
+    	{
+    	    "type": "app",
+    	    "name": "PHP",
+    	    "package": "php",
+    	    "binary": None
+    	},
+        {
+            "type": "app",
+            "name": "PHP FastCGI",
+            "package": "php-fpm",
+            "binary": "php-fpm"
+        }
+    ]
+}
 GENERATION = 1
