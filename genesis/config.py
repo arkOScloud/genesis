@@ -7,7 +7,7 @@ __all__ = ['Config', 'ConfigProxy']
 from ConfigParser import ConfigParser
 import os
 
-from genesis.utils import detect_platform
+from genesis.utils import detect_platform, detect_architecture
 
 
 class Config(ConfigParser):
@@ -21,6 +21,9 @@ class Config(ConfigParser):
     def __init__(self):
         ConfigParser.__init__(self)
         self.set('platform', detect_platform()) # TODO: move this out
+        arch, board = detect_architecture()
+        self.set('arch', arch)
+        self.set('board', board)
 
     def load(self, fn):
         """
