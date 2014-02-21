@@ -10,7 +10,7 @@ class SVWidget(Plugin):
     implements(apis.dashboard.IWidget)
     iconfont = 'gen-bullhorn'
     name = 'Supervisor'
-    title = None
+    title = 'Supervisor'
     style = 'linear'
 
     def __init__(self):
@@ -20,12 +20,12 @@ class SVWidget(Plugin):
         mgr = SVClient(self.app)
         running = False
 
-        for x in mgr.status():
+        for x in mgr.list():
             if x['name'] == cfg and x['status'] == 'RUNNING':
                 running = True
 
         self.title = cfg
-        self.icon = '/dl/core/ui/stock/service-' + ('run.png' if running else 'stop.png')
+        self.iconfont = 'gen-' + ('play-2' if running else 'stop')
 
         ui = self.app.inflate('supervisor:widget')
         if running:
@@ -50,7 +50,7 @@ class SVWidget(Plugin):
     def get_config_dialog(self):
         mgr = SVClient(self.app)
         dlg = self.app.inflate('supervisor:widget-config')
-        for s in mgr.status():
+        for s in mgr.list():
             dlg.append('list', UI.SelectOption(
                 value=s['name'],
                 text=s['name'],

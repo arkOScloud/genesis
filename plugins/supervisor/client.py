@@ -64,15 +64,18 @@ class SVClient(Plugin):
         c.read(os.path.join('/etc/supervisor.d', id+'.ini'))
         return c.sections()[0].split(':')[0]
 
-    def set(self, ptype, id, cfg):
+    def set(self, ptype, id, cfg, restart=True):
         name = '%s:%s'%(ptype,id)
         c = ConfigParser.RawConfigParser()
         c.add_section(name)
         for x in cfg:
             c.set(name, x[0], x[1])
         c.write(open(os.path.join('/etc/supervisor.d', id+'.ini'), 'w'))
+        if restart:
+            self.run('reread')
 
     def remove(self, id, restart=False):
+        self.stop(id)
         if os.path.exists(os.path.join('/etc/supervisor.d', id+'.ini')):
             os.unlink(os.path.join('/etc/supervisor.d', id+'.ini'))
         if restart:
