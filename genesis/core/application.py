@@ -27,8 +27,6 @@ class Application (PluginManager, Plugin):
         self.gconfig = config
         self.log = config.get('log_facility')
         self.platform = config.get('platform')
-        self.arch = config.get('arch', 'Unknown')
-        self.board = config.get('board', 'Unknown')
         PluginLoader.register_observer(self)
         self.refresh_plugin_data()
 

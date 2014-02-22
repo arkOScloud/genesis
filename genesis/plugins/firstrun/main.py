@@ -17,6 +17,7 @@ class FirstRun(CategoryPlugin, URLHandler):
     def on_init(self):
         self.nb = backend.Config(self.app)
         self.ub = UsersBackend(self.app)
+        self.arch = detect_architecture()
 
     def on_session_start(self):
         self._step = 1
@@ -31,7 +32,7 @@ class FirstRun(CategoryPlugin, URLHandler):
         ui.append('content', step)
 
         if self._step == 4:
-            if self.app.board != 'Raspberry Pi':
+            if self.arch[1] != 'Raspberry Pi':
                 ui.remove('rpi-sdc')
                 ui.remove('rpi-ogm')
             tz_sel = [UI.SelectOption(text = x, value = x,
@@ -115,8 +116,8 @@ class FirstRun(CategoryPlugin, URLHandler):
         if params[0] == 'frmSettings':
             hostname = vars.getvalue('hostname', '')
             zone = vars.getvalue('zoneselect', 'UTC')
-            resize = vars.getvalue('resize', '0') if self.app.board == 'Raspberry Pi' else '0'
-            gpumem = vars.getvalue('gpumem', '0') if self.app.board == 'Raspberry Pi' else '0'
+            resize = vars.getvalue('resize', '0') if self.arch[1] == 'Raspberry Pi' else '0'
+            gpumem = vars.getvalue('gpumem', '0') if self.arch[1] == 'Raspberry Pi' else '0'
             ssh_as_root = vars.getvalue('ssh_as_root', '0')
 
             if not hostname:

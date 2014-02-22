@@ -152,7 +152,7 @@ def detect_distro():
     Returns human-friendly OS name.
     """
     if shell_status('lsb_release -sd') == 0:
-        return shell('lsb_release -sd')
+        return shell('lsb_release -sd').replace('"', '')
     return shell('uname -mrs')
 
 def download(url, file=None, crit=False):
