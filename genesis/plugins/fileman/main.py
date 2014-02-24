@@ -120,6 +120,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
         ui.find('newfld').set('id', 'newfld/%i'%tidx)
         ui.find('close').set('id', 'close/%i'%tidx)
 
+        # Is Notepad present?
+        notepad = self.can_order('notepad')
+
         # Generate breadcrumbs
         path = tab
         parts = path.split('/')
@@ -189,6 +192,21 @@ class FMPlugin(CategoryPlugin, URLHandler):
             if islink:
                 name += ' → ' + os.path.realpath(np)
 
+            if not isdir:
+                tc = ''.join(map(chr, [7,8,9,10,12,13,27] + range(0x20, 0x100)))
+                ibs = lambda b: bool(b.translate(None, tc))
+                if not notepad or ibs(open(np).read(1024)):
+                    item = UI.Label(text=name)
+                else:
+                    item = UI.LinkLabel(text=name, id='open/%i/%s' % (
+                        tidx,
+                        self.enc_file(np)
+                    ))
+            else:
+                item = UI.LinkLabel(text=name, id='goto/%i/%s' % (
+                    tidx,
+                    self.enc_file(np)
+                ))
             row = UI.DTR(
                 UI.HContainer(
                     UI.Checkbox(name='%i/%s' % (
@@ -198,11 +216,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
                     UI.IconFont(iconfont=iconfont),
                 ),
                 UI.HContainer(
-                    UI.Label(text=name) if not isdir else
-                    UI.LinkLabel(text=name, id='goto/%i/%s' % (
-                        tidx,
-                        self.enc_file(np)
-                    )),
+                    item,
                     UI.LinkLabel(
                         text='↗',
                         id='gototab/%i/%s' % (
@@ -308,6 +322,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
         if params[0] == 'gototab':
             self._tab = len(self._tabs)
             self._tabs.append(self.dec_file(params[2]))
+        if params[0] == 'open':
+            self.send_order('notepad', 'open', 
+                os.path.join(self._tabs[int(params[1])],self.dec_file(params[2])))
         if params[0] == 'rmClipboard':
             self._clipboard.remove(self._clipboard[int(params[1])])
         if params[0] == 'close' and len(self._tabs)>1:

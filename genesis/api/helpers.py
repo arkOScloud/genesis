@@ -243,6 +243,20 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
     def update_services(self):
         apis.networkcontrol(self.app).port_changed(self.plugin_info)
 
+    def send_order(self, id, *params):
+        d = filter(lambda x: x.id == id,
+            self.app.grab_plugins(apis.orders.IListener))
+        if d:
+            d[0].order(*params)
+        else:
+            self.put_message('err', 'No listener found for %s. '
+                'Please make sure the necessary plugin is installed.' % id)
+
+    def can_order(self, id):
+        d = filter(lambda x: x.id == id,
+            self.app.grab_plugins(apis.orders.IListener))
+        return d != []
+
 
 class ModuleConfig(Plugin):
     """

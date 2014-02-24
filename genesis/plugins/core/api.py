@@ -58,3 +58,14 @@ class LangAssist(apis.API):
     def get_interface(self, name):
         return filter(lambda x: x.__class__.__name__ == name,
             self.app.grab_plugins(apis.langassist.ILangMgr))[0]
+
+
+class Orders(apis.API):
+    def __init__(self, app):
+        self.app = app
+
+    class IListener(Interface):
+        id = ''
+
+        def order(self, *params):
+            pass
