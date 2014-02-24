@@ -23,6 +23,8 @@ class ConfigPlugin(CategoryPlugin):
         # General
         ui.find('bind_host').set('value', self.app.gconfig.get('genesis', 'bind_host', ''))
         ui.find('bind_port').set('value', self.app.gconfig.get('genesis', 'bind_port', ''))
+        ui.find('dformat').set('value', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
+        ui.find('tformat').set('value', self.app.gconfig.get('genesis', 'tformat', '%H:%M'))
         ui.find('ssl').set('text', ('Enabled' if self.app.gconfig.get('genesis', 'ssl', '')=='1' else 'Disabled'))
         ui.find('nofx').set('checked', self.app.gconfig.get('genesis', 'nofx', '')=='1')
         ui.find('updcheck').set('checked', self.app.gconfig.get('genesis', 'updcheck', '')=='1')
@@ -92,11 +94,10 @@ class ConfigPlugin(CategoryPlugin):
                     self._changed = True
                 if self.app.gconfig.get('genesis', 'bind_port', '') != vars.getvalue('bind_port', ''):
                     self._changed = True
-                if self.app.gconfig.get('genesis', 'ssl', '') != vars.getvalue('ssl', ''):
-                    self._changed = True
                 self.app.gconfig.set('genesis', 'bind_host', vars.getvalue('bind_host', ''))
                 self.app.gconfig.set('genesis', 'bind_port', vars.getvalue('bind_port', '8000'))
-                self.app.gconfig.set('genesis', 'ssl', vars.getvalue('ssl', '0'))
+                self.app.gconfig.set('genesis', 'dformat', vars.getvalue('dformat', '%d %b %Y'))
+                self.app.gconfig.set('genesis', 'tformat', vars.getvalue('tformat', '%H:%M'))
                 self.app.gconfig.set('genesis', 'auth_enabled', vars.getvalue('httpauth', '0'))
                 self.app.gconfig.set('genesis', 'nofx', vars.getvalue('nofx', '0'))
                 self.app.gconfig.set('genesis', 'updcheck', vars.getvalue('updcheck', '1'))

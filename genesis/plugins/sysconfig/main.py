@@ -23,7 +23,9 @@ class SysConfigPlugin(CategoryPlugin):
 
     def get_ui(self):
         ui = self.app.inflate('sysconfig:main')
-        systime = self._st.get_datetime('%d %B %Y, %H:%M:%S')
+        systime = self._st.get_datetime('%s, %s' \
+            % (self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'), 
+                self.app.gconfig.get('genesis', 'tformat', '%H:%M')))
         offset = 0
         try:
             offset = self._st.get_offset()

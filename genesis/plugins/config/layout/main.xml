@@ -16,6 +16,12 @@
             <formline text="Authorization" help="See 'Users' for authorized accounts">
                 <checkbox id="httpauth" name="httpauth" text="Enable" />
             </formline>
+            <formline text="Default date format">
+                <textinput name="dformat" id="dformat"/>
+            </formline>
+            <formline text="Default time format">
+                <textinput name="tformat" id="tformat"/>
+            </formline>
             <formline text="SSL" help="You can enable/disable SSL by assigning certificates in the Certificates plugin.">
                 <label id="ssl" text="" />
             </formline>

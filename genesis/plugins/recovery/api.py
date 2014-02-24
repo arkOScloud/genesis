@@ -11,9 +11,9 @@ from genesis.utils import shell, shell_status
 
 
 class BackupRevision:
-    def __init__(self, rev, date):
+    def __init__(self, rev, fmts, date):
         self.revision = rev
-        self.date = time.strftime('%a, %d %b %Y %H:%M:%S', date)
+        self.date = time.strftime('%s %s' % fmts, date)
         self._date = date
 
 
@@ -33,7 +33,9 @@ class Manager(Plugin):
             
         for x in os.listdir(os.path.join(self.dir, id)):
             r.append(BackupRevision(
-                        x.split('.')[0], 
+                        x.split('.')[0],
+                        (self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'), 
+                            self.app.gconfig.get('genesis', 'tformat', '%H:%M')),
                         time.localtime(
                             os.path.getmtime(
                                 os.path.join(self.dir, id, x)

@@ -30,7 +30,7 @@ class SystemTime:
             raise Exception('System time could not be set. Error: %s' % str(e[1]))
 
     def get_serial_time(self):
-            return time.strftime('%Y%m%d%H%M%S')
+        return time.strftime('%Y%m%d%H%M%S')
 
     def get_date(self):
         return time.strftime('%d %b %Y')
