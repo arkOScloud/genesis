@@ -189,6 +189,7 @@ class NotepadPlugin(CategoryPlugin):
 class NotepadListener(Plugin):
     implements(apis.orders.IListener)
     id = 'notepad'
+    cat = 'notepadplugin'
 
     def order(self, op, path):
         if op == 'open':

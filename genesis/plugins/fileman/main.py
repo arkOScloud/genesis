@@ -31,11 +31,17 @@ class FMPlugin(CategoryPlugin, URLHandler):
         self._renaming = None
         self._newfolder = None
         self._upload = None
+        self._redirect = None
         self._archupl = []
         self._showhidden = self._config.showhidden
         self.add_tab()
 
     def get_ui(self):
+        if self._redirect is not None:
+            r = self._redirect
+            self._redirect = None
+            return r
+
         ui = self.app.inflate('fileman:main')
         tc = UI.TabControl(active=self._tab)
 
@@ -323,8 +329,11 @@ class FMPlugin(CategoryPlugin, URLHandler):
             self._tab = len(self._tabs)
             self._tabs.append(self.dec_file(params[2]))
         if params[0] == 'open':
-            self.send_order('notepad', 'open', 
-                os.path.join(self._tabs[int(params[1])],self.dec_file(params[2])))
+            s = self.send_order('notepad', 'open', 
+                os.path.join(self._tabs[int(params[1])],self.dec_file(params[2])),
+                open=True)
+            if s is not None:
+                self._redirect = s
         if params[0] == 'rmClipboard':
             self._clipboard.remove(self._clipboard[int(params[1])])
         if params[0] == 'close' and len(self._tabs)>1:
