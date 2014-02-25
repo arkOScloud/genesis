@@ -1,5 +1,5 @@
 from genesis.ui import *
-from genesis.com import implements
+from genesis.com import Plugin, implements
 from genesis.api import *
 from genesis.utils import *
 from genesis import apis
@@ -114,3 +114,14 @@ class SVPlugin(apis.services.ServiceControlPlugin):
                 if self._set and self._set != True and name != self._set[1]:
                     self._client.remove(self._set[1])
             self._set = None
+
+
+class SVListener(Plugin):
+    implements(apis.orders.IListener)
+    id = 'supervisor'
+
+    def order(self, op, name, ptype='program', args=[]):
+        if op == 'new':
+            SVClient(self.app).set(ptype, name, args)
+        elif op == 'del':
+            SVClient(self.app).remove(name, reread=True)

@@ -129,8 +129,32 @@ class WebappControl(Plugin):
 		if specialmsg:
 			return specialmsg
 
+	def add_reverse_proxy(self, name, path, addr, port):
+		w = Webapp()
+		w.name = name
+		w.stype = 'ReverseProxy'
+		w.path = path
+		w.addr = addr
+		w.port = port
+		block = [
+			nginx.Location('/admin/media/',
+				nginx.Key('root', '/usr/lib/python2.7/site-packages/django/contrib')
+			),
+			nginx.Location('/',
+				nginx.Key('proxy_set_header', 'X-Forwarded-For $proxy_add_x_forwarded_for'),
+				nginx.Key('proxy_set_header', 'Host $http_host'),
+				nginx.Key('proxy_redirect', 'off'),
+				nginx.If('(!-f $request_filename)',
+					nginx.Key('proxy_pass', 'unix:%s'%os.path.join(path, 'gunicorn.sock'))
+					nginx.Key('break', '')
+				)
+			)
+		]
+		self.nginx_add(w, addtoblock=block)
+		self.nginx_enable(w)
+
 	def remove(self, cat, site):
-		if site.sclass != '':
+		if site.sclass != '' and site.stype != 'ReverseProxy':
 			cat.put_statusmsg('Preparing for removal...')
 			site.sclass.pre_remove(site.name, site.path)
 		cat.put_statusmsg('Removing website...')
@@ -143,7 +167,7 @@ class WebappControl(Plugin):
 		self.nginx_remove(site)
 		apis.webapps(self.app).cert_remove_notify(site.name,
 			site.stype)
-		if site.sclass != '':
+		if site.sclass != '' and site.stype != 'ReverseProxy':
 			cat.put_statusmsg('Cleaning up...')
 			site.sclass.post_remove(site.name)
 
