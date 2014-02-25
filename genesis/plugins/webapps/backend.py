@@ -145,7 +145,7 @@ class WebappControl(Plugin):
 				nginx.Key('proxy_set_header', 'Host $http_host'),
 				nginx.Key('proxy_redirect', 'off'),
 				nginx.If('(!-f $request_filename)',
-					nginx.Key('proxy_pass', 'unix:%s'%os.path.join(path, 'gunicorn.sock'))
+					nginx.Key('proxy_pass', 'unix:%s'%os.path.join(path, 'gunicorn.sock')),
 					nginx.Key('break', '')
 				)
 			)
