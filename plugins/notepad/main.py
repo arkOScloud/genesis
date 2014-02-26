@@ -30,6 +30,12 @@ class NotepadPlugin(CategoryPlugin):
         self._files.append(None)
         self._data.append(None)
 
+    def open(self, path):
+        self.add_tab()
+        data = open(path).read()
+        self._files[self._tab] = path
+        self._data[self._tab] = data
+
     def get_ui(self):
         mui = self.app.inflate('notepad:main')
         tabs = UI.TabControl(active=self._tab,test='test')
@@ -178,3 +184,13 @@ class NotepadPlugin(CategoryPlugin):
                     self.add_tab()
             self.app.config.set('notepad', 'favs', '|'.join(self._favs))
             self.app.config.save()
+
+
+class NotepadListener(Plugin):
+    implements(apis.orders.IListener)
+    id = 'notepad'
+    cat = 'notepadplugin'
+
+    def order(self, op, path):
+        if op == 'open':
+            NotepadPlugin(self.app).open(path)

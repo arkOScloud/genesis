@@ -30,7 +30,7 @@ class SystemTime:
             raise Exception('System time could not be set. Error: %s' % str(e[1]))
 
     def get_serial_time(self):
-            return time.strftime('%Y%m%d%H%M%S')
+        return time.strftime('%Y%m%d%H%M%S')
 
     def get_date(self):
         return time.strftime('%d %b %Y')
@@ -83,13 +83,26 @@ def netmask_to_cidr(mask):
 
 def detect_architecture():
     """
-    Returns a text shortname of the current system architecture.
-    :rtype:             str
+    Returns a tuple: current system architecture, and board type
+    (if it can be determined).
+    :rtype:             tuple(str, str)
     """
+    arch, btype = 'Unknown', 'Unknown'
+    # Get architecture
     for x in shell('lscpu').split('\n'):
         if 'Architecture' in x.split()[0]: 
-            return x.split()[1]
-    return 'Unknown'
+            arch = x.split()[1]
+            break
+    # Let's play a guessing game!
+    if arch == 'armv6l':
+        # Is this a... Raspberry Pi?
+        for x in shell('cat /proc/cpuinfo').split('\n'):
+            if 'Hardware' in x.split()[0] and x.split()[1] in ['BCM2708', 'BCM2835']:
+                btype = 'Raspberry Pi'
+                break
+    if arch in ['x86_64', 'i686']:
+        btype = 'General'
+    return (arch, btype)
 
 def detect_platform(mapping=True):
     """
@@ -139,7 +152,7 @@ def detect_distro():
     Returns human-friendly OS name.
     """
     if shell_status('lsb_release -sd') == 0:
-        return shell('lsb_release -sd')
+        return shell('lsb_release -sd').replace('"', '')
     return shell('uname -mrs')
 
 def download(url, file=None, crit=False):

@@ -9,7 +9,7 @@ CATEGORIES = [
         "secondary": []
     }
 ]
-VERSION = '1'
+VERSION = '2'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'

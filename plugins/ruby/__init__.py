@@ -1,8 +1,8 @@
 # Plugin metadata
-NAME = 'PHP'
+NAME = 'Ruby'
 TYPE = 'plugin'
 ICON = 'gen-code'
-DESCRIPTION = 'Extension functions for PHP websites'
+DESCRIPTION = 'Extension functions for Ruby websites and applications'
 CATEGORIES = [
     {
         "primary": "Management",
@@ -22,17 +22,11 @@ MODULES = ["main"]
 PLATFORMS = ["any"]
 DEPENDENCIES = {
     "any": [
-    	{
-    	    "type": "app",
-    	    "name": "PHP",
-    	    "package": "php",
-    	    "binary": None
-    	},
         {
             "type": "app",
-            "name": "PHP FastCGI",
-            "package": "php-fpm",
-            "binary": "php-fpm"
+            "name": "ruby",
+            "package": "ruby",
+            "binary": "ruby"
         }
     ]
 }

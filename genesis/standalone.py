@@ -113,13 +113,13 @@ def run_server(log_level=logging.INFO, config_file=''):
     log.blackbox.start()
 
     arch = genesis.utils.detect_architecture()
-    log.info('Detected architecture: %s'%arch)
+    log.info('Detected architecture/hardware: %s, %s'%(arch[0],arch[1]))
 
     platform = genesis.utils.detect_platform()
     log.info('Detected platform: %s'%platform)
 
     # Load external plugins
-    PluginLoader.initialize(log, config.get('genesis', 'plugins'), arch, platform)
+    PluginLoader.initialize(log, config.get('genesis', 'plugins'), arch[0], platform)
     PluginLoader.load_plugins()
 
     # Start components

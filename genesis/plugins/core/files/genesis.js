@@ -237,6 +237,7 @@ Genesis = (function() {
 			$('#'+id).addClass('selected');
 			Genesis.UI.closePopovers();
 			Genesis.query('/handle/category/click/' + id);
+			$('html').scrollTop(0);
 			return false;
 		},
 

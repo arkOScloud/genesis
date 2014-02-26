@@ -39,13 +39,18 @@ DEPENDENCIES = {
             "name": "ruby",
             "package": "ruby",
             "binary": "ruby"
+        },
+        {
+            "type": "plugin",
+            "name": "Ruby",
+            "package": "ruby"
         }
     ]
 }
 GENERATION = 1
 
 # Webapp metadata
-WA_PLUGIN = 'ownCloud'
+WA_PLUGIN = 'Jekyll'
 DPATH = 'https://pkg.arkos.io/resources/jekyll-sample.tar.gz'
 DBENGINE = ''
 PHP = False

@@ -41,15 +41,24 @@ class Website(Plugin):
 
     def post_install(self, name, path, vars):
         # Create a database if the user wants one
+        if php:
+            phpctl = apis.langassist(self.app).get_interface('PHP')
         if vars.getvalue('ws-dbsel', 'None') != 'None':
             dbtype = vars.getvalue('ws-dbsel', '')
             dbname = vars.getvalue('ws-dbname', '')
             passwd = vars.getvalue('ws-dbpass', '')
             dbase = apis.databases(self.app).get_interface(dbtype)
-            dbase.add(dbname)
-            dbase.usermod(dbname, 'add', passwd)
-            dbase.chperm(dbname, dbname, 'grant')
-            shell('sed -i s/\;extension=mysql.so/extension=mysql.so/g /etc/php/php.ini')
+            if hasattr(dbase, 'connect'):
+                conn = apis.databases(self.app).get_dbconn(dbtype)
+                dbase.add(dbname, conn)
+                dbase.usermod(dbname, 'add', passwd, conn)
+                dbase.chperm(dbname, dbname, 'grant', conn)
+            else:
+                dbase.add(dbname)
+                dbase.usermod(dbname, 'add', passwd)
+                dbase.chperm(dbname, dbname, 'grant')
+            if php:
+                phpctl.enable_mod('mysql')
 
         # Write a basic index file showing that we are here
         if vars.getvalue('php', '0') == '1':
@@ -78,7 +87,7 @@ class Website(Plugin):
 
         # Enable xcache if PHP is set
         if php:
-            shell('sed -i s/\;extension=xcache.so/extension=xcache.so/g /etc/php/conf.d/xcache.ini')
+            phpctl.enable_mod('xcache')
 
     def pre_remove(self, name, path):
         pass

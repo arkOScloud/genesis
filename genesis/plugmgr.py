@@ -595,7 +595,7 @@ class RepositoryManager:
         except:
             self.purge = '1'
 
-        exclude = ['openssl', 'openssh', 'nginx']
+        exclude = ['openssl', 'openssh', 'nginx', 'python2']
 
         if cat:
             cat.put_statusmsg('Removing plugin...')
