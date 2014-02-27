@@ -135,7 +135,7 @@ class RadicaleControl(Plugin):
         [rights]
         # Rights management method
         # Value: None | owner_only | owner_write | from_file
-        type = None
+        type = owner_only
 
         # File for rights management from_file
         file = ~/.config/radicale/rights
