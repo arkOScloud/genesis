@@ -1,0 +1,21 @@
+<xml>
+	<formline text="Reverse proxy type">
+	    <select name="rp-type" id="rp-type">
+            <selectoption id="rpt-ip" value="ip" text="IP and Port" />
+            <selectoption id="rpt-fastcgi" value="fastcgi" text="FastCGI" />
+	    	<selectoption id="rpt-uwsgi" value="uwsgi" text="uWSGI" />
+	    </select>
+	</formline>
+    <formline text="Location regex">
+        <textinput name="rp-lregex" id="rp-lregex" value="/" />
+    </formline>
+	<formline text="Pass to:">
+	    <textinput name="rp-pass" id="rp-pass" />
+	</formline>
+    <formline text="Set X-Real-IP">
+        <checkbox name="rp-xrip" id="rp-xrip" text="Yes" />
+    </formline>
+    <formline text="Set X-Forwarded-For">
+        <checkbox name="rp-xff" id="rp-xff" text="Yes" />
+    </formline>
+</xml>
