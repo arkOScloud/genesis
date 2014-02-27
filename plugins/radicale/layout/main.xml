@@ -2,4 +2,21 @@
     <div class="well">
     	<div id="rinfo"></div>
     </div>
+    
+    <toolbar>
+    	<button id="add" text="Add user" iconfont="gen-user-plus" />
+    </toolbar>
+
+    <label size="5" text="User Accounts" />
+    <pad id="main">
+        <dt id="list" width="100%">
+            <dtr header="True">
+                <dth width="1" />
+                <dth>
+                    <label text="Username" />
+                </dth>
+                <dth width="1" />
+            </dtr>
+        </dt>
+    </pad>
 </xml>

@@ -7,7 +7,7 @@ from genesis.com import *
 from genesis import apis
 from genesis.plugins.users.backend import *
 from genesis.plugins.webapps.backend import WebappControl
-from genesis.utils import shell_cs
+from genesis.utils import shell_cs, hashpw
 
 
 class RadicaleConfig(Plugin):
@@ -173,6 +173,48 @@ class RadicaleControl(Plugin):
         #Access-Control-Allow-Origin = *
         """
 
+    def add_user(self, user, passwd):
+        ic = []
+        if os.path.exists('/etc/radicale/users'):
+            for x in open('/etc/radicale/users', 'r').read().split('\n'):
+                ic.append(x)
+        f = open('/etc/radicale/users', 'w')
+        for x in ic:
+            f.write(x+'\n')
+        f.write('%s:%s'%(user, hashpw(passwd, 'ssha')))
+        f.close()
+
+    def edit_user(self, user, passwd):
+        ic = []
+        if os.path.exists('/etc/radicale/users'):
+            for x in open('/etc/radicale/users', 'r').read().split('\n'):
+                if not user == x.split(':')[0]:
+                    ic.append(x)
+        f = open('/etc/radicale/users', 'w')
+        for x in ic:
+            f.write(x+'\n')
+        f.write('%s:%s'%(user, hashpw(passwd, 'ssha')))
+        f.close()
+
+    def del_user(self, user):
+        ic = []
+        if os.path.exists('/etc/radicale/users'):
+            for x in open('/etc/radicale/users', 'r').read().split('\n'):
+                if not user == x.split(':')[0]:
+                    ic.append(x)
+        f = open('/etc/radicale/users', 'w')
+        for x in ic:
+            f.write(x+'\n')
+        f.close()
+
+    def list_users(self):
+        u = []
+        if os.path.exists('/etc/radicale/users'):
+            for x in open('/etc/radicale/users', 'r').read().split('\n'):
+                if x.split():
+                    u.append(x.split(':')[0])
+        return u
+
     def is_installed(self):
         # Verify the different components of the server setup
         if not os.path.exists('/etc/radicale/config') or not os.path.isdir('/usr/lib/radicale') \
@@ -213,10 +255,14 @@ class RadicaleControl(Plugin):
                 ('stderr_logfile', '/var/log/radicale.log')])
         block = [
             nginx.Location('/',
+                nginx.Key('auth_basic', '"Genesis Calendar Server (Radicale)"'),
+                nginx.Key('auth_basic_user_file', '/etc/radicale/users'),
                 nginx.Key('include', 'uwsgi_params'),
                 nginx.Key('uwsgi_pass', 'unix:///tmp/radicale.sock'),
             )
         ]
+        if not os.path.exists('/etc/radicale/users'):
+            open('/etc/radicale/users', 'w').write('')
         WebappControl(self.app).add_reverse_proxy('radicale', 
             '/usr/lib/radicale', addr, port, block)
         apis.networkcontrol(self.app).add_webapp(('radicale', 'ReverseProxy', port))

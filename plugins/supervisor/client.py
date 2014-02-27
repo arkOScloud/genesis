@@ -72,11 +72,11 @@ class SVClient(Plugin):
             c.set(name, x[0], x[1])
         c.write(open(os.path.join('/etc/supervisor.d', id+'.ini'), 'w'))
         if restart:
-            self.run('reread')
+            self.run('reload')
 
     def remove(self, id, restart=False):
         self.stop(id)
         if os.path.exists(os.path.join('/etc/supervisor.d', id+'.ini')):
             os.unlink(os.path.join('/etc/supervisor.d', id+'.ini'))
         if restart:
-            self.run('reread')
+            self.run('reload')

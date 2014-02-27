@@ -251,6 +251,9 @@ def hashpw(passw, scheme = 'sha512_crypt'):
     elif scheme == 'bcrypt':
         # TODO: rounds should be configurable
         return bcrypt.encrypt(passw, rounds=12)
+    elif scheme == 'ssha':
+        salt = os.urandom(32)
+        return '{SSHA}' + b64encode(sha1(passw + salt).digest() + salt)
     # This scheme should probably be dropped to avoid creating new
     # unsaltes SHA1 hashes.
     elif scheme == 'sha':
