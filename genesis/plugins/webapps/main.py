@@ -344,7 +344,7 @@ class WAWorker(BackgroundWorker):
 			else:
 				cat.put_message('info', 
 					'%s added sucessfully' % site)
-				cat._relsec = ('add', (site, current, vars))
+				cat._relsec = ('add', (site, current.name, vars.getvalue('port', '80')))
 				if spmsg:
 					cat.put_message('info', spmsg)
 		elif action == 'drop':

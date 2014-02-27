@@ -134,6 +134,14 @@ class F2BManager(Plugin):
 					l['filter_name'] = filter_name
 					l['filter_opts'] = filter_opts
 				else:
+					if not os.path.exists(self.filters+'/'+l['filter_name']+'.conf'):
+						f = open(self.filters+'/'+l['filter_name']+'.conf', 'w')
+						fcfg = ConfigParser.SafeConfigParser()
+						fcfg.add_section('Definition')
+						for o in l['filter_opts']:
+							fcfg.set('Definition', o[0], o[1])
+						fcfg.write(f)
+						f.close()
 					if not l['name'] in cfg.sections():
 						f = open(self.jailconf, 'w')
 						cfg.add_section(l['name'])
@@ -150,12 +158,4 @@ class F2BManager(Plugin):
 						l['jail_opts'] = jail_opts
 						l['filter_name'] = filter_name
 						l['filter_opts'] = filter_opts
-					if not os.path.exists(self.filters+'/'+l['filter_name']+'.conf'):
-						f = open(self.filters+'/'+l['filter_name']+'.conf', 'w')
-						fcfg = ConfigParser.SafeConfigParser()
-						fcfg.add_section('Definition')
-						for o in l['filter_opts']:
-							fcfg.set('Definition', o[0], o[1])
-						fcfg.write(f)
-						f.close()
 		return lst
