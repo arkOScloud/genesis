@@ -113,7 +113,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						iconfont='gen-cancel-circle',
 						id='drop/' + str(self.sites.index(s)),
 						text='Delete',
-						warning='Are you sure you wish to delete site %s? This action is irreversible.'%s.name
+						warning='Are you sure you wish to delete site %s? This action is irreversible.%s'%(s.name,
+							' If this Reverse Proxy was set up automatically by Genesis, this may cause the associated plugin to stop functioning.' if s.stype == 'ReverseProxy' else '')
 						)
 					),
 				))

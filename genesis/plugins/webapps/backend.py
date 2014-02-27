@@ -129,28 +129,29 @@ class WebappControl(Plugin):
 		if specialmsg:
 			return specialmsg
 
-	def add_reverse_proxy(self, name, path, addr, port):
+	def add_reverse_proxy(self, name, path, addr, port, block):
 		w = Webapp()
 		w.name = name
 		w.stype = 'ReverseProxy'
 		w.path = path
 		w.addr = addr
 		w.port = port
-		block = [
-			nginx.Location('/admin/media/',
-				nginx.Key('root', '/usr/lib/python2.7/site-packages/django/contrib')
-			),
-			nginx.Location('/',
-				nginx.Key('proxy_set_header', 'X-Forwarded-For $proxy_add_x_forwarded_for'),
-				nginx.Key('proxy_set_header', 'Host $http_host'),
-				nginx.Key('proxy_redirect', 'off'),
-				nginx.If('(!-f $request_filename)',
-					nginx.Key('proxy_pass', 'unix:%s'%os.path.join(path, 'gunicorn.sock')),
-					nginx.Key('break', '')
+		if not block:
+			block = [
+				nginx.Location('/admin/media/',
+					nginx.Key('root', '/usr/lib/python2.7/site-packages/django/contrib')
+				),
+				nginx.Location('/',
+					nginx.Key('proxy_set_header', 'X-Forwarded-For $proxy_add_x_forwarded_for'),
+					nginx.Key('proxy_set_header', 'Host $http_host'),
+					nginx.Key('proxy_redirect', 'off'),
+					nginx.If('(!-f $request_filename)',
+						nginx.Key('proxy_pass', 'unix:%s'%os.path.join(path, 'gunicorn.sock')),
+						nginx.Key('break', '')
+					)
 				)
-			)
-		]
-		self.nginx_add(w, addtoblock=block)
+			]
+		self.nginx_add(w, block)
 		self.nginx_enable(w)
 
 	def remove(self, cat, site):

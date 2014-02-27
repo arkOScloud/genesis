@@ -98,8 +98,8 @@ class SVPlugin(apis.services.ServiceControlPlugin):
             self._client.remove(params[1])
         if params[0] == 'tail':
             self._tail = params[1]
-        if params[0] == 'refresh':
-            self._client.run('reread')
+        if params[0] == 'reload':
+            self._client.run('reload')
 
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):

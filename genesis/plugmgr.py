@@ -436,12 +436,22 @@ class PluginLoader:
                     PluginLoader.__plugins[dep['package']].problem:
                 raise PluginRequirementError(dep)
         if dep['type'] == 'module':
-            try:
-                exec('import %s'%dep['binary'])
-            except:
-                # Let's try to install it anyway
-                shell('pip2 install %s' % dep['package'])
-                raise ModuleRequirementError(dep, True)
+            if dep.has_key('binary') and dep['binary']:
+                try:
+                    exec('import %s'%dep['binary'])
+                except:
+                    # Let's try to install it anyway
+                    shell('pip%s install %s' % ('2' if platform in ['arkos', 'arch'] else '', dep['package']))
+                    raise ModuleRequirementError(dep, True)
+            else:
+                p = False
+                s = shell('pip%s freeze'%'2' if platform in ['arkos', 'arch'] else '')
+                for x in s.split('\n'):
+                    if dep['package'].lower() in x.split('==')[0].lower():
+                        p = True
+                if not p:
+                    shell('pip%s install %s' % ('2' if platform in ['arkos', 'arch'] else '', dep['package']))
+                    raise ModuleRequirementError(dep, True)
 
     @staticmethod
     def get_plugin_path(app, id):

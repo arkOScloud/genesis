@@ -6,7 +6,7 @@ from genesis.ui import *
 from genesis.api import *
 from genesis import apis
 from genesis.com import Plugin, Interface, implements
-from genesis.utils import shell
+from genesis.utils import shell, shell_cs
 
 
 class PythonLangAssist(Plugin):
@@ -14,14 +14,27 @@ class PythonLangAssist(Plugin):
     name = 'Python'
 
     def install(self, *mods):
-        shell('pip%s install %s' % \
+        s = shell_cs('pip%s install %s' % \
             ('2' if self.app.platform in ['arkos', 'arch'] else '',
                 ' '.join(x for x in mods)))
+        if s[0] != 0:
+            self.app.log.error('Failed to install %s via PyPI; %s'%(' '.join(x for x in mods),s[1]))
+            raise Exception('Failed to install %s via PyPI, check logs for info'%' '.join(x for x in mods))
 
     def remove(self, *mods):
-        shell('pip%s uninstall %s' % \
+        s = shell_cs('pip%s uninstall %s' % \
             ('2' if self.app.platform in ['arkos', 'arch'] else '',
                 ' '.join(x for x in mods)))
+        if s[0] != 0:
+            self.app.log.error('Failed to remove %s via PyPI; %s'%(' '.join(x for x in mods),s[1]))
+            raise Exception('Failed to remove %s via PyPI, check logs for info'%' '.join(x for x in mods))
+
+    def is_installed(self, name):
+        s = shell('pip%s freeze'%'2' if self.app.platform in ['arkos', 'arch'] else '')
+        for x in s.split('\n'):
+            if name in x.split('==')[0]:
+                return True
+        return False
 
     def add_django_site(self, name, path, user, group):
         shell('cd %s; django-admin.py startproject %s' % (path,name))
