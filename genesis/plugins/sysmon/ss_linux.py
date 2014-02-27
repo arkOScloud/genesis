@@ -1,8 +1,10 @@
+# -*- coding: UTF-8 -*-
+
 import re
 import os
 
 from genesis import apis
-from genesis.utils import shell
+from genesis.utils import shell, detect_architecture
 from genesis.com import *
 
 
@@ -12,6 +14,14 @@ class LinuxSysStat(Plugin):
 
     def get_load(self):
         return open('/proc/loadavg', 'r').read().split()[0:3]
+
+    def get_temp(self):
+        if detect_architecture()[1] == 'Raspberry Pi':
+            return '%3.1f°C'%(float(shell('cat /sys/class/thermal/thermal_zone0/temp').split('\n')[0])/1000)
+        else:
+            if os.path.exists('/sys/class/hwmon/hwmon1/temp1_input'):
+                return '%3.1f°C'%(float(shell('cat /sys/class/hwmon/hwmon1/temp1_input'))/1000)
+        return ''
 
     def get_ram(self):
         s = shell('free -b | grep Mem').split()[1:]
