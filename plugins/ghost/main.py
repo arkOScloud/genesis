@@ -3,8 +3,11 @@ from genesis.ui import *
 from genesis.com import Plugin, Interface, implements
 from genesis import apis
 from genesis.utils import shell
+from genesis.plugins.users.backend import UsersBackend
 
+import json
 import nginx
+import os
 
 
 class Ghost(Plugin):
@@ -28,6 +31,12 @@ class Ghost(Plugin):
         nodectl = apis.langassist(self.app).get_interface('NodeJS')
         users = UsersBackend(self.app)
 
+        # A bug in 0.4.1 prevents sqlite3@2.1.19 from installing properly.
+        # Fallback to 2.1.15
+        d = json.loads(open(os.path.join(path, 'package.json'), 'r').read())
+        d['dependencies']['sqlite3'] = '2.1.15'
+        open(os.path.join(path, 'package.json'), 'w').write(json.dumps(d))
+
         nodectl.install_from_package(path, 'production')
         users.add_user('ghost')
 
@@ -41,16 +50,8 @@ class Ghost(Plugin):
                 ('stdout_logfile', '/var/log/ghost.log'),
                 ('stderr_logfile', '/var/log/ghost.log')])
 
-        """
-        port = vars.getvalue('ghost-port', '2368')
-        hostname = vars.getvalue('ghost-host', '127.0.0.1')
-        url = vars.getvalue('ghost-url', 'my-ghost-blog.com')
-
-        replacements = [
-            ('2368', port),
-            ('127.0.0.1', hostname),
-            ('my-ghost-blog.com', url)
-        ]
+        addr = vars.getvalue('addr', 'localhost')
+        port = vars.getvalue('port', '80')
 
         # Get Mail settings
         mail_settings = {
@@ -64,8 +65,7 @@ class Ghost(Plugin):
         # Create/Edit the Ghost config file
         f = open(os.path.join(path, 'config.example.js'), 'r').read()
         with open(os.path.join(path, 'config.js'), 'w') as config_file:
-            for r in replacements:
-                f = f.replace(r[0], r[1])
+            f = f.replace('http://my-ghost-blog.com', 'http://'+addr+(':'+port if port != '80' else''))
             if len(set(mail_settings.values())) != 1 and\
                mail_settings['transport'] != '':
                 # If the mail settings exist, add them
@@ -85,20 +85,39 @@ class Ghost(Plugin):
                 )
             config_file.write(f)
             config_file.close()
-        """
 
         # Finally, make sure that permissions are set so that Ghost
         # can make adjustments and save plugins when need be.
-        shell('chown -R http:http ' + path)
+        shell('chown -R ghost ' + path)
 
     def pre_remove(self, name, path):
         pass
 
     def post_remove(self, name):
-        pass
+        users = UsersBackend(self.app)
+        users.del_user('ghost')
+        s = apis.orders(self.app).get_interface('supervisor')
+        if s:
+            s[0].order('del', 'ghost')
 
     def ssl_enable(self, path, cfile, kfile):
-        pass
+        f = open(os.path.join(path, 'config.js'), 'r').read()
+        with open(os.path.join(path, 'config.js'), 'w') as config_file:
+            f = f.replace('production: {\n        url: \'http://', 
+                'production: {\n        url: \'https://')
+            config_file.write(f)
+            config_file.close()
+        s = apis.orders(self.app).get_interface('supervisor')
+        if s:
+            s[0].order('rel', 'ghost')
 
     def ssl_disable(self, path):
-        pass
+        f = open(os.path.join(path, 'config.js'), 'r').read()
+        with open(os.path.join(path, 'config.js'), 'w') as config_file:
+            f = f.replace('production: {\n        url: \'https://', 
+                'production: {\n        url: \'http://')
+            config_file.write(f)
+            config_file.close()
+        s = apis.orders(self.app).get_interface('supervisor')
+        if s:
+            s[0].order('rel', 'ghost')

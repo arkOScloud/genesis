@@ -45,7 +45,7 @@ GENERATION = 1
 
 # Webapp metadata
 WA_PLUGIN = 'Ghost'
-DPATH = 'https://ghost.org/zip/ghost-0.4.1.zip'
+DPATH = 'https://github.com/TryGhost/Ghost/releases/download/0.4.1/Ghost-0.4.1.zip'
 DBENGINE = ''
 PHP = False
 NOMULTI = True

@@ -148,7 +148,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			ui.remove('dlgAdd')
 
 		if self._setup is not None:
-			ui.find('addr').set('value', self.app.get_backend(IHostnameManager).gethostname())
+			ui.find('addr').set('value', self.app.get_backend(IHostnameManager).gethostname().lower())
 			if self._setup.nomulti is True:
 				for site in self.sites:
 					if self._setup.wa_plugin in site.stype:

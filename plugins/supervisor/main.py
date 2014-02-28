@@ -124,4 +124,6 @@ class SVListener(Plugin):
         if op == 'new':
             SVClient(self.app).set(ptype, name, args)
         elif op == 'del':
-            SVClient(self.app).remove(name, reread=True)
+            SVClient(self.app).remove(name, restart=True)
+        elif op == 'rel':
+            SVClient(self.app).restart(name)
