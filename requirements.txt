@@ -3,6 +3,6 @@ gevent
 lxml
 ntplib
 python-iptables>=0.3.0
-python-nginx>=0.1.1
+python-nginx>=0.1.2
 passlib
 feedparser

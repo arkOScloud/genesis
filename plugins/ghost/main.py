@@ -101,6 +101,16 @@ class Ghost(Plugin):
             s[0].order('del', 'ghost')
 
     def ssl_enable(self, path, cfile, kfile):
+        name = os.path.basename(path)
+        n = nginx.loadf('/etc/nginx/sites-available/%s'%name)
+        if n.servers[0].filter('Location', '/'):
+            n.servers[0].remove(n.servers[0].filter('Location', '/')[0])
+            self.addtoblock[0].add(
+                nginx.Key('proxy_set_header', 'X-Forwarded-For $proxy_add_x_forwarded_for'),
+                nginx.Key('proxy_set_header', 'X-Forwarded-Proto $scheme'),
+            )
+            n.servers[0].add(self.addtoblock[0])
+            nginx.dumpf(n, '/etc/nginx/sites-available/%s'%name)
         f = open(os.path.join(path, 'config.js'), 'r').read()
         with open(os.path.join(path, 'config.js'), 'w') as config_file:
             f = f.replace('production: {\n        url: \'http://', 
@@ -112,6 +122,12 @@ class Ghost(Plugin):
             s[0].order('rel', 'ghost')
 
     def ssl_disable(self, path):
+        name = os.path.basename(path)
+        n = nginx.loadf('/etc/nginx/sites-available/%s'%name)
+        if n.servers[0].filter('Location', '/'):
+            n.servers[0].remove(n.servers[0].filter('Location', '/')[0])
+            n.servers[0].add(self.addtoblock[0])
+            nginx.dumpf(n, '/etc/nginx/sites-available/%s'%name)
         f = open(os.path.join(path, 'config.js'), 'r').read()
         with open(os.path.join(path, 'config.js'), 'w') as config_file:
             f = f.replace('production: {\n        url: \'https://', 
