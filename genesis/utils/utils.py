@@ -97,7 +97,9 @@ def detect_architecture():
     if arch == 'armv6l':
         # Is this a... Raspberry Pi?
         for x in shell('cat /proc/cpuinfo').split('\n'):
-            if 'Hardware' in x.split()[0] and x.split()[1] in ['BCM2708', 'BCM2835']:
+            # Parse output of function function c_show in linux/arch/arm/kernel/setup.c
+            k, _, v = x.partition(':')
+            if 'Hardware' in k and v.strip() in ('BCM2708', 'BCM2835'):
                 btype = 'Raspberry Pi'
                 break
     if arch in ['x86_64', 'i686']:
