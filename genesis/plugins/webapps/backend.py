@@ -44,8 +44,10 @@ class WebappControl(Plugin):
 			ending = '.tar.bz2'
 		elif wa.dpath.endswith('.zip'):
 			ending = '.zip'
+		elif wa.dpath.endswith('.git'):
+			ending = '.git'
 		else:
-			raise InstallError('Only gzip, bzip, and zip packages supported for now')
+			raise InstallError('Only GIT repos, gzip, bzip, and zip packages supported for now')
 
 		# Run webapp preconfig, if any
 		try:
@@ -63,7 +65,11 @@ class WebappControl(Plugin):
 		os.makedirs(target_path)
 
 		# Download and extract the source package
-		if wa.dpath:
+		if wa.dpath and ending == '.git':
+			status = shell_cs('git clone %s %s'%(wa.dpath,target_path), stderr=True)
+			if status[0] >= 1:
+				raise InstallError(status[1])
+		elif wa.dpath:
 			try:
 				cat.put_statusmsg('Downloading webapp package...')
 				download(wa.dpath, file=pkg_path, crit=True)
