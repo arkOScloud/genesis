@@ -1,17 +1,5 @@
 <xml>
     <label text="All of these options are OPTIONAL, if you do not choose them, then they will be automatically generated or ignored on install." />
-    <formline text="Port" help="The port at which to serve Ghost, default is 2368">
-        <textinput name="ghost-port" id="ghost-port" />
-    </formline>
-
-    <formline text="Host" help="The Host to use when configuring Ghost. Default is 127.0.0.1">
-        <textinput name="ghost-url" id="ghost-url" />
-    </formline>
-
-    <formline text="URL" help="The URL to use when configuring Ghost. Default is my-ghost-blog.com">
-        <textinput name="ghost-url" id="ghost-url" />
-    </formline>
-
     <formline text="Mail Transport" help="Optional: See http://docs.ghost.org/mail/ for more detail.">
         <textinput name="ghost-transport" id="ghost-transport" />
     </formline>

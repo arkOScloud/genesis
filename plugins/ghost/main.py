@@ -4,38 +4,44 @@ from genesis.com import Plugin, Interface, implements
 from genesis import apis
 from genesis.utils import shell
 
-import hashlib
-import os
-import random
-import urllib
+import nginx
 
 
 class Ghost(Plugin):
     implements(apis.webapps.IWebapp)
     name = 'Ghost'
-    dpath = 'https://ghost.org/zip/ghost-0.3.3.zip'
     icon = 'gen-earth'
-    php = False
-    nomulti = True
-    ssl = False
 
-    addtoblock = (
-        '    location / {\n'
-        '        proxy_pass http://127.0.0.1:2368/;\n'
-        '        proxy_set_header Host $host;\n'
-        '        proxy_buffering off;\n'
-        '    }\n'
-        '\n'
-        )
+    addtoblock = [
+        nginx.Location('/',
+            nginx.Key('proxy_pass', 'http://127.0.0.1:2368'),
+            nginx.Key('proxy_set_header', 'X-Real-IP $remote_addr'),
+            nginx.Key('proxy_set_header', 'Host $host'),
+            nginx.Key('proxy_buffering', 'off')
+            )
+        ]
 
     def pre_install(self, name, vars):
-        port = vars.getvalue('ghost-port', '2368')
-        try:
-            int(port)
-        except ValueError:
-            raise Exception('Invalid Port: %s' % port)
+        pass
 
     def post_install(self, name, path, vars):
+        nodectl = apis.langassist(self.app).get_interface('NodeJS')
+        users = UsersBackend(self.app)
+
+        nodectl.install_from_package(path, 'production')
+        users.add_user('ghost')
+
+        s = apis.orders(self.app).get_interface('supervisor')
+        if s:
+            s[0].order('new', 'ghost', 'program', 
+                [('directory', path), ('user', 'ghost'), 
+                ('command', 'node %s'%os.path.join(path, 'index.js')),
+                ('autostart', 'true'), ('autorestart', 'true'),
+                ('environment', 'NODE_ENV="production"'),
+                ('stdout_logfile', '/var/log/ghost.log'),
+                ('stderr_logfile', '/var/log/ghost.log')])
+
+        """
         port = vars.getvalue('ghost-port', '2368')
         hostname = vars.getvalue('ghost-host', '127.0.0.1')
         url = vars.getvalue('ghost-url', 'my-ghost-blog.com')
@@ -79,6 +85,7 @@ class Ghost(Plugin):
                 )
             config_file.write(f)
             config_file.close()
+        """
 
         # Finally, make sure that permissions are set so that Ghost
         # can make adjustments and save plugins when need be.
@@ -95,18 +102,3 @@ class Ghost(Plugin):
 
     def ssl_disable(self, path):
         pass
-
-    def get_info(self):
-        return {
-            'name': 'Ghost',
-            'short': 'Just a blogging platform.',
-            'long': ("Ghost is a platform dedicated to one thing: Publishing."
-                    "It's beautifully designed, completely customisable and"
-                    "completely Open Source. Ghost allows you to write and"
-                    "publish your own blog, giving you the tools to make it"
-                    "easy and even fun to do. It's simple, elegant, and"
-                    "designed so that you can spend less time messing with"
-                    "making your blog work - and more time blogging."),
-            'site': 'http://ghost.org',
-            'logo': True
-        }

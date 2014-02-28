@@ -1,18 +1,52 @@
-MODULES = ['main']
-
-DEPS =  [
-    (['any'],
-     [
-        ('app', 'nodejs', 'nodejs'),
-        ('app', 'nginx', 'nginx'),
-     ])
-]
-
+# Plugin metadata
 NAME = 'Ghost'
+TYPE = 'webapp'
 ICON = 'gen-earth'
-PLATFORMS = ['any']
 DESCRIPTION = 'Host a blog with Ghost'
-VERSION = '1'
-GENERATION = 1
-AUTHOR = 'arkOS'
+LONG_DESCRIPTION = ('Ghost is a platform dedicated to one thing: Publishing. '
+	'It\'s beautifully designed, completely customisable and completely Open '
+	'Source. Ghost allows you to write and publish your own blog, giving you '
+	'the tools to make it easy and even fun to do.')
+CATEGORIES = [
+    {
+        "primary": "Websites",
+        "secondary": ["Blogs", "Websites", "CMS"]
+    }
+]
+VERSION = '0.4.1-1'
+
+AUTHOR = 'ajvb'
 HOMEPAGE = 'http://arkos.io'
+APP_AUTHOR = "Ghost"
+APP_HOMEPAGE = "https://ghost.org"
+LOGO = True
+
+SERVICES = []
+
+# Plugin parameters
+MODULES = ['main']
+PLATFORMS = ['any']
+DEPENDENCIES = {
+    "any": [
+        {
+            "type": "app",
+            "name": "nginx",
+            "package": "nginx",
+            "binary": "nginx"
+        },
+        {
+            "type": "plugin",
+            "name": "NodeJS",
+            "package": "nodejs"
+        }
+    ]
+}
+GENERATION = 1
+
+# Webapp metadata
+WA_PLUGIN = 'Ghost'
+DPATH = 'https://ghost.org/zip/ghost-0.4.1.zip'
+DBENGINE = ''
+PHP = False
+NOMULTI = True
+SSL = True
