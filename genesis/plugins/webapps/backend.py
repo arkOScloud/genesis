@@ -42,7 +42,7 @@ class WebappControl(Plugin):
 			ending = '.tar.gz'
 		elif wa.dpath.endswith('.tar.bz2'):
 			ending = '.tar.bz2'
-		elif webapp.dpath.endswith('.zip'):
+		elif wa.dpath.endswith('.zip'):
 			ending = '.zip'
 		else:
 			raise InstallError('Only gzip, bzip, and zip packages supported for now')
