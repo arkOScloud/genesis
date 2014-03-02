@@ -147,7 +147,7 @@ class CertControl(Plugin):
 			crt.gmtime_adj_notAfter(2*365*24*60*60)
 			crt.set_issuer(ca_cert.get_subject())
 			crt.set_pubkey(key)
-			crt.sign(key, 'sha1')
+			crt.sign(ca_key, 'sha1')
 		except Exception, e:
 			raise Exception('Error generating self-signed certificate: '+str(e))
 		open('/etc/ssl/certs/genesis/'+name+'.crt', "wt").write(

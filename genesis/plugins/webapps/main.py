@@ -113,7 +113,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						iconfont='gen-cancel-circle',
 						id='drop/' + str(self.sites.index(s)),
 						text='Delete',
-						warning='Are you sure you wish to delete site %s? This action is irreversible.'%s.name
+						warning='Are you sure you wish to delete site %s? This action is irreversible.%s'%(s.name,
+							' If this Reverse Proxy was set up automatically by Genesis, this may cause the associated plugin to stop functioning.' if s.stype == 'ReverseProxy' else '')
 						)
 					),
 				))
@@ -147,7 +148,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			ui.remove('dlgAdd')
 
 		if self._setup is not None:
-			ui.find('addr').set('value', self.app.get_backend(IHostnameManager).gethostname())
+			ui.find('addr').set('value', self.app.get_backend(IHostnameManager).gethostname().lower())
 			if self._setup.nomulti is True:
 				for site in self.sites:
 					if self._setup.wa_plugin in site.stype:
@@ -343,7 +344,7 @@ class WAWorker(BackgroundWorker):
 			else:
 				cat.put_message('info', 
 					'%s added sucessfully' % site)
-				cat._relsec = ('add', (site, current, vars))
+				cat._relsec = ('add', (site, current.name, vars.getvalue('port', '80')))
 				if spmsg:
 					cat.put_message('info', spmsg)
 		elif action == 'drop':

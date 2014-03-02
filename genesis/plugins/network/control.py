@@ -25,8 +25,8 @@ class NetworkControl(apis.API):
     def add_webapp(self, d):
         servers = ServerManager(self.app)
         s = servers.add('webapps', d[0], 
-            d[0] + ' (' + d[1].name + ')', 'gen-earth', 
-            [('tcp', d[2].getvalue('port', '80'))])
+            d[0] + ' (' + d[1] + ')', 'gen-earth', 
+            [('tcp', d[2])])
         RuleManager(self.app).set(s, 2)
         FWMonitor(self.app).regen()
         FWMonitor(self.app).save()
@@ -46,7 +46,11 @@ class NetworkControl(apis.API):
 
     def remove_webapp(self, sid):
         servers = ServerManager(self.app)
-        s = servers.get(sid)[0]
+        s = servers.get(sid)
+        if s:
+            s = s[0]
+        else:
+            return
         RuleManager(self.app).remove(s)
         servers.remove(sid)
         FWMonitor(self.app).regen()

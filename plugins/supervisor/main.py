@@ -98,8 +98,8 @@ class SVPlugin(apis.services.ServiceControlPlugin):
             self._client.remove(params[1])
         if params[0] == 'tail':
             self._tail = params[1]
-        if params[0] == 'refresh':
-            self._client.run('reread')
+        if params[0] == 'reload':
+            self._client.run('reload')
 
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):
@@ -124,4 +124,6 @@ class SVListener(Plugin):
         if op == 'new':
             SVClient(self.app).set(ptype, name, args)
         elif op == 'del':
-            SVClient(self.app).remove(name, reread=True)
+            SVClient(self.app).remove(name, restart=True)
+        elif op == 'rel':
+            SVClient(self.app).restart(name)

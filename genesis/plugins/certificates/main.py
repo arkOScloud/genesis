@@ -72,7 +72,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                ))
 
         if self._gen:
-            ui.find('certcn').set('value', self.app.get_backend(IHostnameManager).gethostname())
+            ui.find('certcn').set('value', self.app.get_backend(IHostnameManager).gethostname().lower())
             self._wal, self._pal = self._cc.get_ssl_capable()
             alist, wlist, plist = [], [], []
             for cert in self.certs:
@@ -257,7 +257,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             self._upload = True
         elif params[0] == 'cagen':
             self._tab = 1
-            self._cc.create_authority(self.app.get_backend(IHostnameManager).gethostname())
+            self._cc.create_authority(self.app.get_backend(IHostnameManager).gethostname().lower())
         elif params[0] == 'cadel':
             self._tab = 1
             self._cc.delete_authority(self.cas[int(params[1])])
@@ -349,7 +349,7 @@ class CertGenWorker(BackgroundWorker):
         cat.put_statusmsg('Generating a certificate and key...')
         try:
             CertControl(cat.app).gencert(name, vars, 
-                cat.app.get_backend(IHostnameManager).gethostname())
+                cat.app.get_backend(IHostnameManager).gethostname().lower())
             cat.put_statusmsg('Assigning new certificate...')
             CertControl(cat.app).assign(name, assign)
         except Exception, e:

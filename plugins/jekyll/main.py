@@ -2,7 +2,7 @@ from genesis.api import *
 from genesis.ui import *
 from genesis.com import Plugin, Interface, implements
 from genesis import apis
-from genesis.utils import shell, download
+from genesis.utils import shell, shell_cs
 
 import re
 import nginx
@@ -23,7 +23,9 @@ class Jekyll(Plugin):
 		c = nginx.loadf(os.path.join('/etc/nginx/sites-available', name))
 		c.servers[0].filter('Key', 'root')[0].value = os.path.join(path, '_site')
 		nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', name))
-		shell('jekyll build --source '+path+' --destination '+os.path.join(path, '_site'))
+		s = shell_cs('jekyll build --source '+path+' --destination '+os.path.join(path, '_site'), stderr=True)
+		if s[0] != 0:
+			raise Exception('Jekyll failed to build: %s'%str(s[1]))
 
 		# Return an explicatory message.
 		return 'Jekyll has been setup, with a sample site at '+path+'. Modify these files as you like. To learn how to use Jekyll, visit http://jekyllrb.com/docs/usage. After making changes, click the Configure button next to the site, then "Regenerate Site" to bring your changes live.'
@@ -41,4 +43,6 @@ class Jekyll(Plugin):
 		pass
 
 	def regenerate_site(self, site):
-		shell('jekyll build --source '+site.path.rstrip('_site')+' --destination '+os.path.join(site.path))
+		s = shell_cs('jekyll build --source '+site.path.rstrip('_site')+' --destination '+os.path.join(site.path), stderr=True)
+		if s[0] != 0:
+			raise Exception('Jekyll failed to build: %s'%str(s[1]))

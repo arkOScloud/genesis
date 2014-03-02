@@ -42,8 +42,12 @@ class WebappControl(Plugin):
 			ending = '.tar.gz'
 		elif wa.dpath.endswith('.tar.bz2'):
 			ending = '.tar.bz2'
+		elif wa.dpath.endswith('.zip'):
+			ending = '.zip'
+		elif wa.dpath.endswith('.git'):
+			ending = '.git'
 		else:
-			raise InstallError('Only gzip and bzip packages supported for now')
+			raise InstallError('Only GIT repos, gzip, bzip, and zip packages supported for now')
 
 		# Run webapp preconfig, if any
 		try:
@@ -61,16 +65,25 @@ class WebappControl(Plugin):
 		os.makedirs(target_path)
 
 		# Download and extract the source package
-		if wa.dpath:
+		if wa.dpath and ending == '.git':
+			status = shell_cs('git clone %s %s'%(wa.dpath,target_path), stderr=True)
+			if status[0] >= 1:
+				raise InstallError(status[1])
+		elif wa.dpath:
 			try:
 				cat.put_statusmsg('Downloading webapp package...')
 				download(wa.dpath, file=pkg_path, crit=True)
 			except Exception, e:
 				raise InstallError('Couldn\'t download - %s' % str(e))
-			status = shell_cs('tar '
-				+('xzf' if ending is '.tar.gz' else 'xjf')
-				+' /tmp/'+name+ending+' -C '
-				+target_path+' --strip 1', stderr=True)
+
+			if ending in ['.tar.gz', '.tar.bz2']:
+				extract_cmd = 'tar '
+				extract_cmd += 'xzf' if ending is '.tar.gz' else 'xjf'
+				extract_cmd += ' /tmp/%s -C %s --strip 1' % (name+ending, target_path)
+			else:
+				extract_cmd = 'unzip -d %s /tmp/%s' % (target_path, name+ending)
+
+			status = shell_cs(extract_cmd, stderr=True)
 			if status[0] >= 1:
 				raise InstallError(status[1])
 			os.remove(pkg_path)
@@ -129,28 +142,29 @@ class WebappControl(Plugin):
 		if specialmsg:
 			return specialmsg
 
-	def add_reverse_proxy(self, name, path, addr, port):
+	def add_reverse_proxy(self, name, path, addr, port, block):
 		w = Webapp()
 		w.name = name
 		w.stype = 'ReverseProxy'
 		w.path = path
 		w.addr = addr
 		w.port = port
-		block = [
-			nginx.Location('/admin/media/',
-				nginx.Key('root', '/usr/lib/python2.7/site-packages/django/contrib')
-			),
-			nginx.Location('/',
-				nginx.Key('proxy_set_header', 'X-Forwarded-For $proxy_add_x_forwarded_for'),
-				nginx.Key('proxy_set_header', 'Host $http_host'),
-				nginx.Key('proxy_redirect', 'off'),
-				nginx.If('(!-f $request_filename)',
-					nginx.Key('proxy_pass', 'unix:%s'%os.path.join(path, 'gunicorn.sock')),
-					nginx.Key('break', '')
+		if not block:
+			block = [
+				nginx.Location('/admin/media/',
+					nginx.Key('root', '/usr/lib/python2.7/site-packages/django/contrib')
+				),
+				nginx.Location('/',
+					nginx.Key('proxy_set_header', 'X-Forwarded-For $proxy_add_x_forwarded_for'),
+					nginx.Key('proxy_set_header', 'Host $http_host'),
+					nginx.Key('proxy_redirect', 'off'),
+					nginx.If('(!-f $request_filename)',
+						nginx.Key('proxy_pass', 'unix:%s'%os.path.join(path, 'gunicorn.sock')),
+						nginx.Key('break', '')
+					)
 				)
-			)
-		]
-		self.nginx_add(w, addtoblock=block)
+			]
+		self.nginx_add(w, block)
 		self.nginx_enable(w)
 
 	def remove(self, cat, site):

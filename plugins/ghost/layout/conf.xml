@@ -1,0 +1,22 @@
+<xml>
+    <label text="All of these options are OPTIONAL, if you do not choose them, then they will be automatically generated or ignored on install." />
+    <formline text="Mail Transport" help="Optional: See http://docs.ghost.org/mail/ for more detail.">
+        <textinput name="ghost-transport" id="ghost-transport" />
+    </formline>
+
+    <formline text="Mail Service" help="Optional: See http://docs.ghost.org/mail/ for more detail.">
+        <textinput name="ghost-service" id="ghost-service" />
+    </formline>
+
+    <formline text="Mail User" help="Optional: See http://docs.ghost.org/mail/ for more detail.">
+        <textinput name="ghost-mail-user" id="ghost-mail-user" />
+    </formline>
+
+    <formline text="Mail Password" help="Optional: See http://docs.ghost.org/mail/ for more detail.">
+        <textinput name="ghost-mail-pass" id="ghost-mail-pass" password="True" />
+    </formline>
+
+    <formline text="From Address" help="Optional: See http://docs.ghost.org/mail/ for more detail.">
+        <textinput name="ghost-from-address" id="ghost-from-address" />
+    </formline>
+</xml>
