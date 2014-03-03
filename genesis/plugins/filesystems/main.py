@@ -1,3 +1,5 @@
+import re
+
 from genesis.ui import *
 from genesis.com import implements
 from genesis.api import *
@@ -20,6 +22,7 @@ class FSPlugin(CategoryPlugin):
         self._tab = 0
         self._fsc = backend.FSControl(self.app)
         self._add = None
+        self._addenc = None
 
     def get_ui(self):
         ui = self.app.inflate('filesystems:main')
@@ -93,6 +96,10 @@ class FSPlugin(CategoryPlugin):
                     UI.TextInput(name='addsize', id='addsize'),
                     text='Disk size (in MB)'
                 ),
+                UI.FormLine(
+                    UI.EditPassword(id='passwd', value='Click to add password'),
+                    text='Password'
+                ) if self._add == 'enc' else None,
                 id='dlgAdd'
             ))
 
@@ -172,8 +179,26 @@ class FSPlugin(CategoryPlugin):
     def on_submit(self, event, params, vars=None):
         if params[0] == 'dlgAdd':
             if vars.getvalue('action', '') == 'OK':
-                self._fsc.add_vdisk(vars.getvalue('addname', ''),
-                    vars.getvalue('addsize', ''))
+                name = vars.getvalue('addname', '')
+                size = vars.getvalue('addsize', '')
+                passwd = vars.getvalue('passwd', '')
+                if not name or not size:
+                    self.put_message('err', 'Must choose a name and size')
+                elif name in [x.name for x in self.vdevs]:
+                    self.put_message('err', 'You already have a virtual disk with that name')
+                elif re.search('\.|-|`|\\\\|\/|^test$|[ ]', name):
+                    self.put_message('err', 'Site name must not contain spaces, dots, dashes or special characters')
+                elif not can_be_int(size):
+                    self.put_message('err', 'Size must be a number in megabytes')
+                elif self._add == 'enc' and not passwd:
+                    self.put_message('err', 'Must choose a password')
+                elif self._add == 'enc' and passwd != vars.getvalue('passwdb', ''):
+                    self.put_message('err', 'Passwords must match')
+                elif self._add == 'enc':
+                    self._fsc.add_vdisk(name, size)
+                    self._fsc.encrypt_vdisk(name, passwd, mount=True)
+                else:
+                    self._fsc.add_vdisk(name, size, mount=True)
             self._add = None
         if params[0] == 'dlgEdit':
             v = vars.getvalue('value', '')

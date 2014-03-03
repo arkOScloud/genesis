@@ -74,7 +74,7 @@ class FSControl(Plugin):
             vdevs.append(f)
         return devs, vdevs
 
-    def add_vdisk(self, name, size, mkfs=True):
+    def add_vdisk(self, name, size, mkfs=True, mount=False):
         with open(os.path.join('/vdisk', name+'.img'), 'wb') as f:
             written = 0
             while (int(size)*1048576) > written:
@@ -88,6 +88,8 @@ class FSControl(Plugin):
             if s[0] != 0:
                 raise Exception('Failed to format loop device: %s'%s[1])
             l.unmount()
+        if mount:
+            self.mount(name)
 
     def encrypt_vdisk(self, name, passwd, opts={'cipher': 'aes-xts-plain64', 'keysize': '256', 'hash': 'sha1'}, move=True, mount=False):
         opts = '-c %s -s %s -h %s'%(opts['cipher'], str(opts['keysize']), opts['hash'])
