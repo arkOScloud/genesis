@@ -12,6 +12,7 @@ import losetup
 class Filesystem(object):
     name = ''
     dev = ''
+    lodev = ''
     fstype = 'disk'
     icon = ''
     size = 0
@@ -22,7 +23,7 @@ class Filesystem(object):
 
 class FSControl(Plugin):
     def get_filesystems(self):
-        devs, vdevs = [],[]
+        devs, vdevs, loops = [],[],[]
         fdisk = shell('lsblk -pbl').split('\n')
 
         for x in fdisk:
@@ -42,6 +43,9 @@ class FSControl(Plugin):
             elif x[5] == 'crypt':
                 f.icon = 'gen-lock'
                 f.delete = False
+            elif x[5] == 'loop':
+                f.icon = 'gen-loop-2'
+                f.delete = False
             else:
                 f.icon = 'gen-storage'
             f.mount = x[6] if len(x) >= 7 else ''
@@ -51,14 +55,25 @@ class FSControl(Plugin):
                     break
             if f.fstype == 'crypt':
                 vdevs.append(f)
+            elif f.fstype == 'loop':
+                loops.append(f)
             else:
                 devs.append(f)
 
+        l = losetup.get_loop_devices()
+        l = [l[x] for x in l if l[x].is_used()]
         if not os.path.exists('/vdisk'):
             os.mkdir('/vdisk')
         for x in glob.glob('/vdisk/*.img'):
             f = Filesystem()
+            for y in l:
+                if y.get_filename() == x:
+                    for z in loops:
+                        if z.dev == y.device:
+                            f = z
+                            f.delete = True
             f.name = os.path.splitext(os.path.split(x)[1])[0]
+            f.lodev = f.dev
             f.dev = x
             f.fstype = 'vdisk'
             f.icon = 'gen-embed'
@@ -66,7 +81,14 @@ class FSControl(Plugin):
             vdevs.append(f)
         for x in glob.glob('/vdisk/*.crypt'):
             f = Filesystem()
+            for y in l:
+                if y.get_filename() == x:
+                    for z in loops:
+                        if z.dev == y.device:
+                            f = z
+                            f.delete = True
             f.name = os.path.splitext(os.path.split(x)[1])[0]
+            f.lodev = f.dev
             f.dev = x
             f.fstype = 'crypt'
             f.icon = 'gen-lock'
@@ -88,61 +110,91 @@ class FSControl(Plugin):
             if s[0] != 0:
                 raise Exception('Failed to format loop device: %s'%s[1])
             l.unmount()
+        fs = Filesystem()
+        fs.name = name
+        fs.dev = os.path.join('/vdisk', name+'.img')
+        fs.fstype = 'vdisk'
         if mount:
-            self.mount(name)
+            self.mount(fs)
+        return fs
 
-    def encrypt_vdisk(self, name, passwd, opts={'cipher': 'aes-xts-plain64', 'keysize': '256', 'hash': 'sha1'}, move=True, mount=False):
+    def encrypt_vdisk(self, fs, passwd, opts={'cipher': 'aes-xts-plain64', 'keysize': '256', 'hash': 'sha1'}, move=True, mount=False):
         opts = '-c %s -s %s -h %s'%(opts['cipher'], str(opts['keysize']), opts['hash'])
         l = losetup.get_loop_devices()
-        for x in l:
-            if l[x].is_used() and l[x].get_filename() in [os.path.join('/vdisk', name+'.img'), os.path.join('/vdisk', name+'.crypt')]:
-                l[x].unmount()
         if move:
-            os.rename(os.path.join('/vdisk', name+'.img'), os.path.join('/vdisk', name+'.crypt'))
-        dev = losetup.find_unused_loop_device().mount(os.path.join('/vdisk', name+'.crypt'))
-        s = shell_cs('echo "%s" | cryptsetup %s luksFormat %s'%(passwd,passwd,opts,dev.device), stderr=True)
-        dev.unmount()
+            os.rename(os.path.join('/vdisk', fs.name+'.img'), os.path.join('/vdisk', fs.name+'.crypt'))
+        dev = losetup.find_unused_loop_device()
+        dev.mount(os.path.join('/vdisk', fs.name+'.crypt'))
+        fs.dev = os.path.join('/vdisk', fs.name+'.crypt')
+        s = shell_cs('echo "%s" | cryptsetup %s luksFormat %s'%(passwd,opts,dev.device), stderr=True)
         if s[0] != 0:
             if move:
-                os.rename(os.path.join('/vdisk', name+'.crypt'), os.path.join('/vdisk', name+'.img'))
-            raise Exception('Failed to encrypt %s: %s'(name, s[1]))
+                dev.unmount()
+                os.rename(os.path.join('/vdisk', fs.name+'.crypt'), os.path.join('/vdisk', fs.name+'.img'))
+            raise Exception('Failed to encrypt %s: %s'%(fs.name, s[1]))
+        fs.fstype = 'crypt'
+        s = shell_cs('echo "%s" | cryptsetup luksOpen %s %s'%(passwd,dev.device,fs.name), stderr=True)
+        if s[0] != 0:
+            dev.unmount()
+            raise Exception('Failed to decrypt %s: %s'%(fs.name, s[1]))
+        s = shell_cs('mkfs.ext4 /dev/mapper/%s'%fs.name, stderr=True)
+        self.umount(fs)
+        if s[0] != 0:
+            raise Exception('Failed to format loop device: %s'%s[1])
         if mount:
-            self.mount(name, passwd)
+            fs.fstype = 'crypt'
+            self.mount(fs, passwd)
 
-    def mount(self, name, passwd=''):
-        path = os.path.join('/vdisk', name+'.crypt') if passwd != '' else os.path.join('/vdisk', name+'.img')
-        dev = losetup.find_unused_loop_device().mount(path)
-        if passwd != '':
-            s = shell_cs('echo "%s" | cryptsetup luksOpen %s %s'%(passwd,dev.device,name), stderr=True)
+    def mount(self, fs, passwd=''):
+        dev = losetup.find_unused_loop_device()
+        dev.mount(fs.dev)
+        if not os.path.isdir(os.path.join('/media', fs.name)):
+            os.mkdir(os.path.join('/media', fs.name))
+        if fs.fstype == 'crypt':
+            s = shell_cs('echo "%s" | cryptsetup luksOpen %s %s'%(passwd,dev.device,fs.name), stderr=True)
             if s[0] != 0:
                 dev.unmount()
-                raise Exception('Failed to decrypt %s: %s'(name, s[1]))
-            if not os.path.isdir(os.path.join('/media', name)):
-                os.mkdir(os.path.join('/media', name))
-            s = shell_cs('mount /dev/mapper/%s %s'%(name, os.path.join('/media', name)), stderr=True)
+                raise Exception('Failed to decrypt %s: %s'%(fs.name, s[1]))
+            s = shell_cs('mount /dev/mapper/%s %s'%(fs.name, os.path.join('/media', fs.name)), stderr=True)
             if s[0] != 0:
-                shell('cryptsetup luksClose %s'%name)
+                shell('cryptsetup luksClose %s'%fs.name)
                 dev.unmount()
-                raise Exception('Failed to mount %s: %s'(name, s[1]))
+                raise Exception('Failed to mount %s: %s'%(fs.name, s[1]))
         else:
-            s = shell_cs('mount %s %s'%(dev.device, os.path.join('/media', name)), stderr=True)
+            s = shell_cs('mount %s %s'%(dev.device, os.path.join('/media', fs.name)), stderr=True)
             if s[0] != 0:
                 dev.unmount()
-                raise Exception('Failed to mount %s: %s'(name, s[1]))
+                raise Exception('Failed to mount %s: %s'%(fs.name, s[1]))
 
-    def umount(self, name, enc=False):
+    def umount(self, fs, rm=False):
+        if not fs.mount:
+            return
         dev = None
         l = losetup.get_loop_devices()
         for x in l:
-            if l[x].is_used() and l[x].get_filename() in [os.path.join('/vdisk', name+'.img'), os.path.join('/vdisk', name+'.crypt')]:
+            if l[x].is_used() and l[x].get_filename() == fs.dev:
                 dev = l[x]
                 break
-        if dev and enc:
-            shell('umount /dev/mapper/%s'%name)
-            shell('cryptsetup luksClose %s'%name)
+        if dev and fs.fstype == 'crypt':
+            s = shell_cs('umount /dev/mapper/%s'%fs.name, stderr=True)
+            if s[0] != 0:
+                raise Exception('Failed to unmount %s: %s'%(fs.name, s[1]))
+            shell('cryptsetup luksClose %s'%fs.name)
             dev.unmount()
         elif dev:
+            s = shell_cs('umount %s'%dev.device, stderr=True)
+            if s[0] != 0:
+                raise Exception('Failed to unmount %s: %s'%(fs.name, s[1]))
             dev.unmount()
+        if rm:
+            os.unlink(fs.mount)
+
+    def delete(self, fs):
+        self.umount(fs)
+        if fs.fstype == 'crypt':
+            os.unlink(os.path.join('/vdisk', fs.name+'.crypt'))
+        else:
+            os.unlink(os.path.join('/vdisk', fs.name+'.img'))
 
 
 class Entry:

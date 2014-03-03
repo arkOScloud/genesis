@@ -25,6 +25,9 @@
                         <dth>
                             <label text="Size" />
                         </dth>
+                        <dth>
+                            <label text="Mountpoint" />
+                        </dth>
                         <dth width="1" />
                     </dtr>
                 </dt>

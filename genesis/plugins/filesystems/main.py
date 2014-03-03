@@ -1,9 +1,10 @@
 import re
+import os
 
 from genesis.ui import *
 from genesis.com import implements
 from genesis.api import *
-from genesis.utils import *
+from genesis.utils import can_be_int, str_fsize
 
 import backend
 
@@ -15,7 +16,7 @@ class FSPlugin(CategoryPlugin):
 
     def on_init(self):
         self.fstab = backend.read()
-        self.devs, self.vdevs = self._fsc.get_filesystems()
+        self._devs, self._vdevs = self._fsc.get_filesystems()
 
     def on_session_start(self):
         self._editing = -1
@@ -23,29 +24,49 @@ class FSPlugin(CategoryPlugin):
         self._fsc = backend.FSControl(self.app)
         self._add = None
         self._addenc = None
+        self._auth = None
 
     def get_ui(self):
         ui = self.app.inflate('filesystems:main')
 
         t = ui.find('vdlist')
 
-        for x in self.vdevs:
+        for x in self._vdevs:
             t.append(UI.DTR(
                 UI.Iconfont(iconfont=x.icon),
                 UI.Label(text=x.name, bold=False if x.parent else True),
                 UI.Label(text='Encrypted Disk' if x.fstype == 'crypt' else 'Virtual Disk'),
-                UI.Label(text=str_fsize(x.size))
+                UI.Label(text=str_fsize(x.size)),
+                UI.Label(text=x.mount if x.mount else 'Not Mounted'),
+                UI.HContainer(
+                    UI.TipIcon(iconfont='gen-key', 
+                        text='Encrypt Disk', 
+                        id=('ecvd/' + str(self._vdevs.index(x))),
+                        warning='Are you sure you wish to encrypt virtual disk %s? This will erase ALL data on the disk, and is irreversible.'%x.name
+                    ) if x.fstype != 'crypt' else None,
+                    UI.TipIcon(iconfont='gen-arrow-down-3' if x.mount else 'gen-arrow-up-3', 
+                        text='Unmount' if x.mount else 'Mount', 
+                        id=('umvd/' if x.mount else 'mvd/') + str(self._vdevs.index(x))
+                    ) if x.mount != '/' else None,
+                    UI.TipIcon(iconfont='gen-cancel-circle', 
+                        text='Delete', 
+                        id=('delvd/' + str(self._vdevs.index(x))), 
+                        warning='Are you sure you wish to delete virtual disk %s?' % (x.name)
+                    ) if x.delete else None,
+                )
             ))
 
         t = ui.find('pdlist')
 
-        for x in self.devs:
+        for x in self._devs:
             if x.fstype == 'disk':
                 fstype = 'Physical Disk'
             elif x.fstype == 'rom':
                 fstype = 'Optical Disk Drive'
             elif x.fstype == 'part':
                 fstype = 'Disk Partition'
+            elif x.fstype == 'loop':
+                fstype = 'Loopback'
             else:
                 fstype = 'Unknown'
             t.append(UI.DTR(
@@ -101,6 +122,27 @@ class FSPlugin(CategoryPlugin):
                     text='Password'
                 ) if self._add == 'enc' else None,
                 id='dlgAdd'
+            ))
+
+        if self._enc:
+            ui.append('main', UI.DialogBox(
+                UI.FormLine(
+                    UI.EditPassword(id='encpasswd', value='Click to add password'),
+                    text='Password'
+                ),
+                id='dlgEnc'
+            ))
+
+        if self._auth:
+            ui.append('main', UI.DialogBox(
+                UI.FormLine(
+                    UI.Label(text=self._auth.name),
+                    text='For disk:'
+                ),
+                UI.FormLine(
+                    UI.TextInput(name='authpasswd', password=True),
+                    text='Password'
+                ), id='dlgAuth'
             ))
 
         return ui
@@ -174,6 +216,17 @@ class FSPlugin(CategoryPlugin):
         if params[0] == 'del':
             self.fstab.pop(int(params[1]))
             backend.save(self.fstab)
+        if params[0] == 'ecvd':
+            self._enc = self._vdevs[int(params[1])]
+        if params[0] == 'mvd':
+            if self._vdevs[int(params[1])].fstype == 'crypt':
+                self._auth = self._vdevs[int(params[1])]
+            else:
+                self._fsc.mount(self._vdevs[int(params[1])])
+        if params[0] == 'umvd':
+            self._fsc.umount(self._vdevs[int(params[1])], rm=True)
+        if params[0] == 'delvd':
+            self._fsc.delete(self._vdevs[int(params[1])])
 
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):
@@ -184,10 +237,10 @@ class FSPlugin(CategoryPlugin):
                 passwd = vars.getvalue('passwd', '')
                 if not name or not size:
                     self.put_message('err', 'Must choose a name and size')
-                elif name in [x.name for x in self.vdevs]:
+                elif name in [x.name for x in self._vdevs]:
                     self.put_message('err', 'You already have a virtual disk with that name')
-                elif re.search('\.|-|`|\\\\|\/|^test$|[ ]', name):
-                    self.put_message('err', 'Site name must not contain spaces, dots, dashes or special characters')
+                elif re.search('\.|-|`|\\\\|\/|[ ]', name):
+                    self.put_message('err', 'Disk name must not contain spaces, dots, dashes or special characters')
                 elif not can_be_int(size):
                     self.put_message('err', 'Size must be a number in megabytes')
                 elif self._add == 'enc' and not passwd:
@@ -195,8 +248,8 @@ class FSPlugin(CategoryPlugin):
                 elif self._add == 'enc' and passwd != vars.getvalue('passwdb', ''):
                     self.put_message('err', 'Passwords must match')
                 elif self._add == 'enc':
-                    self._fsc.add_vdisk(name, size)
-                    self._fsc.encrypt_vdisk(name, passwd, mount=True)
+                    x = self._fsc.add_vdisk(name, size)
+                    self._fsc.encrypt_vdisk(x, passwd, mount=True)
                 else:
                     self._fsc.add_vdisk(name, size, mount=True)
             self._add = None
@@ -229,3 +282,24 @@ class FSPlugin(CategoryPlugin):
                     self.fstab.append(e)
                 backend.save(self.fstab)
             self._editing = -1
+        if params[0] == 'dlgAuth':
+            if vars.getvalue('action', '') == 'OK':
+                try:
+                    self._fsc.mount(self._auth, vars.getvalue('authpasswd', ''))
+                    self.put_message('info', 'Virtual disk decrypted and mounted successfully')
+                except Exception, e:
+                    self.put_message('err', str(e))
+                self._auth = None
+        if params[0] == 'dlgEnc':
+            if vars.getvalue('action', '') == 'OK':
+                passwd = vars.getvalue('encpasswd', '')
+                if passwd != vars.getvalue('encpasswdb', ''):
+                    self.put_message('err', 'Passwords must match')
+                else:
+                    try:
+                        self._fsc.umount(self._enc)
+                        self._fsc.encrypt_vdisk(self._enc, passwd, mount=True)
+                        self.put_message('info', 'Virtual disk decrypted and mounted successfully')
+                    except Exception, e:
+                        self.put_message('err', str(e))
+                    self._enc = None
