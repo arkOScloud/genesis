@@ -75,7 +75,7 @@ class FSControl(Plugin):
         return devs, vdevs
 
     def add_vdisk(self, name, size, mkfs=True):
-        with open(os.path.join('/vdisk', name), 'wb') as f:
+        with open(os.path.join('/vdisk', name+'.img'), 'wb') as f:
             written = 0
             while (int(size)*1048576) > written:
                 written += 1024
@@ -83,28 +83,35 @@ class FSControl(Plugin):
             f.close()
         if mkfs:
             l = losetup.find_unused_loop_device()
-            l.mount(os.path.join('/vdisk', name))
+            l.mount(os.path.join('/vdisk', name+'.img'))
             s = shell_cs('mkfs.ext4 %s'%l.device)
             if s[0] != 0:
                 raise Exception('Failed to format loop device: %s'%s[1])
             l.unmount()
 
-    def encrypt_vdisk(self, name, passwd, opts={'cipher': 'aes-xts-plain64', 'keysize': '256', 'hash': 'sha1'}, mount=False):
-        dev = None
+    def encrypt_vdisk(self, name, passwd, opts={'cipher': 'aes-xts-plain64', 'keysize': '256', 'hash': 'sha1'}, move=True, mount=False):
         opts = '-c %s -s %s -h %s'%(opts['cipher'], str(opts['keysize']), opts['hash'])
         l = losetup.get_loop_devices()
         for x in l:
-            if l[x].is_used() and l[x].get_filename() == os.path.join('/vdisk', name):
-                dev = l[x]
-                break
-        if not dev:
-            dev = losetup.find_unused_loop_device().mount(os.path.join('/vdisk', name))
-        s = shell_cs('echo "YES\n%s\n%s\n" | cryptsetup %s luksFormat %s'%(passwd,passwd,opts,dev.device), stderr=True)
+            if l[x].is_used() and l[x].get_filename() in [os.path.join('/vdisk', name+'.img'), os.path.join('/vdisk', name+'.crypt')]:
+                l[x].unmount()
+        if move:
+            os.rename(os.path.join('/vdisk', name+'.img'), os.path.join('/vdisk', name+'.crypt'))
+        dev = losetup.find_unused_loop_device().mount(os.path.join('/vdisk', name+'.crypt'))
+        s = shell_cs('echo "%s" | cryptsetup %s luksFormat %s'%(passwd,passwd,opts,dev.device), stderr=True)
+        dev.unmount()
         if s[0] != 0:
-            dev.unmount()
+            if move:
+                os.rename(os.path.join('/vdisk', name+'.crypt'), os.path.join('/vdisk', name+'.img'))
             raise Exception('Failed to encrypt %s: %s'(name, s[1]))
         if mount:
-            s = shell_cs('echo "%s\n" | cryptsetup luksOpen %s %s'%(passwd,dev.device,name), stderr=True)
+            self.mount(name, passwd)
+
+    def mount(self, name, passwd=''):
+        path = os.path.join('/vdisk', name+'.crypt') if passwd != '' else os.path.join('/vdisk', name+'.img')
+        dev = losetup.find_unused_loop_device().mount(path)
+        if passwd != '':
+            s = shell_cs('echo "%s" | cryptsetup luksOpen %s %s'%(passwd,dev.device,name), stderr=True)
             if s[0] != 0:
                 dev.unmount()
                 raise Exception('Failed to decrypt %s: %s'(name, s[1]))
@@ -116,6 +123,23 @@ class FSControl(Plugin):
                 dev.unmount()
                 raise Exception('Failed to mount %s: %s'(name, s[1]))
         else:
+            s = shell_cs('mount %s %s'%(dev.device, os.path.join('/media', name)), stderr=True)
+            if s[0] != 0:
+                dev.unmount()
+                raise Exception('Failed to mount %s: %s'(name, s[1]))
+
+    def umount(self, name, enc=False):
+        dev = None
+        l = losetup.get_loop_devices()
+        for x in l:
+            if l[x].is_used() and l[x].get_filename() in [os.path.join('/vdisk', name+'.img'), os.path.join('/vdisk', name+'.crypt')]:
+                dev = l[x]
+                break
+        if dev and enc:
+            shell('umount /dev/mapper/%s'%name)
+            shell('cryptsetup luksClose %s'%name)
+            dev.unmount()
+        elif dev:
             dev.unmount()
 
 
