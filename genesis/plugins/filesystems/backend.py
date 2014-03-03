@@ -6,6 +6,8 @@ from genesis.api import *
 from genesis.com import *
 from genesis.utils import *
 
+import losetup
+
 
 class Filesystem(object):
     name = ''
@@ -71,6 +73,50 @@ class FSControl(Plugin):
             f.size = os.path.getsize(x)
             vdevs.append(f)
         return devs, vdevs
+
+    def add_vdisk(self, name, size, mkfs=True):
+        with open(os.path.join('/vdisk', name), 'wb') as f:
+            written = 0
+            while (int(size)*1048576) > written:
+                written += 1024
+                f.write(os.urandom(1024))
+            f.close()
+        if mkfs:
+            l = losetup.find_unused_loop_device()
+            l.mount(os.path.join('/vdisk', name))
+            s = shell_cs('mkfs.ext4 %s'%l.device)
+            if s[0] != 0:
+                raise Exception('Failed to format loop device: %s'%s[1])
+            l.unmount()
+
+    def encrypt_vdisk(self, name, passwd, opts={'cipher': 'aes-xts-plain64', 'keysize': '256', 'hash': 'sha1'}, mount=False):
+        dev = None
+        opts = '-c %s -s %s -h %s'%(opts['cipher'], str(opts['keysize']), opts['hash'])
+        l = losetup.get_loop_devices()
+        for x in l:
+            if l[x].is_used() and l[x].get_filename() == os.path.join('/vdisk', name):
+                dev = l[x]
+                break
+        if not dev:
+            dev = losetup.find_unused_loop_device().mount(os.path.join('/vdisk', name))
+        s = shell_cs('echo "YES\n%s\n%s\n" | cryptsetup %s luksFormat %s'%(passwd,passwd,opts,dev.device), stderr=True)
+        if s[0] != 0:
+            dev.unmount()
+            raise Exception('Failed to encrypt %s: %s'(name, s[1]))
+        if mount:
+            s = shell_cs('echo "%s\n" | cryptsetup luksOpen %s %s'%(passwd,dev.device,name), stderr=True)
+            if s[0] != 0:
+                dev.unmount()
+                raise Exception('Failed to decrypt %s: %s'(name, s[1]))
+            if not os.path.isdir(os.path.join('/media', name)):
+                os.mkdir(os.path.join('/media', name))
+            s = shell_cs('mount /dev/mapper/%s %s'%(name, os.path.join('/media', name)), stderr=True)
+            if s[0] != 0:
+                shell('cryptsetup luksClose %s'%name)
+                dev.unmount()
+                raise Exception('Failed to mount %s: %s'(name, s[1]))
+        else:
+            dev.unmount()
 
 
 class Entry:

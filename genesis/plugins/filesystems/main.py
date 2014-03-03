@@ -171,6 +171,9 @@ class FSPlugin(CategoryPlugin):
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):
         if params[0] == 'dlgAdd':
+            if vars.getvalue('action', '') == 'OK':
+                self._fsc.add_vdisk(vars.getvalue('addname', ''),
+                    vars.getvalue('addsize', ''))
             self._add = None
         if params[0] == 'dlgEdit':
             v = vars.getvalue('value', '')
