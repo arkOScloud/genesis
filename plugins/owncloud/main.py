@@ -69,6 +69,7 @@ class ownCloud(Plugin):
 			raise Exception('Must choose an ownCloud password')
 
 	def post_install(self, name, path, vars):
+		datadir = ''
 		dbase = apis.databases(self.app).get_interface('MariaDB')
 		conn = apis.databases(self.app).get_dbconn('MariaDB')
 		if vars.getvalue('oc-dbname', '') == '':
@@ -83,6 +84,10 @@ class ownCloud(Plugin):
 		username = vars.getvalue('oc-username')
 		logpasswd = vars.getvalue('oc-logpasswd')
 
+		if vars.getvalue('oc-ddir', '') != '':
+			datadir = vars.getvalue('oc-ddir')
+			os.mkdirs(os.path.join(datadir, 'data'))
+
 		# Request a database and user to interact with it
 		dbase.add(dbname, conn)
 		dbase.usermod(dbname, 'add', passwd, conn)
@@ -91,7 +96,7 @@ class ownCloud(Plugin):
 		# Set ownership as necessary
 		os.makedirs(os.path.join(path, 'data'))
 		shell('chown -R http:http '+os.path.join(path, 'apps'))
-		shell('chown -R http:http '+os.path.join(path, 'data'))
+		shell('chown -R http:http '+os.path.join(datadir if datadir else path, 'data'))
 		shell('chown -R http:http '+os.path.join(path, 'config'))
 
 		# Create ownCloud automatic configuration file
@@ -107,7 +112,7 @@ class ownCloud(Plugin):
 			'	"dbpass" => "'+passwd+'",\n'
 			'	"dbhost" => "localhost",\n'
 			'	"dbtableprefix" => "",\n'
-			'	"directory" => "'+os.path.join(path, 'data')+'",\n'
+			'	"directory" => "'+os.path.join(datadir if datadir else path, 'data')+'",\n'
 			'	);\n'
 			'?>\n'
 			)
@@ -231,3 +236,9 @@ class ownCloud(Plugin):
 					oc.insert(x[0] + 1, '"forcessl" => false,\n')
 		f.writelines(oc)
 		f.close()
+
+	def show_opts_add(self, ui):
+		poi_sel = []
+		for x in sorted(apis.poicontrol(self.app).get_pois()):
+		    poi_sel.append(UI.SelectOption(text=x.name, value=x.path))
+		ui.appendAll('oc-ddir', *poi_sel)
