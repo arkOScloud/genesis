@@ -145,6 +145,8 @@ def run_server(log_level=logging.INFO, config_file=''):
     # Load and verify security rules
     log.info('Starting security plugin...')
     genesis.apis.networkcontrol(app).session_start()
+    log.info('Generating points of interest...')
+    genesis.apis.poicontrol(app).generate_pois()
 
     # Start server
     host = config.get('genesis','bind_host')

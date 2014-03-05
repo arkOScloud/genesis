@@ -25,7 +25,7 @@ class Filesystem(object):
 class FSControl(Plugin):
     def get_filesystems(self):
         devs, vdevs = [],[]
-        fdisk = shell('lsblk -pnblo NAME,SIZE,TYPE,MOUNTPOINT,PKNAME').split('\n')
+        fdisk = shell('lsblk -Ppnbo NAME,SIZE,TYPE,MOUNTPOINT,PKNAME').split('\n')
         l = losetup.get_loop_devices()
         l = [l[x] for x in l if l[x].is_used()]
 
@@ -33,6 +33,8 @@ class FSControl(Plugin):
             if not x.split():
                 continue
             x = x.split()
+            for y in enumerate(x):
+                x[y[0]] = y[1].split('"')[1::2][0]
 
             f = Filesystem()
             f.name = x[0].split('/')[-1]
@@ -174,6 +176,8 @@ class FSControl(Plugin):
             if s[0] != 0:
                 dev.unmount()
                 raise Exception('Failed to mount %s: %s'%(fs.name, s[1]))
+        apis.poicontrol(self.app).add(fs.name, 'vdisk', 
+            fs.mount, 'filesystems', False)
 
     def umount(self, fs, rm=False):
         if not fs.mount:
@@ -195,6 +199,7 @@ class FSControl(Plugin):
             if s[0] != 0:
                 raise Exception('Failed to unmount %s: %s'%(fs.name, s[1]))
             dev.unmount()
+        apis.poicontrol(self.app).drop_by_path(fs.mount)
         if rm:
             shutil.rmtree(fs.mount)
 
