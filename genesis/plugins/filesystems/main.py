@@ -34,7 +34,7 @@ class FSPlugin(CategoryPlugin):
         for x in self._vdevs:
             t.append(UI.DTR(
                 UI.Iconfont(iconfont=x.icon),
-                UI.Label(text=x.name, bold=False if x.parent else True),
+                UI.Label(text=x.name),
                 UI.Label(text='Encrypted Disk' if x.fstype == 'crypt' else 'Virtual Disk'),
                 UI.Label(text=str_fsize(x.size)),
                 UI.Label(text=x.mount if x.mount else 'Not Mounted'),
@@ -222,11 +222,23 @@ class FSPlugin(CategoryPlugin):
             if self._vdevs[int(params[1])].fstype == 'crypt':
                 self._auth = self._vdevs[int(params[1])]
             else:
-                self._fsc.mount(self._vdevs[int(params[1])])
+                try:
+                    self._fsc.mount(self._vdevs[int(params[1])])
+                    self.put_message('info', 'Virtual disk mounted successfully')
+                except Exception, e:
+                    self.put_message('err', str(e))
         if params[0] == 'umvd':
-            self._fsc.umount(self._vdevs[int(params[1])], rm=True)
+            try:
+                self._fsc.umount(self._vdevs[int(params[1])], rm=True)
+                self.put_message('info', 'Virtual disk unmounted successfully')
+            except Exception, e:
+                self.put_message('err', str(e))
         if params[0] == 'delvd':
-            self._fsc.delete(self._vdevs[int(params[1])])
+            try:
+                self._fsc.delete(self._vdevs[int(params[1])])
+                self.put_message('info', 'Virtual disk deleted successfully')
+            except Exception, e:
+                self.put_message('err', str(e))
 
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):
@@ -302,4 +314,4 @@ class FSPlugin(CategoryPlugin):
                         self.put_message('info', 'Virtual disk decrypted and mounted successfully')
                     except Exception, e:
                         self.put_message('err', str(e))
-                    self._enc = None
+            self._enc = None
