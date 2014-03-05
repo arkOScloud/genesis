@@ -101,6 +101,8 @@ class FSControl(Plugin):
                 f.icon = 'gen-lock'
                 f.size = os.path.getsize(x)
                 vdevs.append(f)
+        devs = sorted(devs, key=lambda x: x.name)
+        vdevs = sorted(vdevs, key=lambda x: x.name)
         return devs, vdevs
 
     def add_vdisk(self, name, size, mkfs=True, mount=False):
