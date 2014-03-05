@@ -3,6 +3,7 @@ import os
 import glob
 import shutil
 
+from genesis import apis
 from genesis.api import *
 from genesis.com import *
 from genesis.utils import *
@@ -157,48 +158,60 @@ class FSControl(Plugin):
             self.mount(fs, passwd)
 
     def mount(self, fs, passwd=''):
-        dev = losetup.find_unused_loop_device()
-        dev.mount(fs.img)
         if not os.path.isdir(os.path.join('/media', fs.name)):
             os.mkdir(os.path.join('/media', fs.name))
-        if fs.fstype == 'crypt':
-            s = shell_cs('echo "%s" | cryptsetup luksOpen %s %s'%(passwd,dev.device,fs.name), stderr=True)
-            if s[0] != 0:
-                dev.unmount()
-                raise Exception('Failed to decrypt %s: %s'%(fs.name, s[1]))
-            s = shell_cs('mount /dev/mapper/%s %s'%(fs.name, os.path.join('/media', fs.name)), stderr=True)
-            if s[0] != 0:
-                shell('cryptsetup luksClose %s'%fs.name)
-                dev.unmount()
-                raise Exception('Failed to mount %s: %s'%(fs.name, s[1]))
+        if fs.fstype in ['crypt', 'vdisk', 'loop']:
+            dev = losetup.find_unused_loop_device()
+            dev.mount(fs.img)
+            if fs.fstype == 'crypt':
+                s = shell_cs('echo "%s" | cryptsetup luksOpen %s %s'%(passwd,dev.device,fs.name), stderr=True)
+                if s[0] != 0:
+                    dev.unmount()
+                    raise Exception('Failed to decrypt %s: %s'%(fs.name, s[1]))
+                s = shell_cs('mount /dev/mapper/%s %s'%(fs.name, os.path.join('/media', fs.name)), stderr=True)
+                if s[0] != 0:
+                    shell('cryptsetup luksClose %s'%fs.name)
+                    dev.unmount()
+                    raise Exception('Failed to mount %s: %s'%(fs.name, s[1]))
+            else:
+                s = shell_cs('mount %s %s'%(dev.device, os.path.join('/media', fs.name)), stderr=True)
+                if s[0] != 0:
+                    dev.unmount()
+                    raise Exception('Failed to mount %s: %s'%(fs.name, s[1]))
+            apis.poicontrol(self.app).add(fs.name, 'vdisk', 
+                fs.mount, 'filesystems', False)
         else:
-            s = shell_cs('mount %s %s'%(dev.device, os.path.join('/media', fs.name)), stderr=True)
+            s = shell_cs('mount %s %s'%(fs.dev, os.path.join('/media', fs.name)), stderr=True)
             if s[0] != 0:
-                dev.unmount()
                 raise Exception('Failed to mount %s: %s'%(fs.name, s[1]))
-        apis.poicontrol(self.app).add(fs.name, 'vdisk', 
-            fs.mount, 'filesystems', False)
+            apis.poicontrol(self.app).add(fs.name, 'disk', 
+                fs.mount, 'filesystems', False)
 
     def umount(self, fs, rm=False):
         if not fs.mount:
             return
-        dev = None
-        l = losetup.get_loop_devices()
-        for x in l:
-            if l[x].is_used() and l[x].get_filename() == fs.img:
-                dev = l[x]
-                break
-        if dev and fs.fstype == 'crypt':
-            s = shell_cs('umount /dev/mapper/%s'%fs.name, stderr=True)
+        if fs.fstype in ['crypt', 'vdisk', 'loop']:
+            dev = None
+            l = losetup.get_loop_devices()
+            for x in l:
+                if l[x].is_used() and l[x].get_filename() == fs.img:
+                    dev = l[x]
+                    break
+            if dev and fs.fstype == 'crypt':
+                s = shell_cs('umount /dev/mapper/%s'%fs.name, stderr=True)
+                if s[0] != 0:
+                    raise Exception('Failed to unmount %s: %s'%(fs.name, s[1]))
+                shell('cryptsetup luksClose %s'%fs.name)
+                dev.unmount()
+            elif dev:
+                s = shell_cs('umount %s'%dev.device, stderr=True)
+                if s[0] != 0:
+                    raise Exception('Failed to unmount %s: %s'%(fs.name, s[1]))
+                dev.unmount()
+        else:
+            s = shell_cs('umount %s'%fs.name, stderr=True)
             if s[0] != 0:
                 raise Exception('Failed to unmount %s: %s'%(fs.name, s[1]))
-            shell('cryptsetup luksClose %s'%fs.name)
-            dev.unmount()
-        elif dev:
-            s = shell_cs('umount %s'%dev.device, stderr=True)
-            if s[0] != 0:
-                raise Exception('Failed to unmount %s: %s'%(fs.name, s[1]))
-            dev.unmount()
         apis.poicontrol(self.app).drop_by_path(fs.mount)
         if rm:
             shutil.rmtree(fs.mount)

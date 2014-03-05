@@ -46,7 +46,7 @@ class FSPlugin(CategoryPlugin):
                     ) if x.fstype != 'crypt' else None,
                     UI.TipIcon(iconfont='gen-arrow-down-3' if x.mount else 'gen-arrow-up-3', 
                         text='Unmount' if x.mount else 'Mount', 
-                        id=('umvd/' if x.mount else 'mvd/') + str(self._vdevs.index(x))
+                        id=('umd/' if x.mount else 'md/') + str(self._vdevs.index(x))
                     ) if x.mount != '/' else None,
                     UI.TipIcon(iconfont='gen-cancel-circle', 
                         text='Delete', 
@@ -73,7 +73,13 @@ class FSPlugin(CategoryPlugin):
                 UI.Iconfont(iconfont=x.icon),
                 UI.Label(text=x.name, bold=False if x.parent else True),
                 UI.Label(text=fstype),
-                UI.Label(text=str_fsize(x.size))
+                UI.Label(text=str_fsize(x.size)),
+                UI.HContainer(
+                    UI.TipIcon(iconfont='gen-arrow-down-3' if x.mount else 'gen-arrow-up-3', 
+                        text='Unmount' if x.mount else 'Mount', 
+                        id=('umd/' if x.mount else 'md/') + str(self._devs.index(x))
+                    ) if x.mount != '/' else None,
+                )
             ))
 
         t = ui.find('list')
@@ -218,6 +224,20 @@ class FSPlugin(CategoryPlugin):
             backend.save(self.fstab)
         if params[0] == 'ecvd':
             self._enc = self._vdevs[int(params[1])]
+        if params[0] == 'md':
+            self._tab = 1
+            try:
+                self._fsc.mount(self._devs[int(params[1])])
+                self.put_message('info', 'Disk mounted successfully')
+            except Exception, e:
+                self.put_message('err', str(e))
+        if params[0] == 'umd':
+            self._tab = 1
+            try:
+                self._fsc.umount(self._devs[int(params[1])], rm=True)
+                self.put_message('info', 'Disk unmounted successfully')
+            except Exception, e:
+                self.put_message('err', str(e))
         if params[0] == 'mvd':
             if self._vdevs[int(params[1])].fstype == 'crypt':
                 self._auth = self._vdevs[int(params[1])]
