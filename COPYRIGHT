@@ -1,5 +1,5 @@
 arkOS Genesis
-Copyright (c) 2013 The CitizenWeb Project
+Copyright (c) 2013-2014 The CitizenWeb Project
 Licensed under GPLv3, see LICENSE for more information
 
 Portions copyright (c) 2010-2011 The Ajenti Team
@@ -13,7 +13,6 @@ Ajenti Contributors:
 * Paul Shepel <tacid@tacid.kiev.ua>
 
 Various parts:
+* losetup.py (c) 2008 Sergey Kirillov, Rainboo Software
 * CodeMirror embeddable editor (c) Marijn Haverbeke <marijnh@gmail.com>
 * PyTE (c) Selectel <https://github.com/selectel/pyte>, see plugins/terminal/pyte/
-* Fugue icons (c) Yusuke Kamiyamane: http://p.yusukekamiyamane.com/
-* Faenza icons (c) Matthieu James <matthieu.james@gmail.com>
