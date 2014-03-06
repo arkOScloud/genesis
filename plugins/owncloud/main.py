@@ -176,6 +176,7 @@ class ownCloud(Plugin):
         dbase.usermod(dbname, 'del', '', conn)
         if datadir:
             shutil.rmtree(datadir)
+            phpctl.open_basedir('del', datadir)
 
     def post_remove(self, name):
         pass

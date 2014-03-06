@@ -49,3 +49,16 @@ class PHP(Plugin):
                     oc.append(l)
             f.writelines(oc)
             f.close()
+        elif op == 'del':
+            ic = open('/etc/php/php.ini', 'r').readlines()
+            f = open('/etc/php/php.ini', 'w')
+            oc = []
+            for l in ic:
+                if 'open_basedir = ' in l and path in l:
+                    l = l.replace(':'+path, '')
+                    l = l.replace(':'+path+'/', '')
+                    oc.append(l)
+                else:
+                    oc.append(l)
+            f.writelines(oc)
+            f.close()
