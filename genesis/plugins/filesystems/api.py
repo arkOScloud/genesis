@@ -13,9 +13,12 @@ class POI(object):
 
 
 class POIControl(apis.API):
+    pois = []
+
     def __init__(self, app):
         self.app = app
         self.pois = []
+        self.generate_pois()
 
     def add(self, name, ptype, path, created_by='', remove=True):
         i = POI()
