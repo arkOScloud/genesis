@@ -22,7 +22,7 @@ CATEGORIES = [
             "Contacts"]
     }
 ]
-VERSION = '6.0.1-2'
+VERSION = '6.0.2-1'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
@@ -106,7 +106,7 @@ GENERATION = 1
 
 # Webapp metadata
 WA_PLUGIN = 'ownCloud'
-DPATH = 'https://download.owncloud.org/community/owncloud-6.0.1.tar.bz2'
+DPATH = 'https://download.owncloud.org/community/owncloud-6.0.2.tar.bz2'
 DBENGINE = 'MariaDB'
 PHP = True
 NOMULTI = True

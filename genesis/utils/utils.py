@@ -266,6 +266,14 @@ def hashpw(passw, scheme = 'sha512_crypt'):
     return sha512_crypt.encrypt(passw)
 
 
+def can_be_int(data):
+    try: 
+        int(data)
+        return True
+    except ValueError:
+        return False
+
+
 def str_fsize(sz):
     """
     Formats file size as string (1.2 Mb)

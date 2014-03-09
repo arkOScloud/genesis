@@ -142,11 +142,12 @@ def run_server(log_level=logging.INFO, config_file=''):
         except Exception, e:
             log.error('System time could not be set. Error: %s' % str(e))
 
+    # Make sure correct kernel modules are enabled
+    genesis.utils.shell('modprobe ip_tables')
+    genesis.utils.shell('modprobe loop')
     # Load and verify security rules
     log.info('Starting security plugin...')
     genesis.apis.networkcontrol(app).session_start()
-    # Make sure correct kernel modules are enabled
-    genesis.utils.shell('modprobe ip_tables')
 
     # Start server
     host = config.get('genesis','bind_host')

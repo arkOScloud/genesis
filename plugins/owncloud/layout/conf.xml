@@ -7,6 +7,10 @@
 	</formline>
 	<br />
 	<label text="The following are OPTIONAL, if you do not choose them, then they will be automatically generated for you on install." />
+	<formline text="ownCloud Data Directory" help="If you want the data to be stored in the default location, please leave this blank.">
+		<selecttextinput id="oc-ddir" name="oc-ddir">
+		</selecttextinput>
+	</formline>
 	<formline text="Database Name" help="A database user with full rights on this database will be created of the same name.">
 	    <textinput name="oc-dbname" id="oc-dbname" />
 	</formline>

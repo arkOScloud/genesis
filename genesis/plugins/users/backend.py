@@ -77,6 +77,12 @@ class UsersBackend(Plugin):
     def add_user(self, v):
         shell(self.cfg.cmd_add.format(v))
 
+    def add_sys_user(self, v):
+        shell(self.cfg.cmd_add_sys.format(v))
+
+    def add_sys_with_home(self, v):
+        shell(self.cfg.cmd_add_sys_with_home.format(v))
+
     def add_group(self, v):
         shell(self.cfg.cmd_add_group.format(v))
 
@@ -107,6 +113,8 @@ class LinuxConfig(ModuleConfig):
     platform = ['debian', 'arch', 'arkos', 'fedora', 'centos', 'gentoo', 'mandriva']
 
     cmd_add = 'useradd -m {0}'
+    cmd_add_sys = 'useradd -r {0}'
+    cmd_add_sys_with_home = 'useradd -rm {0}'
     cmd_del = 'userdel {0}'
     cmd_del_with_home = 'userdel -r {0}'
     cmd_add_group = 'groupadd {0}'
