@@ -207,10 +207,26 @@ class WebappControl(Plugin):
 		# Update the nginx serverblock
 		c = nginx.loadf(os.path.join('/etc/nginx/sites-available', oldsite.name))
 		c.filter('Comment')[0].comment = 'GENESIS %s %s' % (site.stype, (('https://' if site.ssl else 'http://')+site.addr+':'+site.port))
-		c.servers[0].filter('Key', 'listen')[0].value = site.port+' ssl' if site.ssl else site.port
-		c.servers[0].filter('Key', 'server_name')[0].value = site.addr
-		c.servers[0].filter('Key', 'root')[0].value = site.path
-		c.servers[0].filter('Key', 'index')[0].value = 'index.php' if site.php else 'index.html'
+		s = c.servers[0]
+		if oldsite.ssl and oldsite.port == '443':
+			for x in c.servers:
+				if x.filter('Key', 'listen')[0].value == '443 ssl':
+					s = x
+			if site.port != '443':
+				for x in c.servers:
+					if not 'ssl' in x.filter('Key', 'listen')[0].value \
+					and x.filter('key', 'return'):
+						c.remove(x)
+		elif site.port == '443':
+			c.add(nginx.Server(
+				nginx.Key('listen', '80'),
+				nginx.Key('server_name', site.addr),
+				nginx.Key('return', '301 https://%s$request_uri'%site.addr)
+			))
+		s.filter('Key', 'listen')[0].value = site.port+' ssl' if site.ssl else site.port
+		s.filter('Key', 'server_name')[0].value = site.addr
+		s.filter('Key', 'root')[0].value = site.path
+		s.filter('Key', 'index')[0].value = 'index.php' if site.php else 'index.html'
 		nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', oldsite.name))
 		# If the name was changed, rename the folder and files
 		if site.name != oldsite.name:
@@ -258,28 +274,38 @@ class WebappControl(Plugin):
 	def php_reload(self):
 		status = shell_cs('systemctl restart php-fpm')
 		if status[0] >= 1:
-			raise Exception('nginx failed to reload.')
+			raise Exception('PHP FastCGI failed to reload.')
 
 	def ssl_enable(self, data, cpath, kpath):
 		name, stype = data.name, data.stype
 		port = '443'
 		c = nginx.loadf('/etc/nginx/sites-available/'+name)
-		l = c.servers[0].filter('Key', 'listen')[0]
+		s = c.servers[0]
+		l = s.filter('Key', 'listen')[0]
 		if l.value == '80':
 			l.value = '443 ssl'
 			port = '443'
+			c.add(nginx.Server(
+				nginx.Key('listen', '80'),
+				nginx.Key('server_name', data.addr),
+				nginx.Key('return', '301 https://%s$request_uri'%data.addr)
+			))
+			for x in c.servers:
+				if x.filter('Key', 'listen')[0].value == '443 ssl':
+					s = x
+					break
 		else:
 			port = l.value.split(' ssl')[0]
 			l.value = l.value.split(' ssl')[0] + ' ssl'
-		if c.servers[0].filter('Key', 'ssl_certificate'):
-			c.servers[0].remove(*c.servers[0].filter('Key', 'ssl_certificate'))
-		if c.servers[0].filter('Key', 'ssl_certificate_key'):
-			c.servers[0].remove(*c.servers[0].filter('Key', 'ssl_certificate_key'))
-		if c.servers[0].filter('Key', 'ssl_protocols'):
-			c.servers[0].remove(*c.servers[0].filter('Key', 'ssl_protocols'))
-		if c.servers[0].filter('Key', 'ssl_ciphers'):
-			c.servers[0].remove(*c.servers[0].filter('Key', 'ssl_ciphers'))
-		c.servers[0].add(
+		if s.filter('Key', 'ssl_certificate'):
+			s.remove(*s.filter('Key', 'ssl_certificate'))
+		if s.filter('Key', 'ssl_certificate_key'):
+			s.remove(*s.filter('Key', 'ssl_certificate_key'))
+		if s.filter('Key', 'ssl_protocols'):
+			s.remove(*s.filter('Key', 'ssl_protocols'))
+		if s.filter('Key', 'ssl_ciphers'):
+			s.remove(*s.filter('Key', 'ssl_ciphers'))
+		s.add(
 			nginx.Key('ssl_certificate', cpath),
 			nginx.Key('ssl_certificate_key', kpath),
 			nginx.Key('ssl_protocols', 'SSLv3 TLSv1 TLSv1.1 TLSv1.2'),
@@ -294,19 +320,27 @@ class WebappControl(Plugin):
 	def ssl_disable(self, data):
 		name, stype = data.name, data.stype
 		port = '80'
+		s = None
 		c = nginx.loadf('/etc/nginx/sites-available/'+name)
-		l = c.servers[0].filter('Key', 'listen')[0]
+		if len(c.servers) > 1:
+			for x in c.servers:
+				if not 'ssl' in x.filter('Key', 'listen')[0].value \
+				and x.filter('key', 'return'):
+					c.remove(x)
+					break
+		s = c.servers[0]
+		l = s.filter('Key', 'listen')[0]
 		if l.value == '443 ssl':
 			l.value = '80'
 			port = '80'
 		else:
 			l.value = l.value.rstrip(' ssl')
 			port = l.value
-		c.servers[0].remove(
-			c.servers[0].filter('Key', 'ssl_certificate')[0],
-			c.servers[0].filter('Key', 'ssl_certificate_key')[0],
-			c.servers[0].filter('Key', 'ssl_protocols')[0],
-			c.servers[0].filter('Key', 'ssl_ciphers')[0]
+		s.remove(
+			s.filter('Key', 'ssl_certificate')[0],
+			s.filter('Key', 'ssl_certificate_key')[0],
+			s.filter('Key', 'ssl_protocols')[0],
+			s.filter('Key', 'ssl_ciphers')[0]
 			)
 		c.filter('Comment')[0].comment = 'GENESIS %s http://%s:%s' \
 			% (stype, data.addr, port)

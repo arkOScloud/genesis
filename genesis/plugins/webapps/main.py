@@ -262,6 +262,10 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					self.put_message('err', 'Can\'t use the same port number as Genesis')
 				elif not vaddr:
 					self.put_message('err', 'Site must have either a different domain/subdomain or a different port')
+				elif self._edit.ssl and port == '80':
+					self.put_message('err', 'Cannot set an HTTPS site to port 80')
+				elif not self._edit.ssl and port == '443':
+					self.put_message('err', 'Cannot set an HTTP-only site to port 443')
 				else:
 					w = Webapp()
 					w.name = name
@@ -273,6 +277,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					w.php = self._edit.php
 					self.mgr.nginx_edit(self._edit, w)
 					apis.networkcontrol(self.app).change_webapp(self._edit, w)
+					self.put_message('info', 'Site edited successfully')
 			self._edit = None
 		if params[0] == 'dlgSetup':
 			if vars.getvalue('action', '') == 'OK':

@@ -40,6 +40,19 @@ class Website(Plugin):
                 raise Exception('Database name must be shorter than 16 characters')
 
     def post_install(self, name, path, vars):
+        # Write a basic index file showing that we are here
+        if vars.getvalue('php', '0') == '1':
+            php = True
+            path = os.path.join(path, 'htdocs')
+            os.mkdir(path)
+            c = nginx.loadf(os.path.join('/etc/nginx/sites-available', name))
+            for x in c.servers:
+                if x.filter('Key', 'root'):
+                    x.filter('Key', 'root')[0].value = path
+            nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', name))
+        else:
+            php = False
+            
         # Create a database if the user wants one
         if php:
             phpctl = apis.langassist(self.app).get_interface('PHP')
@@ -60,16 +73,6 @@ class Website(Plugin):
             if php:
                 phpctl.enable_mod('mysql')
 
-        # Write a basic index file showing that we are here
-        if vars.getvalue('php', '0') == '1':
-            php = True
-            path = os.path.join(path, 'htdocs')
-            os.mkdir(path)
-            c = nginx.loadf(os.path.join('/etc/nginx/sites-available', name))
-            c.servers[0].filter('Key', 'root')[0].value = path
-            nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', name))
-        else:
-            php = False
         f = open(os.path.join(path, 'index.'+('php' if php is True else 'html')), 'w')
         f.write(
             '<html>\n'
