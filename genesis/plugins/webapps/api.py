@@ -70,12 +70,20 @@ class Webapps(apis.API):
 
             # Get actual values
             try:
+                s = None
                 c = nginx.loadf(w.path)
                 w.stype = re.match(rtype, c.filter('Comment')[0].comment).group(1)
-                w.port, w.ssl = re.match(rport, c.servers[0].filter('Key', 'listen')[0].value).group(1, 2)
-                w.addr = c.servers[0].filter('Key', 'server_name')[0].value
-                w.path = c.servers[0].filter('Key', 'root')[0].value
-                w.php = True if 'php' in c.servers[0].filter('Key', 'index')[0].value else False
+                # Get the right serverblock - SSL if it's here
+                for x in c.servers:
+                    if 'ssl' in x.filter('Key', 'listen')[0].value:
+                        s = x
+                        break
+                if not s:
+                    s = c.servers[0]
+                w.port, w.ssl = re.match(rport, s.filter('Key', 'listen')[0].value).group(1, 2)
+                w.addr = s.filter('Key', 'server_name')[0].value
+                w.path = s.filter('Key', 'root')[0].value
+                w.php = True if 'php' in s.filter('Key', 'index')[0].value else False
             except IndexError:
                 pass
 

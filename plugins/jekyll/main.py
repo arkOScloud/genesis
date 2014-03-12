@@ -21,7 +21,9 @@ class Jekyll(Plugin):
 	def post_install(self, name, path, vars):
 		# Make sure the webapps config points to the _site directory and generate it.
 		c = nginx.loadf(os.path.join('/etc/nginx/sites-available', name))
-		c.servers[0].filter('Key', 'root')[0].value = os.path.join(path, '_site')
+		for x in c.servers:
+			if x.filter('Key', 'root'):
+				x.filter('Key', 'root')[0].value = os.path.join(path, '_site')
 		nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', name))
 		s = shell_cs('jekyll build --source '+path+' --destination '+os.path.join(path, '_site'), stderr=True)
 		if s[0] != 0:
