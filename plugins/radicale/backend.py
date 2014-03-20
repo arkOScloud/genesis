@@ -46,132 +46,132 @@ class GeneralConfig(ModuleConfig):
 
 
 class RadicaleControl(Plugin):
-    default_config = """
-        [server]
-        # CalDAV server hostnames separated by a comma
-        # IPv4 syntax: address:port
-        # IPv6 syntax: [address]:port
-        # For example: 0.0.0.0:9999, [::]:9999
-        # IPv6 adresses are configured to only allow IPv6 connections
-        hosts = 0.0.0.0:5232
-        # Daemon flag
-        daemon = False
-        # File storing the PID in daemon mode
-        pid =
-        # SSL flag, enable HTTPS protocol
-        ssl = False
-        # SSL certificate path
-        certificate = /etc/apache2/ssl/server.crt
-        # SSL private key
-        key = /etc/apache2/ssl/server.key
-        # Reverse DNS to resolve client address in logs
-        dns_lookup = True
-        # Root URL of Radicale (starting and ending with a slash)
-        base_prefix = /
-        # Message displayed in the client when a password is needed
-        realm = Radicale - Password Required lol
-
-
-        [encoding]
-        # Encoding for responding requests
-        request = utf-8
-        # Encoding for storing local collections
-        stock = utf-8
-
-
-        [auth]
-        # Authentication method
-        # Value: None | htpasswd | IMAP | LDAP | PAM | courier | http
-        type = None
-
-        # Usernames used for public collections, separated by a comma
-        public_users = public
-        # Usernames used for private collections, separated by a comma
-        private_users = private
-        # Htpasswd filename
-        htpasswd_filename = /etc/radicale/users
-        # Htpasswd encryption method
-        # Value: plain | sha1 | crypt
-        htpasswd_encryption = crypt
-
-        # LDAP server URL, with protocol and port
-        ldap_url = ldap://localhost:389/
-        # LDAP base path
-        ldap_base = ou=users,dc=example,dc=com
-        # LDAP login attribute
-        ldap_attribute = uid
-        # LDAP filter string
-        # placed as X in a query of the form (&(...)X)
-        # example: (objectCategory=Person)(objectClass=User)(memberOf=cn=calenderusers,ou=users,dc=example,dc=org)
-        # leave empty if no additional filter is needed
-        ldap_filter =
-        # LDAP dn for initial login, used if LDAP server does not allow anonymous searches
-        # Leave empty if searches are anonymous
-        ldap_binddn =
-        # LDAP password for initial login, used with ldap_binddn
-        ldap_password =
-        # LDAP scope of the search
-        ldap_scope = OneLevel
-
-        # IMAP Configuration
-        imap_hostname = localhost
-        imap_port = 143
-        imap_ssl = False
-
-        # PAM group user should be member of
-        pam_group_membership =
-
-        # Path to the Courier Authdaemon socket
-        courier_socket =
-
-        # HTTP authentication request URL endpoint
-        http_url =
-        # POST parameter to use for username
-        http_user_parameter =
-        # POST parameter to use for password
-        http_password_parameter =
-
-
-        [rights]
-        # Rights management method
-        # Value: None | owner_only | owner_write | from_file
-        type = owner_only
-
-        # File for rights management from_file
-        file = ~/.config/radicale/rights
-
-
-        [storage]
-        # Storage backend
-        # Value: filesystem | database
-        type = filesystem
-
-        # Folder for storing local collections, created if not present
-        filesystem_folder = ~/.config/radicale/collections
-
-        # Database URL for SQLAlchemy
-        # dialect+driver://user:password@host/dbname[?key=value..]
-        # For example: sqlite:///var/db/radicale.db, postgresql://user:password@localhost/radicale
-        # See http://docs.sqlalchemy.org/en/rel_0_8/core/engines.html#sqlalchemy.create_engine
-        database_url =
-
-
-        [logging]
-        # Logging configuration file
-        # If no config is given, simple information is printed on the standard output
-        # For more information about the syntax of the configuration file, see:
-        # http://docs.python.org/library/logging.config.html
-        config = /etc/radicale/logging
-        # Set the default logging level to debug
-        debug = False
-        # Store all environment variables (including those set in the shell)
-        full_environment = False
-
-
-        # Additional HTTP headers
-        #[headers]
-        #Access-Control-Allow-Origin = *
-        """
+    default_config = (
+        '[server]\n'
+        '# CalDAV server hostnames separated by a comma\n'
+        '# IPv4 syntax: address:port\n'
+        '# IPv6 syntax: [address]:port\n'
+        '# For example: 0.0.0.0:9999, [::]:9999\n'
+        '# IPv6 adresses are configured to only allow IPv6 connections\n'
+        'hosts = 0.0.0.0:5232\n'
+        '# Daemon flag\n'
+        'daemon = False\n'
+        '# File storing the PID in daemon mode\n'
+        'pid =\n'
+        '# SSL flag, enable HTTPS protocol\n'
+        'ssl = False\n'
+        '# SSL certificate path\n'
+        'certificate = /etc/apache2/ssl/server.crt\n'
+        '# SSL private key\n'
+        'key = /etc/apache2/ssl/server.key\n'
+        '# Reverse DNS to resolve client address in logs\n'
+        'dns_lookup = True\n'
+        '# Root URL of Radicale (starting and ending with a slash)\n'
+        'base_prefix = /\n'
+        '# Message displayed in the client when a password is needed\n'
+        'realm = Radicale - Password Required lol\n'
+        '\n'
+        '\n'
+        '[encoding]\n'
+        '# Encoding for responding requests\n'
+        'request = utf-8\n'
+        '# Encoding for storing local collections\n'
+        'stock = utf-8\n'
+        '\n'
+        '\n'
+        '[auth]\n'
+        '# Authentication method\n'
+        '# Value: None | htpasswd | IMAP | LDAP | PAM | courier | http\n'
+        'type = None\n'
+        '\n'
+        '# Usernames used for public collections, separated by a comma\n'
+        'public_users = public\n'
+        '# Usernames used for private collections, separated by a comma\n'
+        'private_users = private\n'
+        '# Htpasswd filename\n'
+        'htpasswd_filename = /etc/radicale/users\n'
+        '# Htpasswd encryption method\n'
+        '# Value: plain | sha1 | crypt\n'
+        'htpasswd_encryption = crypt\n'
+        '\n'
+        '# LDAP server URL, with protocol and port\n'
+        'ldap_url = ldap://localhost:389/\n'
+        '# LDAP base path\n'
+        'ldap_base = ou=users,dc=example,dc=com\n'
+        '# LDAP login attribute\n'
+        'ldap_attribute = uid\n'
+        '# LDAP filter string\n'
+        '# placed as X in a query of the form (&(...)X)\n'
+        '# example: (objectCategory=Person)(objectClass=User)(memberOf=cn=calenderusers,ou=users,dc=example,dc=org)\n'
+        '# leave empty if no additional filter is needed\n'
+        'ldap_filter =\n'
+        '# LDAP dn for initial login, used if LDAP server does not allow anonymous searches\n'
+        '# Leave empty if searches are anonymous\n'
+        'ldap_binddn =\n'
+        '# LDAP password for initial login, used with ldap_binddn\n'
+        'ldap_password =\n'
+        '# LDAP scope of the search\n'
+        'ldap_scope = OneLevel\n'
+        '\n'
+        '# IMAP Configuration\n'
+        'imap_hostname = localhost\n'
+        'imap_port = 143\n'
+        'imap_ssl = False\n'
+        '\n'
+        '# PAM group user should be member of\n'
+        'pam_group_membership =\n'
+        '\n'
+        '# Path to the Courier Authdaemon socket\n'
+        'courier_socket =\n'
+        '\n'
+        '# HTTP authentication request URL endpoint\n'
+        'http_url =\n'
+        '# POST parameter to use for username\n'
+        'http_user_parameter =\n'
+        '# POST parameter to use for password\n'
+        'http_password_parameter =\n'
+        '\n'
+        '\n'
+        '[rights]\n'
+        '# Rights management method\n'
+        '# Value: None | owner_only | owner_write | from_file\n'
+        'type = None\n'
+        '\n'
+        '# File for rights management from_file\n'
+        'file = ~/.config/radicale/rights\n'
+        '\n'
+        '\n'
+        '[storage]\n'
+        '# Storage backend\n'
+        '# Value: filesystem | database\n'
+        'type = filesystem\n'
+        '\n'
+        '# Folder for storing local collections, created if not present\n'
+        'filesystem_folder = ~/.config/radicale/collections\n'
+        '\n'
+        '# Database URL for SQLAlchemy\n'
+        '# dialect+driver://user:password@host/dbname[?key=value..]\n'
+        '# For example: sqlite:///var/db/radicale.db, postgresql://user:password@localhost/radicale\n'
+        '# See http://docs.sqlalchemy.org/en/rel_0_8/core/engines.html#sqlalchemy.create_engine\n'
+        'database_url =\n'
+        '\n'
+        '\n'
+        '[logging]\n'
+        '# Logging configuration file\n'
+        '# If no config is given, simple information is printed on the standard output\n'
+        '# For more information about the syntax of the configuration file, see:\n'
+        '# http://docs.python.org/library/logging.config.html\n'
+        'config = /etc/radicale/logging\n'
+        '# Set the default logging level to debug\n'
+        'debug = False\n'
+        '# Store all environment variables (including those set in the shell)\n'
+        'full_environment = False\n'
+        '\n'
+        '\n'
+        '# Additional HTTP headers\n'
+        '#[headers]\n'
+        '#Access-Control-Allow-Origin = *\n'
+        )
 
     def add_user(self, user, passwd):
         ic = []
@@ -230,8 +230,6 @@ class RadicaleControl(Plugin):
         users = UsersBackend(self.app)
         if not pyctl.is_installed('radicale'):
             pyctl.install('radicale')
-        if not pyctl.is_installed('uWSGI'):
-            pyctl.install('uwsgi')
         if not os.path.exists('/etc/radicale/config'):
             if not os.path.isdir('/etc/radicale'):
                 os.mkdir('/etc/radicale')
@@ -250,7 +248,7 @@ class RadicaleControl(Plugin):
         if s:
             s[0].order('new', 'radicale', 'program', 
                 [('directory', '/etc/radicale'), ('user', 'radicale'), 
-                ('command', 'uwsgi -s /tmp/radicale.sock -C --wsgi-file radicale.wsgi'),
+                ('command', 'uwsgi -s /tmp/radicale.sock -C --plugin python2 --wsgi-file radicale.wsgi'),
                 ('stdout_logfile', '/var/log/radicale.log'),
                 ('stderr_logfile', '/var/log/radicale.log')])
         block = [

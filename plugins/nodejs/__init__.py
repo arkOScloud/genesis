@@ -27,6 +27,11 @@ DEPENDENCIES = {
             "name": "NodeJS",
             "package": "nodejs",
             "binary": "npm"
+        },
+        {
+            "type": "plugin",
+            "name": "Supervisor",
+            "package": "supervisor"
         }
     ]
 }

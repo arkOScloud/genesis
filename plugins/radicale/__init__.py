@@ -37,16 +37,28 @@ DEPENDENCIES = {
             "binary": "python2"
         },
         {
+            "type": "app",
+            "name": "uWSGI",
+            "package": "uwsgi",
+            "binary": "uwsgi"
+        },
+        {
+            "type": "app",
+            "name": "uWSGI Common Plugin",
+            "package": "uwsgi-plugin-common",
+            "binary": None
+        },
+        {
+            "type": "app",
+            "name": "uWSGI Python2 Plugin",
+            "package": "uwsgi-plugin-python2",
+            "binary": None
+        },
+        {
             "type": "module",
             "name": "Radicale",
             "package": "radicale",
             "binary": "radicale"
-        },
-        {
-            "type": "module",
-            "name": "uWSGI",
-            "package": "uwsgi",
-            "binary": None
         },
         {
             "type": "plugin",
@@ -57,6 +69,11 @@ DEPENDENCIES = {
             "type": "plugin",
             "name": "Reverse Proxy",
             "package": "reverseproxy"
+        },
+        {
+            "type": "plugin",
+            "name": "Supervisor",
+            "package": "supervisor"
         }
     ]
 }

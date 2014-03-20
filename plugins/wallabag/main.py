@@ -69,11 +69,6 @@ class Wallabag(Plugin):
         else:
             passwd = vars.getvalue('wb-dbpasswd')
 
-        # Request a database and user to interact with it
-        dbase.add(dbname, conn)
-        dbase.usermod(dbname, 'add', passwd, conn)
-        dbase.chperm(dbname, dbname, 'grant', conn)
-
         # Write a standard Wallabag config file
         shutil.copy(os.path.join(path, 'inc/poche/config.inc.php.new'),
             os.path.join(path, 'inc/poche/config.inc.php'))
@@ -108,7 +103,10 @@ class Wallabag(Plugin):
         # Set up Composer and install the proper modules
         phpctl.composer_install(path)
 
-        # Finish setting up the database then delete the install folder
+        # Set up the database then delete the install folder
+        dbase.add(dbname, conn)
+        dbase.usermod(dbname, 'add', passwd, conn)
+        dbase.chperm(dbname, dbname, 'grant', conn)
         dbase.execute(dbname, 
             open(os.path.join(path, 'install/mysql.sql')).read(), conn)
         shutil.rmtree(os.path.join(path, 'install'))

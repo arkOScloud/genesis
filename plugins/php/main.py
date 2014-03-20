@@ -1,3 +1,5 @@
+import os
+
 from genesis.ui import *
 from genesis.api import *
 from genesis import apis
@@ -10,13 +12,16 @@ class PHP(Plugin):
     name = 'PHP'
 
     def install_composer(self):
+        cwd = os.getcwd()
         self.enable_mod('phar')
-        s = shell_cs('curl -sS https://getcomposer.org/installer | php')
+        self.open_basedir('add', '/root')
+        s = shell_cs('cd /root; curl -sS https://getcomposer.org/installer | php', stderr=True)
         if s[0] != 0:
             raise Exception('Composer download/config failed. Error: %s'%str(s[1]))
         os.rename('composer.phar', '/usr/local/bin/composer')
-        os.chmod('/usr/bin/composer', 755)
+        os.chmod('/usr/local/bin/composer', 755)
         self.open_basedir('add', '/usr/local/bin')
+        shell('cd %s' % cwd)
 
     def verify_composer(self):
         if not shell_status('which composer') == 0:
@@ -26,7 +31,9 @@ class PHP(Plugin):
 
     def composer_install(self, path):
         self.verify_composer()
-        shell('cd %s; composer install'%path)
+        s = shell_cs('cd %s; composer install'%path)
+        if s[0] != 0:
+            raise Exception('Composer failed to install this app\'s bundle. Error: %s'%str(s[1]))
 
     def enable_mod(self, *mod):
         for x in mod:
