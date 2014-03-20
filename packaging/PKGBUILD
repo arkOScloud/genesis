@@ -1,7 +1,7 @@
 # Maintainer: Jacob Cook <jacob at citizenweb dot is>
 
 pkgname=genesis
-pkgver=0.5
+pkgver=0.5.1
 pkgrel=1
 pkgdesc="Easy, modular server management app"
 
