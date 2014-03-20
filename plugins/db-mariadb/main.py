@@ -117,7 +117,7 @@ class MariaDB(Plugin):
         else:
             raise Exception('Unknown input or database connection failure')
 
-    def execute(self, dbname, command, conn=None):
+    def execute(self, dbname, command, conn=None, strf=True):
         if not self.db and conn:
             self.db = conn
         cmds = command.split(';')
@@ -131,11 +131,14 @@ class MariaDB(Plugin):
                     if r:
                         out = r.fetch_row(0)
                         for line in out:
-                            parse.append(line[0])
-            status = ''
-            for line in parse:
-                status += line + '\n'
-            return status
+                            parse.append(line)
+            if strf:
+                status = ''
+                for line in parse:
+                    status += ', '.join(line)+'\n'
+                return status
+            else:
+                return parse
         else:
             raise DBConnFail(self.plugin_info.db_name)
 
