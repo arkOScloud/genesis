@@ -1,3 +1,5 @@
+import os
+
 from genesis.ui import *
 from genesis.api import *
 from genesis import apis
@@ -22,6 +24,8 @@ class NodeJS(Plugin):
             raise Exception('Failed to remove %s via npm, check logs for info'%' '.join(x for x in mods))
 
     def install_from_package(self, path, stat='production'):
+        if not os.environ.has_key('HOME') or not os.environ['HOME']:
+            os.environ['home'] = '/root'
         s = shell_cs('cd %s; npm install %s' % (path, '--'+stat if stat else ''), stderr=True)
         if s[0] != 0:
             self.app.log.error('Failed to install %s via npm; log output follows:\n%s'%(path,s[1]))

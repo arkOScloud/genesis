@@ -318,6 +318,8 @@ class XMPPConfig(Plugin):
 class XMPPUserControl:
     def list_users(self):
         users = []
+        if not os.path.exists('/var/lib/prosody'):
+            os.mkdir('/var/lib/prosody')
         for x in os.listdir('/var/lib/prosody'):
             for y in os.listdir(os.path.join('/var/lib/prosody', x, 'accounts')):
                 users.append((y.split('.dat')[0], urllib.unquote(x)))

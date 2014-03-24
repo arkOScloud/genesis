@@ -13,15 +13,16 @@ class PHP(Plugin):
 
     def install_composer(self):
         cwd = os.getcwd()
+        os.environ['COMPOSER_HOME'] = '/root'
         self.enable_mod('phar')
         self.open_basedir('add', '/root')
         s = shell_cs('cd /root; curl -sS https://getcomposer.org/installer | php', stderr=True)
         if s[0] != 0:
             raise Exception('Composer download/config failed. Error: %s'%str(s[1]))
-        os.rename('composer.phar', '/usr/local/bin/composer')
+        os.rename('/root/composer.phar', '/usr/local/bin/composer')
         os.chmod('/usr/local/bin/composer', 755)
         self.open_basedir('add', '/usr/local/bin')
-        shell('cd %s' % cwd)
+        shell('cd %s'%cwd)
 
     def verify_composer(self):
         if not shell_status('which composer') == 0:
