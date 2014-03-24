@@ -78,7 +78,7 @@ class FSPlugin(CategoryPlugin):
                     UI.TipIcon(iconfont='gen-arrow-down-3' if x.mount else 'gen-arrow-up-3', 
                         text='Unmount' if x.mount else 'Mount', 
                         id=('umd/' if x.mount else 'md/') + str(self._devs.index(x))
-                    ) if x.mount != '/' else None,
+                    ) if x.mount != '/' and x.fstype != 'disk' else None,
                 )
             ))
 
