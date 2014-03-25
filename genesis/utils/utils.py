@@ -175,13 +175,14 @@ def download(url, file=None, crit=False):
         if crit:
             raise
 
-def shell(c, stderr=False):
+def shell(c, stderr=False, env={}):
     """
     Runs commandline in the default shell and returns output. Blocking.
     """
     p = subprocess.Popen('LC_ALL=C '+c, shell=True,
             stderr=subprocess.PIPE,
-            stdout=subprocess.PIPE)
+            stdout=subprocess.PIPE,
+            env=env if env else None)
 
     try:
         data = p.stdout.read() # Workaround; waiting first causes a deadlock
@@ -216,13 +217,14 @@ def shell_status(c):
             stderr=subprocess.PIPE,
             stdout=subprocess.PIPE).wait()
 
-def shell_cs(c, stderr=False):
+def shell_cs(c, stderr=False, env={}):
     """
     Same, but returns exitcode and output in a tuple.
     """
     p = subprocess.Popen('LC_ALL=C '+c, shell=True,
             stderr=subprocess.PIPE,
-            stdout=subprocess.PIPE)
+            stdout=subprocess.PIPE,
+            env=env if env else None)
 
     try:
         data = p.stdout.read() # Workaround; waiting first causes a deadlock

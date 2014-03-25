@@ -261,6 +261,7 @@ class RadicaleControl(Plugin):
         ]
         if not os.path.exists('/etc/radicale/users'):
             open('/etc/radicale/users', 'w').write('')
+            os.chmod('/etc/radicale/users', 766)
         WebappControl(self.app).add_reverse_proxy('radicale', 
             '/usr/lib/radicale', addr, port, block)
         apis.networkcontrol(self.app).add_webapp(('radicale', 'ReverseProxy', port))
