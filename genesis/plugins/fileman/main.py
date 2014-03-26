@@ -318,8 +318,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
     def on_btn_click(self, event, params, vars=None):
         if params[0] == 'hidden':
             self._showhidden = not self._showhidden
-            self._config.showhidden = self._showhidden
-            self._config.save()
+            if self.app.auth.user:
+                self._config.showhidden = self._showhidden
+                self._config.save()
         if params[0] == 'breadcrumb':
             self._tabs[int(params[1])] = self.dec_file(params[2])
         if params[0] == 'goto':
