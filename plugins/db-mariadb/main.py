@@ -53,11 +53,11 @@ class MariaDB(Plugin):
         if passwd and len(passwd) < 8:
             raise Exception('Database password must be longer than 8 characters')
         if name:
-            for x in self.get_dbs():
+            for x in self.get_dbs(self.db):
                 if x['name'] == name:
                     raise Exception('You already have a database named %s - please remove that one or choose a new name!' % name)
         if user:
-            for x in self.get_users():
+            for x in self.get_users(self.db):
                 if x['name'] == user:
                     raise Exception('You already have a database user named %s - please remove that one or choose a new name!' % user)
         return True

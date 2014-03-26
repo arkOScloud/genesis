@@ -56,9 +56,10 @@ class ownCloud(Plugin):
     def pre_install(self, name, vars):
         dbname = vars.getvalue('oc-dbname', '')
         dbpasswd = vars.getvalue('oc-dbpasswd', '')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
         if dbname and dbpasswd:
             apis.databases(self.app).get_interface('MariaDB').validate(
-                dbname, dbname, dbpasswd)
+                dbname, dbname, dbpasswd, conn)
         elif dbname:
             raise Exception('You must enter a database password if you specify a database name!')
         elif dbpasswd:
