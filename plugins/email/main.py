@@ -2,6 +2,8 @@ from genesis.ui import *
 from genesis.api import *
 from genesis import apis
 
+import backend
+
 class MailPlugin(apis.services.ServiceControlPlugin):
     text = 'Mailserver'
     iconfont = 'gen-envelop'
@@ -13,13 +15,12 @@ class MailPlugin(apis.services.ServiceControlPlugin):
         self._addalias = None
         self._adddom = None
         self._list = None
+        self._aliases, self._boxes = [], []
         self._config = backend.MailConfig(self.app)
-        self._mc = backend.MailControl()
+        self._mc = backend.MailControl(self.app)
         self._config.load()
 
     def on_init(self):
-        self._boxes = self._mc.list_mailboxes()
-        self._aliases = self._mc.list_aliases()
         self._domains = self._mc.list_domains()
 
     def get_main_ui(self):
@@ -69,6 +70,40 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                     id='dlgChpasswd')
                 )
 
+        if self._list:
+            dui = self.app.inflate('email:list')
+            t = dui.find('ulist')
+            self._boxes = []
+            for x in self._mc.list_mailboxes(self._list):
+                self._boxes.append(x)
+                t.append(UI.DTR(
+                    UI.Iconfont(iconfont='gen-user'),
+                    UI.Label(text=x['username']),
+                    UI.Label(text=x['name']),
+                    UI.Label(text=x['quota']+' MB' if x['quota'] != '0' else 'Unlimited'),
+                    UI.HContainer(
+                        UI.TipIcon(iconfont='gen-key', id='edit/'+str(self._boxes.index(x)), text='Edit Mailbox'),
+                        UI.TipIcon(iconfont='gen-cancel-circle', id='delbox/'+str(self._boxes.index(x)), text='Delete Mailbox',
+                            warning='Are you sure you want to delete mailbox %s@%s?'%(x['username'],x['domain']))
+                    ),
+                ))
+            t = dui.find('alist')
+            self._aliases = []
+            for x in self._mc.list_aliases(self._list):
+                self._aliases.append(x)
+                t.append(UI.DTR(
+                    UI.Iconfont(iconfont='gen-link'),
+                    UI.Label(text=x['address']),
+                    UI.Label(text=x['forward']),
+                    UI.HContainer(
+                        UI.TipIcon(iconfont='gen-cancel-circle', id='delal/'+str(self._aliases.index(x)), text='Delete Mailbox',
+                            warning='Are you sure you want to delete alias %s, pointing at %s?'%(x['address'],x['forward']))
+                    ),
+                ))
+            ui.append('main',
+                UI.DialogBox(dui, id='dlgList')
+            )
+
         return ui
 
     @event('button/click')
@@ -80,19 +115,21 @@ class MailPlugin(apis.services.ServiceControlPlugin):
         elif params[0] == 'adddom':
             self._adddom = True
         elif params[0] == 'edit':
-            self._chpasswd = self._boxes[int(params[1])]
+            self._chpasswd = (params[2], self._domains[int(params[1])])
         elif params[0] == 'delbox':
             try:
-                u = self._boxes[int(params[1])]
-                self._mc.del_mailbox(u['name'], u['domain'])
+                b = self._boxes[int(params[1])]
+                self._boxes = []
+                self._mc.del_mailbox(b['username'], b['domain'])
                 self.put_message('info', 'Mailbox deleted successfully')
             except Exception, e:
                 self.app.log.error('Mailbox could not be deleted. Error: %s' % str(e))
                 self.put_message('err', 'Mailbox could not be deleted')
         elif params[0] == 'delal':
             try:
-                u = self._aliases[int(params[1])]
-                self._mc.del_alias(u['name'], u['domain'], u['forward'])
+                a = self._aliases[int(params[1])]
+                self._aliases = []
+                self._mc.del_alias(a['address'], a['forward'])
                 self.put_message('info', 'Alias deleted successfully')
             except Exception, e:
                 self.app.log.error('Alias could not be deleted. Error: %s' % str(e))
@@ -139,9 +176,12 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                 elif v in self._domains:
                     self.put_message('err', 'You have already added this domain!')
                 else:
-                    self._config.set('_VirtualHost_%s'%v, {'enabled': False})
-                    self._config.save()
-                    self.put_message('info', 'Domain added successfully')
+                    try:
+                        self._mc.add_domain(v)
+                        self.put_message('info', 'Domain added successfully')
+                    except Exception, e:
+                        self.app.log.error('Domain %s could not be added. Error: %s' % (v,str(e)))
+                        self.put_message('err', 'Domain could not be added')
             self._adddom = None
         elif params[0] == 'dlgChpasswd':
             passwd = vars.getvalue('chpasswd', '')

@@ -2,12 +2,15 @@ import os
 import re
 import hashlib
 import random
+import shutil
 import stat
+
+from passlib.hash import ldap_md5_crypt
 
 from genesis.api import *
 from genesis.com import *
 from genesis import apis
-from genesis.utils import shell_cs
+from genesis.utils import shell_cs, SystemTime
 from genesis.plugins.core.api import ISSLPlugin
 from genesis.plugins.users.backend import UsersBackend
 from genesis.plugins.network.backend import IHostnameManager
@@ -20,6 +23,16 @@ class MailConfig(Plugin):
     iconfont = 'gen-envelop'
 
     def load(self):
+        if not os.path.exists('/etc/dovecot/dovecot.conf'):
+            shutil.copy('/usr/share/doc/dovecot/example-config/dovecot.conf',
+                '/etc/dovecot/dovecot.conf')
+        if not os.path.exists('/etc/dovecot/conf.d/10-auth.conf'):
+            shutil.rmtree('/etc/dovecot/conf.d')
+            shutil.copytree('/usr/share/doc/dovecot/example-config/conf.d',
+                '/etc/dovecot/conf.d')
+        if not os.path.exists('/etc/dovecot/dovecot-sql.conf.ext'):
+            shutil.copy('/usr/share/doc/dovecot/example-config/dovecot-sql.conf.ext',
+                '/etc/dovecot/dovecot-sql.conf.ext')
         s = ConfManager.get().load('email', self.postfix_main_file)
         self.postfix_main = self.loads('postfix_main', s)
         s = ConfManager.get().load('email', self.postfix_master_file)
@@ -41,18 +54,38 @@ class MailConfig(Plugin):
         s = ConfManager.get().load('email', 
             os.path.join(self.dovecot_conf_dir, 'auth-sql.conf.ext'))
         self.dovecot_authsql = self.loads('dovecot_conf', s)
-        s = ConfManager.get().load('email', '/etc/dovecot/dovecot-sql.conf.ext'))
+        s = ConfManager.get().load('email', '/etc/dovecot/dovecot-sql.conf.ext')
         self.dovecot_dovecotsql = self.loads('dovecot_conf', s)
 
-    def save(self):
+    def save(self, wasrunning=False):
         self.mgr = self.app.get_backend(apis.services.IServiceManager)
-        wasrunning = False
-        s = self.dumps(self.config)
         if self.mgr.get_status('postfix') == 'running':
             wasrunning = True
             self.mgr.stop('postfix')
             self.mgr.stop('dovecot')
-        ConfManager.get().save('email', self.configFile, s)
+        s = self.dumps(self.postfix_main)
+        ConfManager.get().save('email', self.postfix_main_file, s)
+        s = self.dumps(self.postfix_master)
+        ConfManager.get().save('email', self.postfix_master_file, s)
+        s = self.dumps(self.dovecot_conf)
+        ConfManager.get().save('email', self.dovecot_conf_file, s)
+        s = self.dumps(self.dovecot_auth)
+        ConfManager.get().save('email', 
+            os.path.join(self.dovecot_conf_dir, '10-auth.conf'), s)
+        s = self.dumps(self.dovecot_mail)
+        ConfManager.get().save('email', 
+            os.path.join(self.dovecot_conf_dir, '10-mail.conf'), s)
+        s = self.dumps(self.dovecot_ssl)
+        ConfManager.get().save('email', 
+            os.path.join(self.dovecot_conf_dir, '10-ssl.conf'), s)
+        s = self.dumps(self.dovecot_master)
+        ConfManager.get().save('email', 
+            os.path.join(self.dovecot_conf_dir, '10-master.conf'), s)
+        s = self.dumps(self.dovecot_authsql)
+        ConfManager.get().save('email', 
+            os.path.join(self.dovecot_conf_dir, 'auth-sql.conf.ext'), s)
+        s = self.dumps(self.dovecot_dovecotsql)
+        ConfManager.get().save('email', '/etc/dovecot/dovecot-sql.conf.ext', s)
         ConfManager.get().commit('email')
         if wasrunning:
             self.mgr.start('postfix')
@@ -139,21 +172,22 @@ class MailConfig(Plugin):
                                 num = num + 1
                         conf[name] = val
                 elif re.match('\s*(.+)\s*{\s*$', line):
-                    val = re.match('\s*(.+)\s*{', line).group(1)
+                    val = re.match('\s*(.+)\s+{', line).group(1)
                     num = 0
                     if active:
                         for x in conf[active[-1]]:
                             if x.startswith(val+'_'):
                                 num = num + 1
                         conf[active[-1]][val+'_'+str(num)] = {}
+                        active.append(val+'_'+str(num))
                     else:
                         for x in conf:
                             if x.startswith(val+'_'):
                                 num = num + 1
                         conf[val+'_'+str(num)] = {}
-                    active.append(val)
+                        active.append(val+'_'+str(num))
                 elif re.match('.*\s*=\s*.*', line):
-                    name, val = re.match('(\S+)\s*=\s*(.*)$', line).group(1,2)
+                    name, val = re.match('\s*(\S+)\s*=\s*(.*)\s*$', line).group(1,2)
                     name, val = name.split()[0], val.split()[0] if val.split() else ''
                     val = re.sub(r'"', '', val)
                     if ', ' in val:
@@ -198,7 +232,7 @@ class MailConfig(Plugin):
         return f
 
 
-class EmailControl(Plugin):
+class MailControl(Plugin):
     def initial_setup(self):
         # Grab frameworks for use later
         config = MailConfig(self.app)
@@ -209,10 +243,48 @@ class EmailControl(Plugin):
 
         # Create a MySQL database for storing mailbox, alias and
         # domain information
+        if 'vmail' in [x['name'] for x in dbase.get_dbs(conn)]:
+            dbase.remove('vmail', conn)
+        if 'vmail' in [x['name'] for x in dbase.get_users(conn)]:
+            dbase.usermod('vmail', 'drop', '', conn)
         dbase.add('vmail', conn)
         passwd = hashlib.sha1(str(random.random())).hexdigest()[0:8]
         dbase.usermod('vmail', 'add', passwd, conn)
         dbase.chperm('vmail', 'vmail', 'grant', conn)
+        sql = (
+            'CREATE TABLE alias ( '
+            'address varchar(255) NOT NULL default \'\', '
+            'goto text NOT NULL, '
+            'domain varchar(255) NOT NULL default \'\', '
+            'created datetime NOT NULL default \'0000-00-00 00:00:00\', '
+            'active tinyint(1) NOT NULL default \'1\', '
+            'PRIMARY KEY  (address), '
+            'KEY address (address) '
+            ') COMMENT=\'Virtual Aliases\'; '
+            'CREATE TABLE domain ( '
+            'domain varchar(255) NOT NULL default \'\', '
+            'transport varchar(255) default NULL, '
+            'backupmx tinyint(1) NOT NULL default \'0\', '
+            'created datetime NOT NULL default \'0000-00-00 00:00:00\', '
+            'active tinyint(1) NOT NULL default \'1\', '
+            'PRIMARY KEY  (domain), '
+            'KEY domain (domain) '
+            ') COMMENT=\'Virtual Domains\'; '
+            'CREATE TABLE mailbox ( '
+            'username varchar(255) NOT NULL default \'\', '
+            'password varchar(255) NOT NULL default \'\', '
+            'name varchar(255) NOT NULL default \'\', '
+            'maildir varchar(255) NOT NULL default \'\', '
+            'quota bigint(20) NOT NULL default \'0\', '
+            'local_part varchar(255) NOT NULL default \'\', '
+            'domain varchar(255) NOT NULL default \'\', '
+            'created datetime NOT NULL default \'0000-00-00 00:00:00\', '\
+            'active tinyint(1) NOT NULL default \'1\', '
+            'PRIMARY KEY  (username), '
+            'KEY username (username) '
+            ') COMMENT=\'Virtual Mailboxes\';'
+        )
+        dbase.execute('vmail', sql, conn, False)
 
         # Add system user and group for handling mail
         users.add_sys_user('vmail')
@@ -427,6 +499,9 @@ class EmailControl(Plugin):
         config.postfix_master['dovecot'] = ['unix', '-', 'n', 'n', '-', '-', 'pipe',
             'flags=DRhu user=vmail:mail argv=/usr/lib/dovecot/dovecot-lda -d $(recipient)']
 
+        # Save the configurations and start the services
+        config.save(True)
+
     def list_domains(self):
         dbase = apis.databases(self.app).get_interface('MariaDB')
         conn = apis.databases(self.app).get_dbconn('MariaDB')
@@ -442,10 +517,11 @@ class EmailControl(Plugin):
         dbase = apis.databases(self.app).get_interface('MariaDB')
         conn = apis.databases(self.app).get_dbconn('MariaDB')
         d = dbase.execute('vmail', 
-            'SELECT local_part FROM mailbox WHERE domain = %s;'%domain, 
+            'SELECT local_part,name,quota FROM mailbox WHERE domain = %s;'%domain, 
             conn, False)
         for x in d:
-            r.append({'name': d[0], 'domain': domain})
+            r.append({'username': d[0], 'name': d[1], 'quota': d[2],
+                'domain': domain})
         return r
 
     def list_aliases(self, domain):
@@ -456,29 +532,60 @@ class EmailControl(Plugin):
             'SELECT address,goto FROM alias WHERE domain = %s;'%domain, 
             conn, False)
         for x in d:
-            r.append({'name': d[0], 'forward': d[1], 'domain': domain})
+            r.append({'address': d[0], 'forward': d[1], 'domain': domain})
         return r
 
-    def add_mailbox(self, name, dom, passwd, quota=False):
-        pass
+    def add_mailbox(self, name, dom, passwd, fullname, quota=False):
+        dbase = apis.databases(self.app).get_interface('MariaDB')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        pwhash = ldap_md5_crypt.encrypt(passwd).split('{CRYPT}')[1]
+        dbase.execute('vmail',
+            'INSERT INTO `mailbox` VALUES (\"'+name+'@'+domain+'\", '
+            +'\"'+pwhash+'\", \"'+fullname+'\", \"'+name+'@'+domain+'/\", '
+            +quota if quota else '0'+', \"'+name+'\", \"'+domain+'\", '
+            +'\"'+SystemTime.get_datetime('%Y-%M-%d %H:%M:%S')+'\", '
+            +'1)', conn, False)
 
     def del_mailbox(self, name, dom):
-        pass
+        dbase = apis.databases(self.app).get_interface('MariaDB')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase.execute('vmail',
+            'DELETE FROM `mailbox` WHERE local_part = \"%s\" AND domain = \"%s\"'%(name,dom), conn, False)
 
     def add_alias(self, name, dom, forward):
-        pass
+        dbase = apis.databases(self.app).get_interface('MariaDB')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase.execute('vmail',
+            'INSERT INTO `alias` VALUES (\"'+name+'\", \"'+forward+'\", '
+            +'\"'+domain+'\", \"'+SystemTime.get_datetime('%Y-%M-%d %H:%M:%S')+'\", '
+            +'1)', conn, False)
 
-    def del_alias(self, name, dom, forward):
-        pass
+    def del_alias(self, addr, forward):
+        dbase = apis.databases(self.app).get_interface('MariaDB')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase.execute('vmail',
+            'DELETE FROM `alias` WHERE address = \"%s@%s\" AND goto = \"%s\"'%(addr,forward), conn, False)
 
     def add_domain(self, name):
-        pass
+        dbase = apis.databases(self.app).get_interface('MariaDB')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase.execute('vmail',
+            'INSERT INTO `domain` VALUES (\"'+name+'\", \"virtual\", '
+            +'0, \"'+SystemTime.get_datetime('%Y-%M-%d %H:%M:%S')+'\", '
+            +'1)', conn, False)
 
     def del_domain(self, name):
-        pass
+        dbase = apis.databases(self.app).get_interface('MariaDB')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase.execute('vmail',
+            'DELETE FROM `domain` WHERE domain = \"%s\"'%name, conn, False)
 
     def chpasswd(self, name, dom, passwd):
-        pass
+        dbase = apis.databases(self.app).get_interface('MariaDB')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        pwhash = ldap_md5_crypt.encrypt(passwd).split('{CRYPT}')[1]
+        dbase.execute('vmail',
+            'UPDATE mailbox SET password = \"%s\" WHERE username = \"%s\" AND domain = \"%s\"'%(pwhash,name,dom), conn, False)
 
 
 class MailSSLPlugin(Plugin):

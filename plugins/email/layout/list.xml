@@ -1,0 +1,32 @@
+<xml>
+    <label size="5" text="Mailboxes" />
+    <dt id="ulist" width="100%">
+        <dtr header="True">
+            <dth width="1" />
+            <dth>
+                <label text="Address" />
+            </dth>
+            <dth>
+                <label text="Full Name" />
+            </dth>
+            <dth>
+                <label text="Quota" />
+            </dth>
+            <dth width="1" />
+        </dtr>
+    </dt>
+
+    <label size="5" text="Aliases" />
+    <dt id="alist" width="100%">
+        <dtr header="True">
+            <dth width="1" />
+            <dth>
+                <label text="Address" />
+            </dth>
+            <dth>
+                <label text="Points to" />
+            </dth>
+            <dth width="1" />
+        </dtr>
+    </dt>
+</xml>

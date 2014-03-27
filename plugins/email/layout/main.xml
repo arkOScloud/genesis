@@ -5,33 +5,30 @@
         <button id="adddom" text="Add domain" iconfont="gen-plus-circle" />
     </toolbar>
 
-    <label size="5" text="Domains" />
     <pad id="main">
-        <dt id="list" width="100%">
-            <dtr header="True">
-                <dth width="1" />
-                <dth>
-                    <label text="Domain" />
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
-    </pad>
+        <tabcontrol id="tabs" active="0">
+            <tabheader text="Accounts" id="0"/>
+            <tabheader text="Settings" id="1"/>
 
-    <label size="5" text="Global Options" />
-    <br />
-    <simpleform id="frmOptions">
-        <formline text="Allow registration" help="Enable creation of new accounts via connected XMPP clients">
-            <checkbox name="allow_registration" id="allow_registration" text="Yes"/>
-        </formline>
-        <formline text="Force encryption (client-to-server)" help="Clients must use SSL to connect to your server. Do not set this if a certificate is not assigned" id="c2senc">
-            <checkbox name="c2s_require_encryption" id="c2s_require_encryption" text="Yes"/>
-        </formline>
-        <formline text="Secure auth (server-to-server)" help="Force servers to authenticate SSL certificates. Cannot use with self-generated certificates" id="s2sauth">
-            <checkbox name="s2s_secure_auth" id="s2s_secure_auth" text="Yes"/>
-        </formline>
-        <formline>
-            <button onclick="form" form="frmOptions" design="primary" action="OK" text="Save" />
-        </formline>
-    </simpleform>
+            <tabbody id="0">
+                <label size="5" text="Mailserver Domains" />
+                <dt id="list" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Domain" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </tabbody>
+
+            <tabbody id="1">
+                <label size="5" text="Mailserver Settings" />
+                <formline>
+                    <button id="reinit" text="Reinitialize" iconfont="gen-loop-2" warning="This will wipe all mailserver account data from your system and start over from scratch. Are you sure you want to do this?" />
+                </formline>
+            </tabbody>
+        </tabcontrol>
+    </pad>
 </xml>
