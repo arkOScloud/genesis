@@ -309,7 +309,14 @@ class WebappControl(Plugin):
 			nginx.Key('ssl_certificate', cpath),
 			nginx.Key('ssl_certificate_key', kpath),
 			nginx.Key('ssl_protocols', 'SSLv3 TLSv1 TLSv1.1 TLSv1.2'),
-			nginx.Key('ssl_ciphers', 'HIGH:!aNULL:!MD5')
+			nginx.Key('ssl_ciphers', ':'.join([
+				'ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-RSA-AES256-SHA384',
+				'ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-RSA-AES128-SHA256',
+				'ECDHE-RSA-RC4-SHA', 'ECDHE-RSA-AES256-SHA',
+				'RC4-SHA', 'AES256-GCM-SHA384', 'AES256-SHA256',
+				'CAMELLIA256-SHA', 'ECDHE-RSA-AES128-SHA', 
+				'AES128-GCM-SHA256', 'AES128-SHA256', 'AES128-SHA',
+				'CAMELLIA128-SHA']))
 			)
 		c.filter('Comment')[0].comment = 'GENESIS %s https://%s:%s' \
 			% (stype, data.addr, port)
