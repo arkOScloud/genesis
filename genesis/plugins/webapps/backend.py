@@ -277,6 +277,30 @@ class WebappControl(Plugin):
 			raise Exception('PHP FastCGI failed to reload.')
 
 	def ssl_enable(self, data, cpath, kpath):
+		# If no cipher preferences set, use the default ones
+		# As per Mozilla recommendations, but substituting 3DES for RC4
+		ciphers = ':'.join([
+			'ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-ECDSA-AES128-GCM-SHA256',
+			'ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-ECDSA-AES256-GCM-SHA384',
+			'kEDH+AESGCM', 'ECDHE-RSA-AES128-SHA256', 
+			'ECDHE-ECDSA-AES128-SHA256', 'ECDHE-RSA-AES128-SHA', 
+			'ECDHE-ECDSA-AES128-SHA', 'ECDHE-RSA-AES256-SHA384',
+			'ECDHE-ECDSA-AES256-SHA384', 'ECDHE-RSA-AES256-SHA', 
+			'ECDHE-ECDSA-AES256-SHA', 'DHE-RSA-AES128-SHA256',
+			'DHE-RSA-AES128-SHA', 'DHE-RSA-AES256-SHA256', 
+			'DHE-DSS-AES256-SHA', 'AES128-GCM-SHA256', 'AES256-GCM-SHA384',
+			'ECDHE-RSA-DES-CBC3-SHA', 'ECDHE-ECDSA-DES-CBC3-SHA',
+			'EDH-RSA-DES-CBC3-SHA', 'EDH-DSS-DES-CBC3-SHA', 
+			'DES-CBC3-SHA', 'HIGH', '!aNULL', '!eNULL', '!EXPORT', '!DES',
+			'!RC4', '!MD5', '!PSK'
+			])
+		cfg = self.app.get_config(genesis.plugins.certificates.backend.CertControl(self.app))
+		if cfg.kas_key('ciphers') and cfg.ciphers:
+			ciphers = cfg.ciphers
+		elif cfg.has_key('ciphers'):
+			cfg.ciphers = ciphers
+			cfg.save()
+
 		name, stype = data.name, data.stype
 		port = '443'
 		c = nginx.loadf('/etc/nginx/sites-available/'+name)
@@ -309,14 +333,10 @@ class WebappControl(Plugin):
 			nginx.Key('ssl_certificate', cpath),
 			nginx.Key('ssl_certificate_key', kpath),
 			nginx.Key('ssl_protocols', 'SSLv3 TLSv1 TLSv1.1 TLSv1.2'),
-			nginx.Key('ssl_ciphers', ':'.join([
-				'ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-RSA-AES256-SHA384',
-				'ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-RSA-AES128-SHA256',
-				'ECDHE-RSA-RC4-SHA', 'ECDHE-RSA-AES256-SHA',
-				'RC4-SHA', 'AES256-GCM-SHA384', 'AES256-SHA256',
-				'CAMELLIA256-SHA', 'ECDHE-RSA-AES128-SHA', 
-				'AES128-GCM-SHA256', 'AES128-SHA256', 'AES128-SHA',
-				'CAMELLIA128-SHA']))
+			nginx.Key('ssl_ciphers', ciphers),
+			nginx.Key('ssl_session_timeout', '5m'),
+			nginx.Key('ssl_prefer_server_ciphers', 'on'),
+			nginx.Key('ssl_session_cache', 'shared:SSL:50m'),
 			)
 		c.filter('Comment')[0].comment = 'GENESIS %s https://%s:%s' \
 			% (stype, data.addr, port)
@@ -343,12 +363,7 @@ class WebappControl(Plugin):
 		else:
 			l.value = l.value.rstrip(' ssl')
 			port = l.value
-		s.remove(
-			s.filter('Key', 'ssl_certificate')[0],
-			s.filter('Key', 'ssl_certificate_key')[0],
-			s.filter('Key', 'ssl_protocols')[0],
-			s.filter('Key', 'ssl_ciphers')[0]
-			)
+		s.remove(*[x for x in s.filter('Key') if x.name.startswith('ssl_')])
 		c.filter('Comment')[0].comment = 'GENESIS %s http://%s:%s' \
 			% (stype, data.addr, port)
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)

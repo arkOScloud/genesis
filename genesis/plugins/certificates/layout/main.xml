@@ -37,6 +37,9 @@
                         <selectoption id="ktrsa" value="RSA" text="RSA" />
                     </select>
                 </formline>
+                <formline text="Cipher string">
+                    <textinput name="ciphers" id="ciphers" />
+                </formline>
                 <formline>
                     <button onclick="form" form="frmCertSettings" design="primary" action="OK" text="Save" />
                 </formline>
