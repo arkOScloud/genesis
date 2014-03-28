@@ -89,5 +89,5 @@ class SSPlugin(CategoryPlugin):
             self._add = None
         elif params[0] == 'dlgLink':
             if vars.getvalue('action', '') == 'OK' and vars.getvalue('value', ''):
-                self._sc.link_client(vars.getvalue('action'))
+                self._sc.link_client(vars.getvalue('value'))
             self._link = None
