@@ -35,7 +35,7 @@ SERVICES = [
 ]
 
 # Plugin parameters
-MODULES = ['main', 'backend']
+MODULES = ['main', 'backend', 'config']
 PLATFORMS = ['any']
 DEPENDENCIES = {
     "any": [

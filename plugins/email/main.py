@@ -1,6 +1,9 @@
+import re
+
 from genesis.ui import *
 from genesis.api import *
 from genesis import apis
+from genesis.plugins.databases.utils import DBAuthFail, DBConnFail
 
 import backend
 
@@ -10,7 +13,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
     folder = 'servers'
 
     def on_session_start(self):
-        self._chpasswd = None
+        self._edit = None
         self._addbox = None
         self._addalias = None
         self._adddom = None
@@ -21,10 +24,30 @@ class MailPlugin(apis.services.ServiceControlPlugin):
         self._config.load()
 
     def on_init(self):
-        self._domains = self._mc.list_domains()
+        try:
+            self._domains = self._mc.list_domains()
+        except DBConnFail:
+            pass
 
     def get_main_ui(self):
         ui = self.app.inflate('email:main')
+
+        if not apis.databases(self.app).get_interface('MariaDB').checkpwstat():
+            self.put_message('err', 'MariaDB does not have a root password set. '
+                'Please add this via the Databases screen.')
+            return ui
+        elif not apis.databases(self.app).get_dbconn('MariaDB'):
+            ui.append('main', UI.InputBox(id='dlgAuth', 
+                text='Enter the database password for MariaDB', 
+                password=True))
+            return ui
+
+        is_setup = self._mc.is_setup()
+        if self.app.get_config(self._mc).reinitialize \
+        or not is_setup:
+            if not is_setup:
+                self.put_message('err', 'Your mailserver does not appear to be properly configured. Please rerun this setup.')
+            return UI.Button(iconfont="gen-cog", text="Setup Mailserver", id="setup")
 
         t = ui.find('list')
         for x in self._domains:
@@ -39,35 +62,70 @@ class MailPlugin(apis.services.ServiceControlPlugin):
 
         if self._addbox:
             doms = [UI.SelectOption(text=x, value=x) for x in self._domains]
-            ui.append('main',
-                UI.DialogBox(
-                    UI.FormLine(
-                        UI.TextInput(name='acct', id='acct'),
-                        text='Name'
-                    ),
-                    UI.FormLine(
-                        UI.Select(*doms if doms else 'None', id='dom', name='dom'),
-                        text='Domain'
-                    ),
-                    UI.FormLine(
-                        UI.EditPassword(id='passwd', value='Click to add password'),
-                        text='Password'
-                    ),
-                    id='dlgAddBox')
-                )
+            if doms:
+                ui.append('main',
+                    UI.DialogBox(
+                        UI.FormLine(
+                            UI.TextInput(name='acct', id='acct'),
+                            text='Account Name', help="The \'name\' in name@example.com"
+                        ),
+                        UI.FormLine(
+                            UI.Select(*doms if doms else 'None', id='dom', name='dom'),
+                            text='Domain'
+                        ),
+                        UI.FormLine(
+                            UI.EditPassword(id='passwd', value='Click to add password'),
+                            text='Password'
+                        ),
+                        UI.FormLine(
+                            UI.TextInput(name='fullname', id='fullname'),
+                            text='Full Name'
+                        ),
+                        UI.FormLine(
+                            UI.TextInput(name='quota', id='quota'),
+                            text='Quota (in MB)'
+                        ),
+                        id='dlgAddBox')
+                    )
+            else:
+                self.put_message('err', 'You must add a domain first!')
+                self._addbox = None
+
+        if self._addalias:
+            doms = [UI.SelectOption(text=x, value=x) for x in self._domains]
+            if doms:
+                ui.append('main',
+                    UI.DialogBox(
+                        UI.FormLine(
+                            UI.TextInput(name='acct', id='acct'),
+                            text='Account Name', help="The \'name\' in name@example.com"
+                        ),
+                        UI.FormLine(
+                            UI.Select(*doms if doms else 'None', id='dom', name='dom'),
+                            text='Domain'
+                        ),
+                        UI.FormLine(
+                            UI.TextInput(name='forward', id='forward'),
+                            text='Points to', help="A full email address to forward messages to"
+                        ),
+                        id='dlgAddAlias')
+                    )
+            else:
+                self.put_message('err', 'You must add a domain first!')
+                self._addalias = None
 
         if self._adddom:
             ui.append('main',
                 UI.InputBox(id='dlgAddDom', text='Enter domain name to add'))
 
-        if self._chpasswd:
+        if self._edit:
             ui.append('main',
                 UI.DialogBox(
                     UI.FormLine(
                         UI.EditPassword(id='chpasswd', value='Click to change password'),
                         text='Password'
                     ),
-                    id='dlgChpasswd')
+                    id='dlgEdit')
                 )
 
         if self._list:
@@ -108,14 +166,18 @@ class MailPlugin(apis.services.ServiceControlPlugin):
 
     @event('button/click')
     def on_click(self, event, params, vars = None):
-        if params[0] == 'add':
+        if params[0] == 'setup':
+            self._mc.initial_setup()
+        elif params[0] == 'add':
             self._addbox = True
         elif params[0] == 'addalias':
             self._addalias = True
         elif params[0] == 'adddom':
             self._adddom = True
         elif params[0] == 'edit':
-            self._chpasswd = (params[2], self._domains[int(params[1])])
+            b = self._boxes[int(params[1])]
+            self._boxes = []
+            self._edit = (b['username'], b['domain'])
         elif params[0] == 'delbox':
             try:
                 b = self._boxes[int(params[1])]
@@ -150,6 +212,8 @@ class MailPlugin(apis.services.ServiceControlPlugin):
             acct = vars.getvalue('acct', '')
             dom = vars.getvalue('dom', '')
             passwd = vars.getvalue('passwd', '')
+            fullname = vars.getvalue('fullname', '')
+            quota = vars.getvalue('quota', '')
             if vars.getvalue('action', '') == 'OK':
                 m = re.match('([-0-9a-zA-Z.+_]+)', acct)
                 if not acct or not m:
@@ -162,7 +226,29 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                     self.put_message('err', 'Passwords must match')
                 else:
                     try:
-                        self._uc.add_mailbox(acct, dom, passwd)
+                        self._mc.add_mailbox(acct, dom, passwd, fullname, quota)
+                        self.put_message('info', 'Mailbox added successfully')
+                    except Exception, e:
+                        self.app.log.error('Mailbox %s@%s could not be added. Error: %s' % (acct,dom,str(e)))
+                        self.put_message('err', 'Mailbox could not be added')
+            self._addbox = None
+        elif params[0] == 'dlgAddAlias':
+            acct = vars.getvalue('acct', '')
+            dom = vars.getvalue('dom', '')
+            forward = vars.getvalue('forward', '')
+            if vars.getvalue('action', '') == 'OK':
+                m = re.match('([-0-9a-zA-Z.+_]+)', acct)
+                if not acct or not m:
+                    self.put_message('err', 'Must choose a valid mailbox name')
+                elif (acct, dom) in self._boxes:
+                    self.put_message('err', 'You already have a mailbox with this name on this domain')
+                elif not passwd:
+                    self.put_message('err', 'Must choose a password')
+                elif passwd != vars.getvalue('passwdb',''):
+                    self.put_message('err', 'Passwords must match')
+                else:
+                    try:
+                        self._mc.add_mailbox(acct, dom, passwd, fullname, quota)
                         self.put_message('info', 'Mailbox added successfully')
                     except Exception, e:
                         self.app.log.error('Mailbox %s@%s could not be added. Error: %s' % (acct,dom,str(e)))
@@ -183,19 +269,27 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                         self.app.log.error('Domain %s could not be added. Error: %s' % (v,str(e)))
                         self.put_message('err', 'Domain could not be added')
             self._adddom = None
-        elif params[0] == 'dlgChpasswd':
+        elif params[0] == 'dlgEdit':
+            quota = vars.getvalue('quota', '')
             passwd = vars.getvalue('chpasswd', '')
             if vars.getvalue('action', '') == 'OK':
-                if not passwd:
-                    self.put_message('err', 'Must choose a password')
-                elif passwd != vars.getvalue('chpasswdb',''):
+                if passwd and passwd != vars.getvalue('chpasswdb',''):
                     self.put_message('err', 'Passwords must match')
                 else:
                     try:
-                        self._uc.chpasswd(self._chpasswd[0], 
-                            self._chpasswd[1], passwd)
-                        self.put_message('info', 'Password changed successfully')
+                        self._mc.edit(self._edit[0], self._edit[1], 
+                            quota, passwd)
+                        self.put_message('info', 'Mailbox edited successfully')
                     except Exception, e:
-                        self.app.log.error('XMPP password for %s@%s could not be changed. Error: %s' % (self._chpasswd[0],self._chpasswd[1],str(e)))
-                        self.put_message('err', 'Password could not be changed')
-            self._chpasswd = None
+                        self.app.log.error('Mailbox %s@%s could not be edited. Error: %s' % (self._edit[0],self._edit[1],str(e)))
+                        self.put_message('err', 'Mailbox could not be edited')
+            self._edit = None
+        if params[0].startswith('dlgAuth'):
+            if vars.getvalue('action', '') == 'OK':
+                login = vars.getvalue('value', '')
+                try:
+                    apis.databases(self.app).get_interface('MariaDB').connect(
+                        store=self.app.session['dbconns'],
+                        passwd=login)
+                except DBAuthFail, e:
+                    self.put_message('err', str(e))
