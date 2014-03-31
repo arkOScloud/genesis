@@ -90,7 +90,7 @@ def detect_architecture():
     arch, btype = 'Unknown', 'Unknown'
     # Get architecture
     for x in shell('lscpu').split('\n'):
-        if 'Architecture' in x.split()[0]: 
+        if x.split() and 'Architecture' in x.split()[0]: 
             arch = x.split()[1]
             break
     # Let's play a guessing game!
@@ -102,7 +102,7 @@ def detect_architecture():
             if 'Hardware' in k and v.strip() in ('BCM2708', 'BCM2835'):
                 btype = 'Raspberry Pi'
                 break
-    if arch in ['x86_64', 'i686']:
+    elif arch in ['x86_64', 'i686']:
         btype = 'General'
     return (arch, btype)
 
