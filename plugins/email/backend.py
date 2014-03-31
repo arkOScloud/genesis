@@ -344,7 +344,7 @@ class MailControl(Plugin):
             os.mkdir('/var/vmail')
         users.change_user_param('vmail', 'home', '/var/vmail')
         users.change_user_param('vmail', 'shell', '/sbin/nologin')
-        os.chmod('/var/vmail', 770)
+        os.chmod('/var/vmail', 0770)
         os.chown('/var/vmail', uid, gid)
 
         # Tell Dovecot (MDA) where to find users and passwords
