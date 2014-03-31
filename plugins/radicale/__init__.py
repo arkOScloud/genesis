@@ -9,7 +9,7 @@ CATEGORIES = [
         "secondary": ["Calendar", "Contacts"]
     }
 ]
-VERSION = '0'
+VERSION = '0.1'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
