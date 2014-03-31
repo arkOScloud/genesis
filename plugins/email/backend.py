@@ -132,10 +132,12 @@ class MailConfig(Plugin):
                     conf[lastname].append(val)
                 elif re.match('.*\s*=\s*.*', line):
                     name, val = re.match('(\S+)\s*=\s*(.*)$', line).group(1,2)
-                    name, val = name.split()[0], val.split()[0] if val.split() else ''
+                    name = name.split()[0]
                     val = re.sub(r'"', '', val)
                     if ', ' in val:
                         val = val.split(', ')
+                    else:
+                        val = val.split()[0] if val.split() else ''
                     conf[name] = val
                     lastname = name
         elif cfgtype == 'postfix_master':
@@ -150,6 +152,8 @@ class MailConfig(Plugin):
                     val = re.match('^\s*-o\s*(.*)$', line).group(1)
                     for x in enumerate(conf):
                         if x[1][0] == lastname:
+                            if len(conf[x[0]]) <= 8:
+                                conf[x[0]].insert(9, '')
                             conf[x[0]].append(val)
                             break
                 elif re.match('^\s\s(.*)$', line) and lastname:
@@ -161,6 +165,7 @@ class MailConfig(Plugin):
                 elif line.split():
                     conf.append(line.split())
                     lastname = line.split()[0]
+            print conf
         elif cfgtype == 'dovecot_conf':
             conf = {}
             active = []
@@ -279,7 +284,7 @@ class MailControl(Plugin):
         if 'vmail' in [x['name'] for x in dbase.get_users(conn)]:
             dbase.usermod('vmail', 'del', '', conn)
         dbase.add('vmail', conn)
-        passwd = hashlib.sha1(str(random.random())).hexdigest()[0:8]
+        passwd = hashlib.sha1(str(random.random())).hexdigest()[0:16]
         dbase.usermod('vmail', 'add', passwd, conn)
         dbase.chperm('vmail', 'vmail', 'grant', conn)
         sql = (
@@ -301,6 +306,15 @@ class MailControl(Plugin):
             'PRIMARY KEY  (domain), '
             'KEY domain (domain) '
             ') COMMENT=\'Virtual Domains\'; '
+            'CREATE TABLE alias_domain ( '
+            'alias_domain varchar(255) NOT NULL default \'\', '
+            'target_domain varchar(255) NOT NULL default \'\', '
+            'created datetime NOT NULL default \'0000-00-00 00:00:00\', '
+            'active tinyint(1) NOT NULL default \'1\', '
+            'PRIMARY KEY (alias_domain), '
+            'KEY active (active), '
+            'KEY target_domain (target_domain) '
+            ') COMMENT=\'Domain Aliases\'; '
             'CREATE TABLE mailbox ( '
             'username varchar(255) NOT NULL default \'\', '
             'password varchar(255) NOT NULL default \'\', '
@@ -353,11 +367,11 @@ class MailControl(Plugin):
         config.dovecot_dovecotsql['password_query'] = (
             'SELECT username as user, password, \'/var/vmail/%d/%n\''
             ' as userdb_home, \'maildir:/var/vmail/%d/%n\' as userdb_mail,'
-            ' 150 as userdb_uid, 8 as userdb_gid FROM mailbox '
+            ' '+str(uid)+' as userdb_uid, '+str(gid)+' as userdb_gid FROM mailbox '
             'WHERE username = \'%u\' AND active = \'1\'')
         config.dovecot_dovecotsql['user_query'] = (
             'SELECT \'/var/vmail/%d/%n\' as home, '
-            '\'maildir:/var/vmail/%d/%n\' as mail, 150 AS uid, 8 AS gid, '
+            '\'maildir:/var/vmail/%d/%n\' as mail, '+str(uid)+' AS uid, '+str(gid)+' AS gid, '
             'concat(\'dirsize:storage=\', quota) AS quota FROM mailbox '
             'WHERE username = \'%u\' AND active = \'1\'')
         config.dovecot_auth['disable_plaintext_auth'] = 'yes'
@@ -533,8 +547,7 @@ class MailControl(Plugin):
                 xs = True
             elif x[0] == 'submission':
                 x = ['submission', 'inet', 'n', '-', '-', '-', '-', 'smtpd', '',
-                    'syslog_name=postfix/submission', 'smtpd_tls_wrappermode=yes',
-                    'smtpd_sasl_auth_enable=yes', 'smtpd_tls_auth_only=yes',
+                    'syslog_name=postfix/submission', 'smtpd_sasl_auth_enable=yes', 'smtpd_tls_auth_only=yes',
                     'smtpd_client_restrictions=permit_sasl_authenticated,reject_unauth_destination,reject',
                     'smtpd_sasl_security_options=noanonymous,noplaintext',
                     'smtpd_sasl_tls_security_options=noanonymous']
@@ -547,14 +560,14 @@ class MailControl(Plugin):
             config.postfix_master.insert(0, ['smtp', 'inet', 'n', '-', '-', '-', '-', 'smtpd'])
         if not xss:
             config.postfix_master.insert(2, ['submission', 'inet', 'n', '-', '-', '-', '-', 'smtpd', '',
-                'syslog_name=postfix/submission', 'smtpd_tls_wrappermode=yes',
-                'smtpd_sasl_auth_enable=yes', 'smtpd_tls_auth_only=yes',
+                'syslog_name=postfix/submission', 'smtpd_sasl_auth_enable=yes', 'smtpd_tls_auth_only=yes',
                 'smtpd_client_restrictions=permit_sasl_authenticated,reject_unauth_destination,reject',
                 'smtpd_sasl_security_options=noanonymous,noplaintext',
                 'smtpd_sasl_tls_security_options=noanonymous'])
         if not xd:
             config.postfix_master.append(['dovecot', 'unix', '-', 'n', 'n', '-', '-', 'pipe',
                 'flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/dovecot-lda -d $(recipient)'])
+        open('/etc/aliases', 'w').write('')
 
         # Save the configurations and start the services
         config.save(True)
@@ -581,10 +594,10 @@ class MailControl(Plugin):
         dbase = apis.databases(self.app).get_interface('MariaDB')
         conn = apis.databases(self.app).get_dbconn('MariaDB')
         d = dbase.execute('vmail', 
-            'SELECT local_part,name,quota FROM mailbox WHERE domain = %s;'%domain, 
+            'SELECT local_part,name,quota FROM mailbox WHERE domain = \"%s\"'%domain, 
             conn, False)
         for x in d:
-            r.append({'username': d[0], 'name': d[1], 'quota': d[2],
+            r.append({'username': x[0], 'name': x[1], 'quota': x[2],
                 'domain': domain})
         return r
 
@@ -593,10 +606,10 @@ class MailControl(Plugin):
         dbase = apis.databases(self.app).get_interface('MariaDB')
         conn = apis.databases(self.app).get_dbconn('MariaDB')
         d = dbase.execute('vmail', 
-            'SELECT address,goto FROM alias WHERE domain = %s;'%domain, 
+            'SELECT address,goto FROM alias WHERE domain = \"%s\";'%domain, 
             conn, False)
         for x in d:
-            r.append({'address': d[0], 'forward': d[1], 'domain': domain})
+            r.append({'address': x[0], 'forward': x[1], 'domain': domain})
         return r
 
     def add_mailbox(self, name, dom, passwd, fullname, quota=False):
@@ -619,14 +632,14 @@ class MailControl(Plugin):
         dbase = apis.databases(self.app).get_interface('MariaDB')
         conn = apis.databases(self.app).get_dbconn('MariaDB')
         dbase.execute('vmail',
-            'INSERT INTO `alias` VALUES (\"'+name+'\", \"'+forward+'\", '+\
+            'INSERT INTO `alias` VALUES (\"'+name+'@'+dom+'\", \"'+forward+'\", '+\
             '\"'+dom+'\", NOW(), 1)', conn, False)
 
     def del_alias(self, addr, forward):
         dbase = apis.databases(self.app).get_interface('MariaDB')
         conn = apis.databases(self.app).get_dbconn('MariaDB')
         dbase.execute('vmail',
-            'DELETE FROM `alias` WHERE address = \"%s@%s\" AND goto = \"%s\"'%(addr,forward), conn, False)
+            'DELETE FROM `alias` WHERE address = \"%s\" AND goto = \"%s\"'%(addr,forward), conn, False)
 
     def add_domain(self, name):
         dbase = apis.databases(self.app).get_interface('MariaDB')
@@ -648,13 +661,13 @@ class MailControl(Plugin):
             pwhash = ldap_md5_crypt.encrypt(passwd).split('{CRYPT}')[1]
         if passwd and quota:
             dbase.execute('vmail',
-                'UPDATE mailbox SET quota = \"%s\", password = \"%s\" WHERE username = \"%s\" AND domain = \"%s\"'%(quota,pwhash,name,dom), conn, False)
+                'UPDATE mailbox SET quota = %s, password = \"%s\" WHERE local_part = \"%s\" AND domain = \"%s\"'%(quota,pwhash,name,dom), conn, False)
         elif passwd:
             dbase.execute('vmail',
-                'UPDATE mailbox SET password = \"%s\" WHERE username = \"%s\" AND domain = \"%s\"'%(pwhash,name,dom), conn, False)
+                'UPDATE mailbox SET password = \"%s\" WHERE local_part = \"%s\" AND domain = \"%s\"'%(pwhash,name,dom), conn, False)
         elif quota:
             dbase.execute('vmail',
-                'UPDATE mailbox SET quota = \"%s\" WHERE username = \"%s\" AND domain = \"%s\"'%(quota,name,dom), conn, False)
+                'UPDATE mailbox SET quota = %s WHERE local_part = \"%s\" AND domain = \"%s\"'%(quota,name,dom), conn, False)
 
 
 class MailSSLPlugin(Plugin):
@@ -677,7 +690,7 @@ class MailSSLPlugin(Plugin):
         config.postfix_main['smtp_tls_exclude_ciphers'] = ['aNULL', 
             'DES', '3DES', 'MD5', 'DES+MD5', 'RC4']
         config.postfix_main['smtpd_tls_protocols'] = ['TLSv1.2',
-            'TLSv1.1', 'TLSv1.0', 'SSLv3', '!SSLv2']
+            'TLSv1.1', 'TLSv1', 'SSLv3', '!SSLv2']
         config.dovecot_ssl['ssl'] = 'yes'
         config.dovecot_ssl['ssl_cert'] = '<'+cert
         config.dovecot_ssl['ssl_key'] = '<'+key
