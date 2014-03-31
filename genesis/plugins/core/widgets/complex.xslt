@@ -1,5 +1,5 @@
 <xsl:template match="tabheader">
-    <li class="ui-el-tab-header {x:iif(@active or (../@active = @id), 'active', '')}">
+    <li class="{x:iif(@active or (../@active = @id), 'active', '')}">
         <a href="#{@id}" data-toggle="tab">
             <xsl:value-of select="@text" />
         </a>
@@ -13,7 +13,7 @@
 </xsl:template>
 
 <xsl:template match="tabcontrol">
-    <ul id="{@id}" class="tabs">
+    <ul id="{@id}" class="nav nav-tabs">
         <xsl:apply-templates select="./tabheader" />
     </ul>
     <div class="tab-content">

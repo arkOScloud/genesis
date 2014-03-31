@@ -11,9 +11,8 @@
 
 
 <xsl:template match="toolbar">
-    <div class="ui-el-toolbar">
-        <xsl:apply-templates />
-    </div>
+    <xsl:apply-templates />
+    <hr />
 </xsl:template>
 
 <!-- Button magic -->
@@ -21,6 +20,105 @@
     <div class="btn-group">
         <xsl:apply-templates />
     </div>
+</xsl:template>
+
+<xsl:template match="dbutton">
+    <xsl:variable name="design">
+        <xsl:choose>
+            <xsl:when test="@design != ''">
+                <xsl:value-of select="@design" />
+            </xsl:when>
+            <xsl:otherwise>default</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="size">
+        <xsl:choose>
+            <xsl:when test="@size != ''">
+                <xsl:value-of select="@size" />
+            </xsl:when>
+            <xsl:otherwise>sm</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <buttongroup>
+        <a class="btn btn-{$design} btn-{$size} dropdown-toggle" data-toggle="dropdown">
+            <xsl:choose>
+                <xsl:when test="@iconfont != ''">
+                    <i class="{@iconfont}"></i>
+                    <xsl:if test="@text">
+                        &#160;<xsl:value-of select="@text" />
+                    </xsl:if>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="@text" />
+                </xsl:otherwise>
+            </xsl:choose>
+            &#160;<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <xsl:apply-templates />
+        </ul>
+    </buttongroup>
+</xsl:template>
+
+<xsl:template match="dbuttonitem">
+    <xsl:variable name="onclickjs">
+        <xsl:choose>
+            <xsl:when test="@warning != ''">
+                return Genesis.showWarning('<xsl:value-of select="@warning"/>',
+                    '<xsl:value-of select="@id"/>'<xsl:choose><xsl:when test="@cls != ''">,
+                    '<xsl:value-of select="@cls"/>'</xsl:when></xsl:choose>);
+            </xsl:when>
+
+            <xsl:when test="@onclick = 'form'">
+                <xsl:choose>
+                    <xsl:when test="@mp != ''">
+                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', true, <xsl:value-of select="@modal" />);
+                    </xsl:when>
+                    <xsl:otherwise>
+                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', null, <xsl:value-of select="x:attr(@modal, 'false')" />);
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+
+            <xsl:when test="@onclick = '' or not (@onclick)">
+                <xsl:variable name="cls">
+                    <xsl:choose>
+                        <xsl:when test="@cls != ''">
+                            <xsl:value-of select="@cls" />
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="x:attr(@class, 'button')" />
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                return Genesis.query('/handle/<xsl:value-of
+                        select="$cls" />/click/<xsl:value-of
+                        select="@id" />');
+            </xsl:when>
+
+            <xsl:otherwise>
+                <xsl:value-of select="@onclick" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <li>
+        <a href="{@href}" onclick="{$onclickjs}">
+            <xsl:choose>
+                <xsl:when test="@iconfont != ''">
+                    <i class="{@iconfont}"></i>
+                    <xsl:if test="@text">
+                        &#160;<xsl:value-of select="@text" />
+                    </xsl:if>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="@text" />
+                </xsl:otherwise>
+            </xsl:choose>
+        </a>
+    </li>
 </xsl:template>
 
 <xsl:template match="button">
@@ -35,10 +133,10 @@
             <xsl:when test="@onclick = 'form'">
                 <xsl:choose>
                     <xsl:when test="@mp != ''">
-                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', true);
+                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', true, <xsl:value-of select="@modal" />);
                     </xsl:when>
                     <xsl:otherwise>
-                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />');
+                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', null, <xsl:value-of select="x:attr(@modal, 'false')" />);
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
@@ -70,13 +168,20 @@
             <xsl:when test="@design != ''">
                 <xsl:value-of select="@design" />
             </xsl:when>
-            <xsl:otherwise>
-                default
-            </xsl:otherwise>
+            <xsl:otherwise>default</xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
 
-    <a href="{@href}" onclick="{$onclickjs}" class="ui-el-button btn {$design}">
+    <xsl:variable name="size">
+        <xsl:choose>
+            <xsl:when test="@size != ''">
+                <xsl:value-of select="@size" />
+            </xsl:when>
+            <xsl:otherwise>sm</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <a href="{@href}" onclick="{$onclickjs}" class="btn btn-{$design} btn-{$size}">
         <xsl:choose>
             <xsl:when test="@iconfont != ''">
                 <i class="{@iconfont}"></i>
@@ -134,21 +239,9 @@
 
 <xsl:template match="tooltip">
     <xsl:variable name="id" select="x:id(@id)" />
-    <div style="display:inline-block; {@styles}" id="{$id}">
+    <div style="display:inline-block; {@styles}" id="{$id}" class="ui-tooltip" data-animation="true" data-placement="{x:attr(@placement, 'right')}" data-html="true" data-delay="{x:attr(@delay, '0')}" data-title="{x:jsesc(x:attr(@text, ''))}" data-trigger="{x:attr(@trigger, 'hover')}">
         <xsl:apply-templates />
     </div>
-    <script>
-        $('#<xsl:value-of select="$id" />').twipsy({
-            animate: true,
-            placement: '<xsl:value-of select="x:attr(@placement, 'right')" />',
-            html: true,
-            live: true,
-            delayIn: <xsl:value-of select="x:attr(@delay, '0')" />,
-            offset: <xsl:value-of select="x:attr(@offset, '0')" />,
-            title: '<xsl:value-of select="x:jsesc(x:attr(@text, ''))" />',
-            trigger: '<xsl:value-of select="x:attr(@trigger, 'hover')" />',
-        });
-    </script>
 </xsl:template>
 
 <xsl:template match="popover">

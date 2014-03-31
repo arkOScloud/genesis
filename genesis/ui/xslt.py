@@ -48,7 +48,7 @@ XSLT="""<?xml version="1.0" encoding="utf-8"?>
   
   <xsl:template match="headstylesheets">
      <xsl:for-each select="headstylesheet">
-         <link href="{@href}" rel="stylesheet/less" />
+         <link rel="stylesheet" type="text/css" href="{@href}" />
      </xsl:for-each>
   </xsl:template>
 

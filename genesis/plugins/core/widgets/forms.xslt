@@ -33,10 +33,12 @@
 <xsl:template match="dialogbox">
 <div>
     <div id="{@id}" class="modal fade">
-        <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
-        <div class="modal-body">
-            <xsl:apply-templates />
-        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
+                <div class="modal-body">
+                    <xsl:apply-templates />
+                </div>
 
         <div class="modal-footer">
             <xsl:if test="not(@hideok = 'True')">
@@ -76,6 +78,8 @@
             <xsl:if test="@miscbtn">
                 <button text="{@miscbtn}" id="{@miscbtnid}"/>
             </xsl:if>
+                </div>
+            </div>
         </div>
     </div>
     <script>
@@ -87,17 +91,21 @@
 <xsl:template match="confirmbox">
 <div>
     <div id="{@id}" class="modal fade">
-        <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
-        <div class="modal-body">
-            <label text="{@text}" />
-        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
+                <div class="modal-body">
+                    <label text="{@text}" />
+                </div>
 
-        <div class="modal-footer">
-            <xsl:if test="not(@hidecancel = 'True')">
-                <button text="Cancel" onclick="form" action="Cancel" form="{@id}"/>
-            </xsl:if>
-            <button text="No" onclick="form" action="Reject" form="{@id}" design="primary" />
-            <button text="Yes" onclick="form" action="Confirm" form="{@id}" design="primary" />
+                <div class="modal-footer">
+                    <xsl:if test="not(@hidecancel = 'True')">
+                        <button text="Cancel" onclick="form" action="Cancel" form="{@id}"/>
+                    </xsl:if>
+                    <button text="No" onclick="form" action="Reject" form="{@id}" design="primary" />
+                    <button text="Yes" onclick="form" action="Confirm" form="{@id}" design="primary" />
+                </div>
+            </div>
         </div>
     </div>
     <script>
@@ -108,29 +116,33 @@
 
 <xsl:template match="inputbox">
 <div>
-    <div id="{@id}" class="modal fade">
-        <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
-        <div class="modal-header">
-            <h3><xsl:value-of select="@text" /></h3>
-        </div>
-        <div class="modal-body">
-            <xsl:if test="not(@extra)">
-                <textinput size="30" password="{@password}" name="value" value="{@value}"/>
-            </xsl:if>
-            <xsl:if test="@extra = 'area'">
-                <textinputarea id="{@id}-inner" name="value" nodecode="True" value="{x:b64(@value)}" width="{x:attr(@width,400)}" height="{x:attr(@height,400)}"/>
-            </xsl:if>
-            <xsl:if test="@extra = 'code'">
-                <codeinputarea id="{@id}-inner" name="value" nodecode="True" value="{x:b64(@value)}" width="{x:attr(@width,800)}" height="{x:attr(@height,600)}"/>
-            </xsl:if>
-        </div>
-        <div class="modal-footer">
-            <xsl:if test="not(@hideok = 'True')">
-                <button text="OK" onclick="form" action="OK" form="{@id}" design="primary" />
-            </xsl:if>
-            <xsl:if test="not(@hidecancel = 'True')">
-                <button text="Cancel" onclick="form" action="Cancel" form="{@id}"/>
-            </xsl:if>
+    <div id="{@id}" class="modal fade" role="dialog" aria-labelledby="{@id}-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="{@id}-title"><xsl:value-of select="@text" /></h4>
+                </div>
+                <div class="modal-body">
+                    <xsl:if test="not(@extra)">
+                        <textinput size="30" password="{@password}" name="value" value="{@value}"/>
+                    </xsl:if>
+                    <xsl:if test="@extra = 'area'">
+                        <textinputarea id="{@id}-inner" name="value" nodecode="True" value="{x:b64(@value)}" width="{x:attr(@width,400)}" height="{x:attr(@height,400)}"/>
+                    </xsl:if>
+                    <xsl:if test="@extra = 'code'">
+                        <codeinputarea id="{@id}-inner" name="value" nodecode="True" value="{x:b64(@value)}" width="{x:attr(@width,800)}" height="{x:attr(@height,600)}"/>
+                    </xsl:if>
+                </div>
+                <div class="modal-footer">
+                    <xsl:if test="not(@hideok = 'True')">
+                        <button text="OK" onclick="form" action="OK" form="{@id}" design="primary" modal="true" />
+                    </xsl:if>
+                    <xsl:if test="not(@hidecancel = 'True')">
+                        <button text="Cancel" onclick="form" action="Cancel" form="{@id}" modal="true" />
+                    </xsl:if>
+                </div>
+            </div>
         </div>
     </div>
     <script>
@@ -148,31 +160,35 @@
 <xsl:template match="uploadbox">
 <div>
     <div id="{@id}" class="modal fade">
-        <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
-        <div class="modal-header">
-            <h3><xsl:value-of select="@text" /></h3>
-        </div>
-        <div class="modal-body">
-            <xsl:if test="@location != ''">
-                <formline text="Uploading to">
-                    <label text="{@location}" />
-                </formline> 
-            </xsl:if>
-            <formline>
-                <fileinput id="file" multiple="{@multiple}" />
-            </formline>
-        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
+                <div class="modal-header">
+                    <h3><xsl:value-of select="@text" /></h3>
+                </div>
+                <div class="modal-body">
+                    <xsl:if test="@location != ''">
+                        <formline text="Uploading to">
+                            <label text="{@location}" />
+                        </formline> 
+                    </xsl:if>
+                    <formline>
+                       <fileinput id="file" multiple="{@multiple}" />
+                    </formline>
+                </div>
 
-        <div class="modal-footer">
-            <xsl:if test="not(@hideok = 'True')">
-                <button text="Upload" onclick="form" action="OK" form="{@id}" design="primary" mp="True" />
-            </xsl:if>
-            <xsl:if test="not(@hidecancel = 'True')">
-                <button text="Cancel" onclick="form" action="Cancel" form="{@id}" />
-            </xsl:if>
-            <xsl:if test="@miscbtn">
-                <button text="{@miscbtn}" id="{@miscbtnid}"/>
-            </xsl:if>
+                <div class="modal-footer">
+                    <xsl:if test="not(@hideok = 'True')">
+                        <button text="Upload" onclick="form" action="OK" form="{@id}" design="primary" mp="True" />
+                    </xsl:if>
+                    <xsl:if test="not(@hidecancel = 'True')">
+                        <button text="Cancel" onclick="form" action="Cancel" form="{@id}" />
+                    </xsl:if>
+                    <xsl:if test="@miscbtn">
+                        <button text="{@miscbtn}" id="{@miscbtnid}"/>
+                    </xsl:if>
+                </div>
+            </div>
         </div>
     </div>
     <script>

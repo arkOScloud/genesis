@@ -1,5 +1,5 @@
 <xsl:template match="lt">
-    <table class="layout" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')};">
+    <table class="table" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')};">
         <xsl:apply-templates />
     </table>
 </xsl:template>
@@ -18,7 +18,7 @@
 
 
 <xsl:template match="dt">
-    <table cellspacing="0" cellpadding="0" class="zebra-striped" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')}; {x:iif(@noborder, 'border: none', '')}">
+    <table cellspacing="0" cellpadding="0" class="table table-striped" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')}; {x:iif(@noborder, 'border: none', '')}">
         <thead>
             <xsl:apply-templates select="./dtr[@header]" />
         </thead>

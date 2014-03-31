@@ -43,6 +43,9 @@ Genesis = (function() {
 		},
 
 		submit: function (fid, action, mp) {
+			$('.modal:not(#warningbox)').each( function (i, e) {
+				Genesis.UI.hideModal(e.id, true);
+			});
 			form = $('#'+fid);
 			if (form && !mp) {
 				params = 'action=' + encodeURIComponent(action);
@@ -138,12 +141,12 @@ Genesis = (function() {
 		Core: {
 			processResponse: function (data) {
 				$('.modal:not(#warningbox)').each( function (i, e) {
-					Genesis.UI.hideModal(e.id, true);
+					Genesis.UI.hideModal(e.id);
 				});
 
 				Genesis.UI.hideModal('warningbox');
 
-				$('.twipsy').remove();
+				// $('.ui-tooltip').tooltip('hide');
 
 				$('#rightplaceholder').empty();
 				$('#rightplaceholder').html(data);
@@ -153,6 +156,7 @@ Genesis = (function() {
 					} catch (err) { }
 					$(e).text('');
 				});
+				$('.ui-tooltip').tooltip();
 				Genesis.UI.showLoader(false);
 			},
 
@@ -270,33 +274,14 @@ Genesis = (function() {
 
 		UI: {
 			showAsModal: function (id) {
-				$('#'+id+'-backdrop').fadeTo(500, 0, function () {
-					$(this).remove();
-				});
-				var backdrop = $('<div class="modal-backdrop" />')
-					.css('opacity', 0)
-					.appendTo(document.body)
-					.fadeTo(500, 0.5)
-					.attr('id', id+'-backdrop');
-				$('#'+id)
-					.css('opacity', 0)
-					.appendTo(document.body)
-					.show()
-					.fadeTo(500, 1)
-					.center();
+				$('#'+id).modal({backdrop: 'static', keyboard: false, show: true});
 				firstPasswordEntry = true;
 			},
 
 			hideModal: function (id, remove) {
-				if ($('#'+id).css('opacity') > 0)
-					$('#'+id).fadeTo(500, 0, function () {
-					if (remove) $(this).remove(); else $(this).hide();
-				});
-				$('#'+id+'-backdrop').fadeTo(500, 0, function () {
-					if (remove) $(this).remove(); else $(this).hide();
-				});
+				$('#'+id).modal('hide');
 			},
-			
+
 			popoverEvent: null,
 
 			prepPopover: function (event, id) {
