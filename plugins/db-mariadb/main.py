@@ -53,11 +53,11 @@ class MariaDB(Plugin):
         if passwd and len(passwd) < 8:
             raise Exception('Database password must be longer than 8 characters')
         if name:
-            for x in self.get_dbs():
+            for x in self.get_dbs(self.db):
                 if x['name'] == name:
                     raise Exception('You already have a database named %s - please remove that one or choose a new name!' % name)
         if user:
-            for x in self.get_users():
+            for x in self.get_users(self.db):
                 if x['name'] == user:
                     raise Exception('You already have a database user named %s - please remove that one or choose a new name!' % user)
         return True
@@ -117,7 +117,7 @@ class MariaDB(Plugin):
         else:
             raise Exception('Unknown input or database connection failure')
 
-    def execute(self, dbname, command, conn=None):
+    def execute(self, dbname, command, conn=None, strf=True):
         if not self.db and conn:
             self.db = conn
         cmds = command.split(';')
@@ -131,11 +131,14 @@ class MariaDB(Plugin):
                     if r:
                         out = r.fetch_row(0)
                         for line in out:
-                            parse.append(line[0])
-            status = ''
-            for line in parse:
-                status += line + '\n'
-            return status
+                            parse.append(line)
+            if strf:
+                status = ''
+                for line in parse:
+                    status += ', '.join(line)+'\n'
+                return status
+            else:
+                return parse
         else:
             raise DBConnFail(self.plugin_info.db_name)
 

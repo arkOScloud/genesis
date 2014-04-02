@@ -9,7 +9,7 @@ CATEGORIES = [
         "secondary": ["Documents", "Music", "Photos"]
     }
 ]
-VERSION = '5'
+VERSION = '5.1'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'

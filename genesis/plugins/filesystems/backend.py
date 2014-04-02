@@ -159,7 +159,7 @@ class FSControl(Plugin):
 
     def mount(self, fs, passwd=''):
         if not os.path.isdir(os.path.join('/media', fs.name)):
-            os.mkdir(os.path.join('/media', fs.name))
+            os.makedirs(os.path.join('/media', fs.name))
         if fs.fstype in ['crypt', 'vdisk', 'loop']:
             dev = losetup.find_unused_loop_device()
             dev.mount(fs.img)

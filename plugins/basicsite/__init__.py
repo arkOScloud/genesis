@@ -10,7 +10,7 @@ CATEGORIES = [
         "secondary": ["Websites", "Static Sites"]
     }
 ]
-VERSION = '1'
+VERSION = '2'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'https://arkos.io'

@@ -5,6 +5,7 @@ from genesis import apis
 
 import os
 import backend
+import re
 
 
 class SambaPlugin(apis.services.ServiceControlPlugin):
@@ -84,11 +85,18 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
             ))
 
         if self._adding_user:
-            ui.append('main', UI.InputBox(
-                title='New user',
-                text='Username (must be existing user)',
-                id='dlgAddUser'
-            ))
+            ui.append('main',
+                UI.DialogBox(
+                    UI.FormLine(
+                        UI.TextInput(name='acct', id='acct'),
+                        text='Username'
+                    ),
+                    UI.FormLine(
+                        UI.EditPassword(id='passwd', value='Click to add password'),
+                        text='Password'
+                    ),
+                    id='dlgAddUser')
+                )
 
     
         # Config
@@ -248,10 +256,20 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
         #    self._editing_user = None
 
         if params[0] == 'dlgAddUser':
-            v = vars.getvalue('value', '')
+            acct = vars.getvalue('acct', '')
+            passwd = vars.getvalue('passwd', '')
             if vars.getvalue('action', '') == 'OK':
-                if v != '':
-                    self._cfg.add_user(v)
+                m = re.match('([-0-9a-zA-Z.+_]+)', acct)
+                if not acct or not m:
+                    self.put_message('err', 'Must choose a valid username')
+                elif acct in self._cfg.users.keys():
+                    self.put_message('err', 'You already have a user with this name')
+                elif not passwd:
+                    self.put_message('err', 'Must choose a password')
+                elif passwd != vars.getvalue('passwdb',''):
+                    self.put_message('err', 'Passwords must match')
+                else:
+                    self._cfg.add_user(acct, passwd)
                     self._cfg.load()
             self._adding_user = False
 

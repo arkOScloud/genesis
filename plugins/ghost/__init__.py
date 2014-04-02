@@ -13,7 +13,7 @@ CATEGORIES = [
         "secondary": ["Blogs", "Websites", "CMS"]
     }
 ]
-VERSION = '0.4.1-1'
+VERSION = '0.4.2-1'
 
 AUTHOR = 'ajvb'
 HOMEPAGE = 'http://arkos.io'
@@ -45,7 +45,7 @@ GENERATION = 1
 
 # Webapp metadata
 WA_PLUGIN = 'Ghost'
-DPATH = 'https://github.com/TryGhost/Ghost/releases/download/0.4.1/Ghost-0.4.1.zip'
+DPATH = 'https://github.com/TryGhost/Ghost/releases/download/0.4.2/Ghost-0.4.2.zip'
 DBENGINE = ''
 PHP = False
 NOMULTI = True

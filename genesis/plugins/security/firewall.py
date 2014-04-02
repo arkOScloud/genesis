@@ -1,4 +1,5 @@
 import iptc
+import re
 
 from genesis.com import *
 from genesis.api import *

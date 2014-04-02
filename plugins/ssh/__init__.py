@@ -28,7 +28,7 @@ SERVICES = [
 
 F2B = [
     {
-        "name": "ssh-iptables"
+        "name": "sshd"
     }
 ]
 
