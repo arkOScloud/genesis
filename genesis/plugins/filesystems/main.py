@@ -46,7 +46,7 @@ class FSPlugin(CategoryPlugin):
                     ) if x.fstype != 'crypt' else None,
                     UI.TipIcon(iconfont='gen-arrow-down-3' if x.mount else 'gen-arrow-up-3', 
                         text='Unmount' if x.mount else 'Mount', 
-                        id=('umd/' if x.mount else 'md/') + str(self._vdevs.index(x))
+                        id=('umvd/' if x.mount else 'mvd/') + str(self._vdevs.index(x))
                     ) if x.mount != '/' else None,
                     UI.TipIcon(iconfont='gen-cancel-circle', 
                         text='Delete', 
@@ -78,7 +78,7 @@ class FSPlugin(CategoryPlugin):
                     UI.TipIcon(iconfont='gen-arrow-down-3' if x.mount else 'gen-arrow-up-3', 
                         text='Unmount' if x.mount else 'Mount', 
                         id=('umd/' if x.mount else 'md/') + str(self._devs.index(x))
-                    ) if x.mount != '/' else None,
+                    ) if x.mount != '/' and x.fstype != 'disk' else None,
                 )
             ))
 
@@ -331,7 +331,7 @@ class FSPlugin(CategoryPlugin):
                     try:
                         self._fsc.umount(self._enc)
                         self._fsc.encrypt_vdisk(self._enc, passwd, mount=True)
-                        self.put_message('info', 'Virtual disk decrypted and mounted successfully')
+                        self.put_message('info', 'Virtual disk encrypted and mounted successfully')
                     except Exception, e:
                         self.put_message('err', str(e))
             self._enc = None

@@ -1,0 +1,38 @@
+<xml>
+    <toolbar>
+        <button id="add" text="Add mailbox" iconfont="gen-user-plus" />
+        <button id="addalias" text="Add alias" iconfont="gen-user-plus" />
+        <button id="adddom" text="Add domain" iconfont="gen-plus-circle" />
+    </toolbar>
+
+    <pad id="main">
+        <tabcontrol id="tabs" active="0">
+            <tabheader text="Accounts" id="0"/>
+            <tabheader text="Settings" id="1"/>
+
+            <tabbody id="0">
+                <label size="5" text="Mailserver Domains" />
+                <pad>
+                    <dt id="list" width="100%">
+                        <dtr header="True">
+                            <dth width="1" />
+                            <dth>
+                                <label text="Domain" />
+                            </dth>
+                            <dth width="1" />
+                        </dtr>
+                    </dt>
+                </pad>
+            </tabbody>
+
+            <tabbody id="1">
+                <label size="5" text="Mailserver Settings" />
+                <pad>
+                <formline>
+                        <button id="setup" text="Reinitialize" iconfont="gen-loop-2" warning="This will wipe all mailserver account data from your system and start over from scratch. Are you sure you want to do this?" />
+                    </formline>
+                </pad>
+            </tabbody>
+        </tabcontrol>
+    </pad>
+</xml>

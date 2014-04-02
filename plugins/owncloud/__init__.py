@@ -22,7 +22,7 @@ CATEGORIES = [
             "Contacts"]
     }
 ]
-VERSION = '6.0.2-1'
+VERSION = '6.0.2-2'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'

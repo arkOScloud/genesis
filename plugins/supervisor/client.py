@@ -28,6 +28,8 @@ class SVClient(Plugin):
     def list(self):
         r = []
         s = self.status()
+        if not os.path.exists('/etc/supervisor.d'):
+            os.mkdir('/etc/supervisor.d')
         for x in os.listdir('/etc/supervisor.d'):
             x = x.split('.ini')[0]
             r.append({

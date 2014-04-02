@@ -18,7 +18,7 @@ class F2BManager(Plugin):
 	filters = '/etc/fail2ban/filter.d'
 
 	def get_jail_config(self):
-		cfg = ConfigParser.SafeConfigParser()
+		cfg = ConfigParser.RawConfigParser()
 		if cfg.read(self.jailconf) == []:
 			raise F2BConfigNotFound()
 		return cfg
@@ -95,6 +95,7 @@ class F2BManager(Plugin):
 
 	def get_all(self):
 		lst = []
+		remove = []
 		cfg = self.get_jail_config()
 		fcfg = ConfigParser.SafeConfigParser()
 		for c in self.app.grab_plugins(ICategoryProvider):
@@ -125,9 +126,15 @@ class F2BManager(Plugin):
 		for p in lst:
 			for l in p['f2b']:
 				if not 'custom' in l:
-					jail_opts = cfg.items(l['name'])
+					try:
+						jail_opts = cfg.items(l['name'])
+					except ConfigParser.NoSectionError:
+						remove.append(p)
+						continue
 					filter_name = cfg.get(l['name'], 'filter')
-					fcfg.read([self.filters+'/common.conf', 
+					if "%(__name__)s" in filter_name:
+						filter_name = filter_name.replace("%(__name__)s", l['name'])
+					c = fcfg.read([self.filters+'/common.conf', 
 						self.filters+'/'+filter_name+'.conf'])
 					filter_opts = fcfg.items('Definition')
 					l['jail_opts'] = jail_opts
@@ -158,4 +165,6 @@ class F2BManager(Plugin):
 						l['jail_opts'] = jail_opts
 						l['filter_name'] = filter_name
 						l['filter_opts'] = filter_opts
+		for x in remove:
+			lst.remove(x)
 		return lst

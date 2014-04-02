@@ -90,7 +90,7 @@ def detect_architecture():
     arch, btype = 'Unknown', 'Unknown'
     # Get architecture
     for x in shell('lscpu').split('\n'):
-        if 'Architecture' in x.split()[0]: 
+        if x.split() and 'Architecture' in x.split()[0]: 
             arch = x.split()[1]
             break
     # Let's play a guessing game!
@@ -102,7 +102,7 @@ def detect_architecture():
             if 'Hardware' in k and v.strip() in ('BCM2708', 'BCM2835'):
                 btype = 'Raspberry Pi'
                 break
-    if arch in ['x86_64', 'i686']:
+    elif arch in ['x86_64', 'i686']:
         btype = 'General'
     return (arch, btype)
 
@@ -175,13 +175,14 @@ def download(url, file=None, crit=False):
         if crit:
             raise
 
-def shell(c, stderr=False):
+def shell(c, stderr=False, env={}):
     """
     Runs commandline in the default shell and returns output. Blocking.
     """
     p = subprocess.Popen('LC_ALL=C '+c, shell=True,
             stderr=subprocess.PIPE,
-            stdout=subprocess.PIPE)
+            stdout=subprocess.PIPE,
+            env=env if env else None)
 
     try:
         data = p.stdout.read() # Workaround; waiting first causes a deadlock
@@ -216,13 +217,14 @@ def shell_status(c):
             stderr=subprocess.PIPE,
             stdout=subprocess.PIPE).wait()
 
-def shell_cs(c, stderr=False):
+def shell_cs(c, stderr=False, env={}):
     """
     Same, but returns exitcode and output in a tuple.
     """
     p = subprocess.Popen('LC_ALL=C '+c, shell=True,
             stderr=subprocess.PIPE,
-            stdout=subprocess.PIPE)
+            stdout=subprocess.PIPE,
+            env=env if env else None)
 
     try:
         data = p.stdout.read() # Workaround; waiting first causes a deadlock

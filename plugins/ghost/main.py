@@ -31,6 +31,9 @@ class Ghost(Plugin):
         nodectl = apis.langassist(self.app).get_interface('NodeJS')
         users = UsersBackend(self.app)
 
+        if not os.path.exists('/usr/bin/python') and os.path.exists('/usr/bin/python'):
+            os.symlink('/usr/bin/python2', '/usr/bin/python')
+
         # A bug in 0.4.1 prevents sqlite3@2.1.19 from installing properly.
         # Fallback to 2.1.15
         d = json.loads(open(os.path.join(path, 'package.json'), 'r').read())

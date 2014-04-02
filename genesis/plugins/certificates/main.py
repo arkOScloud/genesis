@@ -37,6 +37,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
         cfg = self.app.get_config(CertControl(self.app))
         ui.find('kl'+cfg.keylength).set('selected', True)
         ui.find('kt'+cfg.keytype.lower()).set('selected', True)
+        ui.find('ciphers').set('value', cfg.ciphers)
 
         lst = ui.find('certlist')
         for s in self.certs:
@@ -337,6 +338,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                 cfg = self.app.get_config(CertControl(self.app))
                 cfg.keylength = vars.getvalue('keylength', '2048')
                 cfg.keytype = vars.getvalue('keytype', 'RSA')
+                cfg.ciphers = vars.getvalue('ciphers', '')
                 cfg.save()
                 self.put_message('info', 'Settings saved successfully')
 

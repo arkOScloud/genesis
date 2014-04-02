@@ -33,7 +33,7 @@ DEPENDENCIES = {
         {
             "type": "app",
             "name": "Supervisor",
-            "package": "supervisord",
+            "package": "supervisor",
             "binary": "supervisorctl"
         }
     ]

@@ -40,7 +40,7 @@ class RadicalePlugin(CategoryPlugin):
 
         ui.find('rinfo').append(
             UI.Label(size='1', bold=True,
-                text='Your Calendar/Contacts server is listening at http%s://%s%s'%('s' if self.site.ssl else '', self.site.addr, ':'+port if self.site.port not in ['80', '443'] else ''))
+                text='Your Calendar/Contacts server is listening at http%s://%s%s'%('s' if self.site.ssl else '', self.site.addr, ':'+self.site.port if self.site.port not in ['80', '443'] else ''))
             )
 
         t = ui.find('list')

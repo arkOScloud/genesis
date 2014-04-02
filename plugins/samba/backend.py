@@ -113,11 +113,8 @@ class SambaConfig(Plugin):
     def del_user(self, u):
         shell('pdbedit -x -u ' + u)
 
-    def add_user(self, u):
-        with open('/tmp/pdbeditnn', 'w') as f:
-            f.write('\n\n\n')
-        shell('pdbedit -a -t -u ' + u + ' < /tmp/pdbeditnn')
-        os.unlink('/tmp/pdbeditnn')
+    def add_user(self, u, p):
+        shell_stdin('smbpasswd -as %s' % u, p+'\n'+p)
 
     def get_shares(self):
         return self.shares.keys()

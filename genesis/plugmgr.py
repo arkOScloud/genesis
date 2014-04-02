@@ -23,7 +23,7 @@ import urllib2
 
 from genesis.api import *
 from genesis.com import *
-from genesis.utils import BackgroundWorker, detect_platform, shell, shell_status, download
+from genesis.utils import BackgroundWorker, detect_platform, shell, shell_cs, shell_status, download
 import genesis
 
 RETRY_LIMIT = 10
@@ -238,6 +238,7 @@ class PluginLoader:
 
         info = PluginInfo()
         try:
+            d = None
             # Save info
             info.id = plugin
             info.ptype = mod.TYPE
@@ -285,7 +286,7 @@ class PluginLoader:
                         break
                 info.deps = deps
                 for req in deps:
-                    PluginLoader.verify_dep(req, cat)
+                    d = PluginLoader.verify_dep(req, cat)
 
             PluginLoader.__classes[plugin] = []
             PluginLoader.__submods[plugin] = {}
@@ -312,6 +313,8 @@ class PluginLoader:
             # Store the whole plugin
             setattr(genesis.plugins, plugin, mod)
             PluginLoader.notify_plugins_changed()
+            if d:
+                return d
         except BaseRequirementError, e:
             info.problem = e
             raise e
@@ -390,7 +393,7 @@ class PluginLoader:
     @staticmethod
     def verify_dep(dep, cat=''):
         """
-        Verifies that given plugin dependency is satisfied. Returns bool
+        Verifies that given plugin dependency is satisfied.
         """
         platform = PluginLoader.platform
         log = PluginLoader.log
@@ -441,8 +444,12 @@ class PluginLoader:
                     exec('import %s'%dep['binary'])
                 except:
                     # Let's try to install it anyway
-                    shell('pip%s install %s' % ('2' if platform in ['arkos', 'arch'] else '', dep['package']))
-                    raise ModuleRequirementError(dep, True)
+                    s = shell_cs('pip%s install %s' % ('2' if platform in ['arkos', 'arch'] else '', dep['package']))
+                    if s[0] != 0:
+                        raise ModuleRequirementError(dep, False)
+                    else:
+                        return 'Restart Genesis for changes to take effect.'
+                        raise ModuleRequirementError(dep, False)
             else:
                 p = False
                 s = shell('pip%s freeze'%'2' if platform in ['arkos', 'arch'] else '')
@@ -729,8 +736,9 @@ class PluginInfo:
 
 class LiveInstall(BackgroundWorker):
     def run(self, rm, id, load, cat):
-        rm.install(id, load=load, cat=cat)
-        cat.put_message('info', 'Plugin installed. Refresh page for changes to take effect.')
+        d = rm.install(id, load=load, cat=cat)
+        if d:
+            cat.put_message('info', 'Plugin installed. %s'%str(d))
         ComponentManager.get().rescan()
         ConfManager.get().rescan()
         cat._reloadfw = True

@@ -47,7 +47,7 @@ class PluginManager(CategoryPlugin, URLHandler):
 
             if k.problem:
                 row.find('status').set('iconfont', 'gen-close-2 text-error')
-                row.find('status').set('text', 'Error')
+                row.find('status').set('text', k.problem)
                 row.find('icon').set('class', k.iconfont + ' text-error')
                 row.find('name').set('class', 'text-error')
                 row.find('desc').set('class', 'text-error')
