@@ -151,7 +151,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 		if not type_sel_multiuser:
 			ubutton = False
 
-		if self._add is not None:
+		if self._add is not None and type_sel_all:
 			ui.appendAll('type', *type_sel_all)
 		else:
 			ui.remove('dlgAdd')

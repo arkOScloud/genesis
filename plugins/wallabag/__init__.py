@@ -13,7 +13,7 @@ CATEGORIES = [
         "secondary": ["News Readers (RSS)"]
     }
 ]
-VERSION = '1.5.0-3'
+VERSION = '1.6.0-1'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
@@ -91,7 +91,7 @@ GENERATION = 1
 
 # Webapp metadata
 WA_PLUGIN = 'Wallabag'
-DPATH = 'https://github.com/wallabag/wallabag/archive/1.5.0.tar.gz'
+DPATH = 'https://github.com/wallabag/wallabag/archive/1.6.0.tar.gz'
 DBENGINE = 'MariaDB'
 PHP = True
 NOMULTI = True
