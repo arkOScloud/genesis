@@ -1,20 +1,18 @@
 <xsl:template match="formline">
-    <div class="clearfix">
+    <div class="form-group">
         <hlabel for="{@iid}" text="{@text}" />
-        <div class="input">
-            <xsl:apply-templates />
-            <xsl:if test="@help">
-                <span class="help-block">
-                    <xsl:value-of select="@help" />
-                </span>
-            </xsl:if>
-        </div>
+        <xsl:apply-templates />
+        <xsl:if test="@help">
+            <span class="help-block">
+                <xsl:value-of select="@help" />
+            </span>
+        </xsl:if>
     </div>
 </xsl:template>
 
 
 <xsl:template match="textinput">
-        <input name="{@name}" value="{@value}" id="{@id}" class="{@design}" onkeypress="return noenter()" type="{x:iif(@password, 'password', 'text')}">
+        <input name="{@name}" value="{@value}" id="{@id}" class="form-control {@design}" onkeypress="return noenter()" type="{x:iif(@password, 'password', 'text')}">
             <xsl:if test="@disabled != ''">
                 <xsl:attribute name="disabled">true</xsl:attribute>
             </xsl:if>

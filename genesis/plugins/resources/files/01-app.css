@@ -136,3 +136,59 @@ a:link, a:focus, a:active {
   float: left;
   color: #008CBA;
 }
+
+.btn-tipicon {
+  margin: 2px;
+  padding: 0;
+}
+
+td a, td p, td span {
+  line-height: 2;
+}
+
+.ui-user-info {
+  color: #FFF;
+  padding: 15px;
+  line-height: 20px;
+}
+
+.ui-user-info a {
+  color: #FFF;
+  padding: 5px;
+}
+
+.btn-outline-inverse {
+  color: #fff;
+  background-color: transparent;
+  border-color: #E0EBF3;
+}
+.btn-outline-inverse:hover,
+.btn-outline-inverse:focus,
+.btn-outline-inverse:active {
+  color: #3498DB;
+  text-shadow: none;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.navbar-brand {
+  font-size: 1.5em;
+}
+
+.footer {
+  background-color: #222;
+  color: #FFF;
+  padding: 10px;
+  line-height: 35px;
+}
+
+.footer a {
+  color: #FFF;
+  padding: 0px 5px;
+}
+
+.firstrunpage {
+  background-color: #3498DB;
+  color: #FFF;
+  padding-top: 20px;
+}

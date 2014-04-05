@@ -23,6 +23,35 @@
         </div>
 </xsl:template>
 
+<xsl:template match="wizardform">
+    <div id="{@id}" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')}; overflow: hidden; margin-left: auto; margin-right: auto;">
+        <input id="{@id}-url" type="hidden" name="__url" value="/handle/form/submit/{@id}"/>
+        <xsl:apply-templates />
+        <div style="margin-top: 20px;">
+            <xsl:if test="@cancel != ''">
+                <div class="pull-left">
+                    <button text="Cancel" onclick="form" action="Cancel" size="lg" form="{@id}" design="outline-inverse" />
+                </div>
+            </xsl:if>
+            <xsl:if test="@back != ''">
+                <div class="pull-left">
+                    <button text="&#171; Back" onclick="form" action="Back" size="lg" form="{@id}" design="outline-inverse" />
+                </div>
+            </xsl:if>
+            <div class="pull-right">
+            <xsl:choose>
+                <xsl:when test="@mp != ''">
+                    <button text="{x:attr(@btntext,'Next &#187;')}" onclick="form" action="OK" size="lg" form="{@id}" design="outline-inverse" mp="True" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <button text="{x:attr(@btntext,'Next &#187;')}" onclick="form" action="OK" size="lg" form="{@id}" design="outline-inverse" />
+                </xsl:otherwise>
+            </xsl:choose>
+            </div>
+        </div>
+    </div>
+</xsl:template>
+
 <xsl:template match="simpleform">
     <div id="{@id}" style="display:inline-block">
         <input id="{@id}-url" type="hidden" name="__url" value="/handle/form/submit/{@id}"/>

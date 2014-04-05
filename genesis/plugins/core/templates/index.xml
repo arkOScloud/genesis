@@ -11,7 +11,14 @@
     <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand"><img class="logo" src="/dl/core/ui/logo.png" /> Genesis</a>
+                <a class="navbar-brand"><i class="gen-arkos-round"></i> Genesis</a>
+            </div>
+            <div class="ui-user-info pull-right">
+                <strong id="cat-username"></strong>
+                <div class="btn-group">
+                    <a href="#" onclick="return Genesis.selectCategory('usersplugin');"><i class="gen-users" style="font-size: 1.5em;"></i></a>
+                    <a href="/logout"><i class="gen-exit" style="font-size: 1.5em;"></i></a>
+                </div>
             </div>
         </div>
     </div>
@@ -27,19 +34,6 @@
                         <li><a class="danger top-link" onclick="Genesis.showWarning('Are you sure you want to reload the Genesis process?', 'gen_reload');"><i class="gen-arkos-round"></i> Reload Genesis</a></li>
                         <li><a class="danger" onclick="Genesis.showWarning('Are you sure you want to shutdown your system?', 'gen_shutdown');"><i class="gen-switch"></i> Shutdown System</a></li>
                         <li><a class="danger bottom-link" onclick="Genesis.showWarning('Are you sure you want to restart your system?', 'gen_reboot');"><i class="gen-loop-2"></i> Restart System</a></li>
-                    </ul>
-                  </div>
-                </div>
-                <popover id="user-pop" placement="bottom" styles="float:right;" class="ui-el-top-category gen-user"></popover>
-                <div class="popover bottom">
-                  <div id="user-pop-content" class="popover-inner">
-                    <div class="popover-lead">
-                        <p>Logged in as:</p>
-                        <h3 id="cat-username"></h3>
-                    </div>
-                    <ul>
-                        <li><a class="default" onclick="return Genesis.selectCategory('usersplugin');"><i class="gen-users"></i> Settings</a></li>
-                        <li><a class="danger bottom-link" href="/logout"><i class="gen-close"></i> Logout</a></li>
                     </ul>
                   </div>
                 </div>
@@ -68,9 +62,10 @@
 
     <div class="footer">
         <div class="container">
-            <div id="version" />
-            <div id="links">
+            <div id="version" class="pull-left" />
+            <div id="links" class="pull-right">
                 <a href="http://bbs.arkos.io/" id="feedback-link" target="_blank"><i class="gen-users"></i> Community</a>
+                <a href="https://www.gnu.org/licenses/gpl.html" target="_blank"><i class="gen-certificate"></i> License</a>
             </div>
         </div>
     </div>

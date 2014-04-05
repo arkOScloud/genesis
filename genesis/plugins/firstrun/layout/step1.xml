@@ -1,9 +1,12 @@
 <xml>
-    <label size="4" text="Welcome to Genesis" />
-    <pad>
-    <label size="1" text="This wizard will walk you through the steps needed to set up your new arkOS node. This process may take a few minutes as the different settings are modified by the system. Please do not turn off or restart your arkOS node until you have successfully completed this wizard." />
-    <label size="1" text="When you are ready, click OK to begin." />
-    <formbox hidecancel="True" id="splash">
-    </formbox>
-    </pad>
+    <wizardform id="splash" btntext="Start" firstrun="True" width="800">
+        <div class="text-center">
+            <h1>Welcome to Genesis</h1>
+            <h1 class="gen-arkos-round" style="font-size:25em;line-height:1em;"></h1>
+            <label size="1" text="This wizard will walk you through the steps needed to set up your new arkOS server. This process may take a few minutes as the different settings are modified by the system. Please do not turn off or restart your arkOS server until you have successfully completed this wizard." />
+            <br />
+            <br />
+            <label size="1" text="When you are ready, click Start to begin." />
+        </div>
+    </wizardform>
 </xml>

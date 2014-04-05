@@ -1,18 +1,22 @@
 <xml>
-    <label size="4" text="Welcome to Genesis" />
-    <pad>
-    <formbox hidecancel="True" id="frmChangePassword">
-        <label size="3" text="Please change your username and password. This will be the username and password you use to connect to Genesis or manage your arkOS node via SSH." />
-        <spacer height="20" />
-        <formline text="New username:">
-            <textinput name="login" value="admin" />
-        </formline>
-        <formline text="Password:">
-            <textinput name="password" password="True" />
-        </formline>
-        <formline text="Password again:">
-            <textinput name="password_again" password="True" />
-        </formline>
-    </formbox>
-    </pad>
+    <wizardform back="True" id="frmChangePassword" width="800">
+        <div class="text-center">
+            <h1>Welcome to Genesis</h1>
+        </div>
+        <div style="background-color:#FFF;border-radius:8px;color:#000;padding:30px;">
+            <div class="text-center">
+                <label size="3" text="Please change your username and password. This will be the username and password you use to connect to Genesis or manage your arkOS server via SSH." />
+                <spacer height="20" />
+            </div>
+            <formline text="New username:">
+                <textinput name="login" vaTrueTruelue="admin" />
+            </formline>
+            <formline text="Password:">
+                <textinput name="password" password="True" />
+            </formline>
+            <formline text="Password again:">
+                <textinput name="password_again" password="True" />
+            </formline>
+        </div>
+    </wizardform>
 </xml>

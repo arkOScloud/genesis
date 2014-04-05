@@ -46,7 +46,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
 
         templ.append('main-content', self.selected_category.get_ui())
 
-        if self.app.session.has_key('messages'):
+        if self.app.session.has_key('messages') and not self.is_firstrun():
             for msg in self.app.session['messages']:
                 if 'info' in msg[0]:
                     msgcls = 'info'
@@ -127,7 +127,10 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
     def process(self, req, start_response):
         self.do_init()
 
-        templ = self.app.get_template('index.xml')
+        if self.is_firstrun():
+            templ = self.app.get_template('firstrun.xml')
+        else:
+            templ = self.app.get_template('index.xml')
 
         cat = None
         v = UI.VContainer(spacing=0)
@@ -168,27 +171,26 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
             if not empty: v.append(cat_folder)
             cat_folder['expanded'] = exp
 
-        for c in cats:
-            if c.folder in ['top', 'bottom']:
-                templ.append(
-                    'topplaceholder-'+c.folder,
-                    UI.TopCategory(
-                        text=c.text,
-                        id=c.plugin_id,
-                        iconfont=c.iconfont,
-                        counter=c.get_counter(),
-                        selected=c==self.selected_category
+        if not self.is_firstrun():
+            for c in cats:
+                if c.folder in ['top', 'bottom']:
+                    templ.append(
+                        'topplaceholder-'+c.folder,
+                        UI.TopCategory(
+                            text=c.text,
+                            id=c.plugin_id,
+                            iconfont=c.iconfont,
+                            counter=c.get_counter(),
+                            selected=c==self.selected_category
+                        )
                     )
+            templ.append('_head', UI.HeadTitle(text='Genesis @ %s'%platform.node()))
+            templ.append('leftplaceholder', v)
+            templ.append('version', UI.Label(text='Genesis '+version(), size=2))
+            templ.insertText('cat-username', self.app.auth.user)
+            templ.appendAll('links', 
+                    UI.LinkLabel(iconfont='gen-info', text='About', id='about'),
                 )
-
-        templ.append('_head', UI.HeadTitle(text='Genesis @ %s'%platform.node()))
-        templ.append('leftplaceholder', v)
-        templ.append('version', UI.Label(text='Genesis '+version(), size=2))
-        templ.insertText('cat-username', self.app.auth.user)
-        templ.appendAll('links', 
-                UI.LinkLabel(iconfont='gen-info', text='About', id='about'),
-                UI.OutLinkLabel(iconfont='gen-certificate', text='License', url='http://www.gnu.org/licenses/gpl.html')
-            )
 
         return templ.render()
 
