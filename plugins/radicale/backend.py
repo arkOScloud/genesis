@@ -228,7 +228,7 @@ class RadicaleControl(Plugin):
         # Make sure Radicale is installed and ready
         pyctl = apis.langassist(self.app).get_interface('Python')
         users = UsersBackend(self.app)
-        if not pyctl.is_installed('radicale'):
+        if not pyctl.is_installed('Radicale'):
             pyctl.install('radicale')
         if not os.path.exists('/etc/radicale/config'):
             if not os.path.isdir('/etc/radicale'):
@@ -244,6 +244,7 @@ class RadicaleControl(Plugin):
         wsgi_file += 'radicale.log.start()\n'
         wsgi_file += 'application = radicale.Application()\n'
         open('/etc/radicale/radicale.wsgi', 'w').write(wsgi_file)
+        os.chmod('/etc/radicale/radicale.wsgi', 0766)
         s = apis.orders(self.app).get_interface('supervisor')
         if s:
             s[0].order('new', 'radicale', 'program', 
@@ -261,7 +262,7 @@ class RadicaleControl(Plugin):
         ]
         if not os.path.exists('/etc/radicale/users'):
             open('/etc/radicale/users', 'w').write('')
-            os.chmod('/etc/radicale/users', 766)
+            os.chmod('/etc/radicale/users', 0766)
         WebappControl(self.app).add_reverse_proxy('radicale', 
             '/usr/lib/radicale', addr, port, block)
         apis.networkcontrol(self.app).add_webapp(('radicale', 'ReverseProxy', port))

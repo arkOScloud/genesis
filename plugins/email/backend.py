@@ -165,7 +165,6 @@ class MailConfig(Plugin):
                 elif line.split():
                     conf.append(line.split())
                     lastname = line.split()[0]
-            print conf
         elif cfgtype == 'dovecot_conf':
             conf = {}
             active = []
@@ -204,7 +203,7 @@ class MailConfig(Plugin):
                         active.append(val+'_'+str(num))
                 elif re.match('.*\s*=\s*.*', line):
                     name, val = re.match('\s*(\S+)\s*=\s*(.*)\s*$', line).group(1,2)
-                    name, val = name.split()[0], val.split()[0] if val.split() else ''
+                    name = name.split()[0]
                     val = re.sub(r'"', '', val)
                     if ', ' in val:
                         val = val.split(', ')
@@ -255,7 +254,10 @@ class MailConfig(Plugin):
                             f += '  '+y+' = '+data[x][y]+'\n'
                     f += '}\n'
                 else:
-                    f += x+' = '+data[x]+'\n'
+                    if type(data[x]) == str:
+                        f += x+' = '+data[x]+'\n'
+                    else:
+                        f += x+' = '+', '.join(data[x])+'\n'
         return f
 
 
