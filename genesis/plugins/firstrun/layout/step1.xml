@@ -1,12 +1,14 @@
 <xml>
-    <wizardform id="splash" btntext="Start" firstrun="True" width="800">
-        <div class="text-center">
-            <h1>Welcome to Genesis</h1>
-            <h1 class="gen-arkos-round" style="font-size:25em;line-height:1em;"></h1>
-            <label size="1" text="This wizard will walk you through the steps needed to set up your new arkOS server. This process may take a few minutes as the different settings are modified by the system. Please do not turn off or restart your arkOS server until you have successfully completed this wizard." />
-            <br />
-            <br />
-            <label size="1" text="When you are ready, click Start to begin." />
-        </div>
-    </wizardform>
+    <div class="ui-firstrun-stripe">
+        <h1>Welcome to Genesis</h1>
+    </div>
+    <div class="container">
+        <wizardform id="splash" btntext="Start &#187;" firstrun="True" width="800">
+            <div class="text-center">
+                <h1 class="gen-arkos-round" style="font-size:20em;line-height:1em;"></h1>
+                <p>This wizard will walk you through the steps needed to set up your new arkOS server. This process may take a few minutes as the different settings are modified by the system. Please do not turn off or restart your arkOS server until you have successfully completed this wizard.</p>
+                <p>When you are ready, click Start to begin.</p>
+            </div>
+        </wizardform>
+    </div>
 </xml>

@@ -30,21 +30,21 @@
         <div style="margin-top: 20px;">
             <xsl:if test="@cancel != ''">
                 <div class="pull-left">
-                    <button text="Cancel" onclick="form" action="Cancel" size="lg" form="{@id}" design="outline-inverse" />
+                    <button text="Cancel" onclick="form" action="Cancel" size="lg" form="{@id}" design="danger" />
                 </div>
             </xsl:if>
             <xsl:if test="@back != ''">
                 <div class="pull-left">
-                    <button text="&#171; Back" onclick="form" action="Back" size="lg" form="{@id}" design="outline-inverse" />
+                    <button text="&#171; Back" onclick="form" action="Back" size="lg" form="{@id}" />
                 </div>
             </xsl:if>
             <div class="pull-right">
             <xsl:choose>
                 <xsl:when test="@mp != ''">
-                    <button text="{x:attr(@btntext,'Next &#187;')}" onclick="form" action="OK" size="lg" form="{@id}" design="outline-inverse" mp="True" />
+                    <button text="{x:attr(@btntext,'Next &#187;')}" onclick="form" action="OK" size="lg" form="{@id}" design="primary" mp="True" />
                 </xsl:when>
                 <xsl:otherwise>
-                    <button text="{x:attr(@btntext,'Next &#187;')}" onclick="form" action="OK" size="lg" form="{@id}" design="outline-inverse" />
+                    <button text="{x:attr(@btntext,'Next &#187;')}" onclick="form" action="OK" size="lg" form="{@id}" design="primary" />
                 </xsl:otherwise>
             </xsl:choose>
             </div>

@@ -7,9 +7,7 @@
 </head>
 <body id="main" class="firstrunpage">
     <div id="page">
-        <div class="container">
-            <div class="content" id="rightplaceholder" />
-        </div>
+        <div class="content" id="rightplaceholder" />
 
         <script>
             Genesis.init();

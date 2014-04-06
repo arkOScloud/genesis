@@ -1,22 +1,26 @@
 <xml>
-    <wizardform back="True" id="frmChangePassword" width="800">
-        <div class="text-center">
-            <h1>Welcome to Genesis</h1>
-        </div>
-        <div style="background-color:#FFF;border-radius:8px;color:#000;padding:30px;">
+    <div class="ui-firstrun-stripe">
+        <h1>Welcome to Genesis</h1>
+    </div>
+    <div class="container">
+        <wizardform back="True" id="frmChangePassword" width="800">
             <div class="text-center">
-                <label size="3" text="Please change your username and password. This will be the username and password you use to connect to Genesis or manage your arkOS server via SSH." />
+                <table class="table table-condensed">
+                    <tr><td style="background-color:#428BCA;"></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td><strong>Step 1</strong><br />User/Password</td><td>Step 2<br />Administrator</td><td>Step 3<br />Settings</td><td>Step 4<br />Applications</td><td>Step 5<br />Review</td></tr>
+                </table>
+                <label size="3" text="Please choose a username and password. This will be the username and password you use to connect to Genesis, and the Unix account for SSH and other purposes." />
                 <spacer height="20" />
             </div>
             <formline text="New username:">
                 <textinput name="login" vaTrueTruelue="admin" />
             </formline>
-            <formline text="Password:">
-                <textinput name="password" password="True" />
+            <formline text="New password:">
+                <textinput name="passwd" password="True" />
             </formline>
-            <formline text="Password again:">
-                <textinput name="password_again" password="True" />
+            <formline text="Please confirm your new password:">
+                <textinput name="passwdb" password="True" />
             </formline>
-        </div>
-    </wizardform>
+        </wizardform>
+    </div>
 </xml>

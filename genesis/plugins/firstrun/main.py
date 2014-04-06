@@ -86,8 +86,8 @@ class FirstRun(CategoryPlugin, URLHandler):
         if params[0] == 'frmChangePassword':
             if vars.getvalue('action', 'OK') == 'OK':
                 self._username = vars.getvalue('login', '')
-                self._password = vars.getvalue('password', '')
-                self._password_again = vars.getvalue('password_again', '')
+                self._password = vars.getvalue('passwd', '')
+                self._password_again = vars.getvalue('passwdb', '')
                 if self._username == '':
                     self.put_message('err', 'The username can\'t be empty')
                 elif self._password == '':
