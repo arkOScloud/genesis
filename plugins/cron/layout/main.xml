@@ -1,13 +1,13 @@
 <xml>
     <toolbar>
         <hcontainer>
-            <button id="add_task" text="Add task" iconfont="gen-plus-circle" />
-            <button id="add_oth" text="Add non-task string" iconfont="gen-plus-circle" />
+            <btn id="add_task" text="Add task" iconfont="gen-plus-circle" />
+            <btn id="add_oth" text="Add non-task string" iconfont="gen-plus-circle" />
             <div style="padding: 0 5px">
             <simpleform id="frmUser">
                 <hcontainer spacing="5">
                     <select id="users_select" name="users_select" />
-                    <button id="change_user" text="Change user" action="OK" form="frmUser" onclick="form"/>
+                    <btn id="change_user" text="Change user" action="OK" form="frmUser" onclick="form"/>
                 </hcontainer>
             </simpleform>
             </div>

@@ -1,6 +1,6 @@
 <xml>
     <toolbar>
-        <button id="launch" text="Web Interface" iconfont="gen-earth" />
+        <btn id="launch" text="Web Interface" iconfont="gen-earth" />
     </toolbar>
 
     <pad id="main">

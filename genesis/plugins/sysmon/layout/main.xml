@@ -2,8 +2,8 @@
 
 <div class="ui-dashboard-banner">
     <div id="ui-dashboard-buttons" style="float:right">
-        <button id="btnAddWidget" text="Add widget" iconfont="gen-plus-circle" />
-        <button text="Refresh" iconfont="gen-loop-2" />
+        <btn id="btnAddWidget" text="Add widget" iconfont="gen-plus-circle" />
+        <btn text="Refresh" iconfont="gen-loop-2" />
     </div>
     <img id="icon" />
     <span id="host" />
@@ -11,8 +11,8 @@
 </div>
 
     <div id="save-query" style="display:none">
-        <button onclick="return dashboardSave()" text="Save changes" design="" />
-        <button text="Revert" design="danger" />
+        <btn onclick="return dashboardSave()" text="Save changes" design="" />
+        <btn text="Revert" design="danger" />
     </div>
 
 <pad id="main">

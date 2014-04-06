@@ -1,8 +1,8 @@
 <xml>
     <toolbar>
-        <button id="adisk" text="Create virtual disk" iconfont="gen-storage" />
-        <button id="aedisk" text="Create encrypted disk" iconfont="gen-lock" />
-        <button id="add" text="Add new mountpoint" iconfont="gen-plus-circle" />
+        <btn id="adisk" text="Create virtual disk" iconfont="gen-storage" />
+        <btn id="aedisk" text="Create encrypted disk" iconfont="gen-lock" />
+        <btn id="add" text="Add new mountpoint" iconfont="gen-plus-circle" />
     </toolbar>
 
     <pad id='main'>

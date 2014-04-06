@@ -12,10 +12,11 @@
                 <label size="3" text="Please choose a username and password. This will be the username and password you use to connect to Genesis, and the Unix account for SSH and other purposes." />
                 <spacer height="20" />
             </div>
-            <formline text="New username:">
+            <div id="veriferr" />
+            <formline text="New username:" help="Your username must not contain capital letters, dots, colons, or spaces; or end with a hyphen.">
                 <textinput name="login" vaTrueTruelue="admin" />
             </formline>
-            <formline text="New password:">
+            <formline text="New password:" help="Your password must be at least six characters.">
                 <textinput name="passwd" password="True" />
             </formline>
             <formline text="Please confirm your new password:">

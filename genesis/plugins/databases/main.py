@@ -136,12 +136,12 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 					UI.Formline(UI.EditPassword(id='newpasswd', value='Click to change'),
 						text="New root password"
 					),
-					UI.Formline(UI.Button(onclick="form", form="frmPasswd%s" % dbtype[0],
+					UI.Formline(UI.Btn(onclick="form", form="frmPasswd%s" % dbtype[0],
 						design="primary", action="OK", text="Change Password")),
 					id="frmPasswd%s" % dbtype[0]
 				))
 			if self.dbops.get_info(dbtype[0]).requires_conn:
-				st.append(UI.Formline(UI.Button(text='Reauthenticate', id='reauth/'+dbtype[0])))
+				st.append(UI.Formline(UI.Btn(text='Reauthenticate', id='reauth/'+dbtype[0])))
 
 		type_sel_all = [UI.SelectOption(text = x[0], value = x[0])
 			for x in self.dbtypes if x[0] not in self._cancelauth]
@@ -186,7 +186,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 
 		if ubutton == True:
 			tlbr.append(
-				UI.Button(
+				UI.Btn(
 					id="adduser",
 					text="Add user",
 					iconfont="gen-user-plus"

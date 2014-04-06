@@ -60,7 +60,7 @@ class PluginManager(CategoryPlugin, URLHandler):
 
         lst = sorted(self._mgr.available, key=lambda x: x.name.lower())
 
-        btn = UI.Button(text='Check for updates', id='update')
+        btn = UI.Btn(text='Check for updates', id='update')
         if len(lst) == 0:
             btn['text'] = 'Download plugin list'
 

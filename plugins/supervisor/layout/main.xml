@@ -1,8 +1,8 @@
 <xml>
     <toolbar id="toolbar">
-        <button id="refresh" text="Refresh" iconfont="gen-loop-2" />
-        <button id="reload" text="Reload" iconfont="gen-loop-2" />
-        <button id="set" text="Add Process" iconfont="gen-plus-circle" />
+        <btn id="refresh" text="Refresh" iconfont="gen-loop-2" />
+        <btn id="reload" text="Reload" iconfont="gen-loop-2" />
+        <btn id="set" text="Add Process" iconfont="gen-plus-circle" />
     </toolbar>
 
     <pad id="main">

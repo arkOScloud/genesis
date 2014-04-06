@@ -53,7 +53,7 @@ class Dashboard(CategoryPlugin):
         self.fill('r', self._mgr.list_right(), ui, 'cright')
 
         if self._failed != []:
-            ui.find('ui-dashboard-buttons').append(UI.Button(id='btnCleanUp', text='Clean Up', iconfont='gen-remove'))
+            ui.find('ui-dashboard-buttons').append(UI.Btn(id='btnCleanUp', text='Clean Up', iconfont='gen-remove'))
 
         ui.insertText('host', platform.node())
         ui.insertText('distro', detect_distro())

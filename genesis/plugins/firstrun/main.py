@@ -25,11 +25,16 @@ class FirstRun(CategoryPlugin, URLHandler):
         self._reboot = True
         self._username = ''
         self._password = ''
+        self._veriferr = []
 
     def get_ui(self):
         ui = self.app.inflate('firstrun:main')
         step = self.app.inflate('firstrun:step%i'%self._step)
         ui.append('content', step)
+
+        for x in self._veriferr:
+            ui.append('veriferr', UI.SystemMessage(cls="danger", iconfont="gen-close", text=x))
+        self._veriferr = []
 
         if self._step == 4:
             if self.arch[1] != 'Raspberry Pi':
@@ -89,19 +94,19 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self._password = vars.getvalue('passwd', '')
                 self._password_again = vars.getvalue('passwdb', '')
                 if self._username == '':
-                    self.put_message('err', 'The username can\'t be empty')
+                    self._veriferr.append('The username can\'t be empty. Please choose a username.')
                 elif self._password == '':
-                    self.put_message('err', 'The password can\'t be empty')
+                    self._veriferr.append('The password can\'t be empty. Please choose a password.')
                 elif self._password != self._password_again:
-                    self.put_message('err', 'The passwords don\'t match')
+                    self._veriferr.append('The passwords you entered don\'t match. Please try again.')
                 elif re.search('[A-Z]|\.|:|[ ]|-$', self._username):
-                    self.put_message('err', 'Username must not contain capital letters, dots, colons, spaces, or end with a hyphen')
+                    self._veriferr.append('The username must not contain capital letters, dots, colons, spaces, or end with a hyphen.')
                 else:
                     # add Unix user
                     users = self.ub.get_all_users()
                     for u in users:
                         if u.login == self._username:
-                            self.put_message('err', 'Duplicate name, please choose another')
+                            self._veriferr.append('A user already exists with this name. Please choose another.')
                             self._editing = ''
                             return
                     self._step = 3
@@ -112,9 +117,9 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self._root_password = vars.getvalue('root_password', '')
                 self._root_password_again = vars.getvalue('root_password_again', '')
                 if self._root_password == '':
-                    self.put_message('err', 'The password can\'t be empty')
+                    self._veriferr.append('The password can\'t be empty')
                 elif self._root_password != self._root_password_again:
-                    self.put_message('err', 'The passwords don\'t match')
+                    self._veriferr.append('The passwords don\'t match')
                 else:
                     self._step = 4
             elif vars.getvalue('action', 'OK') == 'Back':
@@ -128,10 +133,10 @@ class FirstRun(CategoryPlugin, URLHandler):
                 ssh_as_root = vars.getvalue('ssh_as_root', '0')
 
                 if not hostname:
-                    self.put_message('err', 'Hostname must not be empty')
+                    self._veriferr.append('Hostname must not be empty')
                     return
                 elif not re.search('^[a-zA-Z0-9.-]', hostname) or re.search('(^-.*|.*-$)', hostname):
-                    self.put_message('err', 'Hostname must only contain '
+                    self._veriferr.append('Hostname must only contain '
                         'letters, numbers, hyphens or periods, and must '
                         'not start or end with a hyphen.')
                     return
@@ -140,7 +145,10 @@ class FirstRun(CategoryPlugin, URLHandler):
                 
                 if resize != '0':
                     reboot = self.resize()
-                    self.put_message('info', 'Remember to restart your arkOS node after this wizard. To do this, click "Settings > Reboot".')
+                    self.put_message('info', 'Your settings have been '
+                        'successfully applied. You must restart your arkOS '
+                        'server for them to take effect. To do this, choose '
+                        '"Restart arkOS" in the Power menu.')
                
                 if ssh_as_root != '0':
                     shell('sed -i "/PermitRootLogin no/c\PermitRootLogin yes" /etc/ssh/sshd_config')
@@ -195,7 +203,6 @@ class FirstRun(CategoryPlugin, URLHandler):
 
                 self.app.gconfig.set('genesis', 'firstrun', 'no')
                 self.app.gconfig.save()
-                self.put_message('info', 'Setup complete!')
 
                 # change root password, add Unix user, and allow sudo use
                 self.ub.change_user_password('root', self._root_password)            

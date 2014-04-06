@@ -1,8 +1,8 @@
 <xml>
     <toolbar spacing="0">
-        <button id="btnSave" text="Save" form="frmEdit" onclick="form"  iconfont="gen-disk"/>
-        <button id="btnFav" form="frmEdit" onclick="form" />
-        <button id="btnClose" text="Close" form="frmEdit" onclick="form" iconfont="gen-cancel-circle" />
+        <btn id="btnSave" text="Save" form="frmEdit" onclick="form"  iconfont="gen-disk"/>
+        <btn id="btnFav" form="frmEdit" onclick="form" />
+        <btn id="btnClose" text="Close" form="frmEdit" onclick="form" iconfont="gen-cancel-circle" />
     </toolbar>
 
     <hcontainer>

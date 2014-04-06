@@ -1,6 +1,6 @@
 <xml>
     <toolbar>
-        <button text="Add new group" id="addGroup" iconfont="gen-plus-circle" />
+        <btn text="Add new group" id="addGroup" iconfont="gen-plus-circle" />
     </toolbar>
 
     <pad id="main">

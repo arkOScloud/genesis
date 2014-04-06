@@ -1,8 +1,8 @@
 <xml>
     <toolbar>
-        <button id="add" text="Add mailbox" iconfont="gen-user-plus" />
-        <button id="addalias" text="Add alias" iconfont="gen-user-plus" />
-        <button id="adddom" text="Add domain" iconfont="gen-plus-circle" />
+        <btn id="add" text="Add mailbox" iconfont="gen-user-plus" />
+        <btn id="addalias" text="Add alias" iconfont="gen-user-plus" />
+        <btn id="adddom" text="Add domain" iconfont="gen-plus-circle" />
     </toolbar>
 
     <pad id="main">
@@ -29,7 +29,7 @@
                 <label size="5" text="Mailserver Settings" />
                 <pad>
                 <formline>
-                        <button id="setup" text="Reinitialize" iconfont="gen-loop-2" warning="This will wipe all mailserver account data from your system and start over from scratch. Are you sure you want to do this?" />
+                        <btn id="setup" text="Reinitialize" iconfont="gen-loop-2" warning="This will wipe all mailserver account data from your system and start over from scratch. Are you sure you want to do this?" />
                     </formline>
                 </pad>
             </tabbody>

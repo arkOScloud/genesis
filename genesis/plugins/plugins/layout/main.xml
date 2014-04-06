@@ -1,7 +1,7 @@
 <xml>
     <div style="padding: 2px 0px;">
         <div style="float:right;">
-            <button text="Update plugin list" id="update" iconfont="gen-loop-2" />
+            <btn text="Update plugin list" id="update" iconfont="gen-loop-2" />
         </div>
         <label size="5" text="Installed Applications" />
     </div>

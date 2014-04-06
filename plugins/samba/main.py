@@ -152,7 +152,7 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
     #            t.append(
     #                UI.Formline(
     #                    UI.Label(text=u[k]),
-    #                    UI.Button(design='mini',
+    #                    UI.Btn(design='mini',
     #                        text='Change', id='chuser/'+k) if k in self._cfg.editable else None,
     #                    text=k
     #                )

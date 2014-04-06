@@ -57,7 +57,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
 
         lst = ui.find('certauth')
         if not self.cas:
-            lst.append(UI.Button(text="Generate New", id="cagen"))
+            lst.append(UI.Btn(text="Generate New", id="cagen"))
         for s in self.cas:
             exp = s['expiry']
             exp = exp[0:4] + '-' + exp[4:6] + '-' + exp[6:8] + ', ' + exp[8:10] + ':' + exp[10:12]

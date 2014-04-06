@@ -69,18 +69,18 @@
                 <xsl:apply-templates />
                 <br/>
                     <hcontainer>
-                        <button text="Add rule" id="addrule/{@tname}/{@name}"/>
-                        <button text="Shuffle" id="shuffle/{@tname}/{@name}"/>
+                        <btn text="Add rule" id="addrule/{@tname}/{@name}"/>
+                        <btn text="Shuffle" id="shuffle/{@tname}/{@name}"/>
                         <xsl:choose>
                             <xsl:when test="@default = '-'">
-                                <button text="Delete chain" id="deletechain/{@tname}/{@name}"
+                                <btn text="Delete chain" id="deletechain/{@tname}/{@name}"
                                     warning="Delete rule chain {@name}"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <label text="Set default:"/>
-                                <button text="Accept" id="setdefault/{@tname}/{@name}/ACCEPT"/>
-                                <button text="Drop" id="setdefault/{@tname}/{@name}/DROP"/>
-                                <button text="Reject" id="setdefault/{@tname}/{@name}/REJECT"/>
+                                <btn text="Accept" id="setdefault/{@tname}/{@name}/ACCEPT"/>
+                                <btn text="Drop" id="setdefault/{@tname}/{@name}/DROP"/>
+                                <btn text="Reject" id="setdefault/{@tname}/{@name}/REJECT"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </hcontainer>

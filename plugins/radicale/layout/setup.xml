@@ -9,7 +9,7 @@
     	        <textinput name="port" id="port" value="80" />
     	    </formline>
     	    <formline>
-    	        <button onclick="form" form="frmSetup" design="primary" action="OK" text="Setup" />
+    	        <btn onclick="form" form="frmSetup" design="primary" action="OK" text="Setup" />
     	    </formline>
     	</simpleform>
     </pad>

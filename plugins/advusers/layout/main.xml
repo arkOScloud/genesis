@@ -1,7 +1,7 @@
 <xml>
     <toolbar>
-        <button id="adduser" text="Add user" iconfont="gen-user-plus" />
-        <button id="addgrp" text="Add group" iconfont="gen-plus-circle" />
+        <btn id="adduser" text="Add user" iconfont="gen-user-plus" />
+        <btn id="addgrp" text="Add group" iconfont="gen-plus-circle" />
     </toolbar>
 
     <pad>
@@ -71,11 +71,11 @@
         <formline text="Groups">
             <label id="lblugroups" />
             <br/>
-            <button text="Add" id="chaddtogroup" />
-            <button text="Remove" id="chdelfromgroup" />
+            <btn text="Add" id="chaddtogroup" />
+            <btn text="Remove" id="chdelfromgroup" />
         </formline>
         <formline>
-            <button id="deluser" design="danger" text="Delete user" />
+            <btn id="deluser" design="danger" text="Delete user" />
         </formline>
     </dialogbox>
 
@@ -90,7 +90,7 @@
             <editable id="ename" />
         </formline>
         <formline>
-            <button id="delgroup" design="danger" text="Delete group" />
+            <btn id="delgroup" design="danger" text="Delete group" />
         </formline>
         <formline text="Users">
             <label id="lblgusers" />

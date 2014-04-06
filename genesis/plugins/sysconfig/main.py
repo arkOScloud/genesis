@@ -51,31 +51,31 @@ class SysConfigPlugin(CategoryPlugin):
         else:
             if self._mgr.get_status('logrunner') == 'running':
                 lrstat = 'Running'
-                ui.find('fllogrunner').append(UI.Button(text="Stop", id="svc/logrunner/stop"))
+                ui.find('fllogrunner').append(UI.Btn(text="Stop", id="svc/logrunner/stop"))
             else:
                 lrstat = 'Not running'
-                ui.find('fllogrunner').append(UI.Button(text="Start", id="svc/logrunner/start"))
+                ui.find('fllogrunner').append(UI.Btn(text="Start", id="svc/logrunner/start"))
             if self._mgr.get_enabled('logrunner') == 'enabled':
                 lrstat += ' and enabled on boot'
-                ui.find('fllogrunner').append(UI.Button(text="Disable on boot", id="svc/logrunner/disable"))
+                ui.find('fllogrunner').append(UI.Btn(text="Disable on boot", id="svc/logrunner/disable"))
             else:
                 lrstat += ' and not enabled on boot'
-                ui.find('fllogrunner').append(UI.Button(text="Enable on boot", id="svc/logrunner/enable"))
+                ui.find('fllogrunner').append(UI.Btn(text="Enable on boot", id="svc/logrunner/enable"))
         if shell_cs('which beacond')[0] != 0:
             bestat = 'Not installed'
         else:
             if self._mgr.get_status('beacon') == 'running':
                 bestat = 'Running'
-                ui.find('flbeacon').append(UI.Button(text="Stop", id="svc/beacon/stop"))
+                ui.find('flbeacon').append(UI.Btn(text="Stop", id="svc/beacon/stop"))
             else:
                 bestat = 'Not running'
-                ui.find('flbeacon').append(UI.Button(text="Start", id="svc/beacon/start"))
+                ui.find('flbeacon').append(UI.Btn(text="Start", id="svc/beacon/start"))
             if self._mgr.get_enabled('beacon') == 'enabled':
                 bestat += ' and enabled on boot'
-                ui.find('flbeacon').append(UI.Button(text="Disable on boot", id="svc/beacon/disable"))
+                ui.find('flbeacon').append(UI.Btn(text="Disable on boot", id="svc/beacon/disable"))
             else:
                 bestat += ' and not enabled on boot'
-                ui.find('flbeacon').append(UI.Button(text="Enable on boot", id="svc/beacon/enable"))
+                ui.find('flbeacon').append(UI.Btn(text="Enable on boot", id="svc/beacon/enable"))
         ui.find('logrunner').set('text', lrstat)
         ui.find('beacon').set('text', bestat)
 

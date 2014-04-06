@@ -213,8 +213,8 @@ class PackageManagerPlugin(CategoryPlugin):
                 UI.LTR(
                     UI.LTD(
                         UI.HContainer(
-                            UI.Button(text='(Re)install', id='install/'+pkg),
-                            UI.Button(text='Remove', id='remove/'+pkg)
+                            UI.Btn(text='(Re)install', id='install/'+pkg),
+                            UI.Btn(text='Remove', id='remove/'+pkg)
                         ),
                         colspan=2
                     )

@@ -121,7 +121,7 @@
     </li>
 </xsl:template>
 
-<xsl:template match="button">
+<xsl:template match="btn">
     <xsl:variable name="onclickjs">
         <xsl:choose>
             <xsl:when test="@warning != ''">
@@ -277,5 +277,5 @@
 </xsl:template>
 
 <xsl:template match="tipicon">
-    <tooltip placement="above" text="{@text}"><button id="{@id}" design="tipicon" cls="{@cls}" onclick="{@onclick}" warning="{@warning}" iconfont="{@iconfont}"/></tooltip>
+    <tooltip placement="above" text="{@text}"><btn id="{@id}" design="tipicon" cls="{@cls}" onclick="{@onclick}" warning="{@warning}" iconfont="{@iconfont}"/></tooltip>
 </xsl:template>

@@ -8,8 +8,8 @@
             <label text="Network Connections" size="5" />
             <pad id="conn">
                 <toolbar id="path">
-                    <button id="addconn" text="Add Connection" iconfont="gen-plus-circle" />
-                    <button id="refresh" text="Refresh List" iconfont="gen-loop-2" />
+                    <btn id="addconn" text="Add Connection" iconfont="gen-plus-circle" />
+                    <btn id="refresh" text="Refresh List" iconfont="gen-loop-2" />
                 </toolbar>
                 <br />
                 <dt id="connlist" width="100%">
@@ -59,7 +59,7 @@
             <label text="Hosts" size="5" />
             <pad id="hosts">
                 <toolbar>
-                    <button id="add" text="Add host" iconfont="gen-plus-circle" />
+                    <btn id="add" text="Add host" iconfont="gen-plus-circle" />
                 </toolbar>
                 <br />
                 <dt id="hostlist" width="100%">
@@ -83,7 +83,7 @@
             <label text="DNS servers and options" size="5" />
             <pad id="dns">
             <toolbar>
-                <button text="Add option" id="addns" iconfont="gen-plus-circle" />
+                <btn text="Add option" id="addns" iconfont="gen-plus-circle" />
             </toolbar>
             <br />
                 <dt id="list">

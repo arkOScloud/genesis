@@ -9,20 +9,20 @@
         <ul>
             <li>
                 <label size="1" text="You may want to " />
-                <button onclick="document.location.reload();return false" text="Refresh page" />
+                <btn onclick="document.location.reload();return false" text="Refresh page" />
                 <label size="1" text=" or " />
-                <button onclick="document.location.href='/session_reset';return false" text="Start new session" />
+                <btn onclick="document.location.href='/session_reset';return false" text="Start new session" />
                 <br/>
             </li>
             <li>
                 Or if you believe you did nothing wrong and this is a bug, please let us know about the problem by
                 <outlinklabel url="https://github.com/cznweb/genesis/issues" text="filing this bug to our tracker" />
                 and attaching the crash report.<br/>
-                <button onclick="$('#report').fadeIn();$(this).hide();return false;" text="Show crash report" />
+                <btn onclick="$('#report').fadeIn();$(this).hide();return false;" text="Show crash report" />
                 <div id="report" style="display:none"/><br/><br/>
             </li>
             <li>
-                <button onclick="$('#trace').fadeIn();$(this).hide();return false;" text="View stacktrace" />
+                <btn onclick="$('#trace').fadeIn();$(this).hide();return false;" text="View stacktrace" />
                 <div id="trace" style="display:none"/><br/>
             </li>
         </ul>              

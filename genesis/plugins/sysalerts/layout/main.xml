@@ -2,8 +2,8 @@
     <label text="System Alerts" size="5" />
     <pad id="toolbar">
         <toolbar>
-            <button id="btnRefresh" text="Refresh" iconfont="gen-loop-2" />
-            <button id="btnSettings" text="Configure" iconfont="gen-cog" />
+            <btn id="btnRefresh" text="Refresh" iconfont="gen-loop-2" />
+            <btn id="btnSettings" text="Configure" iconfont="gen-cog" />
         </toolbar>
     </pad>
 

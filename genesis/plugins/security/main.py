@@ -221,7 +221,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
                         ))
                     idx += 1
                 vc.append(uic)
-            vc.append(UI.Button(iconfont='gen-plus-circle', text='Add new chain to '+t.name, id='addchain/'+t.name))
+            vc.append(UI.Btn(iconfont='gen-plus-circle', text='Add new chain to '+t.name, id='addchain/'+t.name))
             tc.add(t.name, vc)
 
         try:

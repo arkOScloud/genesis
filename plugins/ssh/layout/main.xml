@@ -1,6 +1,6 @@
 <xml>
     <toolbar>
-        <button id="add" text="Add public key" iconfont="gen-plus-circle" />
+        <btn id="add" text="Add public key" iconfont="gen-plus-circle" />
     </toolbar>
 
     <label text="Public Keys" size="5" />

@@ -1,7 +1,7 @@
 <xml>
     <toolbar>
-        <button id="add" text="Add user" iconfont="gen-user-plus" />
-        <button id="adddom" text="Add domain" iconfont="gen-plus-circle" />
+        <btn id="add" text="Add user" iconfont="gen-user-plus" />
+        <btn id="adddom" text="Add domain" iconfont="gen-plus-circle" />
     </toolbar>
 
     <label size="5" text="User Accounts" />
@@ -49,7 +49,7 @@
             <checkbox name="s2s_secure_auth" id="s2s_secure_auth" text="Yes"/>
         </formline>
         <formline>
-            <button onclick="form" form="frmOptions" design="primary" action="OK" text="Save" />
+            <btn onclick="form" form="frmOptions" design="primary" action="OK" text="Save" />
         </formline>
     </simpleform>
 </xml>

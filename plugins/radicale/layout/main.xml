@@ -4,7 +4,7 @@
     </div>
     
     <toolbar>
-    	<button id="add" text="Add user" iconfont="gen-user-plus" />
+    	<btn id="add" text="Add user" iconfont="gen-user-plus" />
     </toolbar>
 
     <label size="5" text="User Accounts" />

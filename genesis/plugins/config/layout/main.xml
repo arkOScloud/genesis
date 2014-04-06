@@ -1,7 +1,7 @@
 <xml>
     <div class="well updwell">
         <label size="1" id="updstatus" text="You are running the latest version of Genesis. No updates available." />
-        <button id="updaction" iconfont="gen-loop-2" text="Check for updates" />
+        <btn id="updaction" iconfont="gen-loop-2" text="Check for updates" />
     </div>
 
     <label size="5" text="General Settings" />
@@ -35,7 +35,7 @@
                 <checkbox id="purge" name="purge" text="Yes" />
             </formline>
             <formline>
-                <button onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
+                <btn onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
             </formline>
         </simpleform>
 

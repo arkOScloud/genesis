@@ -9,7 +9,7 @@
                 <select id="zoneselect" name="zoneselect" />
             </formline>
             <formline>
-                <button onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
+                <btn onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
             </formline>
         </simpleform>
 
@@ -25,7 +25,7 @@
             <label id="offset" />
         </formline>
         <formline>
-            <button id="settime" iconfont="gen-clock" text="Update time" />
+            <btn id="settime" iconfont="gen-clock" text="Update time" />
         </formline>
     </pad>
 

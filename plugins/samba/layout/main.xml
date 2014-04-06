@@ -1,7 +1,7 @@
 <xml>
     <toolbar>
-        <button id="newshare" text="Add share" iconfont="gen-folder-plus" />
-        <button id="newuser" text="Add user" iconfont="gen-user-plus" />
+        <btn id="newshare" text="Add share" iconfont="gen-folder-plus" />
+        <btn id="newuser" text="Add user" iconfont="gen-user-plus" />
     </toolbar>
     
     <pad id="main">

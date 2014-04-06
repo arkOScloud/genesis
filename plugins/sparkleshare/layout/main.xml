@@ -1,7 +1,7 @@
 <xml>
     <toolbar id="toolbar">
-        <button id="add" text="Add Share" iconfont="gen-plus-circle" />
-        <button id="link" text="Link Computer" iconfont="gen-plus-circle" />
+        <btn id="add" text="Add Share" iconfont="gen-plus-circle" />
+        <btn id="link" text="Link Computer" iconfont="gen-plus-circle" />
     </toolbar>
 
     <pad id="main">

@@ -64,9 +64,9 @@
         <tabbody id="s2">
             <toolbar>
                 <hcontainer>
-                    <button text="Apply" id="apply" iconfont="gen-checkmark-circle" />
-                    <button text="Load current" id="loadruntime" warning="Dispose saved configuration and load current iptables status" iconfont="gen-enter" />
-                    <button text="Autostart" id="autostart" iconfont="gen-link" />
+                    <btn text="Apply" id="apply" iconfont="gen-checkmark-circle" />
+                    <btn text="Load current" id="loadruntime" warning="Dispose saved configuration and load current iptables status" iconfont="gen-enter" />
+                    <btn text="Autostart" id="autostart" iconfont="gen-link" />
                 </hcontainer>
             </toolbar>
 
@@ -75,7 +75,7 @@
         </tabbody>
         <tabbody id="s3">
             <toolbar>
-                <button text="Reinitialize" id="reinit" iconfont="gen-loop-2" warning="Are you sure you want to reinitialize your input table? This will clear any custom rules you may have entered into it." />
+                <btn text="Reinitialize" id="reinit" iconfont="gen-loop-2" warning="Are you sure you want to reinitialize your input table? This will clear any custom rules you may have entered into it." />
             </toolbar>
             <label size="5" text="Firewall Settings" />
             <pad>
@@ -96,7 +96,7 @@
                         <textinput name="f2b_bantime" id="f2b_bantime"/>
                     </formline>
                     <formline>
-                        <button onclick="form" form="frmDefense" id="frmDefenseButton" design="primary" action="OK" text="Save Defense Settings" />
+                        <btn onclick="form" form="frmDefense" id="frmDefenseButton" design="primary" action="OK" text="Save Defense Settings" />
                     </formline>
                 </simpleform>
             </pad>

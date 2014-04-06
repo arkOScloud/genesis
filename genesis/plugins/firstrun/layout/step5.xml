@@ -23,7 +23,7 @@
         </dt>
 
         <tooltip text="Download and installation may take a few minutes">
-            <button form="frmPlugins" onclick="form" action="OK" text="Download and install" />
+            <btn form="frmPlugins" onclick="form" action="OK" text="Download and install" />
         </tooltip>
         <br/>
         <br/>

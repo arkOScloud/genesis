@@ -1,7 +1,7 @@
 <xml>
     <toolbar>
-        <button id="gen" text="Generate certificate" iconfont="gen-certificate" />
-        <button id="upl" text="Upload certificate" iconfont="gen-file-upload" />
+        <btn id="gen" text="Generate certificate" iconfont="gen-certificate" />
+        <btn id="upl" text="Upload certificate" iconfont="gen-file-upload" />
     </toolbar>
 
     <pad id="main">
@@ -41,7 +41,7 @@
                     <textinput name="ciphers" id="ciphers" />
                 </formline>
                 <formline>
-                    <button onclick="form" form="frmCertSettings" design="primary" action="OK" text="Save" />
+                    <btn onclick="form" form="frmCertSettings" design="primary" action="OK" text="Save" />
                 </formline>
             </simpleform>
             <label size="5" text="Certificate Authority" />

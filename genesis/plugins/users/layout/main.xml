@@ -1,6 +1,6 @@
 <xml>
     <toolbar>
-        <button id="adduser" text="Add user" iconfont="gen-user-plus" />
+        <btn id="adduser" text="Add user" iconfont="gen-user-plus" />
     </toolbar>
 
     <pad>
@@ -31,7 +31,7 @@
             <label id="home" />
         </formline>
         <formline>
-            <button id="deluser" design="danger" text="Delete user" />
+            <btn id="deluser" design="danger" text="Delete user" />
         </formline>
     </dialogbox>
 

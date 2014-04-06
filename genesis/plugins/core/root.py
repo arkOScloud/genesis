@@ -49,17 +49,18 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         if self.app.session.has_key('messages') and not self.is_firstrun():
             for msg in self.app.session['messages']:
                 if 'info' in msg[0]:
-                    msgcls = 'info'
+                    msgcls, ift = 'info', 'gen-info'
                 elif 'warn' in msg[0]:
-                    msgcls = 'warning'
+                    msgcls, ift = 'warning', 'gen-warning'
                 elif 'success' in msg[0]:
-                    msgcls = 'success'
+                    msgcls, ift = 'success', 'gen-checkmark'
                 else:
-                    msgcls = 'danger'
+                    msgcls, ift = 'danger', 'gen-close'
                 templ.append(
                     'system-messages',
                     UI.SystemMessage(
                         cls=msgcls,
+                        iconfont=ift,
                         text=msg[1],
                     )
                 )

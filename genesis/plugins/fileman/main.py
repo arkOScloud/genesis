@@ -138,7 +138,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
 
         idx = 0
         for part in parts:
-            ui.append('path', UI.Button(
+            ui.append('path', UI.Btn(
                 text=part,
                 id='goto/%i/%s' % (
                     tidx,
