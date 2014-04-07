@@ -22,32 +22,45 @@ Genesis = (function() {
 			return false;
 		},
 
-		verifyPassword: function(password1, password2, event){
-			if(event.target.id == password1 && firstPasswordEntry)
-				return true;
-			firstPasswordEntry = false;
-			var pass1 = document.getElementById(password1),
-				pass2 = document.getElementById(password2);
-			var keycode = (event !== undefined && typeof event.charCode !== "undefined") ? String.fromCharCode(event.charCode) : '';
-            
-			var match;
-			var frmgrp = $('#'+password1+', #'+password2).parent('.form-group');
-			if(event.target.id == password1){
-				match = pass1.value + keycode == pass2.value;
+		verify: function(vtype, field1, field2, event){
+			var f1 = document.getElementById(field1),
+				f2 = document.getElementById(field2),
+				match = false;
+
+			if (vtype == 'passwd') {
+				if(event.target.id == field1 && firstPasswordEntry) {
+					if (f1.value.length < 6) {
+						var frmgrp = $('#'+field1).parent('.form-group');
+						match = false;
+					} else if (f1.value.length >= 6) {
+						var frmgrp = $('#'+field1).parent('.form-group');
+						match = true;
+					} else {
+						return true;
+					}
+				} else {
+					firstPasswordEntry = false;
+					var keycode = (event !== undefined && typeof event.charCode !== "undefined") ? String.fromCharCode(event.charCode) : '';
+					var frmgrp = $('#'+field1+', #'+field2).parent('.form-group');
+					if(event.target.id == field1){
+						match = ((f1.value + keycode == f2.value) && (f1.value+keycode).length >= 6);
+					} else {
+						match = ((f1.value == f2.value + keycode) && (f2.value+keycode).length >= 6);
+					}
+				}
+			} else if (vtype == 'user') {
+				match = !(RegExp('^$|[A-Z]|\\.|:|[ ]|-$').test(f1.value));
+				var frmgrp = $('#'+field1).parent('.form-group');
 			} else {
-				match = pass1.value == pass2.value + keycode;
+				match = true;
 			}
 
-			if (match) {
-				frmgrp.removeClass('has-error');
-				frmgrp.addClass('has-success');
-				frmgrp.children('.form-control-feedback').removeClass('gen-close-2', 'gen-lock')
-				frmgrp.children('.form-control-feedback').addClass('gen-checkmark')
-			} else if (!match) {
-				frmgrp.removeClass('has-success')
-				frmgrp.addClass('has-error');
-				frmgrp.children('.form-control-feedback').removeClass('gen-checkmark', 'gen-lock')
-				frmgrp.children('.form-control-feedback').addClass('gen-close-2')
+			if (match && frmgrp) {
+				frmgrp.removeClass('has-error').addClass('has-success');
+				frmgrp.children('.form-control-feedback').removeClass().addClass('form-control-feedback gen-checkmark');
+			} else if (!match && frmgrp) {
+				frmgrp.removeClass('has-success').addClass('has-error');
+				frmgrp.children('.form-control-feedback').removeClass().addClass('form-control-feedback gen-close-2');
 			}
 
 			return match;

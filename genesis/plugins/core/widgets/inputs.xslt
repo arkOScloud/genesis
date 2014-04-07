@@ -21,10 +21,11 @@
         <xsl:if test="@verify != ''">
             <xsl:choose>
                 <xsl:when test="@verify = 'password'">
-                    <xsl:attribute name="onkeypress">Genesis.verifyPassword('<xsl:value-of select="@verify-with" />', '<xsl:value-of select="@verify-with" />b', event)</xsl:attribute>
+                    <xsl:attribute name="onkeypress">Genesis.verify('passwd', '<xsl:value-of select="@verify-with" />', '<xsl:value-of select="@verify-with" />b', event)</xsl:attribute>
                 </xsl:when>
-                <xsl:otherwise>
-                </xsl:otherwise>
+                <xsl:when test="@verify = 'username'">
+                    <xsl:attribute name="onblur">Genesis.verify('user', '<xsl:value-of select="@id" />', '', event)</xsl:attribute>
+                </xsl:when>
             </xsl:choose>
         </xsl:if>
     </input>

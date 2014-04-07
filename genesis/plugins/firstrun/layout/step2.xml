@@ -15,8 +15,8 @@
                 <spacer height="20" />
             </div>
             <div id="veriferr" />
-            <formline text="New username:" help="Your username must not contain capital letters, dots, colons, or spaces; or end with a hyphen." iid="login">
-                <textinput name="login" id="login" />
+            <formline text="New username:" help="Your username must not contain capital letters, dots, colons, or spaces; or end with a hyphen." feedback="gen-user" iid="login">
+                <textinput name="login" id="login" verify="username" />
             </formline>
             <formline text="New password:" help="Your password must be at least six characters." feedback="gen-lock" iid="passwd">
                 <textinput name="passwd" id="passwd" password="True" verify="password" verify-with="passwd" />
