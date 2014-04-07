@@ -1,5 +1,5 @@
 <xsl:template match="formline">
-    <div class="form-group{x:iif(@feedback != '', ' has-feedback', '')}">
+    <div class="{x:iif(@checkbox, 'checkbox', 'form-group')}{x:iif(@feedback != '', ' has-feedback', '')}">
         <hlabel class="control-label" for="{@iid}" text="{@text}" />
         <xsl:apply-templates />
         <xsl:if test="@feedback">
@@ -41,19 +41,17 @@
 </xsl:template>
 
 <xsl:template match="checkbox">
-    <div class="ui-el-checkbox">
-        <input type="checkbox" name="{@name}" id="{@id}" onkeypress="return noenter()">
-            <xsl:if test="@checked = 'True'">
-                <xsl:attribute name="checked"/>
-            </xsl:if>
-        </input>
-        <xsl:value-of select="@text" />
-    </div>
+    <input type="checkbox" name="{@name}" id="{@id}" onkeypress="return noenter()">
+        <xsl:if test="@checked = 'True'">
+            <xsl:attribute name="checked"/>
+        </xsl:if>
+    </input>
+    <xsl:value-of select="@text" />
 </xsl:template>
 
 
 <xsl:template match="selectinput">
-    <select name="{@name}" id="{@id}" class="{@design}">
+    <select name="{@name}" id="{@id}" class="form-control{x:iif(@design, ' '+@design, '')}">
         <xsl:if test="@disabled != ''">
             <xsl:attribute name="disabled" />
         </xsl:if>

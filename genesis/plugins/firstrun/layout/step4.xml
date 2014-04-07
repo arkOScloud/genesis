@@ -1,27 +1,35 @@
 <xml>
-    <label size="5" text="Initial System Settings" />
-    <pad>
-    <label size="1" text="To finish the installation of arkOS, please fill out the following settings. If you don't know what a setting means, it's OK to leave it as the default value." />
-    <formbox hidecancel="True" id="frmSettings">
-        <formline text="Set hostname:">
-            <textinput name="hostname" value="arkos" />
-            <label size="1" text="Your hostname is the name you enter on your network to gain access to your arkOS node. It is also the address you will enter into your browser to get to Genesis. For example, if your hostname is 'arkos', then you will enter 'http://arkos:8000' to open Genesis." />
-        </formline>
-        <formline text="Set timezone:">
-            <select id="zoneselect" name="zoneselect" />
-        </formline>
-        <formline id="rpi-sdc" text="Expand arkOS to fit SD card?">
-            <checkbox name='resize' checked='False' />
-            <label size="1" text="If you installed arkOS via the Installer, and you have an SD card larger than 2GB, select this option. It will expand arkOS to give you all of the free space on this SD card. Requires a system restart to take effect." />
-        </formline>
-        <formline id="rpi-ogm" text="Optimize graphical memory?">
-            <checkbox name='gpumem' checked='True' />
-            <label size="1" text="As you will not be using your Raspberry Pi directly with a monitor/keyboard, you can elect to free up some of the reserved graphical memory for general use. Use this to set GPU memory to the minimum 16MB." />
-        </formline>
-        <formline text="Allow SSH as Root?">
-            <checkbox name='ssh_as_root' checked='False' /> 
-            <label size="1" text="Advanced: If you want to SSH into your RPi as the Root user, check this box. If not, leave it unchecked, and you can use SSH with the user established in the last step. Note that enabling this is a security risk!" />
-        </formline>
-    </formbox>
-    </pad>
+    <div class="ui-firstrun-stripe">
+        <h1>Welcome to Genesis</h1>
+    </div>
+    <div class="container">
+        <wizardform back="True" id="frmSettings" width="800">
+            <div class="text-center">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <tr><td style="background-color:#3498DB;"></td><td style="background-color:#3498DB;"></td><td style="background-color:#428BCA;"></td><td></td><td></td></tr>
+                        <tr><td>Step 1<br />User/Password</td><td>Step 2<br />Administrator</td><td><strong>Step 3</strong><br />Settings</td><td>Step 4<br />Applications</td><td>Step 5<br />Review</td></tr>
+                    </table>
+                </div>
+                <label size="3" text="Choose the following settings to continue setting up your arkOS server. If you don't know what a setting means, it's OK to leave it as the default value." />
+                <spacer height="20" />
+            </div>
+            <div id="veriferr" />
+            <formline text="Name your arkOS server:" help="This hostname is what you will enter on your network to gain access to your arkOS server. It is also the address you will enter into your browser to get to Genesis. For example, if your hostname is 'arkos', then you will enter 'http://arkos:8000' to open Genesis.">
+                <textinput name="hostname" value="arkos" />
+            </formline>
+            <formline text="Choose your timezone:">
+                <selectinput id="zoneselect" name="zoneselect" />
+            </formline>
+            <formline checkbox="true" id="rpi-sdc" text="Expand arkOS to fit your SD card?" help="If you installed arkOS via the Installer, and you have an SD card larger than 2GB, select this option. It will expand arkOS to give you all of the free space on this SD card. Requires a system restart to take effect.">
+                <checkbox name='resize' checked='False' />
+            </formline>
+            <formline checkbox="true" id="rpi-ogm" text="Optimize graphical memory?" help="As you will not be using your Raspberry Pi directly with a monitor/keyboard, you can elect to free up some of the reserved graphical memory for general use. Use this to set GPU memory to the minimum 16MB.">
+                <checkbox name='gpumem' checked='True' />
+            </formline>
+            <formline checkbox="true" text="Allow SSH as Administrator?" help="Advanced: If you want to SSH into your arkOS server as the root user, check this box. If not, leave it unchecked, and you can use SSH with the user established in the last step. Note that enabling this is a security risk!">
+                <checkbox name='ssh_as_root' checked='False' /> 
+            </formline>
+        </wizardform>
+    </div>
 </xml>

@@ -1,15 +1,26 @@
 <xml>
-    <label size="4" text="Welcome to Genesis" />
-    <pad>
-    <formbox hidecancel="True" id="frmChangeRootPassword">
-        <label size="3" text="Please change the password for the root (administrative) account. This password has to be changed, whether you plan on using the root account or not." />
-        <spacer height="20" />
-        <formline text="Password:">
-            <textinput name="root_password" password="True" />
-        </formline>
-        <formline text="Re-enter password:">
-            <textinput name="root_password_again" password="True" />
-        </formline>
-    </formbox>
-    </pad>
+    <div class="ui-firstrun-stripe">
+        <h1>Welcome to Genesis</h1>
+    </div>
+    <div class="container">
+        <wizardform back="True" id="frmChangeRootPassword" width="800">
+            <div class="text-center">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <tr><td style="background-color:#3498DB;"></td><td style="background-color:#428BCA;"></td><td></td><td></td><td></td></tr>
+                        <tr><td>Step 1<br />User/Password</td><td><strong>Step 2</strong><br />Administrator</td><td>Step 3<br />Settings</td><td>Step 4<br />Applications</td><td>Step 5<br />Review</td></tr>
+                    </table>
+                </div>
+                <label size="3" text="Please set a password for the Administrator (root) Unix account. You will generally not need to use this account. This should be a secure yet memorable password." />
+                <spacer height="20" />
+            </div>
+            <div id="veriferr" />
+            <formline text="New admin password:" help="Your password must be at least six characters." feedback="gen-lock" iid="rootpasswd">
+                <textinput name="rootpasswd" id="rootpasswd" password="True" verify="password" verify-with="rootpasswd" />
+            </formline>
+            <formline text="Please confirm your new admin password:" feedback="gen-lock" iid="rootpasswdb">
+                <textinput name="rootpasswdb" id="rootpasswdb" password="True" verify="password" verify-with="rootpasswd" />
+            </formline>
+        </wizardform>
+    </div>
 </xml>

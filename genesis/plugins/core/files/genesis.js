@@ -17,6 +17,7 @@ Genesis = (function() {
 				error: Genesis.Core.processOffline,
 				type: _data?'POST':'GET',
 			});
+			firstPasswordEntry = true;
 			if (!_noupdate)
 				Genesis.UI.showLoader(true);
 			return false;
@@ -299,7 +300,6 @@ Genesis = (function() {
 		UI: {
 			showAsModal: function (id) {
 				$('#'+id).modal({backdrop: 'static', keyboard: false, show: true});
-				firstPasswordEntry = true;
 			},
 
 			hideModal: function (id, remove) {

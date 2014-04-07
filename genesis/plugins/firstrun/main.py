@@ -41,7 +41,7 @@ class FirstRun(CategoryPlugin, URLHandler):
                 ui.remove('rpi-sdc')
                 ui.remove('rpi-ogm')
             tz_sel = [UI.SelectOption(text = x, value = x,
-                        selected = False)
+                        selected=(x=='UTC'))
                         for x in zonelist.zones]
             ui.appendAll('zoneselect', *tz_sel)
 
@@ -114,8 +114,8 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self._step = 1
         if params[0] == 'frmChangeRootPassword':
             if vars.getvalue('action', 'OK') == 'OK':
-                self._root_password = vars.getvalue('root_password', '')
-                self._root_password_again = vars.getvalue('root_password_again', '')
+                self._root_password = vars.getvalue('rootpasswd', '')
+                self._root_password_again = vars.getvalue('rootpasswdb', '')
                 if self._root_password == '':
                     self._veriferr.append('The password can\'t be empty')
                 elif self._root_password != self._root_password_again:
