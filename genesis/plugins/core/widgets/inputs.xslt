@@ -1,7 +1,10 @@
 <xsl:template match="formline">
-    <div class="form-group">
-        <hlabel for="{@iid}" text="{@text}" />
+    <div class="form-group{x:iif(@feedback != '', ' has-feedback', '')}">
+        <hlabel class="control-label" for="{@iid}" text="{@text}" />
         <xsl:apply-templates />
+        <xsl:if test="@feedback">
+            <span class="{@feedback} form-control-feedback"></span>
+        </xsl:if>
         <xsl:if test="@help">
             <span class="help-block">
                 <xsl:value-of select="@help" />
@@ -10,13 +13,21 @@
     </div>
 </xsl:template>
 
-
 <xsl:template match="textinput">
-        <input name="{@name}" value="{@value}" id="{@id}" class="form-control {@design}" onkeypress="return noenter()" type="{x:iif(@password, 'password', 'text')}">
-            <xsl:if test="@disabled != ''">
-                <xsl:attribute name="disabled">true</xsl:attribute>
-            </xsl:if>
-        </input>
+    <input name="{@name}" value="{@value}" id="{@id}" class="form-control {@design}" type="{x:iif(@password, 'password', 'text')}">
+        <xsl:if test="@disabled != ''">
+            <xsl:attribute name="disabled">true</xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@verify != ''">
+            <xsl:choose>
+                <xsl:when test="@verify = 'password'">
+                    <xsl:attribute name="onkeypress">Genesis.verifyPassword('<xsl:value-of select="@verify-with" />', '<xsl:value-of select="@verify-with" />b', event)</xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
+    </input>
 </xsl:template>
 
 <xsl:template match="attachtextinput">

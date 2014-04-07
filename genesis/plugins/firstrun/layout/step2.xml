@@ -5,22 +5,24 @@
     <div class="container">
         <wizardform back="True" id="frmChangePassword" width="800">
             <div class="text-center">
-                <table class="table table-condensed">
-                    <tr><td style="background-color:#428BCA;"></td><td></td><td></td><td></td><td></td></tr>
-                    <tr><td><strong>Step 1</strong><br />User/Password</td><td>Step 2<br />Administrator</td><td>Step 3<br />Settings</td><td>Step 4<br />Applications</td><td>Step 5<br />Review</td></tr>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <tr><td style="background-color:#428BCA;"></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td><strong>Step 1</strong><br />User/Password</td><td>Step 2<br />Administrator</td><td>Step 3<br />Settings</td><td>Step 4<br />Applications</td><td>Step 5<br />Review</td></tr>
+                    </table>
+                </div>
                 <label size="3" text="Please choose a username and password. This will be the username and password you use to connect to Genesis, and the Unix account for SSH and other purposes." />
                 <spacer height="20" />
             </div>
             <div id="veriferr" />
-            <formline text="New username:" help="Your username must not contain capital letters, dots, colons, or spaces; or end with a hyphen.">
-                <textinput name="login" vaTrueTruelue="admin" />
+            <formline text="New username:" help="Your username must not contain capital letters, dots, colons, or spaces; or end with a hyphen." iid="login">
+                <textinput name="login" id="login" />
             </formline>
-            <formline text="New password:" help="Your password must be at least six characters.">
-                <textinput name="passwd" password="True" />
+            <formline text="New password:" help="Your password must be at least six characters." feedback="gen-lock" iid="passwd">
+                <textinput name="passwd" id="passwd" password="True" verify="password" verify-with="passwd" />
             </formline>
-            <formline text="Please confirm your new password:">
-                <textinput name="passwdb" password="True" />
+            <formline text="Please confirm your new password:" feedback="gen-lock" iid="passwdb">
+                <textinput name="passwdb" id="passwdb" password="True" verify="password" verify-with="passwd" />
             </formline>
         </wizardform>
     </div>

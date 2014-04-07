@@ -21,9 +21,6 @@
     </div>
 </xsl:template>
 
-
-
-
 <xsl:template match="treecontainer">
     <div class="ui-el-treecontainernode">
         <a href="#" onclick="return Genesis.UI.toggleTreeNode('{@id}');" class="text">
@@ -54,7 +51,6 @@
         <xsl:apply-templates />
     </li>
 </xsl:template>
-
 
 <xsl:template match="editable">
     <a href="#" onclick="return Genesis.UI.editableActivate('{x:idesc(@id)}')" class="ui-el-editable-inactive" id="{x:idesc(@id)}-normal">

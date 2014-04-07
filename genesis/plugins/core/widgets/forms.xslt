@@ -1,5 +1,5 @@
 <xsl:template match="formbox">
-        <div id="{@id}" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')}; overflow: hidden">
+        <div id="{@id}" style="max-width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')}; overflow: hidden">
             <input id="{@id}-url" type="hidden" name="__url" value="/handle/form/submit/{@id}"/>
             <xsl:apply-templates />
             <formline>
@@ -24,7 +24,7 @@
 </xsl:template>
 
 <xsl:template match="wizardform">
-    <div id="{@id}" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')}; overflow: hidden; margin-left: auto; margin-right: auto;">
+    <div id="{@id}" style="max-width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')}; overflow: hidden; margin-left: auto; margin-right: auto;">
         <input id="{@id}-url" type="hidden" name="__url" value="/handle/form/submit/{@id}"/>
         <xsl:apply-templates />
         <div style="margin-top: 20px;">
