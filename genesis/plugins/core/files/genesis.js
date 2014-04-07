@@ -163,6 +163,11 @@ Genesis = (function() {
 				return "Genesis is currently processing an operation, if you leave this page you may lose unsaved data.";
 		},
 
+		appListClick: function (id) {
+			$('#'+id).toggleClass('selected');
+			$('#'+id).children('input').prop("checked", !($('#'+id).children('input').prop("checked")))
+		},
+
 		Core: {
 			processResponse: function (data) {
 				$('.modal:not(#warningbox)').each( function (i, e) {

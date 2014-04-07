@@ -56,21 +56,14 @@ class FirstRun(CategoryPlugin, URLHandler):
             lst = self._mgr.available
 
             for k in sorted(lst, key=lambda x:x.name):
-                row = self.app.inflate('firstrun:item')
-                row.find('name').set('text', k.name)
-                row.find('desc').set('text', k.description)
-                row.find('icon').set('class', k.icon)
-                row.find('version').set('text', k.version)
-                row.find('author').set('text', k.author)
-                row.find('author').set('url', k.homepage)
-
-                req = k.str_req()
-
-                row.find('check').set('name', 'install-'+k.id)
-                if req != '':
-                    row.append('reqs', UI.HelpIcon(text=req))
-
-                ui.append('list', row)
+                ui.append('ui-firstrun-appselectfield',
+                    UI.AppSelect(
+                        id=k.id,
+                        name=k.name,
+                        desc=k.description,
+                        iconfont=k.icon,
+                        version=k.version
+                    ))
 
         return ui
 

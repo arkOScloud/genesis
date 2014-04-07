@@ -1,32 +1,21 @@
 <xml>
-    <label size="5" text="Choose plugins to be downloaded" />
-    <label size="1" text="Please note that an internet connection is required to install plugins." />
-    <pad>
-    <simpleform id="frmPlugins">
-        <dt id="list" width="100%">
-            <dtr header="True">
-                <dth />
-                <dth />
-                <dth>
-                    <label text="Name" />
-                </dth>
-                <dth>
-                    <label text="Description" />
-                </dth>
-                <dth>
-                    <label text="Version" />
-                </dth>
-                <dth>
-                    <label text="Author" />
-                </dth>
-            </dtr>
-        </dt>
-
-        <tooltip text="Download and installation may take a few minutes">
-            <btn form="frmPlugins" onclick="form" action="OK" text="Download and install" />
-        </tooltip>
-        <br/>
-        <br/>
-    </simpleform>
-    </pad>
+    <div class="ui-firstrun-stripe">
+        <h1>Welcome to Genesis</h1>
+    </div>
+    <div class="container">
+        <wizardform back="True" id="frmPlugins" width="800">
+            <div class="text-center">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <tr><td style="background-color:#3498DB;"></td><td style="background-color:#3498DB;"></td><td style="background-color:#3498DB;"></td><td style="background-color:#428BCA;"></td><td></td></tr>
+                        <tr><td>Step 1<br />User/Password</td><td>Step 2<br />Administrator</td><td>Step 3<br />Settings</td><td><strong>Step 4</strong><br />Applications</td><td>Step 5<br />Review</td></tr>
+                    </table>
+                </div>
+                <label size="3" text="Select the applications you'd like to install. You'll always have the opportunity to add or remove applications later as you wish. Remember that you need an active and functional Internet connection in order to install applications." />
+                <spacer height="20" />
+            </div>
+            <div id="veriferr" />
+            <div id="ui-firstrun-appselectfield" />
+        </wizardform>
+    </div>
 </xml>

@@ -123,3 +123,15 @@
         </xsl:otherwise>
     </xsl:choose>
 </xsl:template>
+
+<xsl:template match="appselect">
+    <div class="ui-firstrun-appselect" id="{@id}" onclick="Genesis.appListClick('{@id}')">
+        <input type="checkbox" name="{@id}" />
+        <div class="pull-left" style="height:100%;">
+            <h1 class="{@iconfont}"></h1>
+        </div>
+        <h3><xsl:value-of select="@name"/></h3>
+        <p><xsl:value-of select="@desc"/></p>
+        <small>Version <xsl:value-of select="@version"/></small>
+    </div>
+</xsl:template>

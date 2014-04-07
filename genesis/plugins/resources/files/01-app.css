@@ -217,3 +217,44 @@ td a, td p, td span {
 .alert > i {
   margin-right: 5px;
 }
+
+#ui-firstrun-appselectfield {
+  text-align: center;
+}
+
+.ui-firstrun-appselect {
+  display: inline-block;
+  text-align: left;
+  border: 1px solid #CCC;
+  border-radius: 6px;
+  margin: 10px;
+  padding: 0px 10px 10px 15px;
+  width: 300px;
+  height: 150px;
+}
+
+.ui-firstrun-appselect.selected {
+  background-color: #2ECC71;
+  color: #FFF;
+  border-color: #2ECC71;
+}
+
+.ui-firstrun-appselect.selected:hover {
+  background-color: #1DB35C;
+  border-color: #1DB35C;
+}
+
+.ui-firstrun-appselect:hover {
+  background-color: #EBEBEB;
+  border-color: #ADADAD;
+}
+
+.ui-firstrun-appselect input {
+  display: none;
+}
+
+.ui-firstrun-appselect h1 {
+  float: left;
+  padding-right: 15px;
+  line-height: 1;
+}
