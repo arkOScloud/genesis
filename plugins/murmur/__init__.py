@@ -1,7 +1,7 @@
 # Plugin metadata
 NAME = 'Mumble Server'
 TYPE = 'plugin'
-ICON = 'gen-bubbles'
+ICON = 'gen-phone'
 DESCRIPTION = 'Host your own Mumble server'
 LONG_DESCRIPTION = ('Murmur is the server application for Mumble, an open '
                     'source Voice-over-IP (VoIP) client. This plugin hosts the '
