@@ -15,7 +15,7 @@ CATEGORIES = [
 ]
 VERSION = '1'
 
-AUTHOR = 'Heiner Tholen'
+AUTHOR = 'Heiner'
 HOMEPAGE = 'http://github.com/heinzK1X'
 APP_AUTHOR = "The Mumble Community"
 APP_HOMEPAGE = "http://mumble.sourceforge.net"
@@ -23,7 +23,7 @@ LOGO = True
 
 SERVICES = [
     {
-        "name": "VoIP Server",
+        "name": "Mumble VoIP Server",
         "binary": "murmurd",
         "ports": [('tcp', '64738'), ('udp', '64738')]
     }
