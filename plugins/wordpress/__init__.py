@@ -14,7 +14,7 @@ CATEGORIES = [
         "secondary": ["Blogs", "Websites", "CMS"]
     }
 ]
-VERSION = '3.8.1-1'
+VERSION = '3.8.2-1'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
@@ -86,7 +86,7 @@ GENERATION = 1
 
 # Webapp metadata
 WA_PLUGIN = 'WordPress'
-DPATH = 'https://wordpress.org/wordpress-3.8.1.tar.gz'
+DPATH = 'https://wordpress.org/wordpress-3.8.2.tar.gz'
 DBENGINE = 'MariaDB'
 PHP = True
 NOMULTI = True
