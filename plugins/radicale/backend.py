@@ -1,6 +1,7 @@
 import ConfigParser
 import nginx
 import os
+import stat
 
 from genesis.api import *
 from genesis.com import *
@@ -230,6 +231,13 @@ class RadicaleControl(Plugin):
         users = UsersBackend(self.app)
         if not pyctl.is_installed('Radicale'):
             pyctl.install('radicale')
+        # due to packaging bugs, make extra sure perms are readable
+        st = os.stat('/usr/lib/python2.7/site-packages/radicale')
+        for r, d, f in os.walk('/usr/lib/python2.7/site-packages/radicale')):
+            for x in d:
+                os.chmod(os.path.join(r, x), st.st_mode&stat.S_IROTH&stat.S_IRGRP)
+            for x in f:
+                os.chmod(os.path.join(r, x), st.st_mode&stat.S_IROTH&stat.S_IRGRP)
         if not os.path.exists('/etc/radicale/config'):
             if not os.path.isdir('/etc/radicale'):
                 os.mkdir('/etc/radicale')
