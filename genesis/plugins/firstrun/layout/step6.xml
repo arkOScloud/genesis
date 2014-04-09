@@ -1,5 +1,31 @@
 <xml>
-    <label size="5" text="Installation complete" />
-    <label size="1" text="You'll be redirected to the dashboard in a second..." />
-    <completerefresh />
+    <div class="ui-firstrun-stripe">
+        <h1>Welcome to Genesis</h1>
+    </div>
+    <div class="container">
+        <wizardform back="True" id="frmConfirm" width="800" btntext="Setup &#187;">
+            <div class="text-center">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <tr><td style="background-color:#3498DB;"></td><td style="background-color:#3498DB;"></td><td style="background-color:#3498DB;"></td><td style="background-color:#3498DB;"></td><td style="background-color:#428BCA;"></td></tr>
+                        <tr><td>Step 1<br />User/Password</td><td>Step 2<br />Administrator</td><td>Step 3<br />Settings</td><td>Step 4<br />Applications</td><td><strong>Step 5</strong><br />Review</td></tr>
+                    </table>
+                </div>
+                <label size="3" text="Here is a list of operations that are about to be carried out on your arkOS server. Please carefully review them for accuracy before clicking Setup. This may take a few minutes to complete, depending on the speed of your system and Internet connection. " />
+                <spacer height="20" />
+            </div>
+            <div id="veriferr" />
+            <dt id="todo" width="100%" noborder="True">
+                <dtr header="True">
+                	<dth width="1" />
+                    <dth>
+                        <label text="Operation" />
+                    </dth>
+                    <dth>
+                        <label text="Item" />
+                    </dth>
+                </dtr>
+            </dt>
+        </wizardform>
+    </div>
 </xml>

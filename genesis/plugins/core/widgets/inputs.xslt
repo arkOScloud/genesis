@@ -126,12 +126,12 @@
 
 <xsl:template match="appselect">
     <div class="ui-firstrun-appselect" id="{@id}" onclick="Genesis.appListClick('{@id}')">
-        <input type="checkbox" name="{@id}" />
+        <input type="checkbox" name="install-{@id}" />
         <div class="pull-left" style="height:100%;">
-            <h1 class="{@iconfont}"></h1>
+            <h2 class="{@iconfont}"></h2>
         </div>
-        <h3><xsl:value-of select="@name"/></h3>
-        <p><xsl:value-of select="@desc"/></p>
-        <small>Version <xsl:value-of select="@version"/></small>
+        <h4><xsl:value-of select="@name"/></h4>
+        <small><xsl:value-of select="@desc"/></small>
+        <h6>Version <xsl:value-of select="@version"/></h6>
     </div>
 </xsl:template>

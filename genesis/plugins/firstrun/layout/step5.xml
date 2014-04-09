@@ -13,6 +13,8 @@
                 </div>
                 <label size="3" text="Select the applications you'd like to install. You'll always have the opportunity to add or remove applications later as you wish. Remember that you need an active and functional Internet connection in order to install applications." />
                 <spacer height="20" />
+                <btn text="Select All" href="#" size="lg" onclick="Genesis.selectAllApps()" />
+                <btn text="Clear" href="#" size="lg" onclick="Genesis.clearAppSelection()" />
             </div>
             <div id="veriferr" />
             <div id="ui-firstrun-appselectfield" />

@@ -50,6 +50,9 @@
             </div>
         </div>
     </div>
+    <script>
+        Genesis.submitOnEnter('<xsl:value-of select="@id"/>');
+    </script>
 </xsl:template>
 
 <xsl:template match="simpleform">

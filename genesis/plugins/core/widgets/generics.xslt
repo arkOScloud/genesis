@@ -19,7 +19,7 @@
 </xsl:template>
 
 <xsl:template match="completerefresh">
-    <script>document.location.href="/";</script>
+    <script>setInterval("document.location.href='/'",<xsl:value-of select="@wait"/>*1000);</script>
 </xsl:template>
 
 <xsl:template match="container">

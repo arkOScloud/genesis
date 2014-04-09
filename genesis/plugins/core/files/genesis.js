@@ -44,9 +44,9 @@ Genesis = (function() {
 					var keycode = (event !== undefined && typeof event.charCode !== "undefined") ? String.fromCharCode(event.charCode) : '';
 					var frmgrp = $('#'+field1+', #'+field2).parent('.form-group');
 					if(event.target.id == field1){
-						match = ((f1.value + keycode == f2.value) && (f1.value+keycode).length >= 6);
+						match = ((f1.value + (event.keyCode != 13 ? keycode : '') == f2.value) && (f1.value+(event.keyCode != 13 ? keycode : '')).length >= 6);
 					} else {
-						match = ((f1.value == f2.value + keycode) && (f2.value+keycode).length >= 6);
+						match = ((f1.value == f2.value + (event.keyCode != 13 ? keycode : '')) && (f2.value+(event.keyCode != 13 ? keycode : '')).length >= 6);
 					}
 				}
 			} else if (vtype == 'user') {
@@ -153,6 +153,14 @@ Genesis = (function() {
 			return false;
 		},
 
+		submitOnEnter: function (id) {
+			$('#'+id+' input').keydown(function(e) {
+			    if (e.keyCode == 13) {
+			        Genesis.submit(id, 'OK', null, false);
+			    }
+			});
+		},
+
 		init: function () {
 			Genesis.query('/handle/nothing');
 			Genesis.Core.requestProgress();
@@ -166,6 +174,16 @@ Genesis = (function() {
 		appListClick: function (id) {
 			$('#'+id).toggleClass('selected');
 			$('#'+id).children('input').prop("checked", !($('#'+id).children('input').prop("checked")))
+		},
+
+		selectAllApps: function () {
+			$('.ui-firstrun-appselect').addClass('selected');
+			$('.ui-firstrun-appselect').children('input').prop("checked", true)
+		},
+
+		clearAppSelection: function () {
+			$('.ui-firstrun-appselect').removeClass('selected');
+			$('.ui-firstrun-appselect').children('input').prop("checked", false)
 		},
 
 		Core: {

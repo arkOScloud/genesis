@@ -21,10 +21,7 @@ class FirstRun(CategoryPlugin, URLHandler):
 
     def on_session_start(self):
         self._step = 1
-        self._tree = TreeManager()
-        self._reboot = True
-        self._username = ''
-        self._password = ''
+        self._opts = {}
         self._veriferr = []
 
     def get_ui(self):
@@ -37,12 +34,19 @@ class FirstRun(CategoryPlugin, URLHandler):
         self._veriferr = []
 
         if self._step == 4:
-            if self.arch[1] != 'Raspberry Pi':
+            ui.find('hostname').set('value', self._opts['hostname'] if self._opts.has_key('hostname') else 'arkos')
+            ui.find('ssh_as_root').set('checked', 'True' if self._opts.has_key('ssh_as_root') and self._opts['ssh_as_root'] == '1' else 'False')
+
+            if self.arch[1] == 'Raspberry Pi':
+                ui.find('rpi-sdc').set('checked', 'True' if self._opts.has_key('resize') and self._opts['resize'] == '1' else 'False')
+                ui.find('rpi-ogm').set('checked', 'True' if self._opts.has_key('gpumem') and self._opts['gpumem'] == '1' else 'False')
+            else:
                 ui.remove('rpi-sdc')
                 ui.remove('rpi-ogm')
+            tz = self._opts['zone'] if self._opts.has_key('zone') else 'UTC'
             tz_sel = [UI.SelectOption(text = x, value = x,
-                        selected=(x=='UTC'))
-                        for x in zonelist.zones]
+                selected=(x==tz))
+                for x in zonelist.zones]
             ui.appendAll('zoneselect', *tz_sel)
 
         if self._step == 5:
@@ -65,6 +69,41 @@ class FirstRun(CategoryPlugin, URLHandler):
                         version=k.version
                     ))
 
+        if self._step == 6:
+            ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Add User')), UI.DTD(UI.Label(text='Username: %s, Password: %s'%(self._opts['username'], '*'*len(self._opts['userpasswd']))))))
+            ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Set Administrator Password')), UI.DTD(UI.Label(text='Password: %s'%('*'*len(self._opts['rootpasswd']))))))
+            ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Set Hostname')), UI.DTD(UI.Label(text=self._opts['hostname']))))
+            ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Set Timezone')), UI.DTD(UI.Label(text=self._opts['zone']))))
+            ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Allow SSH as Root')), UI.DTD(UI.Label(text='Yes' if self._opts.has_key('ssh_as_root') and self._opts['ssh_as_root'] != '0' else 'No'))))
+            ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Expand to Fit SD Card')), UI.DTD(UI.Label(text='Yes'))) if self._opts.has_key('resize') and self._opts['resize'] != '0' else None)
+            ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Adjust GPU Memory')), UI.DTD(UI.Label(text='Yes'))) if self._opts.has_key('gpumem') and self._opts['gpumem'] != '0' else None)
+            for x in self._opts['toinst']+self._opts['metoo']:
+                ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-download text-success')), UI.DTD(UI.Label(text='Install')), UI.DTD(UI.Label(text=x))))
+
+        if self._step == 7:
+            self.app.gconfig.set('genesis', 'firstrun', 'no')
+            self.app.gconfig.save()
+            self._opts = {}
+
+        if self._opts.has_key('metoo') and self._opts['metoo']:
+            ui.append('veriferr', UI.DialogBox(
+                UI.Label(text=('The applications you selected require some '
+                    'additional applications to be installed in order to '
+                    'function properly. These will also be installed; '
+                    'click OK to do this automatically or Cancel to go '
+                    'back and adjust your choices.')),
+                UI.ScrollContainer(
+                    UI.DT(id='prereqs', width='100%', noborder='True'), 
+                    width=300, height=300
+                ),
+                id='dlgMeToo'
+            ))
+            for x in self._opts['metoo']:
+                ui.append('prereqs', UI.DTR(
+                    UI.DTD(UI.IconFont(iconfont='gen-box-add'), width='1'),
+                    UI.DTD(UI.Label(text=x))
+                ))
+
         return ui
 
     def resize(self):
@@ -76,42 +115,57 @@ class FirstRun(CategoryPlugin, URLHandler):
         self.app.gconfig.set('genesis', 'restartmsg', 'yes')
         self.app.gconfig.save()
 
+    def install(self, toinst):
+        for k in toinst:
+            try:
+                self._mgr.install(k)
+            except:
+                pass
+        ComponentManager.get().rescan()
+        ConfManager.get().rescan();
+
+    def checkdeps(self, t, y):
+        for i in t[y].deps:
+            for dep in t[y].deps[i]:
+                if dep['type'] == 'plugin' and dep['package'] not in self._opts['toinst']+self._opts['metoo']:
+                    self._opts['metoo'].append(dep['package'])
+                    self.checkdeps(t, dep['package'])
+
     @event('form/submit')
+    @event('dialog/submit')
     def on_event(self, event, params, vars=None):
-        reboot = False
         if params[0] == 'splash':
             self._step = 2
         if params[0] == 'frmChangePassword':
             if vars.getvalue('action', 'OK') == 'OK':
-                self._username = vars.getvalue('login', '')
-                self._password = vars.getvalue('passwd', '')
-                self._password_again = vars.getvalue('passwdb', '')
-                if self._username == '':
+                self._opts['username'] = vars.getvalue('login', '')
+                self._opts['userpasswd'] = vars.getvalue('passwd', '')
+                pwdconf = vars.getvalue('passwdb', '')
+                if not self._opts['username']:
                     self._veriferr.append('The username can\'t be empty. Please choose a username.')
-                elif self._password == '':
+                elif self._opts['userpasswd'] == '':
                     self._veriferr.append('The password can\'t be empty. Please choose a password.')
-                elif self._password != self._password_again:
+                elif self._opts['userpasswd'] != pwdconf:
                     self._veriferr.append('The passwords you entered don\'t match. Please try again.')
-                elif re.search('[A-Z]|\.|:|[ ]|-$', self._username):
+                elif re.search('[A-Z]|\.|:|[ ]|-$', self._opts['username']):
                     self._veriferr.append('The username must not contain capital letters, dots, colons, spaces, or end with a hyphen.')
                 else:
                     # add Unix user
                     users = self.ub.get_all_users()
-                    for u in users:
-                        if u.login == self._username:
+                    for x in users:
+                        if x.login == self._username:
                             self._veriferr.append('A user already exists with this name. Please choose another.')
-                            self._editing = ''
                             return
                     self._step = 3
             elif vars.getvalue('action', 'OK') == 'Back':
                 self._step = 1
         if params[0] == 'frmChangeRootPassword':
             if vars.getvalue('action', 'OK') == 'OK':
-                self._root_password = vars.getvalue('rootpasswd', '')
-                self._root_password_again = vars.getvalue('rootpasswdb', '')
-                if self._root_password == '':
+                self._opts['rootpasswd'] = vars.getvalue('rootpasswd', '')
+                pwdconf = vars.getvalue('rootpasswdb', '')
+                if not self._opts['rootpasswd']:
                     self._veriferr.append('The password can\'t be empty')
-                elif self._root_password != self._root_password_again:
+                elif self._opts['rootpasswd'] != pwdconf:
                     self._veriferr.append('The passwords don\'t match')
                 else:
                     self._step = 4
@@ -119,43 +173,66 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self._step = 2
         if params[0] == 'frmSettings':
             if vars.getvalue('action', 'OK') == 'OK':
-                hostname = vars.getvalue('hostname', '')
-                zone = vars.getvalue('zoneselect', 'UTC')
-                resize = vars.getvalue('resize', '0') if self.arch[1] == 'Raspberry Pi' else '0'
-                gpumem = vars.getvalue('gpumem', '0') if self.arch[1] == 'Raspberry Pi' else '0'
-                ssh_as_root = vars.getvalue('ssh_as_root', '0')
+                self._opts['hostname'] = vars.getvalue('hostname', '')
+                self._opts['zone'] = vars.getvalue('zoneselect', 'UTC')
+                self._opts['resize'] = vars.getvalue('resize', '0') if self.arch[1] == 'Raspberry Pi' else '0'
+                self._opts['gpumem'] = vars.getvalue('gpumem', '0') if self.arch[1] == 'Raspberry Pi' else '0'
+                self._opts['ssh_as_root'] = vars.getvalue('ssh_as_root', '0')
 
-                if not hostname:
+                if not self._opts['hostname']:
                     self._veriferr.append('Hostname must not be empty')
-                    return
-                elif not re.search('^[a-zA-Z0-9.-]', hostname) or re.search('(^-.*|.*-$)', hostname):
+                elif not re.search('^[a-zA-Z0-9.-]', self._opts['hostname']) \
+                or re.search('(^-.*|.*-$)', self._opts['hostname']):
                     self._veriferr.append('Hostname must only contain '
                         'letters, numbers, hyphens or periods, and must '
                         'not start or end with a hyphen.')
-                    return
                 else:
-                    self.nb.sethostname(hostname)
-                
-                if resize != '0':
-                    reboot = self.resize()
-                    self.put_message('info', 'Your settings have been '
-                        'successfully applied. You must restart your arkOS '
-                        'server for them to take effect. To do this, choose '
-                        '"Restart arkOS" in the Power menu.')
-               
-                if ssh_as_root != '0':
+                    self._step = 5
+            elif vars.getvalue('action', 'OK') == 'Back':
+                self._step = 3
+        if params[0] == 'frmPlugins':
+            if vars.getvalue('action', 'OK') == 'OK':
+                lst = self._mgr.available
+
+                self._opts['toinst'] = []
+                self._opts['metoo'] = []
+
+                for k in lst:
+                    if vars.getvalue('install-'+k.id, '0') == '1':
+                        self._opts['toinst'].append(k.id)
+
+                t = self._mgr.list_available()
+                for y in self._opts['toinst']:
+                    self.checkdeps(t, y)
+
+                if not self._opts['metoo']:
+                    self._step = 6
+            elif vars.getvalue('action', 'OK') == 'Back':
+                self._step = 4
+        if params[0] == 'dlgMeToo':
+            if vars.getvalue('action', 'OK') == 'OK':
+                self._opts['toinst'] = self._opts['toinst'] + self._opts['metoo']
+                self._opts['metoo'] = []
+                self._step = 6
+            else:
+                self._opts['metoo'] = []
+                self._step = 5
+        if params[0] == 'frmConfirm':
+            if vars.getvalue('action', 'OK') == 'OK':
+                # install apps
+                self.install(self._opts['toinst'])
+
+                # set hostname
+                self.nb.sethostname(self._opts['hostname'])
+
+                # allow SSH as root
+                if self._opts.has_key('ssh_as_root') and self._opts['ssh_as_root'] != '0':
                     shell('sed -i "/PermitRootLogin no/c\PermitRootLogin yes" /etc/ssh/sshd_config')
                 else:
                     shell('sed -i "/PermitRootLogin yes/c\PermitRootLogin no" /etc/ssh/sshd_config')
 
-                if gpumem != '0':
-                    shell('mount /dev/mmcblk0p1 /boot')
-                    if os.path.exists('/boot/config.txt'):
-                        shell('sed -i "/gpu_mem=/c\gpu_mem=16" /boot/config.txt')
-                    else:
-                        shell('echo "gpu_mem=16" >> /boot/config.txt')
-
-                zone = zone.split('/')
+                # set timezone
+                zone = self._opts['zone'].split('/')
                 if len(zone) > 1:
                     zonepath = os.path.join('/usr/share/zoneinfo', zone[0], zone[1])
                 else:
@@ -163,59 +240,41 @@ class FirstRun(CategoryPlugin, URLHandler):
                 if os.path.exists('/etc/localtime'):
                     os.remove('/etc/localtime')
                 os.symlink(zonepath, '/etc/localtime')
-                self._step = 5
-            elif vars.getvalue('action', 'OK') == 'Back':
-                self._step = 3
-        if params[0] == 'frmPlugins':
-            if vars.getvalue('action', 'OK') == 'OK':
-                lst = self._mgr.available
-
-                toinst = []
-
-                for k in lst:
-                    if vars.getvalue('install-'+k.id, '0') == '1':
-                        toinst.append(k.id)
-
-                t = self._mgr.list_available()
-                for y in toinst:
-                    for i in t[y].deps:
-                        for dep in i[1]:
-                            if dep[0] == 'plugin' and dep[1] not in toinst:
-                                self.put_message('err', ('%s can\'t be installed, as it depends on %s. Please '
-                                    'install that also.' % (t[y].name, t[dep[1]].name)))
-                                return
-
-                for k in lst:
-                    if vars.getvalue('install-'+k.id, '0') == '1':
-                        try:
-                            self._mgr.install(k.id)
-                        except:
-                            pass
-                ComponentManager.get().rescan()
-                ConfManager.get().rescan();
-
-                self.app.gconfig.set('genesis', 'firstrun', 'no')
-                self.app.gconfig.save()
 
                 # change root password, add Unix user, and allow sudo use
-                self.ub.change_user_password('root', self._root_password)            
-                self.ub.add_user(self._username)
-                self.ub.change_user_password(self._username, self._password)
-                sudofile = open('/etc/sudoers', 'r+')
-                filedata = sudofile.readlines()
-                filedata = ["%sudo ALL=(ALL) ALL\n" if "# %sudo" in line else line for line in filedata]
-                sudofile.close()
-                sudofile = open('/etc/sudoers', 'w')
-                for thing in filedata:
-                    sudofile.write(thing)
-                sudofile.close()
+                self.ub.change_user_password('root', self._opts['rootpasswd'])            
+                self.ub.add_user(self._opts['username'])
+                self.ub.change_user_password(self._opts['username'], self._opts['userpasswd'])
+                sr = open('/etc/sudoers', 'r+').readlines()
+                sr = ["%sudo ALL=(ALL) ALL\n" if "# %sudo" in line else line for line in sr]
+                sw = open('/etc/sudoers', 'w')
+                for thing in sr:
+                    sw.write(thing)
+                sw.close()
                 self.ub.add_group('sudo')
-                self.ub.add_to_group(self._username, 'sudo')
+                self.ub.add_to_group(self._opts['username'], 'sudo')
 
                 # add user to Genesis config
                 self.app.gconfig.remove_option('users', 'admin')
-                self.app.gconfig.set('users', self._username, hashpw(self._password))
+                self.app.gconfig.set('users', self._opts['username'], hashpw(self._opts['userpasswd']))
                 self.app.gconfig.save()
-                self._step = 6
+
+                # set SD card resize (RPi only)
+                if self._opts.has_key('resize') and self._opts['resize'] != '0':
+                    self.resize()
+                    self.put_message('info', 'Your settings have been '
+                        'successfully applied. You must restart your arkOS '
+                        'server for them to take effect. To do this, choose '
+                        '"Restart arkOS" in the Power menu.')
+
+                # set GPU memory (RPi only)
+                if self._opts.has_key('gpumem') and self._opts['gpumem'] != '0':
+                    shell('mount /dev/mmcblk0p1 /boot')
+                    if os.path.exists('/boot/config.txt'):
+                        shell('sed -i "/gpu_mem=/c\gpu_mem=16" /boot/config.txt')
+                    else:
+                        shell('echo "gpu_mem=16" >> /boot/config.txt')
+
+                self._step = 7
             elif vars.getvalue('action', 'OK') == 'Back':
-                self._step = 4
+                self._step = 5
