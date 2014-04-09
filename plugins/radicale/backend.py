@@ -233,7 +233,7 @@ class RadicaleControl(Plugin):
             pyctl.install('radicale')
         # due to packaging bugs, make extra sure perms are readable
         st = os.stat('/usr/lib/python2.7/site-packages/radicale')
-        for r, d, f in os.walk('/usr/lib/python2.7/site-packages/radicale')):
+        for r, d, f in os.walk('/usr/lib/python2.7/site-packages/radicale'):
             for x in d:
                 os.chmod(os.path.join(r, x), st.st_mode&stat.S_IROTH&stat.S_IRGRP)
             for x in f:

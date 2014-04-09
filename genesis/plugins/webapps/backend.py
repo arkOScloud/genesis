@@ -279,6 +279,7 @@ class WebappControl(Plugin):
 	def ssl_enable(self, data, cpath, kpath):
 		# If no cipher preferences set, use the default ones
 		# As per Mozilla recommendations, but substituting 3DES for RC4
+		from genesis.plugins.certificates.backend import CertControl
 		ciphers = ':'.join([
 			'ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-ECDSA-AES128-GCM-SHA256',
 			'ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-ECDSA-AES256-GCM-SHA384',
@@ -294,10 +295,10 @@ class WebappControl(Plugin):
 			'DES-CBC3-SHA', 'HIGH', '!aNULL', '!eNULL', '!EXPORT', '!DES',
 			'!RC4', '!MD5', '!PSK'
 			])
-		cfg = self.app.get_config(genesis.plugins.certificates.backend.CertControl(self.app))
-		if cfg.kas_key('ciphers') and cfg.ciphers:
+		cfg = self.app.get_config(CertControl(self.app))
+		if hasattr(cfg, 'ciphers') and cfg.ciphers:
 			ciphers = cfg.ciphers
-		elif cfg.has_key('ciphers'):
+		elif hasattr(cfg, 'ciphers'):
 			cfg.ciphers = ciphers
 			cfg.save()
 
