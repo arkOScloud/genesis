@@ -21,6 +21,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             key=lambda x: x['name'])
         self.cas = sorted(self._cc.get_cas(),
             key=lambda x: x['name'])
+        self._hostname = self.app.get_backend(IHostnameManager).gethostname().lower()
 
     def on_session_start(self):
         self._cc = CertControl(self.app)
@@ -28,6 +29,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
         self._tab = 0
         self._wal = []
         self._pal = []
+        self._hostname = ''
         self._upload = None
 
     def get_ui(self):
@@ -73,7 +75,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                ))
 
         if self._gen:
-            ui.find('certcn').set('value', self.app.get_backend(IHostnameManager).gethostname().lower())
+            ui.find('certcn').set('value', self._hostname)
             self._wal, self._pal = self._cc.get_ssl_capable()
             alist, wlist, plist = [], [], []
             for cert in self.certs:
@@ -258,7 +260,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             self._upload = True
         elif params[0] == 'cagen':
             self._tab = 1
-            self._cc.create_authority(self.app.get_backend(IHostnameManager).gethostname().lower())
+            self._cc.create_authority(self._hostname)
         elif params[0] == 'cadel':
             self._tab = 1
             self._cc.delete_authority(self.cas[int(params[1])])
@@ -273,11 +275,12 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
         elif params[0] == 'dlgGen':
             self._tab = 0
             if vars.getvalue('action', '') == 'OK':
-                if vars.getvalue('certname', '') == '':
+                name = vars.getvalue('certname', '')
+                if name == '':
                     self.put_message('err', 'Certificate name is mandatory')
-                elif re.search('\.|-|`|\\\\|\/|[ ]', vars.getvalue('certname')):
+                elif re.search('\.|-|`|\\\\|\/|[ ]', name):
                     self.put_message('err', 'Certificate name must not contain spaces, dots, dashes or special characters')
-                elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
+                elif name in [x['name'] for x in self.certs]:
                     self.put_message('err', 'You already have a certificate with that name.')
                 elif len(vars.getvalue('certcountry', '')) != 2:
                     self.put_message('err', 'The country field must be a two-letter abbreviation')
@@ -297,8 +300,15 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                                 lst.append(('plugin', self._pal[i]))
                         except TypeError:
                             pass
-                    cgw = CertGenWorker(self, vars.getvalue('certname'), vars, lst)
-                    cgw.start()
+                    self.statusmsg('Generating a certificate and key...')
+                    try:
+                        self._cc.gencert(name, vars, self._hostname)
+                        self.statusmsg('Assigning new certificate...')
+                        self._cc.assign(name, lst)
+                        self.put_message('info', 'Certificate successfully generated')
+                    except Exception, e:
+                        self.put_message('err', str(e))
+                        self.app.log.error(str(e))
             self._wal = []
             self._pal = []
             self._gen = False
@@ -340,23 +350,4 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                 cfg.keytype = vars.getvalue('keytype', 'RSA')
                 cfg.ciphers = vars.getvalue('ciphers', '')
                 cfg.save()
-                self.put_message('info', 'Settings saved successfully')
-
-
-class CertGenWorker(BackgroundWorker):
-    def __init__(self, *args):
-        BackgroundWorker.__init__(self, *args)
-
-    def run(self, cat, name, vars, assign):
-        cat.put_statusmsg('Generating a certificate and key...')
-        try:
-            CertControl(cat.app).gencert(name, vars, 
-                cat.app.get_backend(IHostnameManager).gethostname().lower())
-            cat.put_statusmsg('Assigning new certificate...')
-            CertControl(cat.app).assign(name, assign)
-        except Exception, e:
-            cat.clr_statusmsg()
-            cat.put_message('err', str(e))
-            cat.app.log.error(str(e))
-        cat.clr_statusmsg()
-        cat.put_message('info', 'Certificate successfully generated')
+                self.put_message('info', 'Settings saved successfully')     

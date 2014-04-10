@@ -20,14 +20,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 	services = []
 
 	def on_init(self):
-		if self._relsec != None:
-			if self._relsec[0] == 'add':
-				apis.networkcontrol(self.app).add_webapp(self._relsec[1])
-				self._relsec = None
-			elif self._relsec[0] == 'del':
-				apis.networkcontrol(self.app).remove_webapp(self._relsec[1])
-			self._relsec = None
 		self.services = []
+		self.ncops = apis.networkcontrol(self.app)
 		self.apiops = apis.webapps(self.app)
 		self.dbops = apis.databases(self.app)
 		self.mgr = WebappControl(self.app)
@@ -75,7 +69,6 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		self._add = None
 		self._edit = None
 		self._setup = None
-		self._relsec = None
 		self._dbauth = ('','','')
 
 	def get_main_ui(self):
@@ -200,15 +193,20 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		elif params[0] == 'config':
 			self._edit = self.sites[int(params[1])]
 		elif params[0] == 'drop':
-			if hasattr(self.sites[int(params[1])], 'dbengine') and \
-			self.sites[int(params[1])].dbengine and \
-			self.dbops.get_info(self.sites[int(params[1])].dbengine).requires_conn and \
-			not self.dbops.get_dbconn(self.sites[int(params[1])].dbengine):
-				self._dbauth = (self.sites[int(params[1])].dbengine, 
-					self.sites[int(params[1])], 'drop')
+			site = self.sites[int(params[1])]
+			if hasattr(site, 'dbengine') and site.dbengine and \
+			self.dbops.get_info(site.dbengine).requires_conn and \
+			not self.dbops.get_dbconn(site.dbengine):
+				self._dbauth = (site.dbengine, site, 'drop')
 			else:
-				w = WAWorker(self, 'drop', self.sites[int(params[1])])
-				w.start()
+				try:
+					self.mgr.remove(self, site)
+				except Exception, e:
+					self.put_message('err', 'Website removal failed: ' + str(e))
+					self.app.log.error('Website removal failed: ' + str(e))
+				else:
+					self.put_message('info', 'Website successfully removed')
+					self.ncops.remove_webapp(site.name)
 		elif params[0] == 'enable':
 			self.mgr.nginx_enable(self.sites[int(params[1])])
 		elif params[0] == 'disable':
@@ -276,7 +274,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					w.ssl = self._edit.ssl
 					w.php = self._edit.php
 					self.mgr.nginx_edit(self._edit, w)
-					apis.networkcontrol(self.app).change_webapp(self._edit, w)
+					self.ncops.change_webapp(self._edit, w)
 					self.put_message('info', 'Site edited successfully')
 			self._edit = None
 		if params[0] == 'dlgSetup':
@@ -305,8 +303,16 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				elif not vname:
 					self.put_message('err', 'A site with this name already exists')
 				else:
-					w = WAWorker(self, 'add', name, self._current, vars)
-					w.start()
+					try:
+						spmsg = self.mgr.add(self, name, self._current, vars, True)
+					except Exception, e:
+						self.put_message('err', str(e))
+						self.app.log.error(str(e))
+					else:
+						self.put_message('info', '%s added sucessfully' % name)
+						self.ncops.add_webapp((name, self._current.name, port))
+						if spmsg:
+							self.put_message('info', spmsg)
 			self._setup = None
 		if params[0].startswith('dlgAuth'):
 			dbtype = params[0].split('dlgAuth')[1]
@@ -334,31 +340,3 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 		for p in self.apptypes:
 			if p.name == params[0]:
 				self._current = p
-
-
-class WAWorker(BackgroundWorker):
-	def run(self, cat, action, site, current='', vars=None):
-		if action == 'add':
-			try:
-				spmsg = WebappControl(cat.app).add(
-					cat, site, current, vars, True)
-			except Exception, e:
-				cat.clr_statusmsg()
-				cat.put_message('err', str(e))
-				cat.app.log.error(str(e))
-			else:
-				cat.put_message('info', 
-					'%s added sucessfully' % site)
-				cat._relsec = ('add', (site, current.name, vars.getvalue('port', '80')))
-				if spmsg:
-					cat.put_message('info', spmsg)
-		elif action == 'drop':
-			try:
-				WebappControl(cat.app).remove(cat, site)
-			except Exception, e:
-				cat.clr_statusmsg()
-				cat.put_message('err', 'Website removal failed: ' + str(e))
-				cat.app.log.error('Website removal failed: ' + str(e))
-			else:
-				cat.put_message('info', 'Website successfully removed')
-				cat._relsec = ('del', site.name)

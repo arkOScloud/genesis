@@ -51,7 +51,7 @@ class WebappControl(Plugin):
 
 		# Run webapp preconfig, if any
 		try:
-			cat.put_statusmsg('Running pre-install configuration...')
+			cat.statusmsg('Running pre-install configuration...')
 			webapp.pre_install(name, vars)
 		except Exception, e:
 			raise InstallError('Webapp config - '+str(e))
@@ -71,7 +71,7 @@ class WebappControl(Plugin):
 				raise InstallError(status[1])
 		elif wa.dpath:
 			try:
-				cat.put_statusmsg('Downloading webapp package...')
+				cat.statusmsg('Downloading webapp package...')
 				download(wa.dpath, file=pkg_path, crit=True)
 			except Exception, e:
 				raise InstallError('Couldn\'t download - %s' % str(e))
@@ -116,7 +116,7 @@ class WebappControl(Plugin):
 			raise PartialError('nginx serverblock couldn\'t be written - '+str(e))
 
 		try:
-			cat.put_statusmsg('Running post-install configuration...')
+			cat.statusmsg('Running post-install configuration...')
 			specialmsg = webapp.post_install(name, target_path, vars)
 		except Exception, e:
 			shutil.rmtree(target_path, True)
@@ -136,8 +136,6 @@ class WebappControl(Plugin):
 
 		# Make sure that nginx is enabled by default
 		cat.app.get_backend(apis.services.IServiceManager).enable('nginx')
-
-		cat.clr_statusmsg()
 
 		if specialmsg:
 			return specialmsg
@@ -169,9 +167,9 @@ class WebappControl(Plugin):
 
 	def remove(self, cat, site):
 		if site.sclass != '' and site.stype != 'ReverseProxy':
-			cat.put_statusmsg('Preparing for removal...')
+			cat.statusmsg('Preparing for removal...')
 			site.sclass.pre_remove(site.name, site.path)
-		cat.put_statusmsg('Removing website...')
+		cat.statusmsg('Removing website...')
 		if site.path.endswith('_site'):
 			shutil.rmtree(site.path.split('/_site')[0])
 		elif site.path.endswith('htdocs'):
@@ -182,10 +180,8 @@ class WebappControl(Plugin):
 		apis.webapps(self.app).cert_remove_notify(site.name,
 			site.stype)
 		if site.sclass != '' and site.stype != 'ReverseProxy':
-			cat.put_statusmsg('Cleaning up...')
+			cat.statusmsg('Cleaning up...')
 			site.sclass.post_remove(site.name)
-
-		cat.clr_statusmsg()
 
 	def nginx_add(self, site, add):
 		if site.path == '':

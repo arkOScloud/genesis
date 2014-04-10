@@ -226,7 +226,7 @@ class PluginLoader:
         from genesis import generation, version
 
         if cat:
-            cat.put_statusmsg('Loading plugin %s...' % plugin)
+            cat.statusmsg('Loading plugin %s...' % plugin)
         log.debug('Loading plugin %s' % plugin)
 
         try:
@@ -404,7 +404,7 @@ class PluginLoader:
                 if platform == 'arch' or platform == 'arkos':
                     try:
                         if cat:
-                            cat.put_statusmsg('Installing dependency %s...' % dep['name'])
+                            cat.statusmsg('Installing dependency %s...' % dep['name'])
                         log.warn('Missing %s, which is required by a plugin. Attempting to install...' % dep['name'])
                         shell('pacman -Sy --noconfirm --needed '+dep['package'])
                         if dep['binary']:
@@ -615,7 +615,7 @@ class RepositoryManager:
         exclude = ['openssl', 'openssh', 'nginx', 'python2']
 
         if cat:
-            cat.put_statusmsg('Removing plugin...')
+            cat.statusmsg('Removing plugin...')
         dir = self.config.get('genesis', 'plugins')
         shell('rm -r %s/%s' % (dir, id))
 
@@ -634,7 +634,7 @@ class RepositoryManager:
                 for thing in depends:
                     if thing[1] <= 1 and not thing[0][1] in exclude:
                         if cat:
-                            cat.put_statusmsg('Removing dependency %s...' % thing[0][1])
+                            cat.statusmsg('Removing dependency %s...' % thing[0][1])
                         shell('systemctl stop ' + thing[0][2])
                         shell('systemctl disable ' + thing[0][2])
                         shell('pacman -%s --noconfirm ' %('Rn' if self.purge is '1' else 'R') + thing[0][1])
@@ -645,7 +645,7 @@ class RepositoryManager:
         self.update_installed()
         self.update_available()
         if cat:
-            cat.put_message('info', 'Plugin removed. Refresh page for changes to take effect.')
+            cat.message('info', 'Plugin removed. Refresh page for changes to take effect.')
 
     def install(self, id, load=True, cat=''):
         """
@@ -660,7 +660,7 @@ class RepositoryManager:
         dir = self.config.get('genesis', 'plugins')
 
         if cat:
-            cat.put_statusmsg('Downloading plugin package...')
+            cat.statusmsg('Downloading plugin package...')
         download('http://%s/genesis/plugin/%s' % (self.server, id),
             file='%s/plugin.tar.gz'%dir, crit=True)
 
@@ -688,7 +688,7 @@ class RepositoryManager:
         dir = self.config.get('genesis', 'plugins')
 
         if cat:
-            cat.put_statusmsg('Extracting plugin package...')
+            cat.statusmsg('Extracting plugin package...')
         id = shell('tar tzf %s/plugin.tar.gz'%dir).split('\n')[0].strip('/')
 
         shell('cd %s; tar xf plugin.tar.gz' % dir)
@@ -733,19 +733,7 @@ class PluginInfo:
                         reqs.append(str(e))
         return ', '.join(reqs)
 
-
-class LiveInstall(BackgroundWorker):
-    def run(self, rm, id, load, cat):
-        d = rm.install(id, load=load, cat=cat)
-        if d:
-            cat.put_message('info', 'Plugin installed. %s'%str(d))
-        ComponentManager.get().rescan()
-        ConfManager.get().rescan()
-        cat._reloadfw = True
-        cat.clr_statusmsg()
-
 class LiveRemove(BackgroundWorker):
     def run(self, rm, id, cat):
         rm.remove(id, cat)
         cat._reloadfw = True
-        cat.clr_statusmsg()

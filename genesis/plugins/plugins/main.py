@@ -1,7 +1,7 @@
 from genesis.api import *
 from genesis.ui import *
 from genesis import apis
-from genesis.plugmgr import ImSorryDave, PluginLoader, RepositoryManager, LiveInstall, LiveRemove
+from genesis.plugmgr import ImSorryDave, PluginLoader, RepositoryManager
 
 
 class PluginManager(CategoryPlugin, URLHandler):
@@ -12,7 +12,6 @@ class PluginManager(CategoryPlugin, URLHandler):
     def on_session_start(self):
         self._mgr = RepositoryManager(self.app.log, self.app.config)
         self._nc = apis.networkcontrol(self.app)
-        self._reloadfw = False
 
     def on_init(self):
         self._mgr.refresh()
@@ -21,10 +20,6 @@ class PluginManager(CategoryPlugin, URLHandler):
         return len(self._mgr.upgradable) or None
 
     def get_ui(self):
-        if self._reloadfw == True:
-            self._nc.refresh()
-            self._reloadfw = False
-
         ui = self.app.inflate('plugins:main')
 
         inst = sorted(self._mgr.installed, key=lambda x: x.name.lower())
@@ -148,8 +143,9 @@ class PluginManager(CategoryPlugin, URLHandler):
         if params[0] == 'install':
             try:
                 self._mgr.check_conflict(params[1], 'install')
-                li = LiveInstall(self._mgr, params[1], 
-                    True, self)
-                li.start()
+                self._mgr.install(params[1], True, self)
+                ComponentManager.get().rescan()
+                ConfManager.get().rescan()
+                self._nc.refresh()
             except Exception, e:
                 self.put_message('err', str(e))
