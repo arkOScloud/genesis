@@ -198,6 +198,7 @@ def run_server(log_level=logging.INFO, config_file=''):
                 pass
             fd -= 1
 
+        import os
         os.execv(sys.argv[0], sys.argv)
     else:
         log.info('Stopped by request')
