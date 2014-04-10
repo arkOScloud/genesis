@@ -5,6 +5,11 @@ from genesis.api import *
 from genesis.com import *
 from genesis import apis
 
+orig_welcome = "<br />Welcome to this server running <b>Murmur</b>." \
+               "<br />Enjoy your stay!<br />"
+new_welcome = "<br />Welcome to this server running <b>Murmur</b> " \
+              "on <b>arkOS</b>.<br />Enjoy your stay!<br />"
+
 
 class MurmurConfig(Plugin):
     implements(IConfigurable)
@@ -21,6 +26,7 @@ class MurmurConfig(Plugin):
     def load(self):
         cfg = ConfManager.get().load('murmur', self.config_file)
         self.config = configobj.ConfigObj(cfg.split("\n"))
+        self.rebrand_welcometext()
 
     def save(self):
         was_running = False
@@ -45,6 +51,10 @@ class MurmurConfig(Plugin):
 
     def list_files(self):
         return [self.config_file]
+
+    def rebrand_welcometext(self):
+        if self.config["welcometext"] in [orig_welcome, ""]:
+            self.config["welcometext"] = new_welcome
 
 
 class GeneralConfig(ModuleConfig):
