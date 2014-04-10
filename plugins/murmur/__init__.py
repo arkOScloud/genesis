@@ -38,8 +38,13 @@ DEPENDENCIES = {
             "type": "app",
             "name": "Murmur",
             "package": "murmur",
-            "binary": "murmur"
+            "binary": "murmurd"
         },
+        {
+            "type": "module",
+            "name": "configobj",
+            "package": "configobj"
+        }
     ]
 }
 GENERATION = 1
