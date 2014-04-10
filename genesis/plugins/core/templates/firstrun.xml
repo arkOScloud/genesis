@@ -7,6 +7,13 @@
 </head>
 <body id="main" class="firstrunpage">
     <div id="page">
+        <div id="whiteout" style="display:none;opacity:0" />
+        <div id="pbox">
+            <p class="pbox-status" id="pbox-text">Please wait...</p>
+            <div style="float:left;">
+                <img src="/dl/core/ui/ajax.gif" />
+            </div>
+        </div>
         <div class="content" id="rightplaceholder" />
 
         <script>

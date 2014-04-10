@@ -52,6 +52,14 @@
             </div>
         </div>
     </div>
+
+    <div id="whiteout" style="display:none;opacity:0" />
+    <div id="pbox">
+        <p class="pbox-status" id="pbox-text">Please wait...</p>
+        <div style="float:left;">
+            <img src="/dl/core/ui/ajax.gif" />
+        </div>
+    </div>
     
     <div class="container">
         <div class="row">
