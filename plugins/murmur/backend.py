@@ -40,8 +40,8 @@ class MurmurConfig(Plugin):
         if was_running:
             self.service_mgr.start(self.service_name)
 
-    def get(self, key):
-        return self.config[key]
+    def get(self, key, default=None):
+        return self.config.get(key, default)
 
     def set(self, key, value):
         self.config[key] = value

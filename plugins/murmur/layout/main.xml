@@ -1,15 +1,11 @@
 <xml>
-    <toolbar>
-        <button id="launch" text="Web Interface" iconfont="gen-earth" />
-    </toolbar>
-
     <pad id="main">
         <tabcontrol id="tabs" active="0">
-            <tabheader text="Basic" id="0" />
+            <tabheader text="Settings" id="0" />
             <tabbody id="0">
                 <container id="tab0" />
             </tabbody>
-            <tabheader text="Advanced" id="1"/>
+            <tabheader text="Info" id="1"/>
             <tabbody id="1">
                 <scrollcontainer width="100%">
                     <dt id="all_config" width="100%">
