@@ -9,31 +9,6 @@ html, body, h1, h2, h3, h4, h5, h6, p, a, span {
   font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', sans-serif;
 }
 
-#ajax-loader {
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.5);
-  margin: -30px 0 0 -30px;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  border-radius: 7px;
-  border: 1px solid #666;
-  z-index: 1000001;
-}
-
-#pbox {
-  display: none;
-  position: fixed;
-  top: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  width: 500px;
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 0 0 5px;
-  z-index: 1000001;
-}
-
 a:link, a:focus, a:active {
   outline: 0;
 }
@@ -292,7 +267,7 @@ td a, td p, td span {
   position: fixed;
   top: 50%;
   background: rgba(0,0,0,0.5);
-  padding: 20px;
+  padding: 20px 20px 15px 20px;
   width: 500px;
   border-radius: 8px;
   overflow: hidden;

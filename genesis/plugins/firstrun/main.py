@@ -78,12 +78,7 @@ class FirstRun(CategoryPlugin, URLHandler):
             ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Expand to Fit SD Card')), UI.DTD(UI.Label(text='Yes'))) if self._opts.has_key('resize') and self._opts['resize'] != '0' else None)
             ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Adjust GPU Memory')), UI.DTD(UI.Label(text='Yes'))) if self._opts.has_key('gpumem') and self._opts['gpumem'] != '0' else None)
             for x in self._opts['toinst']+self._opts['metoo']:
-                ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-download text-success')), UI.DTD(UI.Label(text='Install')), UI.DTD(UI.Label(text=x))))
-
-        if self._step == 7:
-            self.app.gconfig.set('genesis', 'firstrun', 'no')
-            self.app.gconfig.save()
-            self._opts = {}
+                ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-download text-success')), UI.DTD(UI.Label(text='Install')), UI.DTD(UI.HContainer(UI.Iconfont(iconfont=x.icon), UI.Label(text=' '+x.name)))))
 
         if self._opts.has_key('metoo') and self._opts['metoo']:
             ui.append('veriferr', UI.DialogBox(
@@ -100,8 +95,8 @@ class FirstRun(CategoryPlugin, URLHandler):
             ))
             for x in self._opts['metoo']:
                 ui.append('prereqs', UI.DTR(
-                    UI.DTD(UI.IconFont(iconfont='gen-box-add'), width='1'),
-                    UI.DTD(UI.Label(text=x))
+                    UI.DTD(UI.IconFont(iconfont=x.icon), width='1'),
+                    UI.DTD(UI.Label(text=x.name))
                 ))
 
         return ui
@@ -118,18 +113,21 @@ class FirstRun(CategoryPlugin, URLHandler):
     def install(self, toinst):
         for k in toinst:
             try:
-                self._mgr.install(k)
+                self.statusmsg('Installing %s...' % k.name)
+                self._mgr.install(k.id)
             except:
                 pass
         ComponentManager.get().rescan()
         ConfManager.get().rescan();
 
-    def checkdeps(self, t, y):
-        for i in t[y].deps:
-            for dep in t[y].deps[i]:
+    def checkdeps(self, l, a, y):
+        for i in a[y.id].deps:
+            for dep in a[y.id].deps[i]:
                 if dep['type'] == 'plugin' and dep['package'] not in self._opts['toinst']+self._opts['metoo']:
-                    self._opts['metoo'].append(dep['package'])
-                    self.checkdeps(t, dep['package'])
+                    for x in l:
+                        if x.id == dep['package']:
+                            self._opts['metoo'].append(x)
+                            self.checkdeps(l, a, x)
 
     @event('form/submit')
     @event('dialog/submit')
@@ -197,13 +195,15 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self._opts['toinst'] = []
                 self._opts['metoo'] = []
 
+                self.statusmsg('Reviewing choices...')
                 for k in lst:
                     if vars.getvalue('install-'+k.id, '0') == '1':
-                        self._opts['toinst'].append(k.id)
+                        self._opts['toinst'].append(k)
 
+                self.statusmsg('Checking dependencies...')
                 t = self._mgr.list_available()
                 for y in self._opts['toinst']:
-                    self.checkdeps(t, y)
+                    self.checkdeps(lst, t, y)
 
                 if not self._opts['metoo']:
                     self._step = 6
@@ -223,15 +223,18 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self.install(self._opts['toinst'])
 
                 # set hostname
+                self.statusmsg('Setting hostname...')
                 self.nb.sethostname(self._opts['hostname'])
 
                 # allow SSH as root
+                self.statusmsg('Setting SSH options...')
                 if self._opts.has_key('ssh_as_root') and self._opts['ssh_as_root'] != '0':
                     shell('sed -i "/PermitRootLogin no/c\PermitRootLogin yes" /etc/ssh/sshd_config')
                 else:
                     shell('sed -i "/PermitRootLogin yes/c\PermitRootLogin no" /etc/ssh/sshd_config')
 
                 # set timezone
+                self.statusmsg('Setting timezone...')
                 zone = self._opts['zone'].split('/')
                 if len(zone) > 1:
                     zonepath = os.path.join('/usr/share/zoneinfo', zone[0], zone[1])
@@ -242,6 +245,7 @@ class FirstRun(CategoryPlugin, URLHandler):
                 os.symlink(zonepath, '/etc/localtime')
 
                 # change root password, add Unix user, and allow sudo use
+                self.statusmsg('Setting user preferences...')
                 self.ub.change_user_password('root', self._opts['rootpasswd'])            
                 self.ub.add_user(self._opts['username'])
                 self.ub.change_user_password(self._opts['username'], self._opts['userpasswd'])
@@ -261,6 +265,7 @@ class FirstRun(CategoryPlugin, URLHandler):
 
                 # set SD card resize (RPi only)
                 if self._opts.has_key('resize') and self._opts['resize'] != '0':
+                    self.statusmsg('Programming SD filesystem resize...')
                     self.resize()
                     self.put_message('info', 'Your settings have been '
                         'successfully applied. You must restart your arkOS '
@@ -269,12 +274,17 @@ class FirstRun(CategoryPlugin, URLHandler):
 
                 # set GPU memory (RPi only)
                 if self._opts.has_key('gpumem') and self._opts['gpumem'] != '0':
+                    self.statusmsg('Setting GPU memory preferences...')
                     shell('mount /dev/mmcblk0p1 /boot')
                     if os.path.exists('/boot/config.txt'):
                         shell('sed -i "/gpu_mem=/c\gpu_mem=16" /boot/config.txt')
                     else:
                         shell('echo "gpu_mem=16" >> /boot/config.txt')
 
+                self.app.gconfig.set('genesis', 'firstrun', 'no')
+                self.app.gconfig.save()
+                self._opts = {}
+                
                 self._step = 7
             elif vars.getvalue('action', 'OK') == 'Back':
                 self._step = 5

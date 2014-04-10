@@ -91,14 +91,6 @@
         </div>
     </div>
 
-    <div class="progress-box-wr" id="progress-box" />
-    <div id="pbox">
-        <div id="pbox-text" />
-        <div style="float:left;">
-            <img src="/dl/core/ui/ajax.gif" />
-        </div>
-    </div>
-
     <script>
         Genesis.init();
     </script>

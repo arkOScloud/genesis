@@ -322,6 +322,7 @@ Genesis = (function() {
 			showLoader: function (visible) {
 				if (visible) {
 					$('#whiteout').show().fadeTo(200, 1);
+					$('html').scrollTop(0);
 					$('#pbox').show().center();
 					$('body').css('cursor', 'wait !important');
 					isProcessing = true;

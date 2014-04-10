@@ -47,7 +47,9 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
 
         templ.append('main-content', self.selected_category.get_ui())
 
-        if self.app.session.has_key('messages') and not self.is_firstrun():
+        if self.is_firstrun():
+            del self.app.session['messages']
+        if self.app.session.has_key('messages'):
             for msg in self.app.session['messages']:
                 if 'info' in msg[0]:
                     msgcls, ift = 'info', 'gen-info'
@@ -89,7 +91,6 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         r = []
         rm = []
         if self.app.session.has_key('statusmsg'):
-            clear = None
             # Look for new messages pushed to the queue
             for msg in self.app.session['statusmsg']:
                 if msg[1]:
@@ -102,8 +103,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
                     clear = False
                     rm.append(msg)
             # Remove messages from queue when they are shown
-            for x in rm:
-                self.app.session['statusmsg'].remove(x)
+            self.app.session['statusmsg'] = []
         for p in sorted(self.app.grab_plugins(IProgressBoxProvider)):
             if p.has_progress():
                 r.append({
