@@ -1,3 +1,4 @@
+import gevent
 import inspect
 import traceback
 
@@ -213,21 +214,14 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
             self.app.session['messages'] = []
         self.app.session['messages'].append((cls, msg))
 
-    def put_statusmsg(self, msg):
+    def statusmsg(self, msg):
         """
         Sets a blocking status message to appear while an operation completes.
         """
         if not self.app.session.has_key('statusmsg'):
             self.app.session['statusmsg'] = []
         self.app.session['statusmsg'].append((self.text, msg))
-
-    def clr_statusmsg(self):
-        """
-        Clear the currently shown status window
-        """
-        if not self.app.session.has_key('statusmsg'):
-            self.app.session['statusmsg'] = []
-        self.app.session['statusmsg'].append((self.text, False))
+        gevent.sleep(0.1)
 
     def redirapp(self, service, port, ssl=False):
         if self.app.get_backend(apis.services.IServiceManager).get_status(service) == 'running':

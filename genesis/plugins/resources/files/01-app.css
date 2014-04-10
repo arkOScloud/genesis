@@ -264,3 +264,45 @@ td a, td p, td span {
   overflow: hidden;
   word-wrap: break-word;
 }
+
+#whiteout {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  z-index: 1000000;
+}
+
+#ajax-loader {
+  padding: 10px;
+  background: rgba(0,0,0,0.5);
+  margin: -30px 0 0 -30px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  .border-radius(7px);
+  border: 1px solid #666;
+  z-index: 1000001;
+}
+
+#pbox {
+  display: none;
+  position: fixed;
+  top: 50%;
+  background: rgba(0,0,0,0.5);
+  padding: 20px;
+  width: 500px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 0 0 5px;
+  z-index: 1000001;
+}
+
+#pbox-text {
+  display: inline-block;
+  color: #FFF;
+  font-weight: bold;
+  margin-left: 10px;
+}

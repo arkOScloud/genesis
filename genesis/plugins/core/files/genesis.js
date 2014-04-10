@@ -221,7 +221,7 @@ Genesis = (function() {
 						$('#progress-box').empty();
 						for (var prg in j) {
 							if (j[prg].type === 'statusbox') {
-								Genesis.Core.setStatusProgress(j[prg]);
+								Genesis.UI.setLoaderText(j[prg]);
 							} else {
 								Genesis.Core.addProgress(j[prg]);
 							}
@@ -244,43 +244,6 @@ Genesis = (function() {
 				html += '<p><strong>' + desc.owner + '</strong> ' + desc.status + '</p></div>';
 				$('#progress-box').append(html);
 			},
-
-			setStatusProgress: function (desc) {
-				if (desc.status && $('#pbox-'+desc.id).length) {
-					$('#pbox-'+desc.id).text(desc.status);
-					isProcessing = true;
-				} else if (desc.status) {
-					$('html').scrollTop(0);
-					$('#whiteout').stop(true);
-					Genesis.UI.wipeOut(true);
-					var status = '<p class="pbox-status" id="pbox-'+desc.id+'">'+desc.status+'</p>';
-					$('#pbox-text').append(status);
-					$('#pbox').show();
-					$('#pbox').center();
-					isProcessing = true;
-				} else if ($('#pbox').is(':visible')) {
-					$('#whiteout').stop(true);
-					Genesis.UI.wipeOut();
-					$('#pbox-text').empty();
-					$('#pbox').hide();
-					$('#whiteout').promise().done(function() {
-						Genesis.query('/handle/nothing');
-					});
-					isProcessing = false;
-				} else if (!desc.status) {
-					Genesis.query('/handle/nothing');
-					isProcessing = false;
-				}
-			},
-
-			clearStatusProgress: function () {
-				$('#whiteout').stop(true);
-				Genesis.UI.wipeOut();
-				$('#pbox-text').empty();
-				$('#pbox').hide();
-				isProcessing = false;
-			},
-
 		},
 
 		selectCategory: function (id) {
@@ -358,28 +321,23 @@ Genesis = (function() {
 
 			showLoader: function (visible) {
 				if (visible) {
-					$('#whiteout').show().fadeTo(3000, 1);
-					$('#ajax-loader').show().fadeTo(500, 1);
+					$('#whiteout').show().fadeTo(200, 1);
+					$('#pbox').show().center();
 					$('body').css('cursor', 'wait !important');
 					isProcessing = true;
 				}
 				else {
 					$('#whiteout').stop().fadeTo(250, 0, function () { $(this).hide(); });
-					$('#ajax-loader').stop().fadeTo(250, 0, function () { $(this).hide(); });
-					$('#ajax-data').text('');
+					$('#pbox').stop().hide();
+					$('#pbox-text').text('Please wait...');
 					$('body').css('cursor', '');
 					isProcessing = false;
 				}
 			},
 
-			wipeOut: function (visible) {
-				if (visible) {
-					$('#whiteout').show().fadeTo(200, 1);
-					$('body').css('cursor', 'wait !important');
-				}
-				else {
-					$('#whiteout').stop().fadeTo(250, 0, function () { $(this).hide(); });
-					$('body').css('cursor', '');
+			setLoaderText: function (desc) {
+				if (desc.status) {
+					$('#pbox-text').text(desc.status);
 				}
 			},
 
