@@ -8,5 +8,5 @@ class MurmurPlugin(apis.services.ServiceControlPlugin):
     folder = 'servers'
 
     def get_main_ui(self):
-        ui = self.app.inflate('transmission:main')
+        ui = self.app.inflate('murmur:main')
         return ui
