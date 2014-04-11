@@ -99,6 +99,12 @@ class PKeysConfig(Plugin):
     def read(self):
         if self.app.auth.user == 'anonymous':
             self.currentuser = 'root'
+            if not os.path.exists('/root/.ssh'):
+                os.makedirs('/root/.ssh')
+                os.chown('/root/.ssh', 0, 100)
+            if not os.path.exists('/root/.ssh/authorized_keys'):
+                open('/root/.ssh/authorized_keys', 'w').write('')
+                os.chown('/root/.ssh/authorized_keys', 0, 100)
         else:
             self.currentuser = self.app.auth.user
 
