@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from genesis.api import *
 from genesis.com import *
@@ -45,6 +46,8 @@ class SambaConfig(Plugin):
 
     def __init__(self):
         self.cfg_file = self.app.get_config(self).cfg_file
+        if not os.path.exists(self.cfg_file):
+            shutil.copyfile('/etc/samba/smb.conf.default', self.cfg_file)
 
     def list_files(self):
         return [self.cfg_file]
@@ -114,7 +117,7 @@ class SambaConfig(Plugin):
         shell('pdbedit -x -u ' + u)
 
     def add_user(self, u, p):
-        shell_stdin('smbpasswd -as %s' % u, p+'\n'+p)
+        shell_stdin('smbpasswd -as %s' % u, p+'\n'+p+'\n')
 
     def get_shares(self):
         return self.shares.keys()

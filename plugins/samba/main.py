@@ -3,6 +3,8 @@ from genesis.ui import *
 from genesis.utils import *
 from genesis import apis
 
+from genesis.plugins.users.backend import UsersBackend
+
 import os
 import backend
 import re
@@ -85,19 +87,22 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
             ))
 
         if self._adding_user:
-            ui.append('main',
-                UI.DialogBox(
-                    UI.FormLine(
-                        UI.TextInput(name='acct', id='acct'),
-                        text='Username'
-                    ),
-                    UI.FormLine(
-                        UI.EditPassword(id='passwd', value='Click to add password'),
-                        text='Password'
-                    ),
-                    id='dlgAddUser')
-                )
-
+            users = [UI.SelectOption(text=x.login, value=x.login) for x in UsersBackend(self.app).get_all_users() if x.uid >= 1000]
+            if users:
+                ui.append('main',
+                    UI.DialogBox(
+                        UI.FormLine(
+                            UI.Select(*users, name='acct', id='acct'),
+                            text='Username'
+                        ),
+                        UI.FormLine(
+                            UI.EditPassword(id='passwd', value='Click to add password'),
+                            text='Password'
+                        ),
+                        id='dlgAddUser')
+                    )
+            else:
+                self.put_message('err', 'No non-root Unix users found')
     
         # Config
         ui.append('tab2', self.get_ui_general())
