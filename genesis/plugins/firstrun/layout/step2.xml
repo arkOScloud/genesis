@@ -1,6 +1,6 @@
 <xml>
     <div class="ui-firstrun-stripe">
-        <h1>Welcome to Genesis</h1>
+        <h1 id="welcomemsg">Welcome to Genesis</h1>
     </div>
     <div class="container">
         <wizardform back="True" id="frmChangePassword" width="800">

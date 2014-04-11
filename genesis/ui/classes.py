@@ -100,10 +100,13 @@ class UI(object):
         return Element(name.lower(), *args, **kwargs)
 
     class ProgressBar(Element):
-        def __init__(self, value=0, max=1, width=1):
+        def __init__(self, value=0, min=0, max=1):
             Element.__init__(self, 'progressbar')
-            self['right'] = width - int(value*width/max)
-            self['left'] = int(value*width/max)
+            self['value'] = value
+            self['min'] = min
+            self['max'] = max
+            self['pct'] = float(value)/float(max)*100
+            self['rpct'] = int(round(float(self['pct'])))
 
     class LT(Element):
         def __init__(self, *args, **kwargs):

@@ -1,4 +1,5 @@
 import os
+import psutil
 import re
 
 from genesis.api import *
@@ -27,14 +28,8 @@ class RAMMeter (LinearMeter):
     category = 'System'
     transform = 'fsize_percent'
 
-    def init(self):
-        self.ram = self.app.get_backend(apis.sysstat.ISysStat).get_ram()
-
-    def get_max(self):
-        return int(self.ram[1])
-
     def get_value(self):
-        return int(self.ram[0])
+        return psutil.virtual_memory().percent
 
 
 class SwapMeter (LinearMeter):
@@ -42,14 +37,8 @@ class SwapMeter (LinearMeter):
     category = 'System'
     transform = 'fsize_percent'
 
-    def init(self):
-        self.swap = self.app.get_backend(apis.sysstat.ISysStat).get_swap()
-
-    def get_max(self):
-        return int(self.swap[1])
-
     def get_value(self):
-        return int(self.swap[0])
+        return psutil.swap_memory().percent
 
 
 class DiskUsageMeter(LinearMeter):
@@ -57,51 +46,26 @@ class DiskUsageMeter(LinearMeter):
     category = 'System'
     transform = 'percent'
 
-    _platform = detect_platform()
-    _partstatformat = re.compile('(/dev/)?(?P<dev>\w+)\s+\d+\s+\d+\s+\d+\s+' +
-                                       '(?P<usage>\d+)%\s+(?P<mountpoint>\S+)$')
-    if 'arkos' in _platform or 'arch' in _platform:
-        _totalformat = re.compile('(?P<dev>total)\s+\d+\s+\d+\s+\d+\s+(?P<usage>\d+)%+\s+\-$')
-    else:
-        _totalformat = re.compile('(?P<dev>total)\s+\d+\s+\d+\s+\d+\s+(?P<usage>\d+)%$')
-
     def init(self):
         if self.variant == 'total':
             self.text = 'total'
         else:
-            mountpoints = self.get_mountpoints()
-            self.text = '%s (%s)' % (self.variant, ', '.join(mountpoints))
-
-    def _get_stats(self, predicate = (lambda m: True)):
-        if hasattr(self, 'variant') and self.variant == 'total':
-            matcher = DiskUsageMeter._totalformat
-        else:
-            matcher = DiskUsageMeter._partstatformat
-
-        stats = shell('df --total')
-        matches = []
-        for stat in stats.splitlines():
-            match = matcher.match(stat)
-            if match and predicate(match):
-                matches.append(match)
-        return matches
-
-    def _get_stats_for_this_device(self):
-        return self._get_stats(lambda m: m.group('dev').endswith(self.variant))
+            self.text = '%s (%s)' % (self.variant, next(x.mountpoint for x in psutil.disk_partitions() if x.device == self.variant))
 
     def get_variants(self):
-        if 'arkos' in self._platform or 'arch' in self._platform:
-            return sorted(set([ m.group('dev') for m in self._get_stats()]))
-        else:
-            return sorted(set([ m.group('dev') for m in self._get_stats()])) + ['total']
-
-    def get_mountpoints(self):
-        devmatches = self._get_stats_for_this_device()
-        return sorted([ m.group('mountpoint') for m in devmatches])
+        return [x.device for x in psutil.disk_partitions()] + ['total']
 
     def get_value(self):
-        devmatches = self._get_stats_for_this_device()
-        return int(devmatches[0].group('usage'))
+        if self.variant == 'total':
+            u, f, n = 0, 0, 0
+            for x in psutil.disk_partitions():
+                d = psutil.disk_usage(x.mountpoint)
+                u += d.used
+                f += d.free
+                n += 1
+            return ((float(u)/float(f))*100)/n
+        else:
+            return psutil.disk_usage(next(x.mountpoint for x in psutil.disk_partitions() if x.device == self.variant)).percent
 
     def get_min(self):
         return 0
@@ -116,11 +80,7 @@ class CpuMeter(LinearMeter):
     transform = 'percent'
     
     def get_usage(self):
-         u = shell('ps h -eo pcpu').split()
-         b=0.0
-         for a in u:  
-            b += float(a)
-         return b
+        return psutil.cpu_percent()
     
     def get_value(self):
         return self.get_usage()

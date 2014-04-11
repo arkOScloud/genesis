@@ -219,11 +219,10 @@
 </xsl:template>
 
 <xsl:template match="progressbar">
-    <div class="ui-el-progressbar-wrapper">
-        <div style="width:{@left}px" class="ui-el-progressbar-active">
-            <div><div/></div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{@value}" aria-valuemin="{@min}" aria-valuemax="{@max}" style="width: {@pct}%;">
+            <xsl:value-of select="@rpct" />%
         </div>
-        <div style="width:{@right}px" class="ui-el-progressbar" />
     </div>
 </xsl:template>
 

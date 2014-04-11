@@ -29,9 +29,19 @@ class FirstRun(CategoryPlugin, URLHandler):
         step = self.app.inflate('firstrun:step%i'%self._step)
         ui.append('content', step)
 
+        if detect_platform() == 'arkos':
+            ui.find('welcomemsg').insertText('Welcome to arkOS')
+
         for x in self._veriferr:
             ui.append('veriferr', UI.SystemMessage(cls="danger", iconfont="gen-close", text=x))
         self._veriferr = []
+
+        if self._step == 2:
+            ui.find('login').set('value', self._opts['username'] if self._opts.has_key('username') else '')
+            ui.find('passwd').set('value', self._opts['userpasswd'] if self._opts.has_key('userpasswd') else '')
+
+        if self._step == 3:
+            ui.find('rootpasswd').set('value', self._opts['rootpasswd'] if self._opts.has_key('rootpasswd') else '')
 
         if self._step == 4:
             ui.find('hostname').set('value', self._opts['hostname'] if self._opts.has_key('hostname') else 'arkos')
@@ -123,7 +133,7 @@ class FirstRun(CategoryPlugin, URLHandler):
     def checkdeps(self, l, a, y):
         for i in a[y.id].deps:
             for dep in a[y.id].deps[i]:
-                if dep['type'] == 'plugin' and dep['package'] not in self._opts['toinst']+self._opts['metoo']:
+                if dep['type'] == 'plugin' and dep['package'] not in [x.id for x in self._opts['toinst']+self._opts['metoo']]:
                     for x in l:
                         if x.id == dep['package']:
                             self._opts['metoo'].append(x)

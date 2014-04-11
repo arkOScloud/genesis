@@ -183,6 +183,12 @@ td a, td p, td span {
   margin-bottom:30px;
 }
 
+.alert-warning {
+  background-color:#F4A425;
+  color: #FFF;
+  border: 0px;
+}
+
 .alert-danger {
   background-color:#E74C3C;
   color: #FFF;
@@ -250,18 +256,6 @@ td a, td p, td span {
   z-index: 1000000;
 }
 
-#ajax-loader {
-  padding: 10px;
-  background: rgba(0,0,0,0.5);
-  margin: -30px 0 0 -30px;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  .border-radius(7px);
-  border: 1px solid #666;
-  z-index: 1000001;
-}
-
 #pbox {
   display: none;
   position: fixed;
@@ -280,4 +274,122 @@ td a, td p, td span {
   color: #FFF;
   font-weight: bold;
   margin-left: 10px;
+}
+
+.ui-dashboard-banner {
+  overflow: hidden;
+  padding: 7px 5px;
+  border-bottom: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.ui-dashboard-banner > span {
+  color: #555;
+  text-shadow: 0 1px 0 #fff;
+  font-weight: bold;
+  display: block;
+}
+
+.ui-dashboard-banner img {
+  float: left;
+  margin-right: 10px;
+}
+
+.ui-dashboard-banner #host {
+  font-size: 24px;
+}
+
+.ui-dashboard-banner #distro {
+  font-size: 12px;
+  padding-left: 60px;
+}
+
+.dashboard {
+  min-width: 200px;
+  min-height: 50px;
+}
+
+.dashboard-placeholder {
+  border: 1px dashed #68a;
+  background: #bdf;
+  width: 100%;
+  height: 40px;
+  margin: 15px 0;
+  border-radius: 5px;
+}
+
+.ui-dashboard-trash {
+  border: 1px dashed #a86;
+  background: #fdb;
+  border-radius: 5px;
+
+  overflow: hidden;
+  text-align: center;
+  font-size: 18px;
+  padding: 20px 0;
+  min-height: 0;
+}
+
+#save-query {
+  height: 0;
+  border-bottom: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px 10px 0;
+}
+
+.ui-el-widget {
+  zoom: 1;
+  text-align: left;
+  vertical-align: top;
+  width: 375px;
+}
+
+.ui-el-widget:before {
+  display: table;
+  content: "";
+}
+
+.ui-el-widget:after {
+  display: table;
+  content: "";
+  clear: both;
+}
+
+.ui-el-widget > .handle {
+  background: url('/dl/sysmon/handle.png');
+  width: 6px;
+  height: 20px;
+  margin: 3px 3px 3px 0;
+  float: left;
+  cursor: move;
+}
+
+.ui-el-widget .icon {
+  float: left;
+  width: 16px;
+}
+
+.ui-el-widget .btn.tipicon {
+  margin: 0px 1px;
+}
+
+.ui-el-widget .title {
+  float: left;
+  font-weight: bold;
+  line-height: 25px;
+  padding: 0 5px;
+  margin: 0 5px 0 0;
+  height: 25px;
+}
+
+.ui-el-widget > .content.linear {
+  float: left;
+  overflow: hidden;
+  line-height: 22px;
+  margin: -1px 0;
+}
+
+.ui-el-widget > .content.normal {
+  margin-left: 30px;
+  clear: both;
 }

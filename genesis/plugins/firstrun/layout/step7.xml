@@ -1,6 +1,6 @@
 <xml>
     <div class="ui-firstrun-stripe">
-        <h1>Welcome to Genesis</h1>
+        <h1 id="welcomemsg">Welcome to Genesis</h1>
     </div>
     <div class="container">
         <div class="text-center" style="max-width:800px;margin-left:auto;margin-right:auto;">

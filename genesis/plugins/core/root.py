@@ -47,7 +47,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
 
         templ.append('main-content', self.selected_category.get_ui())
 
-        if self.is_firstrun():
+        if self.is_firstrun() and self.app.session.has_key('messages'):
             del self.app.session['messages']
         if self.app.session.has_key('messages'):
             for msg in self.app.session['messages']:

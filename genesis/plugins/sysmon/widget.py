@@ -3,7 +3,7 @@ from genesis import apis
 from genesis.com import implements, Plugin
 from genesis.api import *
 from genesis.utils import *
-from meters import DiskUsageMeter, CpuMeter
+from meters import DiskUsageMeter, CpuMeter, RAMMeter, SwapMeter
 
 
 class LoadWidget(Plugin):
@@ -40,12 +40,8 @@ class RamWidget(Plugin):
     style = 'normal'
 
     def get_ui(self, cfg, id=None):
-        stat = self.app.get_backend(apis.sysstat.ISysStat)
-        ru, rt = stat.get_ram()
-        return UI.HContainer(
-            UI.ProgressBar(value=ru, max=rt, width=220),
-            UI.Label(text=str_fsize(ru)),
-        )
+        return UI.ProgressBar(value=RAMMeter(self.app).get_value(), 
+            min=0, max=100)
 
     def handle(self, event, params, cfg, vars=None):
         pass
@@ -65,12 +61,8 @@ class SwapWidget(Plugin):
     style = 'normal'
 
     def get_ui(self, cfg, id=None):
-        stat = self.app.get_backend(apis.sysstat.ISysStat)
-        su, st = stat.get_swap()
-        return UI.HContainer(
-            UI.ProgressBar(value=su, max=int(st)+1, width=220),
-            UI.Label(text=str_fsize(su)),
-        )
+        return UI.ProgressBar(value=SwapMeter(self.app).get_value(), 
+            min=0, max=100)
 
     def handle(self, event, params, cfg, vars=None):
         pass
@@ -136,10 +128,7 @@ class DiskUsageWidget(Plugin):
         if cfg == None:
             cfg = "total"
         m = DiskUsageMeter(self.app).prepare(cfg)
-        return UI.HContainer(
-            UI.ProgressBar(value=m.get_value(), max=m.get_max(), width=220),
-            UI.Label(text=str('%d%%' % m.get_value())),
-        )
+        return UI.ProgressBar(value=m.get_value(), min=0, max=m.get_max())
 
     def handle(self, event, params, cfg, vars=None):
         pass
@@ -167,10 +156,7 @@ class CpuWidget(Plugin):
 
     def get_ui(self, cfg, id=None):
         m = CpuMeter(self.app).prepare(cfg)
-        return UI.HContainer(
-            UI.ProgressBar(value=m.get_value(), max=m.get_max(), width=220),
-            UI.Label(text=str(m.get_value())+'%'),
-        )
+        return UI.ProgressBar(value=m.get_value(), min=0, max=m.get_max())
 
     def handle(self, event, params, cfg, vars=None):
         pass
