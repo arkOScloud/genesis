@@ -95,12 +95,20 @@ def detect_architecture():
             break
     # Let's play a guessing game!
     if arch == 'armv6l':
-        # Is this a... Raspberry Pi?
         for x in shell('cat /proc/cpuinfo').split('\n'):
             # Parse output of function function c_show in linux/arch/arm/kernel/setup.c
             k, _, v = x.partition(':')
+            # Is this a... Raspberry Pi?
             if 'Hardware' in k and v.strip() in ('BCM2708', 'BCM2835'):
                 btype = 'Raspberry Pi'
+                break
+            # Is this a... BeagleBone Black?
+            elif 'Hardware' in k and 'Generic AM33XX' in v.strip()
+                btype = 'BeagleBone Black'
+                break
+            # Is this a... Cubietruck?
+            elif 'Hardware' in k and v.strip() == 'sun7i':
+                btype = 'Cubietruck'
                 break
     elif arch in ['x86_64', 'i686']:
         btype = 'General'
