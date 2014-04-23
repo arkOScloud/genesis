@@ -103,7 +103,7 @@ def detect_architecture():
                 btype = 'Raspberry Pi'
                 break
             # Is this a... BeagleBone Black?
-            elif 'Hardware' in k and 'Generic AM33XX' in v.strip()
+            elif 'Hardware' in k and 'Generic AM33XX' in v.strip():
                 btype = 'BeagleBone Black'
                 break
             # Is this a... Cubietruck?
