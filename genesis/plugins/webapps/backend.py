@@ -322,14 +322,9 @@ class WebappControl(Plugin):
 		else:
 			port = l.value.split(' ssl')[0]
 			l.value = l.value.split(' ssl')[0] + ' ssl'
-		if s.filter('Key', 'ssl_certificate'):
-			s.remove(*s.filter('Key', 'ssl_certificate'))
-		if s.filter('Key', 'ssl_certificate_key'):
-			s.remove(*s.filter('Key', 'ssl_certificate_key'))
-		if s.filter('Key', 'ssl_protocols'):
-			s.remove(*s.filter('Key', 'ssl_protocols'))
-		if s.filter('Key', 'ssl_ciphers'):
-			s.remove(*s.filter('Key', 'ssl_ciphers'))
+		for x in s.all():
+			if type(x) == nginx.Key and x.name.startswith('ssl_'):
+				s.remove(x)
 		s.add(
 			nginx.Key('ssl_certificate', cpath),
 			nginx.Key('ssl_certificate_key', kpath),

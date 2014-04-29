@@ -32,7 +32,7 @@ class PHP(Plugin):
 
     def composer_install(self, path):
         self.verify_composer()
-        s = shell_cs('cd %s; composer install'%path)
+        s = shell_cs('cd %s; composer install'%path, stderr=True)
         if s[0] != 0:
             raise Exception('Composer failed to install this app\'s bundle. Error: %s'%str(s[1]))
 
