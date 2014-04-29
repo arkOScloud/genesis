@@ -24,11 +24,13 @@ class MurmurConfig(Plugin):
         self.service_mgr = self.app.get_backend(apis.services.IServiceManager)
 
     def load(self):
+        return
         cfg = ConfManager.get().load('murmur', self.config_file)
         self.config = configobj.ConfigObj(cfg.split("\n"))
         self.rebrand_welcometext()
 
     def save(self):
+        return
         was_running = False
         if self.service_mgr.get_status(self.service_name) == "running":
             was_running = True
@@ -65,4 +67,4 @@ class GeneralConfig(ModuleConfig):
         'cfg_file': 'Configuration file'
     }
 
-    cfg_file = '/etc/murmur.ini'
+    cfg_file = '/etc/umurmur/umurmur.conf'

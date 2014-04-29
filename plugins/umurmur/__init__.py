@@ -24,7 +24,7 @@ LOGO = True
 SERVICES = [
     {
         "name": "Mumble VoIP Server",
-        "binary": "murmur",
+        "binary": "umurmur",
         "ports": [('tcp', '64738'), ('udp', '64738')]
     }
 ]
@@ -37,8 +37,8 @@ DEPENDENCIES = {
         {
             "type": "app",
             "name": "Murmur",
-            "package": "murmur",
-            "binary": "murmurd"
+            "package": "umurmur",
+            "binary": "umurmurd"
         },
         {
             "type": "module",
