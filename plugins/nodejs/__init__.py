@@ -9,7 +9,7 @@ CATEGORIES = [
         "secondary": []
     }
 ]
-VERSION = '0.2'
+VERSION = '0.3'
 
 AUTHOR = 'arkOS'
 HOMEPAGE = 'http://arkos.io'
@@ -27,11 +27,6 @@ DEPENDENCIES = {
             "name": "NodeJS",
             "package": "nodejs",
             "binary": "npm"
-        },
-        {
-            "type": "plugin",
-            "name": "Supervisor",
-            "package": "supervisor"
         }
     ]
 }
