@@ -586,6 +586,8 @@ class MailControl(Plugin):
         except _mysql_exceptions.OperationalError, e:
             if e[0] == 1049:
                 return []
+        except Exception, e:
+            raise
         for x in d:
             if x == ('ALL',):
                 d.remove(x)
