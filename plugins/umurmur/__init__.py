@@ -3,10 +3,9 @@ NAME = 'Mumble Server'
 TYPE = 'plugin'
 ICON = 'gen-phone'
 DESCRIPTION = 'Host your own Mumble server'
-LONG_DESCRIPTION = ('Murmur is the server application for Mumble, an open '
+LONG_DESCRIPTION = ('uMurmur is the server application for Mumble, an open '
                     'source Voice-over-IP (VoIP) client. This plugin hosts the '
-                    'murmur server and lets you manage the server via the '
-                    'Mumb1e Admin Plugin.')
+                    'umurmur server and lets you manage it.')
 CATEGORIES = [
     {
         "primary": "Communication",
@@ -15,7 +14,7 @@ CATEGORIES = [
 ]
 VERSION = '1'
 
-AUTHOR = 'Heiner'
+AUTHOR = 'Heiner Tholen'
 HOMEPAGE = 'http://github.com/heinzK1X'
 APP_AUTHOR = "The Mumble Community"
 APP_HOMEPAGE = "http://mumble.sourceforge.net"
@@ -30,20 +29,20 @@ SERVICES = [
 ]
 
 # Plugin parameters
-MODULES = ['main']
+MODULES = ['main', 'backend']
 PLATFORMS = ['any']
 DEPENDENCIES = {
     "any": [
         {
             "type": "app",
-            "name": "Murmur",
+            "name": "uMurmur",
             "package": "umurmur",
             "binary": "umurmurd"
         },
         {
             "type": "module",
-            "name": "configobj",
-            "package": "configobj"
+            "name": "pylibconfig2",
+            "package": "pylibconfig2"
         }
     ]
 }

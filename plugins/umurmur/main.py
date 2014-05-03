@@ -1,10 +1,10 @@
 from genesis.ui import *
 from genesis.api import *
 from genesis import apis
-
 import backend
 
-class MurmurPlugin(apis.services.ServiceControlPlugin):
+
+class UMurmurPlugin(apis.services.ServiceControlPlugin):
     text = 'Mumble Server'
     iconfont = 'gen-phone'
     folder = 'servers'
@@ -12,26 +12,133 @@ class MurmurPlugin(apis.services.ServiceControlPlugin):
     def on_session_start(self):
         self._config = backend.MurmurConfig(self.app)
         self._config.load()
+        self._tab = 0
+        self._open_dialog = None
         self.update_services()
 
     def get_main_ui(self):
-        ui = self.app.inflate('murmur:main')
+        ui = self.app.inflate('umurmur:main')
+        ui.find('tabs').set('active', 'tab' + str(self._tab))
+        cfg = self._config.config
 
-        settings_content = UI.FormBox(
+        if not hasattr(cfg, "channels"):
+            ui.remove('dlg_add_chan')
+            ui.remove('dlg_add_chan_lnk')
+            ui.append("container_settings", UI.Label(
+                text="uMurmur settings file damaged. "
+                     "Please reinstall uMurmur",
+                size=3)
+            )
+            return ui
+
+        # Tab 0: General Server Settings
+        content = UI.FormBox(
             UI.FormLine(
                 UI.TextInput(
                     name="welcometext",
-                    value=self._config.get("welcometext", ""),
+                    value=cfg.get("welcometext", ""),
                 ),
-                text="Welcome Text"
+                text="Welcome text"
             ),
-            id="frmSettings"
+            UI.FormLine(
+                UI.TextInput(
+                    name="password",
+                    value=cfg.get("password", ""),
+                    password=True
+                ),
+                text="Server password"
+            ),
+            UI.FormLine(
+                UI.TextInput(
+                    name="max_bandwidth",
+                    value=cfg.get("max_bandwidth", 48000),
+                ),
+                text="Max. bandwidth"
+            ),
+            UI.FormLine(
+                UI.TextInput(
+                    name="max_users",
+                    value=cfg.get("max_users", 10),
+                ),
+                text="Max. users"
+            ),
+            id="form_server"
         )
-        ui.append("tab0", settings_content)
+        ui.append("container_settings", content)
 
-        for k, v in sorted(self._config.items()):
-            if k == "serverpassword":
-                continue
+        # Tab 1: Channels
+        # TODO password for channels
+        # TODO Tree View of channels
+        chan_to_par = {}
+        for chan in cfg.channels:
+            if chan.parent:
+                chan_to_par[chan.name] = chan.parent
+            row = UI.DTR(
+                UI.Label(text=chan.name),
+                UI.Label(text=chan.parent),
+                UI.Label(text=chan.description),
+                UI.Label(text=("Yes" if chan.get("silent") else "No"))
+            )
+            ui.append('table_channels', row)
+
+        for lnk in cfg.channel_links:
+            row = UI.DTR(
+                UI.Label(text=lnk.source),
+                UI.Label(text="=>"),
+                UI.Label(text=lnk.destination),
+            )
+            ui.append('table_channel_links', row)
+
+        def_chan = cfg.default_channel
+        content = UI.FormBox(
+            UI.FormLine(
+                UI.SelectInput(*list(
+                    UI.SelectOption(text=c, value=c, selected=(c == def_chan))
+                    for c in sorted(chan_to_par.keys())
+                ), name="default_channel"),
+                text="Default channel",
+            ),
+            id="form_def_chan"
+        )
+        ui.append("container_default_channel", content)
+
+        non_del_channels = set(chan_to_par.values() + [def_chan])
+        del_channels = list( 
+            c for c in chan_to_par.keys()
+            if c not in non_del_channels
+        )
+        content = UI.FormBox(
+            UI.FormLine(
+                UI.SelectInput(*list(
+                    UI.SelectOption(text=c, value=c, selected=c == "(None)")
+                    for c in (["(None)"] + sorted(del_channels))
+                ), name="delete_channel"),
+                text="Delete channel",
+                help="(Only non-default channels without children)"
+            ),
+            id="form_del_chan"
+        )
+        ui.append("container_delete_channel", content)
+
+        chan_lnks = ["(None)"] + list(
+            "%s => %s" % (l.source, l.destination) for l in cfg.channel_links
+        )
+        content = UI.FormBox(
+            UI.FormLine(
+                UI.SelectInput(*list(
+                    UI.SelectOption(text=c, value=c, selected=c == "(None)")
+                    for c in chan_lnks
+                ), name="delete_channel_link"),
+                text="Delete channel link"
+            ),
+            id="form_del_chan_lnk"
+        )
+        ui.append("container_delete_channel_link", content)
+
+        # Tab 2: Info
+        for k, v in sorted(cfg.items()):
+            if k == "password":
+                v = "############"
             e = UI.DTR(
                 UI.IconFont(iconfont='gen-folder'),
                 UI.Label(text=k),
@@ -39,17 +146,175 @@ class MurmurPlugin(apis.services.ServiceControlPlugin):
             )
             ui.append('all_config', e)
 
+        # dialogs
+        if self._open_dialog == 'add_channel':
+            content = UI.SimpleForm(
+                UI.FormLine(
+                    UI.TextInput(
+                        name="chan_name",
+                        value=""
+                    ),
+                    text="Channel name"
+                ),
+                UI.FormLine(
+                    UI.TextInput(
+                        name="chan_descr",
+                        value=""
+                    ),
+                    text="Channel description"
+                ),
+                UI.FormLine(
+                    UI.SelectInput(*list(
+                        UI.SelectOption(text=c, value=c)
+                        for c in (["Root"] + sorted(chan_to_par.keys())),
+                    ), name="chan_parent"),
+                    text="Parent channel"
+                ),
+                UI.FormLine(
+                    UI.CheckBox(
+                        name="chan_silent",
+                        text="Yes",
+                        checked=False,
+                    ),
+                    text="Silent",
+                    #TODO: help="" (checkout silent mode before... )
+                ),
+                id="dialog_add_channel"
+            )
+            ui.append("container_add_channel", content)
+        else:
+            ui.remove('dlg_add_chan')
+
+        if self._open_dialog == 'add_channel_link':
+            content = UI.SimpleForm(
+                UI.FormLine(
+                    UI.SelectInput(*list(
+                        UI.SelectOption(text=c, value=c)
+                        for c in sorted(chan_to_par.keys()),
+                    ), name="chan_src"),
+                    text="Source channel"
+                ),
+                UI.FormLine(
+                    UI.SelectInput(*list(
+                        UI.SelectOption(text=c, value=c)
+                        for c in sorted(chan_to_par.keys()),
+                    ), name="chan_dest"),
+                    text="Destination channel"
+                ),
+                id="dialog_add_channel_link"
+            )
+            ui.append("container_add_channel_link", content)
+        else:
+            ui.remove('dlg_add_chan_lnk')
+
+        self._open_dialog = None
         return ui
 
-    @event('dialog/submit')
+    @event('button/click')
+    def on_click(self, event, params, vars=None):
+        self._open_dialog = params[0]
+
+
     @event('form/submit')
     def on_submit(self, event, params, vars=None):
-        if params[0] == 'frmSettings':
+        cfg = self._config.config
+
+        # server settings
+        if params[0] == 'form_server':
+            self._tab = 0
             if vars.getvalue('action', '') == 'OK':
-                self._config.set(
+                cfg.set(
                     "welcometext",
                     vars.getvalue("welcometext", "")
                 )
+                cfg.set(
+                    "password",
+                    vars.getvalue("password", "")
+                )
+                try:
+                    cfg.set(
+                        "max_bandwidth",
+                        int(vars.getvalue("max_bandwidth", ""))
+                    )
+                except ValueError:
+                    pass  #TODO: message
+                try:
+                    cfg.set(
+                        "max_users",
+                        int(vars.getvalue("max_users", ""))
+                    )
+                except ValueError:
+                    pass  #TODO: message
                 self._config.save()
-            elif vars.getvalue('action', '') == 'Cancel':
-                self._config.load()
+
+        # channel settings
+        if params[0] == 'form_def_chan':
+            self._tab = 1
+            if vars.getvalue('action', '') == 'OK':
+                cfg.set("default_channel", vars.getvalue("default_channel"))
+                self._config.save()
+
+        if params[0] == 'form_del_chan':
+            self._tab = 1
+            del_chan = vars.getvalue("delete_channel")
+            for chan in cfg.channels[:]:
+                if del_chan == chan.name:
+                    cfg.channels.remove(chan)
+                    break
+            for lnk in cfg.channel_links[:]:
+                if del_chan in (lnk.source, lnk.destination):
+                    cfg.channel_links.remove(lnk)
+            self._config.save()
+
+        if params[0] == 'form_del_chan_lnk':
+            self._tab = 1
+            src, dest = vars.getvalue("delete_channel_link").split(" => ")
+            for lnk in cfg.channel_links[:]:
+                if src == lnk.source and dest == lnk.destination:
+                    cfg.channel_links.remove(lnk)
+            self._config.save()
+
+        if vars.getvalue('action', '') == 'Cancel':
+            self._config.load()
+
+    @event('dialog/submit')
+    def on_submit_dlg(self, event, params, vars=None):
+        if vars.getvalue('action', '') != 'OK':
+            return
+
+        cfg = self._config.config
+        if params[0] == 'dlg_add_chan':
+
+            # TODO message on empty chan_name
+            chan_name = vars.getvalue('chan_name')
+            if not chan_name:
+                return  # no channel name
+
+            if chan_name.lower() in (n.name.lower() for n in cfg.channels):
+                return  # channel exists
+
+            new_chan = backend.pylibconfig2.ConfGroup()
+            setattr(new_chan, "name", chan_name)
+            setattr(new_chan, "description", vars.getvalue('chan_descr'))
+            setattr(new_chan, "parent", vars.getvalue('chan_parent'))
+            if vars.getvalue('chan_silent'):
+                setattr(new_chan, "silent", True),
+            cfg.channels.append(new_chan)
+            self._config.save()
+            self._tab = 1
+
+        if params[0] == 'dlg_add_chan_lnk':
+            chan_src = vars.getvalue('chan_src')
+            chan_dest = vars.getvalue('chan_dest')
+            if chan_src == chan_dest:
+                return
+            new_lnk = backend.pylibconfig2.ConfGroup()
+            setattr(new_lnk, "source", chan_src)
+            setattr(new_lnk, "destination", chan_dest)
+            cfg.channel_links.append(new_lnk)
+            self._config.save()
+            self._tab = 1
+
+# TODO: check input for all submits
+# TODO: Warning message if no cert assigned
+# TODO: Move website content from here to layout file

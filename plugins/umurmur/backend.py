@@ -1,66 +1,48 @@
-import cStringIO
-import configobj
-
+import pylibconfig2
 from genesis.api import *
 from genesis.com import *
 from genesis import apis
 
-orig_welcome = "<br />Welcome to this server running <b>Murmur</b>." \
-               "<br />Enjoy your stay!<br />"
-new_welcome = "<br />Welcome to this server running <b>Murmur</b> " \
-              "on <b>arkOS</b>.<br />Enjoy your stay!<br />"
+arkos_welcome = "Welcome to uMurmur on arkOS!"
 
 
-class MurmurConfig(Plugin):
+class UMurmurConfig(Plugin):
     implements(IConfigurable)
     name = "Murmur"
-    id = "murmur"
+    id = "umurmur"
     iconfont = "gen-phone"
-    service_name = "murmur"
+    service_name = "umurmur"
 
     def __init__(self):
         self.config_file = self.app.get_config(self).cfg_file
-        self.config = configobj.ConfigObj()
+        self.config = pylibconfig2.Config("")
         self.service_mgr = self.app.get_backend(apis.services.IServiceManager)
 
     def load(self):
-        return
-        cfg = ConfManager.get().load('murmur', self.config_file)
-        self.config = configobj.ConfigObj(cfg.split("\n"))
-        self.rebrand_welcometext()
+        cfg = ConfManager.get().load('umurmur', self.config_file)
+        try:
+            self.config = pylibconfig2.Config(cfg)
+        except pylibconfig2.PyLibConfigErrors as e:
+            print e  # TODO: use logging system
+        self.config.welcometext = arkos_welcome
 
     def save(self):
-        return
-        was_running = False
-        if self.service_mgr.get_status(self.service_name) == "running":
-            was_running = True
+        running = self.is_service_running()
+        if running:
             self.service_mgr.stop(self.service_name)
-        out = cStringIO.StringIO()
-        self.config.write(out)
-        ConfManager.get().save("murmur", self.config_file, out.getvalue())
-        ConfManager.get().commit("murmur")
-        if was_running:
+        ConfManager.get().save("umurmur", self.config_file, str(self.config))
+        ConfManager.get().commit("umurmur")
+        if running:
             self.service_mgr.start(self.service_name)
-
-    def get(self, key, default=None):
-        return self.config.get(key, default)
-
-    def set(self, key, value):
-        self.config[key] = value
-
-    def items(self):
-        return self.config.items()
 
     def list_files(self):
         return [self.config_file]
 
-    def rebrand_welcometext(self):
-        if self.config["welcometext"] in [orig_welcome, ""]:
-            self.config["welcometext"] = new_welcome
-
+    def is_service_running(self):
+        return self.service_mgr.get_status(self.service_name) == "running"
 
 class GeneralConfig(ModuleConfig):
-    target = MurmurConfig
+    target = UMurmurConfig
     platform = ['arch', 'arkos']
 
     labels = {

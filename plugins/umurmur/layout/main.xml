@@ -1,27 +1,86 @@
 <xml>
+    <toolbar>
+        <hcontainer>
+            <button id="add_channel" text="Add channel" iconfont="gen-plus-circle" />
+            <button id="add_channel_link" text="Add channel link" iconfont="gen-plus-circle" />
+        </hcontainer>
+    </toolbar>
     <pad id="main">
-        <tabcontrol id="tabs" active="0">
-            <tabheader text="Settings" id="0" />
-            <tabbody id="0">
-                <container id="tab0" />
+        <tabcontrol id="tabs" active="tab0" >
+            <tabheader text="Server" id="tab0" />
+            <tabheader text="Channels" id="tab1" />
+            <tabheader text="Info" id="tab2"/>
+
+            <tabbody id="tab0">
+                <label size="5" text="General Mumble Server Settings" />
+                <pad>
+                    <container id="container_settings" />
+                </pad>
             </tabbody>
-            <tabheader text="Info" id="1"/>
-            <tabbody id="1">
-                <scrollcontainer width="100%">
-                    <dt id="all_config" width="100%">
+            <tabbody id="tab1">
+                <label size="5" text="Mumble Server Channels" />
+                <pad>
+                    <label size="3" text="Channels" />
+                    <dt id="table_channels" width="100%">
                         <dtr header="True">
-                            <dth width="1" />
                             <dth>
-                                <label text="Key" />
+                                <label text="Channel" />
                             </dth>
                             <dth>
-                                <label text="Value" />
+                                <label text="Parent Channel" />
                             </dth>
-                            <dth width="1" />
+                            <dth>
+                                <label text="Description" />
+                            </dth>
+                            <dth width="1">
+                                <label text="Silent" />
+                            </dth>
                         </dtr>
                     </dt>
-                </scrollcontainer>
+                    <label size="3" text="Channel Links" />
+                    <dt id="table_channel_links" width="100%">
+                        <dtr header="True">
+                            <dth>
+                                <label text="Source" />
+                            </dth>
+                            <dth width="1">
+                                <label text="" />
+                            </dth>
+                            <dth>
+                                <label text="Destination" />
+                            </dth>
+                        </dtr>
+                    </dt>
+                </pad>
+                <label size="5" text="Channel Settings" />
+                <pad>
+                    <pad><container id="container_default_channel" /></pad>
+                    <pad><container id="container_delete_channel" /></pad>
+                    <pad><container id="container_delete_channel_link" /></pad>
+                </pad>
+            </tabbody>
+            <tabbody id="tab2">
+                <dt id="all_config" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <label text="Key" />
+                        </dth>
+                        <dth>
+                            <label text="Value" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
             </tabbody>
         </tabcontrol>
+        <dialogbox id="dlg_add_chan" title='Add channel'>
+            <container id="container_add_channel" />
+        </dialogbox>
+        <dialogbox id="dlg_add_chan_lnk" title='Add channel link'>
+            <vcontainer>
+                <container id="container_add_channel_link" />
+            </vcontainer>
+        </dialogbox>
     </pad>
 </xml>
