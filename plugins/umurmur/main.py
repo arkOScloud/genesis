@@ -313,6 +313,9 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             chan_src = vars.getvalue('chan_src')
             chan_dest = vars.getvalue('chan_dest')
             if chan_src == chan_dest:
+                self.put_message(
+                    'warn', "Nope. I won't make a link with src == dest."
+                )
                 return
             new_lnk = backend.pylibconfig2.ConfGroup()
             setattr(new_lnk, "source", chan_src)
