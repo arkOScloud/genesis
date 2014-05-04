@@ -41,6 +41,7 @@ class UMurmurConfig(Plugin):
     def is_service_running(self):
         return self.service_mgr.get_status(self.service_name) == "running"
 
+
 class GeneralConfig(ModuleConfig):
     target = UMurmurConfig
     platform = ['arch', 'arkos']

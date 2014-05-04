@@ -10,7 +10,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
     folder = 'servers'
 
     def on_session_start(self):
-        self._config = backend.MurmurConfig(self.app)
+        self._config = backend.UMurmurConfig(self.app)
         self._config.load()
         self._tab = 0
         self._open_dialog = None
@@ -237,14 +237,18 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                         int(vars.getvalue("max_bandwidth", ""))
                     )
                 except ValueError:
-                    pass  #TODO: message
+                    self.put_message(
+                        'warn', 'Max. bandwidth must be an integer value.'
+                    )
                 try:
                     cfg.set(
                         "max_users",
                         int(vars.getvalue("max_users", ""))
                     )
                 except ValueError:
-                    pass  #TODO: message
+                    self.put_message(
+                        'warn', 'Max. users must be an integer value.'
+                    )
                 self._config.save()
 
         # channel settings
@@ -285,13 +289,14 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         cfg = self._config.config
         if params[0] == 'dlg_add_chan':
 
-            # TODO message on empty chan_name
             chan_name = vars.getvalue('chan_name')
             if not chan_name:
-                return  # no channel name
+                self.put_message('warn', 'Channel name cannot be empty.')
+                return
 
             if chan_name.lower() in (n.name.lower() for n in cfg.channels):
-                return  # channel exists
+                self.put_message('warn', 'Channel name already exists.')
+                return
 
             new_chan = backend.pylibconfig2.ConfGroup()
             setattr(new_chan, "name", chan_name)
