@@ -53,7 +53,8 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                     name="max_bandwidth",
                     value=cfg.get("max_bandwidth", 48000),
                 ),
-                text="Max. bandwidth"
+                text="Max. bandwidth",
+                help="In bits/second/user",
             ),
             UI.FormLine(
                 UI.TextInput(
@@ -238,7 +239,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                     )
                 except ValueError:
                     self.put_message(
-                        'warn', 'Max. bandwidth must be an integer value.'
+                        'warn', '"Max. bandwidth" must be an integer value.'
                     )
                 try:
                     cfg.set(
@@ -247,7 +248,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                     )
                 except ValueError:
                     self.put_message(
-                        'warn', 'Max. users must be an integer value.'
+                        'warn', '"Max. users" must be an integer value.'
                     )
                 self._config.save()
 
