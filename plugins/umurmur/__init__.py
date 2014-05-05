@@ -41,6 +41,11 @@ DEPENDENCIES = {
         },
         {
             "type": "module",
+            "name": "pyparsing",
+            "package": "pyparsing"
+        },
+        {
+            "type": "module",
             "name": "pylibconfig2",
             "package": "pylibconfig2"
         }
