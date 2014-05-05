@@ -1,7 +1,9 @@
 import pylibconfig2
+
 from genesis.api import *
 from genesis.com import *
 from genesis import apis
+from genesis.plugins.core.api import ISSLPlugin
 
 arkos_welcome = "Welcome to uMurmur on arkOS!"
 
@@ -45,9 +47,26 @@ class UMurmurConfig(Plugin):
 class GeneralConfig(ModuleConfig):
     target = UMurmurConfig
     platform = ['arch', 'arkos']
-
-    labels = {
-        'cfg_file': 'Configuration file'
-    }
-
+    labels = {'cfg_file': 'Configuration file'}
     cfg_file = '/etc/umurmur/umurmur.conf'
+
+
+class UMurmurSSLPlugin(Plugin):
+    implements(ISSLPlugin)
+    text = "Mumble Server (uMurmur)"
+    iconfont = "gen-phone"
+    cert_type = 'cert-key'
+
+    def enable_ssl(self, cert, key):
+        config = UMurmurConfig(self.app)
+        config.load()
+        config.config.certificate = cert
+        config.config.private_key = key
+        config.save()
+
+    def disable_ssl(self):
+        config = UMurmurConfig(self.app)
+        config.load()
+        config.config.certificate = "/etc/umurmur/umurmur.cert"
+        config.config.private_key = "/etc/umurmur/umurmur.key"
+        config.save()
