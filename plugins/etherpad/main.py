@@ -1,4 +1,4 @@
-from genesis.com import Plugin, Interface, implements
+from genesis.com import Plugin, implements
 from genesis import apis
 from genesis.utils import shell
 from genesis.plugins.users.backend import UsersBackend
@@ -7,8 +7,6 @@ import json
 import nginx
 import os
 
-import pyparsing
-pyparsing.Word
 
 class Etherpad(Plugin):
     implements(apis.webapps.IWebapp)
@@ -49,7 +47,7 @@ class Etherpad(Plugin):
                 ]
             )
 
-        # Create/Edit the Ghost config file
+        # Create/Edit the config file
         cfg = {
             "title": "Etherpad",
             "favicon": "favicon.ico",
@@ -86,7 +84,25 @@ class Etherpad(Plugin):
                 ]
             }
         }
+        with open(os.path.join(path, 'settings.json'), 'w') as f:
+            json.dump(cfg, f)
 
-        # Finally, make sure that permissions are set so that Ghost
-        # can make adjustments and save plugins when need be.
-        shell('chown -R ghost ' + path)
+        # Change owner of everything in the etherpad path
+        shell('chown -R etherpad ' + path)
+
+    def pre_remove(self, name, path):
+        pass
+
+    def post_remove(self, name):
+        users = UsersBackend(self.app)
+        users.del_user('etherpad')
+        s = apis.orders(self.app).get_interface('supervisor')
+        if s:
+            s[0].order('del', 'etherpad')
+
+    def ssl_enable(self, path, cfile, kfile):
+        pass
+
+    def ssl_disable(self, path):
+        pass
+

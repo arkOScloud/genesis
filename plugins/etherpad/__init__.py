@@ -47,7 +47,8 @@ GENERATION = 1
 
 # Webapp metadata
 WA_PLUGIN = 'Etherpad'
-DPATH = 'https://github.com/ether/etherpad-lite/tarball/1.4.0-rc1'
+DPATH = 'https://github.com/ether/etherpad-lite.git'
+#DPATH = 'https://github.com/ether/etherpad-lite/zipball/1.4.0-rc1'
 DBENGINE = None
 PHP = False
 NOMULTI = True
