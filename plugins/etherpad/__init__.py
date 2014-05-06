@@ -17,7 +17,7 @@ CATEGORIES = [
 ]
 VERSION = '1.4.0-rc1'
 
-AUTHOR = 'Heiner Tholen'
+AUTHOR = 'Heiner'
 HOMEPAGE = 'http://github.com/heinzK1X'
 APP_AUTHOR = "The Etherpad Foundation"
 APP_HOMEPAGE = "http://etherpad.org/"
