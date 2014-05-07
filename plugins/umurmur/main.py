@@ -137,9 +137,10 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         ui.append("container_delete_channel_link", content)
 
         # Tab 2: Info
+        # TODO: remove info tab
         for k, v in sorted(cfg.items()):
-            if k == "password":
-                v = "############"
+            if k in ("password", "channel_links", "channels"):
+                continue
             e = UI.DTR(
                 UI.IconFont(iconfont='gen-folder'),
                 UI.Label(text=k),
