@@ -137,9 +137,10 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         ui.append("container_delete_channel_link", content)
 
         # Tab 2: Info
+        # TODO: remove info tab
         for k, v in sorted(cfg.items()):
-            if k == "password":
-                v = "############"
+            if k in ("password", "channel_links", "channels"):
+                continue
             e = UI.DTR(
                 UI.IconFont(iconfont='gen-folder'),
                 UI.Label(text=k),
@@ -313,6 +314,9 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             chan_src = vars.getvalue('chan_src')
             chan_dest = vars.getvalue('chan_dest')
             if chan_src == chan_dest:
+                self.put_message(
+                    'warn', "Nope. I won't make a link with src == dest."
+                )
                 return
             new_lnk = backend.pylibconfig2.ConfGroup()
             setattr(new_lnk, "source", chan_src)

@@ -14,7 +14,7 @@ CATEGORIES = [
 ]
 VERSION = '1'
 
-AUTHOR = 'Heiner Tholen'
+AUTHOR = 'Heiner'
 HOMEPAGE = 'http://github.com/heinzK1X'
 APP_AUTHOR = "The Mumble Community"
 APP_HOMEPAGE = "http://mumble.sourceforge.net"
@@ -38,6 +38,11 @@ DEPENDENCIES = {
             "name": "uMurmur",
             "package": "umurmur",
             "binary": "umurmurd"
+        },
+        {
+            "type": "module",
+            "name": "pyparsing",
+            "package": "pyparsing"
         },
         {
             "type": "module",
