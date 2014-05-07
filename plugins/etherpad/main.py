@@ -19,33 +19,8 @@ class Etherpad(Plugin):
         pass
 
     def post_install(self, name, path, vars):
-        nodectl = apis.langassist(self.app).get_interface('NodeJS')
         users = UsersBackend(self.app)
-
-        if not os.path.exists('/usr/bin/python'):
-            os.symlink('/usr/bin/python2', '/usr/bin/python')
-
-        nodectl.install_from_package(path, 'production')
         users.add_user('etherpad')
-
-        s = apis.orders(self.app).get_interface('supervisor')
-        if s:
-            s[0].order(
-                'new',
-                'etherpad',
-                'program',
-                [
-                    ('directory', path),
-                    ('user', 'etherpad'),
-                    ('command', 'node %s' % os.path.join(
-                        path, 'node_modules/ep_etherpad-lite/node/server.js'
-                    )),
-                    ('autostart', 'true'), ('autorestart', 'true'),
-                    ('environment', 'NODE_ENV="production"'),
-                    ('stdout_logfile', '/var/log/etherpad.log'),
-                    ('stderr_logfile', '/var/log/etherpad.log')
-                ]
-            )
 
         # Create/Edit the config file
         cfg = {
@@ -63,7 +38,7 @@ class Etherpad(Plugin):
                 "synchronized as you type, so that everyone viewing this page "
                 "sees the same text. This allows you to collaborate seamlessly "
                 "on documents!\n\nGet involved with Etherpad at "
-                "http:\/\/etherpad.org, or with arkOS at http:\/\/arkos.io\n",
+                "http:\/\/etherpad.org, or with arkOS at http:\/\/arkos.io\n"
             ),
             "requireSession": False,
             "editOnly": False,
@@ -85,10 +60,27 @@ class Etherpad(Plugin):
             }
         }
         with open(os.path.join(path, 'settings.json'), 'w') as f:
-            json.dump(cfg, f)
+            json.dump(cfg, f, indent=4)
 
         # Change owner of everything in the etherpad path
         shell('chown -R etherpad ' + path)
+
+        # Make supervisor entry (and run it?)
+        s = apis.orders(self.app).get_interface('supervisor')
+        if s:
+            s[0].order(
+                'new',
+                'etherpad',
+                'program',
+                [
+                    ('directory', path),
+                    ('user', 'etherpad'),
+                    ('command', os.path.join(path, 'bin/run.sh')),
+                    ('autostart', 'true'), ('autorestart', 'true'),
+                    ('stdout_logfile', '/var/log/etherpad.log'),
+                    ('stderr_logfile', '/var/log/etherpad.log')
+                ]
+            )
 
     def pre_remove(self, name, path):
         pass
