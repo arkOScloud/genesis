@@ -25,7 +25,7 @@ class UMurmurConfig(Plugin):
         try:
             self.config = pylibconfig2.Config(cfg)
         except pylibconfig2.PyLibConfigErrors as e:
-            self.app.log.error(e)
+            print e  # TODO: use logging system
         self.config.welcometext = arkos_welcome
 
     def save(self):

@@ -1,8 +1,8 @@
 # Plugin metadata
-NAME = 'Mumble VoIP'
+NAME = 'Mumble Server'
 TYPE = 'plugin'
 ICON = 'gen-phone'
-DESCRIPTION = 'Host your own gaming VoIP server with Mumble'
+DESCRIPTION = 'Host your own Mumble server'
 LONG_DESCRIPTION = ('uMurmur is the server application for Mumble, an open '
                     'source Voice-over-IP (VoIP) client. This plugin hosts the '
                     'umurmur server and lets you manage it.')
