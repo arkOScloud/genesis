@@ -14,16 +14,16 @@ class UMurmurConfig(Plugin):
     id = "umurmur"
     iconfont = "gen-phone"
     service_name = "umurmur"
+    config = pylibconfig2.Config("")
 
     def __init__(self):
         self.config_file = self.app.get_config(self).cfg_file
-        self.config = pylibconfig2.Config("")
         self.service_mgr = self.app.get_backend(apis.services.IServiceManager)
 
     def load(self):
-        cfg = ConfManager.get().load('umurmur', self.config_file)
+        cfg_str = ConfManager.get().load('umurmur', self.config_file)
         try:
-            self.config = pylibconfig2.Config(cfg)
+            self.__class__.config = pylibconfig2.Config(cfg_str)
         except pylibconfig2.PyLibConfigErrors as e:
             print e  # TODO: use logging system
         self.config.welcometext = arkos_welcome
