@@ -12,7 +12,7 @@ LONG_DESCRIPTION = ('Etherpad allows you to edit documents collaboratively in '
 CATEGORIES = [
     {
         "primary": "Websites",
-        "secondary": ["Personal Cloud"]
+        "secondary": ["Personal Cloud", "Writing"]
     }
 ]
 VERSION = '1.4.0-rc1'
@@ -23,7 +23,13 @@ APP_AUTHOR = "The Etherpad Foundation"
 APP_HOMEPAGE = "http://etherpad.org/"
 LOGO = True
 
-SERVICES = []
+SERVICES = [
+    {
+        "name": "MariaDB",
+        "binary": "mysqld",
+        "ports": []
+    },
+]
 
 # Plugin parameters
 MODULES = ['main']
@@ -40,7 +46,24 @@ DEPENDENCIES = {
             "type": "plugin",
             "name": "NodeJS",
             "package": "nodejs"
-        }
+        },
+        {
+            "type": "app",
+            "name": "MariaDB",
+            "package": "mariadb",
+            "binary": "mysqld"
+        },
+        {
+            "type": "plugin",
+            "name": "MariaDB",
+            "package": "db-mariadb"
+        },
+        {
+            "type": "app",
+            "name": "make",
+            "package": "make",
+            "binary": "make"
+        },
     ]
 }
 GENERATION = 1
@@ -48,8 +71,7 @@ GENERATION = 1
 # Webapp metadata
 WA_PLUGIN = 'Etherpad'
 DPATH = 'https://github.com/ether/etherpad-lite.git'
-#DPATH = 'https://github.com/ether/etherpad-lite/zipball/1.4.0-rc1'
-DBENGINE = None
+DBENGINE = 'MariaDB'
 PHP = False
 NOMULTI = True
 SSL = True
