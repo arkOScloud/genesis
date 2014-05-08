@@ -183,31 +183,34 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 ),
                 id="dialog_add_channel"
             )
-            ui.append("container_add_channel", content)
-        else:
-            ui.remove('dlg_add_chan')
+            box = UI.DialogBox(
+                content,
+                id="dlg_add_chan",
+                title='Add channel'
+            )
+            ui.append("dialog_container", box)
 
         if self._open_dialog == 'add_channel_link':
             content = UI.SimpleForm(
-                UI.FormLine(
+                UI.HContainer(
                     UI.SelectInput(*list(
                         UI.SelectOption(text=c, value=c)
                         for c in sorted(chan_to_par.keys()),
                     ), name="chan_src"),
-                    text="Source channel"
-                ),
-                UI.FormLine(
+                    UI.Label(text=" => "),
                     UI.SelectInput(*list(
                         UI.SelectOption(text=c, value=c)
                         for c in sorted(chan_to_par.keys()),
                     ), name="chan_dest"),
-                    text="Destination channel"
                 ),
                 id="dialog_add_channel_link"
             )
-            ui.append("container_add_channel_link", content)
-        else:
-            ui.remove('dlg_add_chan_lnk')
+            box = UI.DialogBox(
+                content,
+                id="dlg_add_chan_lnk",
+                title='Add channel link'
+            )
+            ui.append("dialog_container", box)
 
         self._open_dialog = None
         return ui
@@ -316,6 +319,13 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             if chan_src == chan_dest:
                 self.put_message(
                     'warn', "Nope. I won't make a link with src == dest."
+                )
+                return
+            if (chan_src, chan_dest) in (
+                    (lnk.source, lnk.destination) for lnk in cfg.channel_links
+            ):
+                self.put_message(
+                    'warn', "Nope. This channel link exists."
                 )
                 return
             new_lnk = backend.pylibconfig2.ConfGroup()

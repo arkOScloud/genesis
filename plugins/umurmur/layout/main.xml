@@ -74,13 +74,6 @@
                 </dt>
             </tabbody>
         </tabcontrol>
-        <dialogbox id="dlg_add_chan" title='Add channel'>
-            <container id="container_add_channel" />
-        </dialogbox>
-        <dialogbox id="dlg_add_chan_lnk" title='Add channel link'>
-            <vcontainer>
-                <container id="container_add_channel_link" />
-            </vcontainer>
-        </dialogbox>
+        <container id="dialog_container" />
     </pad>
 </xml>
