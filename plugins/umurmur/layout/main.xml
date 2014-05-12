@@ -1,8 +1,8 @@
 <xml>
     <toolbar>
         <hcontainer>
-            <button id="add_channel" text="Add channel" iconfont="gen-plus-circle" />
-            <button id="add_channel_link" text="Add channel link" iconfont="gen-plus-circle" />
+            <button id="dlg_add_channel" text="Add channel" iconfont="gen-plus-circle" />
+            <button id="dlg_add_channel_link" text="Add channel link" iconfont="gen-plus-circle" />
         </hcontainer>
     </toolbar>
     <pad id="main">
@@ -27,14 +27,12 @@
                                 <label text="Channel" />
                             </dth>
                             <dth>
-                                <label text="Parent Channel" />
-                            </dth>
-                            <dth>
                                 <label text="Description" />
                             </dth>
                             <dth width="1">
                                 <label text="Silent" />
                             </dth>
+                            <dth width="1" />
                         </dtr>
                     </dt>
                     <label size="3" text="Channel Links" />
@@ -49,6 +47,7 @@
                             <dth>
                                 <label text="Destination" />
                             </dth>
+                            <dth width="1" />
                         </dtr>
                     </dt>
                 </pad>
