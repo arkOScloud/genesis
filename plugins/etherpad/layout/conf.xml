@@ -1,0 +1,9 @@
+<xml>
+    <label text="These options are MANDATORY!" />
+	<formline text="Admin Username">
+	    <textinput name="ether_admin" id="ether_admin" value="Admin" />
+	</formline>
+	<formline text="Admin Password">
+	    <textinput name="ether_pass" id="ether_pass" password="True" />
+	</formline>
+</xml>
