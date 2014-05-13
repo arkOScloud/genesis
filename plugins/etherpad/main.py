@@ -16,20 +16,20 @@ class Etherpad(Plugin):
     icon = 'gen-pen'
 
     addtoblock = [
-        nginx.Location('= /favicon.ico',
-            nginx.Key('log_not_found', 'off'),
-            nginx.Key('access_log', 'off')
-        ),
+        nginx.Location('/',
+            nginx.Key('proxy_pass', 'http://127.0.0.1:9001'),
+            nginx.Key('proxy_set_header', 'X-Real-IP $remote_addr'),
+            nginx.Key('proxy_set_header', 'Host $host'),
+            nginx.Key('proxy_buffering', 'off')
+        )
     ]
 
     def pre_install(self, name, vars):
         eth_name = vars.getvalue('ether_admin', '')
         eth_pass = vars.getvalue('ether_pass', '')
         if not (eth_name and eth_pass):
-            raise Exception('You must enter an admin name AND password!')
-        #apis.databases(self.app).get_interface('MariaDB').validate(
-        #    name, name, "S0me4akepa55"
-        #)
+            raise Exception('You must enter an admin name AND password'
+                            'in the App Settings tab!')
 
     def post_install(self, name, path, vars):
         users = UsersBackend(self.app)
@@ -49,8 +49,8 @@ class Etherpad(Plugin):
         cfg = {
             "title": "Etherpad",
             "favicon": "favicon.ico",
-            "ip": vars.getvalue('addr'),
-            "port": vars.getvalue('port'),
+            "ip": "127.0.0.1",
+            "port": "9001",
             "sessionKey": session_key,
             "dbType": "mysql",
             "dbSettings": {
