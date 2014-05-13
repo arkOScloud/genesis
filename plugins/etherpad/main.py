@@ -17,7 +17,7 @@ class Etherpad(Plugin):
 
     addtoblock = [
         nginx.Location('/',
-            nginx.Key('proxy_pass', 'http://127.0.0.1:9001'),
+            nginx.Key('proxy_pass', 'http://127.0.0.1:2369'),
             nginx.Key('proxy_set_header', 'X-Real-IP $remote_addr'),
             nginx.Key('proxy_set_header', 'Host $host'),
             nginx.Key('proxy_buffering', 'off')
@@ -30,6 +30,10 @@ class Etherpad(Plugin):
         if not (eth_name and eth_pass):
             raise Exception('You must enter an admin name AND password'
                             'in the App Settings tab!')
+        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        apis.databases(self.app).get_interface('MariaDB').validate(
+            name, name, eth_pass, conn
+        )
 
     def post_install(self, name, path, vars):
         users = UsersBackend(self.app)
@@ -50,7 +54,7 @@ class Etherpad(Plugin):
             "title": "Etherpad",
             "favicon": "favicon.ico",
             "ip": "127.0.0.1",
-            "port": "9001",
+            "port": "2369",
             "sessionKey": session_key,
             "dbType": "mysql",
             "dbSettings": {
@@ -121,6 +125,10 @@ class Etherpad(Plugin):
                     ('stderr_logfile', '/var/log/etherpad.log')
                 ]
             )
+        #TODO: install some plugins right away..
+
+        #TODO: tell user, that the first start of etherpad takes quite long
+        #TODO: and that he might have to restart it in supervisor
 
     def pre_remove(self, name, path):
         with open(os.path.join(path, 'settings.json')) as f:
