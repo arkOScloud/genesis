@@ -1,4 +1,5 @@
 import os
+import random
 import re
 
 from genesis.api import *
@@ -35,6 +36,14 @@ class FirstRun(CategoryPlugin, URLHandler):
             if self.arch[1] != 'Raspberry Pi':
                 ui.remove('rpi-sdc')
                 ui.remove('rpi-ogm')
+            if self.arch[1] != 'Cubieboard':
+                ui.remove('cbb-mac')
+            else:
+                mac = ':'.join(map(lambda x: "%02x" % x, 
+                    [0x00, 0x16, 0x3e, random.randint(0x00, 0x7f), 
+                    random.randint(0x00, 0xff), 
+                    random.randint(0x00, 0xff)]))
+                ui.find('macaddr').set('value', mac)
             tz_sel = [UI.SelectOption(text = x, value = x,
                         selected = False)
                         for x in zonelist.zones]
@@ -118,6 +127,7 @@ class FirstRun(CategoryPlugin, URLHandler):
             zone = vars.getvalue('zoneselect', 'UTC')
             resize = vars.getvalue('resize', '0') if self.arch[1] == 'Raspberry Pi' else '0'
             gpumem = vars.getvalue('gpumem', '0') if self.arch[1] == 'Raspberry Pi' else '0'
+            macaddr = vars.getvalue('macaddr', '') if self.arch[1] in ['Cubieboard2', 'Cubietruck'] else ''
             ssh_as_root = vars.getvalue('ssh_as_root', '0')
 
             if not hostname:
@@ -146,6 +156,11 @@ class FirstRun(CategoryPlugin, URLHandler):
                     shell('sed -i "/gpu_mem=/c\gpu_mem=16" /boot/config.txt')
                 else:
                     shell('echo "gpu_mem=16" >> /boot/config.txt')
+
+            if macaddr != '' and self.arch[1] == 'Cubieboard2':
+                open('/boot/uEnv.txt', 'w').write('extraargs=mac_addr=%s\n'%macaddr)
+            elif macaddr != '' and self.arch[1] == 'Cubietruck':
+                open('/etc/modprobe.d/gmac.conf', 'w').write('options sunxi_gmac mac_str="%s"\n'%macaddr)
 
             zone = zone.split('/')
             if len(zone) > 1:
