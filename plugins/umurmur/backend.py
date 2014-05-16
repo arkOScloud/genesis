@@ -14,16 +14,16 @@ class UMurmurConfig(Plugin):
     id = "umurmur"
     iconfont = "gen-phone"
     service_name = "umurmur"
-    config = pylibconfig2.Config("")
 
     def __init__(self):
         self.config_file = self.app.get_config(self).cfg_file
         self.service_mgr = self.app.get_backend(apis.services.IServiceManager)
+        self.config = pylibconfig2.Config("")
 
     def load(self):
         cfg_str = ConfManager.get().load('umurmur', self.config_file)
         try:
-            self.__class__.config = pylibconfig2.Config(cfg_str)
+            self.config = pylibconfig2.Config(cfg_str)
         except pylibconfig2.PyLibConfigErrors as e:
             self.app.log.error(e)
         self.config.welcometext = arkos_welcome
@@ -59,6 +59,7 @@ class UMurmurSSLPlugin(Plugin):
 
     def enable_ssl(self, cert, key):
         config = UMurmurConfig(self.app)
+        print config
         config.load()
         config.config.certificate = cert
         config.config.private_key = key
@@ -66,6 +67,7 @@ class UMurmurSSLPlugin(Plugin):
 
     def disable_ssl(self):
         config = UMurmurConfig(self.app)
+        print config
         config.load()
         config.config.certificate = "/etc/umurmur/umurmur.cert"
         config.config.private_key = "/etc/umurmur/umurmur.key"

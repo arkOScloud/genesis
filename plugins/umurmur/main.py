@@ -9,14 +9,17 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
     iconfont = 'gen-phone'
     folder = 'servers'
 
-    def on_session_start(self):
+    def on_init(self):
         self._config = backend.UMurmurConfig(self.app)
         self._config.load()
+
+    def on_session_start(self):
         self._tab = 0
         self._open_dialog = None
         self.update_services()
 
     def get_main_ui(self):
+        print self._config
         ui = self.app.inflate('umurmur:main')
         ui.find('tabs').set('active', 'tab' + str(self._tab))
         cfg = self._config.config
@@ -69,7 +72,6 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
 
         # Tab 1: Channels
         # TODO password for channels
-        # TODO Tree View of channels
 
         # channels
         channels = dict((c.name, c) for c in cfg.channels)
