@@ -109,7 +109,8 @@ def detect_architecture():
         elif 'Generic AM33XX' in cpuinfo['Hardware'] and cpuinfo['CPU part'] == '0xc08':
             btype = 'BeagleBone Black'
         # Is this a Cubieboard (series)?
-        elif cpuinfo['Hardware'] == 'sun7i' and cpuinfo['CPU part'] == '0xc08':
+        elif cpuinfo['Hardware'] == 'sun7i' and cpuinfo['CPU part'] == '0xc07':
+            meminfo = {}
             # Since both the Cubieboard2 and Cubietruck have the same processor,
             # we need to check memory size to make a good guess.
             for x in shell('cat /proc/meminfo').split('\n'):
