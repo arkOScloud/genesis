@@ -34,11 +34,13 @@ class Ghost(Plugin):
         if not os.path.exists('/usr/bin/python') and os.path.exists('/usr/bin/python'):
             os.symlink('/usr/bin/python2', '/usr/bin/python')
 
-        # A bug in 0.4.1 prevents sqlite3@2.1.19 from installing properly.
-        # Fallback to 2.1.15
         d = json.loads(open(os.path.join(path, 'package.json'), 'r').read())
-        d['dependencies']['sqlite3'] = '2.1.15'
+        del d['dependencies']['bcryptjs']
+        d['dependencies']['bcrypt'] = '0.7.8'
         open(os.path.join(path, 'package.json'), 'w').write(json.dumps(d))
+        d = open(os.path.join(path, 'core/server/models/user.js'), 'r').read()
+        d = d.replace('bcryptjs', 'bcrypt')
+        open(os.path.join(path, 'core/server/models/user.js'), 'w').write(d)
 
         nodectl.install_from_package(path, 'production')
         users.add_user('ghost')

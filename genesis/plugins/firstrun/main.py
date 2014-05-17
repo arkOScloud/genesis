@@ -1,4 +1,5 @@
 import os
+import random
 import re
 
 from genesis.api import *
@@ -33,8 +34,17 @@ class FirstRun(CategoryPlugin, URLHandler):
 
         if self._step == 4:
             if self.arch[1] != 'Raspberry Pi':
-                ui.remove('rpi-sdc')
                 ui.remove('rpi-ogm')
+            if self.arch[1] not in ['Cubieboard2', 'Cubietruck']:
+                ui.remove('cbb-mac')
+            if self.arch[1] in ['Unknown', 'General']:
+                ui.remove('sdc')
+            else:
+                mac = ':'.join(map(lambda x: "%02x" % x, 
+                    [0x54, 0xb3, 0xeb, random.randint(0x00, 0x7f), 
+                    random.randint(0x00, 0xff), 
+                    random.randint(0x00, 0xff)]))
+                ui.find('macaddr').set('value', mac)
             tz_sel = [UI.SelectOption(text = x, value = x,
                         selected = False)
                         for x in zonelist.zones]
@@ -69,10 +79,13 @@ class FirstRun(CategoryPlugin, URLHandler):
 
         return ui
 
-    def resize(self):
-        shell_stdin('fdisk /dev/mmcblk0', 'd\n2\nn\np\n2\n\n\nw\n')
+    def resize(self, part):
+        if part == 1:
+            shell_stdin('fdisk /dev/mmcblk0', 'd\nn\np\n1\n\n\nw\n')
+        else:
+            shell_stdin('fdisk /dev/mmcblk0', 'd\n2\nn\np\n2\n\n\nw\n')
         f = open('/etc/cron.d/resize', 'w')
-        f.write('@reboot root resize2fs /dev/mmcblk0p2\n')
+        f.write('@reboot root resize2fs /dev/mmcblk0p%s\n'%part)
         f.write('@reboot root rm /etc/cron.d/resize\n')
         f.close()
         self.app.gconfig.set('genesis', 'restartmsg', 'yes')
@@ -116,8 +129,9 @@ class FirstRun(CategoryPlugin, URLHandler):
         if params[0] == 'frmSettings':
             hostname = vars.getvalue('hostname', '')
             zone = vars.getvalue('zoneselect', 'UTC')
-            resize = vars.getvalue('resize', '0') if self.arch[1] == 'Raspberry Pi' else '0'
+            resize = vars.getvalue('resize', '0') if self.arch[1] in ['Cubieboard2', 'Cubietruck', 'Raspberry Pi'] else '0'
             gpumem = vars.getvalue('gpumem', '0') if self.arch[1] == 'Raspberry Pi' else '0'
+            macaddr = vars.getvalue('macaddr', '') if self.arch[1] in ['Cubieboard2', 'Cubietruck'] else ''
             ssh_as_root = vars.getvalue('ssh_as_root', '0')
 
             if not hostname:
@@ -132,7 +146,7 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self.nb.sethostname(hostname)
             
             if resize != '0':
-                reboot = self.resize()
+                reboot = self.resize(2 if self.arch[1] == 'Raspberry Pi' else 1)
                 self.put_message('info', 'Remember to restart your arkOS node after this wizard. To do this, click "Settings > Reboot".')
            
             if ssh_as_root != '0':
@@ -146,6 +160,11 @@ class FirstRun(CategoryPlugin, URLHandler):
                     shell('sed -i "/gpu_mem=/c\gpu_mem=16" /boot/config.txt')
                 else:
                     shell('echo "gpu_mem=16" >> /boot/config.txt')
+
+            if macaddr != '' and self.arch[1] == 'Cubieboard2':
+                open('/boot/uEnv.txt', 'w').write('extraargs=mac_addr=%s\n'%macaddr)
+            elif macaddr != '' and self.arch[1] == 'Cubietruck':
+                open('/etc/modprobe.d/gmac.conf', 'w').write('options sunxi_gmac mac_str="%s"\n'%macaddr)
 
             zone = zone.split('/')
             if len(zone) > 1:
