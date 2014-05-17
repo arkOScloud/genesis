@@ -59,7 +59,6 @@ class UMurmurSSLPlugin(Plugin):
 
     def enable_ssl(self, cert, key):
         config = UMurmurConfig(self.app)
-        print config
         config.load()
         config.config.certificate = cert
         config.config.private_key = key
@@ -67,7 +66,6 @@ class UMurmurSSLPlugin(Plugin):
 
     def disable_ssl(self):
         config = UMurmurConfig(self.app)
-        print config
         config.load()
         config.config.certificate = "/etc/umurmur/umurmur.cert"
         config.config.private_key = "/etc/umurmur/umurmur.key"

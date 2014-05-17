@@ -19,7 +19,6 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         self.update_services()
 
     def get_main_ui(self):
-        print self._config
         ui = self.app.inflate('umurmur:main')
         ui.find('tabs').set('active', 'tab' + str(self._tab))
         cfg = self._config.config
