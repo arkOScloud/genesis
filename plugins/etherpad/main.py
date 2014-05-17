@@ -68,7 +68,7 @@ class Etherpad(Plugin):
                 "synchronized as you type, so that everyone viewing this page "
                 "sees the same text. This allows you to collaborate seamlessly "
                 "on documents!\n\nGet involved with Etherpad at "
-                "http:\/\/etherpad.org, or with arkOS at http:\/\/arkos.io\n"
+                "http://etherpad.org, or with arkOS at http://arkos.io\n"
             ),
             "requireSession": False,
             "editOnly": False,
@@ -125,10 +125,13 @@ class Etherpad(Plugin):
                     ('stderr_logfile', '/var/log/etherpad.log')
                 ]
             )
+
+        self.put_message('warn',
+                         'First startup of Etherpad takes several minutes.')
         #TODO: install some plugins right away..
 
-        #TODO: tell user, that the first start of etherpad takes quite long
-        #TODO: and that he might have to restart it in supervisor
+        #TODO: check if supervisor process starts
+        #TODO: make github issue for supervisor log not showing up
 
     def pre_remove(self, name, path):
         with open(os.path.join(path, 'settings.json')) as f:
