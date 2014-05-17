@@ -13,7 +13,7 @@ CATEGORIES = [
         "secondary": ["Blogs", "Websites", "CMS"]
     }
 ]
-VERSION = '0.4.2-1'
+VERSION = '0.4.2-2'
 
 AUTHOR = 'ajvb'
 HOMEPAGE = 'http://arkos.io'
@@ -38,6 +38,11 @@ DEPENDENCIES = {
             "type": "plugin",
             "name": "NodeJS",
             "package": "nodejs"
+        },
+        {
+            "type": "plugin",
+            "name": "Supervisor",
+            "package": "supervisor"
         }
     ]
 }
