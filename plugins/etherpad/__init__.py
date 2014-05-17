@@ -64,6 +64,11 @@ DEPENDENCIES = {
             "package": "make",
             "binary": "make"
         },
+        {
+            "type": "plugin",
+            "name": "Supervisor",
+            "package": "supervisor"
+        },
     ]
 }
 GENERATION = 1
