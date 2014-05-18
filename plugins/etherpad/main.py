@@ -100,9 +100,6 @@ class Etherpad(Plugin):
         with open(os.path.join(path, 'settings.json'), 'w') as f:
             json.dump(cfg, f, indent=4)
 
-        # Change owner of everything in the etherpad path
-        shell('chown -R etherpad ' + path)
-
         # node-gyp needs the HOME variable to be set
         with open(os.path.join(path, 'bin/run.sh')) as f:
             run_script = f.readlines()
@@ -141,11 +138,11 @@ class Etherpad(Plugin):
                 ]
             )
 
+        # Change owner of everything in the etherpad path
         shell('chown -R etherpad ' + path)
-
-        #TODO: put: 'First startup of Etherpad takes several minutes.')
-        #TODO: check if supervisor process starts
-        #TODO: make github issue for supervisor log not showing up
+        #TODO: make more user friendly: supervisor process
+        #TODO: make more user friendly: enabling ssl
+        #TODO: user auth with nginx??
 
     def pre_remove(self, name, path):
         with open(os.path.join(path, 'settings.json')) as f:
