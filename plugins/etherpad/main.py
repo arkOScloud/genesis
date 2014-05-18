@@ -115,15 +115,14 @@ class Etherpad(Plugin):
             raise RuntimeError(
                 "Sorry Bro, could not install etherpad dependencies.")
 
-        # Install some plugins right away..
-        # http://blog.etherpad.org/2013/01/31/9-etherpad-plugins-to-extend-functionality/
+        # Install selected plugins
         mods = os.path.join(path, "node_modules")
         os.mkdir(mods)
         for var in vars:
             var = str(var)
             if var.startswith('ep_plugin/') and int(vars.getvalue(var)):
                 var = var.split("/")[1]
-                shell('cd %s && npm install ep_%s' % mods, var)
+                shell('cd %s && npm install ep_%s' % (mods, var))
 
         # Make supervisor entry
         s = apis.orders(self.app).get_interface('supervisor')
