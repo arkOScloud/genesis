@@ -307,7 +307,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             setattr(new_chan, "name", chan_name)
             setattr(new_chan, "description", vars.getvalue('chan_descr'))
             setattr(new_chan, "parent", vars.getvalue('chan_parent'))
-            if vars.getvalue('chan_silent'):
+            if int(vars.getvalue('chan_silent')):
                 setattr(new_chan, "silent", True),
             cfg.channels.append(new_chan)
             self._config.save()
