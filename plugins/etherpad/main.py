@@ -8,6 +8,7 @@ import json
 import nginx
 import os
 import random
+import subprocess
 
 
 class Etherpad(Plugin):
@@ -109,7 +110,22 @@ class Etherpad(Plugin):
         with open(os.path.join(path, 'bin/run.sh'), 'w') as f:
             f.writelines(run_script)
 
-        # Make supervisor entry (and run it?)
+        # Install deps right away
+        if not shell(os.path.join(path, 'bin/installDeps.sh') + ' || exit 1'):
+            raise RuntimeError(
+                "Sorry Bro, could not install etherpad dependencies.")
+
+        # Install some plugins right away..
+        # http://blog.etherpad.org/2013/01/31/9-etherpad-plugins-to-extend-functionality/
+        mods = os.path.join(path, "node_modules")
+        os.mkdir(mods)
+        for var in vars:
+            var = str(var)
+            if var.startswith('ep_plugin/') and int(vars.getvalue(var)):
+                var = var.split("/")[1]
+                shell('cd %s && npm install ep_%s' % mods, var)
+
+        # Make supervisor entry
         s = apis.orders(self.app).get_interface('supervisor')
         if s:
             s[0].order(
@@ -126,10 +142,9 @@ class Etherpad(Plugin):
                 ]
             )
 
-        self.put_message('warn',
-                         'First startup of Etherpad takes several minutes.')
-        #TODO: install some plugins right away..
+        shell('chown -R etherpad ' + path)
 
+        #TODO: put: 'First startup of Etherpad takes several minutes.')
         #TODO: check if supervisor process starts
         #TODO: make github issue for supervisor log not showing up
 

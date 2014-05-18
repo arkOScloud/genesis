@@ -1,9 +1,18 @@
 <xml>
-    <label text="These options are MANDATORY!" />
+    <label text="These options are MANDATORY! Especially the password." />
 	<formline text="Admin Username">
 	    <textinput name="ether_admin" id="ether_admin" value="Admin" />
 	</formline>
 	<formline text="Admin Password">
 	    <textinput name="ether_pass" id="ether_pass" password="True" />
 	</formline>
+    <label text="Plugins to be preinstalled. (More plugins can be found in http://your-etherpad-domain/admin/plugins)" />
+    <checkbox name="ep_plugin/adminpads" text="adminpads - Gives the ability to list and administrate all pads on admin page." checked="True" />
+<!--<checkbox name="draw" text="draw - Really real time Collaborative painting and drawing with Etherpad" checked="True" />-->
+    <checkbox name="ep_plugin/headings" text="headings - Adds heading support to Etherpad Lite." checked="True" />
+    <checkbox name="ep_plugin/historicalsearch" text="historicalsearch - Search through the history of documents to find when a query/search pattern or string existed." checked="True" />
+    <checkbox name="ep_plugin/offline_edit" text="offline_edit - View your pad data even if you are disconnected from the Internets." checked="True" />
+    <checkbox name="ep_plugin/page_view" text="page_view - Add support to do 'page view', with a toggle on/off option in Settings, also Page Breaks with Control Enter." checked="True" />
+    <checkbox name="ep_plugin/timesliderdiff" text="timesliderdiff - See a diff view showing the changes between the latest pad and a revision." checked="True" />
+    <checkbox name="ep_plugin/webrtc" text="webrtc - WebRTC based audio/video chat to Etherpad." checked="False" />
 </xml>
