@@ -161,8 +161,26 @@ class Etherpad(Plugin):
             s[0].order('del', 'etherpad')
 
     def ssl_enable(self, path, cfile, kfile):
-        pass
+        name = os.path.basename(path)
+        n = nginx.loadf('/etc/nginx/sites-available/%s' % name)
+        for x in n.servers:
+            if x.filter('Location', '/'):
+                x.remove(x.filter('Location', '/')[0])
+                self.addtoblock[0].add(
+                    nginx.Key('proxy_set_header',
+                              'X-Forwarded-For $proxy_add_x_forwarded_for'),
+                    nginx.Key('proxy_set_header',
+                              'X-Forwarded-Proto $scheme'),
+                )
+                x.add(self.addtoblock[0])
+                nginx.dumpf(n, '/etc/nginx/sites-available/%s' % name)
 
     def ssl_disable(self, path):
-        pass
+        name = os.path.basename(path)
+        n = nginx.loadf('/etc/nginx/sites-available/%s' % name)
+        for x in n.servers:
+            if x.filter('Location', '/'):
+                x.remove(x.filter('Location', '/')[0])
+                x.add(self.addtoblock[0])
+                nginx.dumpf(n, '/etc/nginx/sites-available/%s' % name)
 
