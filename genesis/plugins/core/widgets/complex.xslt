@@ -48,6 +48,9 @@
 
 <xsl:template match="listitem">
     <li class="{x:iif(@active, 'active', '')}" onclick="return Genesis.query('/handle/listitem/click/{@id}');">
+        <xsl:if test="@iconfont">
+            <i class="{@iconfont}"></i>&#160;
+        </xsl:if>
         <xsl:apply-templates />
     </li>
 </xsl:template>

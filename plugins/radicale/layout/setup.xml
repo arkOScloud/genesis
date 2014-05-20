@@ -1,5 +1,5 @@
 <xml>
-    <label size="5" text="Calendar/Contacts Server Setup" />
+    <h1 class="page-header">Calendar/Contacts Server Setup</h1>
     <pad id="main">
     	<simpleform id="frmSetup">
     	    <formline text="Address" help="This should be the web address you want this calendar server to be visible on. For example, 'www.example.com'. It must be a DNS-resolvable name pointing at this server.">

@@ -6,18 +6,18 @@
                 <xsl:if test="not(@hideok = 'True')">
                     <xsl:choose>
                         <xsl:when test="@mp != ''">
-                            <btn text="OK" onclick="form" action="OK" form="{@id}" design="primary" mp="True" />
+                            <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" mp="True" />
                         </xsl:when>
                         <xsl:otherwise>
-                            <btn text="OK" onclick="form" action="OK" form="{@id}" design="primary" />
+                            <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:if>
                 <xsl:if test="not(@hidecancel = 'True')">
-                    <btn text="Cancel" onclick="form" action="Cancel" form="{@id}"/>
+                    <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" size="reg"/>
                 </xsl:if>
                 <xsl:if test="@miscbtn">
-                    <btn text="{@miscbtn}" id="{@miscbtnid}"/>
+                    <btn text="{@miscbtn}" id="{@miscbtnid}" size="reg"/>
                 </xsl:if>
             </formline>
         </div>
@@ -78,20 +78,20 @@
                     <xsl:when test="@mp != ''">
                         <xsl:choose>
                             <xsl:when test="@yesno != ''">
-                                <btn text="Yes" onclick="form" action="OK" form="{@id}" design="primary" mp="True" />
+                                <btn text="Yes" onclick="form" action="OK" form="{@id}" size="reg" design="primary" mp="True" />
                             </xsl:when>
                             <xsl:otherwise>
-                                <btn text="OK" onclick="form" action="OK" form="{@id}" design="primary" mp="True" />
+                                <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" mp="True" />
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:choose>
                             <xsl:when test="@yesno != ''">
-                                <btn text="Yes" onclick="form" action="OK" form="{@id}" design="primary" />
+                                <btn text="Yes" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
                             </xsl:when>
                             <xsl:otherwise>
-                                <btn text="OK" onclick="form" action="OK" form="{@id}" design="primary" />
+                                <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:otherwise>
@@ -100,15 +100,15 @@
             <xsl:if test="not(@hidecancel = 'True')">
                 <xsl:choose>
                     <xsl:when test="@yesno != ''">
-                        <btn text="No" onclick="form" action="Cancel" form="{@id}"/>
+                        <btn text="No" onclick="form" action="Cancel" form="{@id}" size="reg" />
                     </xsl:when>
                     <xsl:otherwise>
-                        <btn text="Cancel" onclick="form" action="Cancel" form="{@id}"/>
+                        <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" size="reg" />
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>
             <xsl:if test="@miscbtn">
-                <btn text="{@miscbtn}" id="{@miscbtnid}"/>
+                <btn text="{@miscbtn}" id="{@miscbtnid}" size="reg" />
             </xsl:if>
                 </div>
             </div>
@@ -132,10 +132,10 @@
 
                 <div class="modal-footer">
                     <xsl:if test="not(@hidecancel = 'True')">
-                        <btn text="Cancel" onclick="form" action="Cancel" form="{@id}"/>
+                        <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" size="reg" />
                     </xsl:if>
-                    <btn text="No" onclick="form" action="Reject" form="{@id}" design="primary" />
-                    <btn text="Yes" onclick="form" action="Confirm" form="{@id}" design="primary" />
+                    <btn text="No" onclick="form" action="Reject" form="{@id}" size="reg" design="primary" />
+                    <btn text="Yes" onclick="form" action="Confirm" form="{@id}" size="reg" design="primary" />
                 </div>
             </div>
         </div>
@@ -168,10 +168,10 @@
                 </div>
                 <div class="modal-footer">
                     <xsl:if test="not(@hideok = 'True')">
-                        <btn text="OK" onclick="form" action="OK" form="{@id}" design="primary" modal="true" />
+                        <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" modal="true" />
                     </xsl:if>
                     <xsl:if test="not(@hidecancel = 'True')">
-                        <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" modal="true" />
+                        <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" modal="true" size="reg" />
                     </xsl:if>
                 </div>
             </div>
@@ -211,13 +211,13 @@
 
                 <div class="modal-footer">
                     <xsl:if test="not(@hideok = 'True')">
-                        <btn text="Upload" onclick="form" action="OK" form="{@id}" design="primary" mp="True" />
+                        <btn text="Upload" onclick="form" action="OK" form="{@id}" size="reg" design="primary" mp="True" />
                     </xsl:if>
                     <xsl:if test="not(@hidecancel = 'True')">
-                        <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" />
+                        <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" size="reg" />
                     </xsl:if>
                     <xsl:if test="@miscbtn">
-                        <btn text="{@miscbtn}" id="{@miscbtnid}"/>
+                        <btn text="{@miscbtn}" id="{@miscbtnid}" size="reg" />
                     </xsl:if>
                 </div>
             </div>

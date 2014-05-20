@@ -66,10 +66,8 @@ class Dashboard(CategoryPlugin):
                 if hasattr(prov, 'hidden'):
                     continue
                 dlg.append('list', UI.ListItem(
-                    UI.HContainer(
-                        UI.IconFont(iconfont=prov.iconfont),
-                        UI.Label(text=' '+prov.name),
-                    ),
+                    UI.Label(text=prov.name),
+                    iconfont=prov.iconfont,
                     id=prov.plugin_id,
                 ))
                 idx += 1

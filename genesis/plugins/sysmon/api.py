@@ -293,14 +293,14 @@ class Services(API):
 
             if self.display:
                 dlg = UI.DialogBox(
-                        UI.ScrollContainer(res, width=300, height=300),
+                        UI.ScrollContainer(res),
                         id='dlgServices',
                         hidecancel='True'
                     )
                 return UI.Container(panel, dlg, self.get_main_ui())
             elif self.disports:
                 dlg = UI.DialogBox(
-                        UI.ScrollContainer(pts, width=300, height=300),
+                        UI.ScrollContainer(pts),
                         id='dlgPorts',
                         hidecancel='True'
                     )

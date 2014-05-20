@@ -1,31 +1,25 @@
 <xml>
-    <lt width="90%">
-        <ltr>
-            <ltd width="100%" spacing="0">
-                <label id="connection" />
-            </ltd>
-        </ltr>
-    </lt>
-    <lt width="90%">
-        <ltr>
-            <ltd width="40%" spacing="0">
+    <label id="connection" />
+    <dt>
+        <dtr>
+            <dtd spacing="0">
                 <hcontainer>
                     <iconfont iconfont="gen-globe" />
                     <label id="ip" />
                 </hcontainer>
-            </ltd>
-            <ltd width="30%" spacing="0">
+            </dtd>
+            <dtd spacing="0">
                 <hcontainer>
                     <iconfont iconfont="gen-download" />
                     <label id="in" />
                 </hcontainer>
-            </ltd>
-            <ltd width="30%" spacing="0">
+            </dtd>
+            <dtd spacing="0">
                 <hcontainer>
                     <iconfont iconfont="gen-upload" />
                     <label id="out" />
                 </hcontainer>
-            </ltd>
-        </ltr>
-    </lt>
+            </dtd>
+        </dtr>
+    </dt>
 </xml>

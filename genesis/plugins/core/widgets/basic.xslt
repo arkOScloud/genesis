@@ -1,7 +1,20 @@
 <xsl:template match="label">
-    <span class="ui-el-label-{x:attr(@size, '1')} {@class}" style="{x:iif(@bold, 'font-weight: bold;', '')} {x:iif(@monospace, 'font-family: monospace;', '')} {x:iif(@lbreak, 'max-width: 500px;', '')}">
-        <xsl:value-of select="@text" />
-    </span>
+    <xsl:choose>
+        <xsl:when test="@size = '5'">
+            <h1 class="page-header"><xsl:value-of select="@text" /></h1>
+        </xsl:when>
+        <xsl:when test="@size = '4'">
+            <h2 class="page-header"><xsl:value-of select="@text" /></h2>
+        </xsl:when>
+        <xsl:when test="@size = '3'">
+            <h3 class="page-header"><xsl:value-of select="@text" /></h3>
+        </xsl:when>
+        <xsl:otherwise>
+            <span class="ui-el-label-{x:attr(@size, '1')} {@class}" style="{x:iif(@bold, 'font-weight: bold;', '')} {x:iif(@monospace, 'font-family: monospace;', '')} {x:iif(@lbreak, 'max-width: 500px;', '')}">
+                <xsl:value-of select="@text" />
+            </span>
+        </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 

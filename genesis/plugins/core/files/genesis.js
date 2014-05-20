@@ -290,6 +290,7 @@ Genesis = (function() {
 
 			hideModal: function (id, remove) {
 				$('#'+id).modal('hide');
+				$('.modal-backdrop').fadeTo(250, 0, function () { $(this).remove(); });
 			},
 
 			popoverEvent: null,

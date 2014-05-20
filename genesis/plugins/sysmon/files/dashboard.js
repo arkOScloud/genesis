@@ -5,7 +5,7 @@ $(document).on('sortstart', '.dashboard', function () {
 $(document).on('sortstop', '.dashboard', function () {
     $('#trash').fadeTo(500, 0).empty().text('Drop here to remove widget');
     $('#save-query').show();
-    $('#save-query').animate({'height':'35px'}, 1000);
+    $('#save-query').animate({'height':'50px'}, 1000);
 });
 
 function dashboardSave() {

@@ -7,7 +7,7 @@
     	<btn id="add" text="Add user" iconfont="gen-user-plus" />
     </toolbar>
 
-    <label size="5" text="User Accounts" />
+    <h1>User Accounts</h1>
     <pad id="main">
         <dt id="list" width="100%">
             <dtr header="True">

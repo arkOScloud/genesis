@@ -18,7 +18,9 @@ a:link, a:focus, a:active {
 }
 
 .navbar-static-top {
+  background-color: #2980B9;
   margin-bottom: 0;
+  border: 0;
 }
 
 .nav-tabs {
@@ -158,7 +160,7 @@ td a, td p, td span {
 }
 
 .footer {
-  background-color: #222;
+  background-color: #2980B9;
   color: #FFF;
   padding: 10px;
   line-height: 35px;
@@ -281,6 +283,7 @@ td a, td p, td span {
   padding: 7px 5px;
   border-bottom: 1px solid #ccc;
   border-radius: 5px;
+  margin-bottom: 10px;
 }
 
 .ui-dashboard-banner > span {
@@ -334,7 +337,8 @@ td a, td p, td span {
   height: 0;
   border-bottom: 1px solid #ccc;
   border-radius: 5px;
-  padding: 10px 10px 0;
+  padding: 5px 10px 0;
+  margin-bottom: 10px;
 }
 
 .ui-el-widget {
@@ -342,6 +346,7 @@ td a, td p, td span {
   text-align: left;
   vertical-align: top;
   width: 375px;
+  margin-bottom: 5px;
 }
 
 .ui-el-widget:before {
@@ -392,4 +397,40 @@ td a, td p, td span {
 .ui-el-widget > .content.normal {
   margin-left: 30px;
   clear: both;
+}
+
+.ui-el-list {
+  background: #fff;
+  border: 1px solid #ccc;
+  margin: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  list-style: none;
+}
+
+.ui-el-list li {
+  padding: 2px;
+  width: 100%;
+  line-height: 16px;
+  color: #555;
+}
+
+.ui-el-list li:hover {
+  background: #eee;
+}
+
+.ui-el-list li:active {
+  background-color: #2980B9;
+  color: white;
+  font-weight: bold;
+}
+
+.modal-footer {
+  padding: 15px 20px 15px;
+}
+
+.ui-el-scrollcontainer {
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #ccc;
 }
