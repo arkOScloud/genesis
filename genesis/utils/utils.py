@@ -88,30 +88,40 @@ def detect_architecture():
     :rtype:             tuple(str, str)
     """
     arch, btype = 'Unknown', 'Unknown'
+    cpuinfo = {}
     # Get architecture
     for x in shell('lscpu').split('\n'):
         if x.split() and 'Architecture' in x.split()[0]: 
             arch = x.split()[1]
             break
     # Let's play a guessing game!
-    if arch == 'armv6l':
+    if arch in ['x86_64', 'i686']:
+        btype = 'General'
+    else:
         for x in shell('cat /proc/cpuinfo').split('\n'):
             # Parse output of function function c_show in linux/arch/arm/kernel/setup.c
             k, _, v = x.partition(':')
-            # Is this a... Raspberry Pi?
-            if 'Hardware' in k and v.strip() in ('BCM2708', 'BCM2835'):
-                btype = 'Raspberry Pi'
-                break
-            # Is this a... BeagleBone Black?
-            elif 'Hardware' in k and 'Generic AM33XX' in v.strip():
-                btype = 'BeagleBone Black'
-                break
-            # Is this a... Cubietruck?
-            elif 'Hardware' in k and v.strip() == 'sun7i':
+            cpuinfo[k.strip()] = v.strip()
+        # Is this a... Raspberry Pi?
+        if cpuinfo['Hardware'] in ('BCM2708', 'BCM2835'):
+            btype = 'Raspberry Pi'
+        # Is this a... BeagleBone Black?
+        elif 'Generic AM33XX' in cpuinfo['Hardware'] and cpuinfo['CPU part'] == '0xc08':
+            btype = 'BeagleBone Black'
+        # Is this a Cubieboard (series)?
+        elif cpuinfo['Hardware'] == 'sun7i' and cpuinfo['CPU part'] == '0xc07':
+            meminfo = {}
+            # Since both the Cubieboard2 and Cubietruck have the same processor,
+            # we need to check memory size to make a good guess.
+            for x in shell('cat /proc/meminfo').split('\n'):
+                k, _, v = x.partition(':')
+                meminfo[k.strip()] = v.strip()
+            # Is this a... Cubieboard2?
+            if int(meminfo['MemTotal'].split(' ')[0]) < 1100000:
+                btype = 'Cubieboard2'
+            # Then it must be a Cubietruck!
+            else:
                 btype = 'Cubietruck'
-                break
-    elif arch in ['x86_64', 'i686']:
-        btype = 'General'
     return (arch, btype)
 
 def detect_platform(mapping=True):

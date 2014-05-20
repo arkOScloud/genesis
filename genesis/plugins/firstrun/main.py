@@ -48,11 +48,21 @@ class FirstRun(CategoryPlugin, URLHandler):
             ui.find('ssh_as_root').set('checked', 'True' if self._opts.has_key('ssh_as_root') and self._opts['ssh_as_root'] == '1' else 'False')
 
             if self.arch[1] == 'Raspberry Pi':
-                ui.find('rpi-sdc').set('checked', 'True' if self._opts.has_key('resize') and self._opts['resize'] == '1' else 'False')
-                ui.find('rpi-ogm').set('checked', 'True' if self._opts.has_key('gpumem') and self._opts['gpumem'] == '1' else 'False')
+                ui.find('resize').set('checked', 'True' if self._opts.has_key('resize') and self._opts['resize'] == '1' else 'False')
+                ui.find('gpumem').set('checked', 'True' if self._opts.has_key('gpumem') and self._opts['gpumem'] == '1' else 'False')
             else:
-                ui.remove('rpi-sdc')
+                ui.remove('sdc')
                 ui.remove('rpi-ogm')
+            if self.arch[1] in ['Unknown', 'General']:
+                ui.remove('sdc')
+            if self.arch[1] not in ['Cubieboard2', 'Cubietruck']:
+                ui.remove('cbb-mac')
+            else:
+                mac = ':'.join(map(lambda x: "%02x" % x, 
+                    [0x54, 0xb3, 0xeb, random.randint(0x00, 0x7f), 
+                    random.randint(0x00, 0xff), 
+                    random.randint(0x00, 0xff)]))
+                ui.find('macaddr').set('value', mac)
             tz = self._opts['zone'] if self._opts.has_key('zone') else 'UTC'
             tz_sel = [UI.SelectOption(text = x, value = x,
                 selected=(x==tz))
@@ -111,10 +121,13 @@ class FirstRun(CategoryPlugin, URLHandler):
 
         return ui
 
-    def resize(self):
-        shell_stdin('fdisk /dev/mmcblk0', 'd\n2\nn\np\n2\n\n\nw\n')
+    def resize(self, part):
+        if part == 1:
+            shell_stdin('fdisk /dev/mmcblk0', 'd\nn\np\n1\n\n\nw\n')
+        else:
+            shell_stdin('fdisk /dev/mmcblk0', 'd\n2\nn\np\n2\n\n\nw\n')
         f = open('/etc/cron.d/resize', 'w')
-        f.write('@reboot root resize2fs /dev/mmcblk0p2\n')
+        f.write('@reboot root resize2fs /dev/mmcblk0p%s\n'%part)
         f.write('@reboot root rm /etc/cron.d/resize\n')
         f.close()
         self.app.gconfig.set('genesis', 'restartmsg', 'yes')
@@ -235,6 +248,12 @@ class FirstRun(CategoryPlugin, URLHandler):
                 # set hostname
                 self.statusmsg('Setting hostname...')
                 self.nb.sethostname(self._opts['hostname'])
+
+                # set MAC address
+                if macaddr != '' and self.arch[1] == 'Cubieboard2':
+                    open('/boot/uEnv.txt', 'w').write('extraargs=mac_addr=%s\n'%macaddr)
+                elif macaddr != '' and self.arch[1] == 'Cubietruck':
+                    open('/etc/modprobe.d/gmac.conf', 'w').write('options sunxi_gmac mac_str="%s"\n'%macaddr)
 
                 # allow SSH as root
                 self.statusmsg('Setting SSH options...')

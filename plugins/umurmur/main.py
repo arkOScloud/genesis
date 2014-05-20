@@ -70,71 +70,69 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         # Tab 1: Channels
         # TODO password for channels
         # TODO Tree View of channels
-        chan_to_par = {}
-        for chan in cfg.channels:
-            if chan.parent:
-                chan_to_par[chan.name] = chan.parent
+
+        # channels
+        channels = dict((c.name, c) for c in cfg.channels)
+        channel_names = sorted(channels.keys())
+        channel_names.remove("Root")
+        channel_leaves = list()
+
+        def recursive_add_row(chan, depth):
+            children = list(
+                channels[c] for c in channel_names
+                if channels[c].parent == chan.name
+            )
+            if not children:
+                channel_leaves.append(chan.name)
+                delete_button = UI.TipIcon(  # only leaves can be deleted
+                    iconfont='gen-cancel-circle',
+                    text='Delete',
+                    warning='Delete channel "%s"' % chan.name,
+                    id='deleteChan/%s' % chan.name
+                )
+            else:
+                delete_button = UI.Label(text="-")
             row = UI.DTR(
-                UI.Label(text=chan.name),
-                UI.Label(text=chan.parent),
+                UI.Label(text=". . "*depth + (" %s" % chan.name)),
                 UI.Label(text=chan.description),
-                UI.Label(text=("Yes" if chan.get("silent") else "No"))
+                UI.Label(text=("Yes" if chan.get("silent") else "No")),
+                delete_button
             )
             ui.append('table_channels', row)
+            if children:
+                for c in children:
+                    recursive_add_row(c, depth+1)
+        recursive_add_row(channels["Root"], 0)
 
+        # channel links
         for lnk in cfg.channel_links:
+            src_dest = (lnk.source, lnk.destination)
             row = UI.DTR(
                 UI.Label(text=lnk.source),
                 UI.Label(text="=>"),
                 UI.Label(text=lnk.destination),
+                UI.TipIcon(
+                    iconfont='gen-cancel-circle',
+                    text='Delete',
+                    warning='Delete channel link "%s => %s"' % src_dest,
+                    id='deleteChanLnk/%s/%s' % src_dest
+                )
             )
             ui.append('table_channel_links', row)
 
+        # form: default channel
         def_chan = cfg.default_channel
         content = UI.FormBox(
             UI.FormLine(
                 UI.SelectInput(*list(
                     UI.SelectOption(text=c, value=c, selected=(c == def_chan))
-                    for c in sorted(chan_to_par.keys())
+                    for c in channel_names if c != "Root"
                 ), name="default_channel"),
                 text="Default channel",
             ),
             id="form_def_chan"
         )
         ui.append("container_default_channel", content)
-
-        non_del_channels = set(chan_to_par.values() + [def_chan])
-        del_channels = list( 
-            c for c in chan_to_par.keys()
-            if c not in non_del_channels
-        )
-        content = UI.FormBox(
-            UI.FormLine(
-                UI.SelectInput(*list(
-                    UI.SelectOption(text=c, value=c, selected=c == "(None)")
-                    for c in (["(None)"] + sorted(del_channels))
-                ), name="delete_channel"),
-                text="Delete channel",
-                help="(Only non-default channels without children)"
-            ),
-            id="form_del_chan"
-        )
-        ui.append("container_delete_channel", content)
-
-        chan_lnks = ["(None)"] + list(
-            "%s => %s" % (l.source, l.destination) for l in cfg.channel_links
-        )
-        content = UI.FormBox(
-            UI.FormLine(
-                UI.SelectInput(*list(
-                    UI.SelectOption(text=c, value=c, selected=c == "(None)")
-                    for c in chan_lnks
-                ), name="delete_channel_link"),
-                text="Delete channel link"
-            ),
-            id="form_del_chan_lnk"
-        )
-        ui.append("container_delete_channel_link", content)
 
         # Tab 2: Info
         # TODO: remove info tab
@@ -149,7 +147,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             ui.append('all_config', e)
 
         # dialogs
-        if self._open_dialog == 'add_channel':
+        if self._open_dialog == 'dlg_add_channel':
             content = UI.SimpleForm(
                 UI.FormLine(
                     UI.TextInput(
@@ -168,7 +166,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 UI.FormLine(
                     UI.SelectInput(*list(
                         UI.SelectOption(text=c, value=c)
-                        for c in (["Root"] + sorted(chan_to_par.keys())),
+                        for c in (["Root"] + channel_names),
                     ), name="chan_parent"),
                     text="Parent channel"
                 ),
@@ -183,39 +181,63 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 ),
                 id="dialog_add_channel"
             )
-            ui.append("container_add_channel", content)
-        else:
-            ui.remove('dlg_add_chan')
+            box = UI.DialogBox(
+                content,
+                id="dlg_add_chan",
+                title='Add channel'
+            )
+            ui.append("dialog_container", box)
 
-        if self._open_dialog == 'add_channel_link':
+        if self._open_dialog == 'dlg_add_channel_link':
             content = UI.SimpleForm(
-                UI.FormLine(
+                UI.HContainer(
                     UI.SelectInput(*list(
                         UI.SelectOption(text=c, value=c)
-                        for c in sorted(chan_to_par.keys()),
+                        for c in channel_names,
                     ), name="chan_src"),
-                    text="Source channel"
-                ),
-                UI.FormLine(
+                    UI.Label(text=" => "),
                     UI.SelectInput(*list(
                         UI.SelectOption(text=c, value=c)
-                        for c in sorted(chan_to_par.keys()),
+                        for c in channel_names,
                     ), name="chan_dest"),
-                    text="Destination channel"
                 ),
                 id="dialog_add_channel_link"
             )
-            ui.append("container_add_channel_link", content)
-        else:
-            ui.remove('dlg_add_chan_lnk')
+            box = UI.DialogBox(
+                content,
+                id="dlg_add_chan_lnk",
+                title='Add channel link'
+            )
+            ui.append("dialog_container", box)
 
         self._open_dialog = None
         return ui
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
-        self._open_dialog = params[0]
+        cfg = self._config.config
+        if params[0].startswith("dlg_"):
+            self._open_dialog = params[0]
 
+        if params[0] == "deleteChan":
+            self._tab = 1
+            del_chan = params[1]
+            for chan in cfg.channels[:]:
+                if del_chan == chan.name:
+                    cfg.channels.remove(chan)
+                    break
+            for lnk in cfg.channel_links[:]:
+                if del_chan in (lnk.source, lnk.destination):
+                    cfg.channel_links.remove(lnk)
+            self._config.save()
+
+        if params[0] == 'deleteChanLnk':
+            self._tab = 1
+            src, dest = params[1:3]
+            for lnk in cfg.channel_links[:]:
+                if src == lnk.source and dest == lnk.destination:
+                    cfg.channel_links.remove(lnk)
+            self._config.save()
 
     @event('form/submit')
     def on_submit(self, event, params, vars=None):
@@ -260,26 +282,6 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 cfg.set("default_channel", vars.getvalue("default_channel"))
                 self._config.save()
 
-        if params[0] == 'form_del_chan':
-            self._tab = 1
-            del_chan = vars.getvalue("delete_channel")
-            for chan in cfg.channels[:]:
-                if del_chan == chan.name:
-                    cfg.channels.remove(chan)
-                    break
-            for lnk in cfg.channel_links[:]:
-                if del_chan in (lnk.source, lnk.destination):
-                    cfg.channel_links.remove(lnk)
-            self._config.save()
-
-        if params[0] == 'form_del_chan_lnk':
-            self._tab = 1
-            src, dest = vars.getvalue("delete_channel_link").split(" => ")
-            for lnk in cfg.channel_links[:]:
-                if src == lnk.source and dest == lnk.destination:
-                    cfg.channel_links.remove(lnk)
-            self._config.save()
-
         if vars.getvalue('action', '') == 'Cancel':
             self._config.load()
 
@@ -316,6 +318,13 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             if chan_src == chan_dest:
                 self.put_message(
                     'warn', "Nope. I won't make a link with src == dest."
+                )
+                return
+            if (chan_src, chan_dest) in (
+                    (lnk.source, lnk.destination) for lnk in cfg.channel_links
+            ):
+                self.put_message(
+                    'warn', "Nope. This channel link exists."
                 )
                 return
             new_lnk = backend.pylibconfig2.ConfGroup()

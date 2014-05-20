@@ -96,6 +96,7 @@ class SambaConfig(Plugin):
 
 
     def save(self):
+        print self.shares
         ss = ''
         ss += '[global]\n'
         for k in self.general:
@@ -105,8 +106,8 @@ class SambaConfig(Plugin):
         for s in self.shares:
             ss += '\n[%s]\n' % s
             for k in self.shares[s]:
-                if not k in self.defaults or self.shares[s][k] != self.defaults[k]:
-                    ss += '\t%s = %s\n' % (k,self.shares[s][k])
+                #if not k in self.defaults or self.shares[s][k] != self.defaults[k]:
+                ss += '\t%s = %s\n' % (k,self.shares[s][k])
         ConfManager.get().save('samba', self.cfg_file, ss)
         ConfManager.get().commit('samba')
 

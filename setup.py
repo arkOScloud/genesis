@@ -5,7 +5,7 @@ from setuptools import find_packages
 
 setup(
     name='genesis',
-    version='0.5.3',
+    version='0.5.4.1',
     install_requires=[
         'pyOpenSSL',
         'gevent',
