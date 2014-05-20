@@ -135,3 +135,7 @@
         <h6>Version <xsl:value-of select="@version"/></h6>
     </div>
 </xsl:template>
+
+<xsl:template match="authorization">
+    <script>Genesis.showAuthorization('<xsl:value-of select="@app"/>', '<xsl:value-of select="@reason"/>', '<xsl:value-of select="@meta"/>');</script>
+</xsl:template>

@@ -78,13 +78,29 @@
         </div>
     </div>
 
-    <div class="warningbox" id="warningbox">
+    <div class="shadebox" id="warningbox">
         <h3><i class="gen-warning"></i> Warning!</h3>
         <strong id="warning-text" />
         <div class="pull-right">
             <btn text="OK" design="outline-inverse-warn warning-button" size="reg" onclick="none" />
             <btn text="Cancel" href="#" design="outline-inverse outline-inverse-gray" size="reg" onclick="Genesis.cancelWarning();">Cancel</btn>
         </div>
+    </div>
+
+    <div class="shadebox" id="authbox">
+        <h3><i class="gen-key"></i> Authorization required</h3>
+        <strong id="auth-text" />
+        <p id="auth-reason" />
+        <simpleform id="dlgAuthorize">
+            <input type="hidden" id="auth-metadata" name="auth-metadata" />
+            <formline>
+                <textinput name="auth-string" id="auth-string" password="true" />
+            </formline>
+            <div class="pull-right">
+                <btn text="Authorize" action="OK" design="outline-inverse-warn auth-button" size="reg" form="dlgAuthorize" onclick="form" />
+                <btn text="Cancel" action="Cancel" href="#" design="outline-inverse outline-inverse-gray" size="reg" form="dlgAuthorize" onclick="form">Cancel</btn>
+            </div>
+        </simpleform>
     </div>
 
     <script>

@@ -150,6 +150,7 @@ Genesis = (function() {
 
 				Genesis.query(url, fData, true);
 			}
+			Genesis.cancelAuthorization();
 			return false;
 		},
 
@@ -257,30 +258,49 @@ Genesis = (function() {
 		},
 
 		showWarning: function (text, btnid, cls) {
+			$('.modal-backdrop').stop()
 			warning_button_id = btnid;
 			if (typeof cls === "undefined") {
 				warning_class = 'button';
 			} else {
 				warning_class = cls;
 			}
-			$('.warning-button').unbind('click');
 			$('.warning-button').click(Genesis.acceptWarning);
 			$('#warning-text').html(text);
-			$('html').append('<div id="wbback" class="modal-backdrop" style="opacity:0;"></div>');
-			$('#wbback').animate({opacity: 0.8}, 250);
+			$('html').append('<div id="shadeback" class="modal-backdrop" style="opacity:0;"></div>');
+			$('#shadeback').animate({opacity: 0.8}, 250);
 			$('#warningbox').center().fadeTo(250, 1, function () { $(this).show(); });
 			return false;
 		},
 
 		cancelWarning: function () {
+			$('.warning-button').unbind('click');
 			$('#warningbox').fadeTo(250, 0, function () { $(this).hide(); });
-			$('.modal-backdrop').fadeTo(250, 0, function () { $(this).remove(); });
+			$('#shadeback').fadeTo(250, 0, function () { $(this).remove(); });
 			return false;
 		},
 
 		acceptWarning: function () {
 			Genesis.cancelWarning();
 			Genesis.query('/handle/'+ warning_class +'/click/' + warning_button_id);
+			return false;
+		},
+
+		showAuthorization: function (app, text, meta) {
+			$('#auth-text').html(app+' needs your authorization for the following operation:');
+			$('#auth-reason').html(text);
+			$('#auth-metadata').val(meta);
+			$('html').append('<div id="shadeback" class="modal-backdrop" style="opacity:0;"></div>');
+			$('#shadeback').fadeTo(250, 0.8);
+			$('#authbox').center().fadeTo(250, 1, function () { $(this).show(); });
+			return false;
+		},
+
+		cancelAuthorization: function () {
+			$('#auth-string').val('');
+			$('.auth-button').unbind('click');
+			$('#authbox').fadeTo(250, 0, function () { $(this).hide(); });
+			$('#shadeback').fadeTo(250, 0, function () { $(this).remove(); });
 			return false;
 		},
 

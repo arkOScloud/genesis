@@ -74,10 +74,10 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 				self.dbops.get_info(dbtype[0]).requires_conn == True and \
 				not self.dbops.get_dbconn(dbtype[0]):
 					ui.append('main', 
-						UI.InputBox(id='dlgAuth%s' % dbtype[0], 
-							text='Enter the database password for %s' 
-							% dbtype[0],
-							password=True)
+						UI.Authorization(
+							app='Databases',
+							reason='Unlock %s database engine'%dbtype[0],
+							meta=dbtype[0])
 					)
 					self._rootpwds[dbtype[0]] = True
 				elif self.dbops.get_info(dbtype[0]).multiuser == True:
@@ -321,10 +321,10 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 					self.put_message('info',
 						'Permissions for %s changed successfully' % self._chmod['name'])
 			self._chmod = None
-		elif params[0].startswith('dlgAuth'):
-			dbtype = params[0].split('dlgAuth')[1]
+		elif params[0] == 'dlgAuthorize':
+			dbtype = vars.getvalue('auth-metadata', '')
 			if vars.getvalue('action', '') == 'OK':
-				login = vars.getvalue('value', '')
+				login = vars.getvalue('auth-string', '')
 				try:
 					self.dbops.get_interface(dbtype).connect(
 						store=self.app.session['dbconns'],

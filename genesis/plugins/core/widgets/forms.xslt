@@ -56,7 +56,7 @@
 </xsl:template>
 
 <xsl:template match="simpleform">
-    <div id="{@id}" style="display:inline-block">
+    <div id="{@id}" style="display:inherit;">
         <input id="{@id}-url" type="hidden" name="__url" value="/handle/form/submit/{@id}"/>
         <xsl:apply-templates />
     </div>
