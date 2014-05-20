@@ -68,7 +68,7 @@ Genesis = (function() {
 		},
 
 		submit: function (fid, action, mp) {
-			$('.modal:not(#warningbox)').each( function (i, e) {
+			$('.modal').each( function (i, e) {
 				Genesis.UI.hideModal(e.id, true);
 			});
 			form = $('#'+fid);
@@ -188,11 +188,11 @@ Genesis = (function() {
 
 		Core: {
 			processResponse: function (data) {
-				$('.modal:not(#warningbox)').each( function (i, e) {
+				$('.modal').each( function (i, e) {
 					Genesis.UI.hideModal(e.id);
 				});
 
-				Genesis.UI.hideModal('warningbox');
+				Genesis.cancelWarning();
 
 				// $('.ui-tooltip').tooltip('hide');
 
@@ -257,9 +257,6 @@ Genesis = (function() {
 		},
 
 		showWarning: function (text, btnid, cls) {
-			Genesis.UI.showAsModal('warningbox');
-			$('#warning-text').html(text);
-			$('#warningbox').addClass('modal');
 			warning_button_id = btnid;
 			if (typeof cls === "undefined") {
 				warning_class = 'button';
@@ -268,12 +265,16 @@ Genesis = (function() {
 			}
 			$('.warning-button').unbind('click');
 			$('.warning-button').click(Genesis.acceptWarning);
-			$('#warning-cancel-button').click(Genesis.cancelWarning);
+			$('#warning-text').html(text);
+			$('html').append('<div id="wbback" class="modal-backdrop" style="opacity:0;"></div>');
+			$('#wbback').animate({opacity: 0.8}, 250);
+			$('#warningbox').center().fadeTo(250, 1, function () { $(this).show(); });
 			return false;
 		},
 
 		cancelWarning: function () {
-			Genesis.UI.hideModal('warningbox');
+			$('#warningbox').fadeTo(250, 0, function () { $(this).hide(); });
+			$('.modal-backdrop').fadeTo(250, 0, function () { $(this).remove(); });
 			return false;
 		},
 
@@ -290,6 +291,7 @@ Genesis = (function() {
 
 			hideModal: function (id, remove) {
 				$('#'+id).modal('hide');
+				$('body').removeClass('modal-open');
 				$('.modal-backdrop').fadeTo(250, 0, function () { $(this).remove(); });
 			},
 

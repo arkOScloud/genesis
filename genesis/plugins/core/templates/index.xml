@@ -78,16 +78,12 @@
         </div>
     </div>
 
-    <div class="fade modal" id="warningbox" style="display:none">
-        <div class="modal-header">
-            <h3><i class="gen-warning"></i> Warning!</h3>
-        </div>
-        <div class="modal-body">
-            <strong id="warning-text" />
-        </div>
-        <div class="modal-footer">
-            <btn text="OK" design="danger warning-button" onclick="none" />
-            <a class="btn" id="warning-cancel-button" href="#">Cancel</a>
+    <div class="warningbox" id="warningbox">
+        <h3><i class="gen-warning"></i> Warning!</h3>
+        <strong id="warning-text" />
+        <div class="pull-right">
+            <btn text="OK" design="outline-inverse-warn warning-button" size="reg" onclick="none" />
+            <btn text="Cancel" href="#" design="outline-inverse outline-inverse-gray" size="reg" onclick="Genesis.cancelWarning();">Cancel</btn>
         </div>
     </div>
 

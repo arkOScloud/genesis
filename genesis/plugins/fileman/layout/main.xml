@@ -1,13 +1,4 @@
 <xml>
-    <toolbar>
-      <buttongroup>
-        <btn text="Rename" form="files" onclick="form" action="rename" iconfont="gen-tag-2" />
-        <btn text="Cut" form="files" onclick="form" action="cut" iconfont="gen-file-minus" />
-        <btn text="Copy" form="files" onclick="form" action="copy" iconfont="gen-copy" />
-        <btn id="hidden" text="Show hidden" iconfont="gen-eye" />
-      </buttongroup>
-    </toolbar>
-
     <pad id="main" />
 
     <label text="Clipboard" size="5" />

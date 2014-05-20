@@ -45,10 +45,6 @@ class FMPlugin(CategoryPlugin, URLHandler):
         ui = self.app.inflate('fileman:main')
         tc = UI.TabControl(active=self._tab)
 
-        if self._showhidden:
-            ui.find('hidden').set('text', 'Hide hidden')
-            ui.find('hidden').set('iconfont', 'gen-eye-blocked')
-
         idx = 0
         for tab in self._tabs:
             tc.add(tab, content=self.get_tab(tab, tidx=idx), id=str(idx))
@@ -73,6 +69,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
             idx += 1
 
         ui.append('main', tc)
+        if self._showhidden:
+            ui.find('hidden').set('text', 'Hide hidden')
+            ui.find('hidden').set('iconfont', 'gen-eye-blocked')
 
         if self._renaming is not None:
             ui.append('main', UI.InputBox(

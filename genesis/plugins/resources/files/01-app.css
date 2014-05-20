@@ -146,6 +146,11 @@ td a, td p, td span {
   background-color: transparent;
   border-color: #E0EBF3;
 }
+.btn-outline-inverse-warn {
+  color: #D2322D;
+  background-color: transparent;
+  border-color: #D2322D;
+}
 .btn-outline-inverse:hover,
 .btn-outline-inverse:focus,
 .btn-outline-inverse:active {
@@ -153,6 +158,22 @@ td a, td p, td span {
   text-shadow: none;
   background-color: #fff;
   border-color: #fff;
+}
+.outline-inverse-gray:hover,
+.outline-inverse-gray:focus,
+.outline-inverse-gray:active {
+  color: #3E3E3E;
+  text-shadow: none;
+  background-color: #fff;
+  border-color: #fff;
+}
+.btn-outline-inverse-warn:hover,
+.btn-outline-inverse-warn:focus,
+.btn-outline-inverse-warn:active {
+  color: #3E3E3E;
+  text-shadow: none;
+  background-color: #D2322D;
+  border-color: #AC2925;
 }
 
 .navbar-brand {
@@ -193,6 +214,12 @@ td a, td p, td span {
 
 .alert-danger {
   background-color:#E74C3C;
+  color: #FFF;
+  border: 0px;
+}
+
+.alert-info {
+  background-color:#5BC0DE;
   color: #FFF;
   border: 0px;
 }
@@ -433,4 +460,28 @@ td a, td p, td span {
   overflow: auto;
   background: #fff;
   border: 1px solid #ccc;
+}
+
+#warningbox {
+  width: 500px;
+  display: none;
+  position: fixed;
+  top: 40%;
+  margin-left: auto;
+  margin-right: auto;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000001;
+  padding: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  color: #FFF;
+}
+
+#warningbox h3 {
+  margin-top: 0;
+}
+
+#warning-text {
+  display: inherit;
+  margin-bottom: 10px;
 }
