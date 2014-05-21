@@ -4,14 +4,7 @@
             <xsl:apply-templates />
             <formline>
                 <xsl:if test="not(@hideok = 'True')">
-                    <xsl:choose>
-                        <xsl:when test="@mp != ''">
-                            <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" mp="True" />
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
                 </xsl:if>
                 <xsl:if test="not(@hidecancel = 'True')">
                     <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" size="reg"/>
@@ -39,14 +32,7 @@
                 </div>
             </xsl:if>
             <div class="pull-right">
-            <xsl:choose>
-                <xsl:when test="@mp != ''">
-                    <btn text="{x:attr(@btntext,'Next &#187;')}" onclick="form" action="OK" size="lg" form="{@id}" design="primary" mp="True" />
-                </xsl:when>
-                <xsl:otherwise>
-                    <btn text="{x:attr(@btntext,'Next &#187;')}" onclick="form" action="OK" size="lg" form="{@id}" design="primary" />
-                </xsl:otherwise>
-            </xsl:choose>
+                <btn text="{x:attr(@btntext,'Next &#187;')}" onclick="form" action="OK" size="lg" form="{@id}" design="primary" />
             </div>
         </div>
     </div>
@@ -82,25 +68,11 @@
         <div class="modal-footer">
             <xsl:if test="not(@hideok = 'True')">
                 <xsl:choose>
-                    <xsl:when test="@mp != ''">
-                        <xsl:choose>
-                            <xsl:when test="@yesno != ''">
-                                <btn text="Yes" onclick="form" action="OK" form="{@id}" size="reg" design="primary" mp="True" />
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" mp="True" />
-                            </xsl:otherwise>
-                        </xsl:choose>
+                    <xsl:when test="@yesno != ''">
+                        <btn text="Yes" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:choose>
-                            <xsl:when test="@yesno != ''">
-                                <btn text="Yes" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
-                            </xsl:otherwise>
-                        </xsl:choose>
+                        <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>
@@ -218,7 +190,7 @@
 
                 <div class="modal-footer">
                     <xsl:if test="not(@hideok = 'True')">
-                        <btn text="Upload" onclick="form" action="OK" form="{@id}" size="reg" design="primary" mp="True" />
+                        <btn text="Upload" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
                     </xsl:if>
                     <xsl:if test="not(@hidecancel = 'True')">
                         <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" size="reg" />

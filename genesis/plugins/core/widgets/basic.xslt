@@ -85,14 +85,7 @@
             </xsl:when>
 
             <xsl:when test="@onclick = 'form'">
-                <xsl:choose>
-                    <xsl:when test="@mp != ''">
-                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', true, <xsl:value-of select="@modal" />);
-                    </xsl:when>
-                    <xsl:otherwise>
-                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', null, <xsl:value-of select="x:attr(@modal, 'false')" />);
-                    </xsl:otherwise>
-                </xsl:choose>
+                return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', <xsl:value-of select="x:attr(@modal, 'false')" />);
             </xsl:when>
 
             <xsl:when test="@onclick = '' or not (@onclick)">
@@ -144,14 +137,7 @@
             </xsl:when>
 
             <xsl:when test="@onclick = 'form'">
-                <xsl:choose>
-                    <xsl:when test="@mp != ''">
-                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', true, <xsl:value-of select="@modal" />);
-                    </xsl:when>
-                    <xsl:otherwise>
-                        return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', null, <xsl:value-of select="x:attr(@modal, 'false')" />);
-                    </xsl:otherwise>
-                </xsl:choose>
+                return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />', <xsl:value-of select="x:attr(@modal, 'false')" />);
             </xsl:when>
 
             <xsl:when test="@onclick = '' or not (@onclick)">
