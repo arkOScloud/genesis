@@ -79,10 +79,10 @@
     </div>
 
     <div class="shadebox" id="warningbox">
-        <h3><i class="gen-warning"></i> Warning!</h3>
+        <h3><i class="gen-warning pull-right"></i>Warning!</h3>
         <strong id="warning-text" />
-        <div class="pull-right">
-            <btn text="OK" design="outline-inverse-warn warning-button" size="reg" onclick="none" />
+        <div class="shadebox-footer">
+            <btn text="OK" design="outline-inverse-warn warning-button" size="reg" onclick="return false;" />
             <btn text="Cancel" href="#" design="outline-inverse outline-inverse-gray" size="reg" onclick="Genesis.cancelWarning();">Cancel</btn>
         </div>
     </div>

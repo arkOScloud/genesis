@@ -12,7 +12,7 @@
                 <dbuttonitem text="Cut" form="files" onclick="form" action="cut" iconfont="gen-file-minus" />
                 <dbuttonitem text="Copy" form="files" onclick="form" action="copy" iconfont="gen-copy" />
                 <dbuttonitem id="paste" text="Paste" iconfont="gen-paste" />
-                <dbuttonitem text="Delete" form="files" onclick="form" action="delete" iconfont="gen-file-remove" />
+                <dbuttonitem text="Delete" form="files" onclick="form" action="delete" warning="Are you sure you wish to remove the selected files?" iconfont="gen-file-remove" />
             </dbutton>
             <dbutton text="View">
                 <dbuttonitem id="reload" text="Reload" iconfont="gen-loop-2" />
@@ -30,7 +30,7 @@
     <spacer height="10" />
 
     <simpleform id="files">
-    <dt id="list" width="765">
+    <dt id="list" width="100%">
         <dtr header="True">
             <dth width="1" />
             <dth>

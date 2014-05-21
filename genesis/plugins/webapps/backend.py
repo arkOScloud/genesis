@@ -137,6 +137,10 @@ class WebappControl(Plugin):
 		# Make sure that nginx is enabled by default
 		cat.app.get_backend(apis.services.IServiceManager).enable('nginx')
 
+		# Add the new path to tracked points of interest (POIs)
+		apis.poicontrol(self.app).add(name, 'website', target_path, 'webapps',
+            webapp.plugin_info.iconfont, False)
+
 		if specialmsg:
 			return specialmsg
 
@@ -181,6 +185,7 @@ class WebappControl(Plugin):
 			site.stype)
 		if site.sclass != '' and site.stype != 'ReverseProxy':
 			cat.statusmsg('Cleaning up...')
+			apis.poicontrol(self.app).drop_by_path(site.path)
 			site.sclass.post_remove(site.name)
 
 	def nginx_add(self, site, add):

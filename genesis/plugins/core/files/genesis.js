@@ -222,7 +222,7 @@ Genesis = (function() {
             return false;
         },
 
-        showWarning: function (text, btnid, cls) {
+        showWarning: function (text, btnid, cls, fid, action) {
             $('.modal-backdrop').stop()
             warning_button_id = btnid;
             if (typeof cls === "undefined") {
@@ -230,7 +230,8 @@ Genesis = (function() {
             } else {
                 warning_class = cls;
             }
-            $('.warning-button').click(Genesis.acceptWarning);
+            $('.warning-button').click({'fid': fid, 'action': action}, 
+                Genesis.acceptWarning);
             $('#warning-text').html(text);
             $('html').append('<div id="shadeback" style="display:none;opacity:0"></div>');
             $('#shadeback').stop().fadeTo(250, 0.8, function () { $(this).show(); });
@@ -245,9 +246,13 @@ Genesis = (function() {
             return false;
         },
 
-        acceptWarning: function () {
+        acceptWarning: function (event) {
             Genesis.cancelWarning();
-            Genesis.query('/handle/'+ warning_class +'/click/' + warning_button_id);
+            if (event.data.fid) {
+                Genesis.submit(event.data.fid, event.data.action);
+            } else {
+                Genesis.query('/handle/'+ warning_class +'/click/' + warning_button_id);
+            }
             return false;
         },
 

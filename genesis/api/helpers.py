@@ -221,7 +221,7 @@ class CategoryPlugin(SessionPlugin, EventProcessor):
         if not self.app.session.has_key('statusmsg'):
             self.app.session['statusmsg'] = []
         self.app.session['statusmsg'].append((self.text, msg))
-        gevent.sleep(0.1)
+        gevent.sleep(1)
 
     def redirapp(self, service, port, ssl=False):
         if self.app.get_backend(apis.services.IServiceManager).get_status(service) == 'running':

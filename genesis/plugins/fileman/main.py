@@ -28,7 +28,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
         self._tab = 0
         self._clipboard = []
         self._cbs = None
-        self._renaming = None
+        self._renaming = []
         self._newfolder = None
         self._upload = None
         self._redirect = None
@@ -69,14 +69,11 @@ class FMPlugin(CategoryPlugin, URLHandler):
             idx += 1
 
         ui.append('main', tc)
-        if self._showhidden:
-            ui.find('hidden').set('text', 'Hide hidden')
-            ui.find('hidden').set('iconfont', 'gen-eye-blocked')
 
-        if self._renaming is not None:
+        if self._renaming:
             ui.append('main', UI.InputBox(
                 text='New name',
-                value=os.path.split(self._renaming)[1],
+                value=os.path.split(self._renaming[0])[1],
                 id='dlgRename'
             ))
 
@@ -124,6 +121,17 @@ class FMPlugin(CategoryPlugin, URLHandler):
         ui.find('paste').set('id', 'paste/%i'%tidx)
         ui.find('newfld').set('id', 'newfld/%i'%tidx)
         ui.find('close').set('id', 'close/%i'%tidx)
+        for x in sorted(apis.poicontrol(self.app).get_pois(), key=lambda x: x.name):
+            ui.find('gomenu').append(
+                UI.DButtonItem(
+                    text=x.name, 
+                    iconfont=x.icon, 
+                    id='goto/%i/%s'%(tidx, self.enc_file(x.path))
+                )
+            )
+        if self._showhidden:
+            ui.find('hidden').set('text', 'Hide hidden')
+            ui.find('hidden').set('iconfont', 'gen-eye-blocked')
 
         # Is Notepad present?
         notepad = self.can_order('notepad')
@@ -197,7 +205,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
             if islink:
                 name += ' → ' + os.path.realpath(np)
 
-            if not isdir:
+            if not isdir and not path.startswith('/dev'):
                 tc = ''.join(map(chr, [7,8,9,10,12,13,27] + range(0x20, 0x100)))
                 ibs = lambda b: bool(b.translate(None, tc))
                 if not notepad or ibs(open(np).read(1024)):
@@ -271,8 +279,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
     def dec_file(self, b64):
         return b64decode(b64.replace('*', '='), altchars='+-')
 
-    def add_tab(self):
-        self._tabs.append(self._root)
+    def add_tab(self, path=''):
+        self._tabs.append(path if path else self._root)
+        self._tab = len(self._tabs) - 1
 
     def mode_string(self, mode):
         return ('r' if mode & 256 else '-') + \
@@ -339,6 +348,10 @@ class FMPlugin(CategoryPlugin, URLHandler):
         if params[0] == 'close' and len(self._tabs)>1:
             self._tabs.remove(self._tabs[int(params[1])])
             self._tab = 0
+        if params[0] == 'closeall':
+            self._tabs = []
+            self.add_tab()
+            self._tab = 0
         if params[0] == 'paste':
             self._tab = int(params[1])
             path = self._tabs[int(params[1])]
@@ -388,16 +401,32 @@ class FMPlugin(CategoryPlugin, URLHandler):
                     self._clipboard = lst
                     self._cbs = 'cut'
                 if act == 'rename':
-                    self._renaming = lst[0]
+                    self._renaming = lst
+                if act == 'delete':
+                    suc, err = [], []
+                    for x in lst:
+                        try:
+                            if os.path.isdir(x):
+                                shutil.rmtree(x)
+                            else:
+                                os.unlink(x)
+                            suc.append(x)
+                        except Exception, e:
+                            self.app.log.error('Failed to delete %s: %s'%(x,str(e)))
+                            err.append(x)
+                    if suc:
+                        self.put_message('info', 'Deleted %s'%(', '.join(suc)))
+                    if err:
+                        self.put_message('err', 'Deleting of %s failed'%(', '.join(suc)))
             self._tab = tab
         if params[0] == 'dlgRename':
             if vars.getvalue('action', None) == 'OK':
-                os.rename(self._renaming,
+                os.rename(self._renaming[0],
                     os.path.join(
-                        os.path.split(self._renaming)[0],
+                        os.path.split(self._renaming[0])[0],
                         vars.getvalue('value', None)
                     ))
-            self._renaming = None
+            self._renaming.remove(self._renaming[0])
         if params[0] == 'dlgAcl':
             self._editing_acl = None
         if params[0] == 'dlgUpload':
@@ -511,3 +540,13 @@ class FMProgress(Plugin):
     def abort(self):
         if self.has_progress():
             self.get_worker().kill()
+
+
+class FileManListener(Plugin):
+    implements(apis.orders.IListener)
+    id = 'fileman'
+    cat = 'fmplugin'
+
+    def order(self, op, path):
+        if op == 'open':
+            FMPlugin(self.app).add_tab(path)

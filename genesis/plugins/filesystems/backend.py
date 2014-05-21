@@ -179,13 +179,13 @@ class FSControl(Plugin):
                     dev.unmount()
                     raise Exception('Failed to mount %s: %s'%(fs.name, s[1]))
             apis.poicontrol(self.app).add(fs.name, 'vdisk', 
-                fs.mount, 'filesystems', False)
+                fs.mount, 'filesystems', 'gen-storage', False)
         else:
             s = shell_cs('mount %s %s'%(fs.dev, os.path.join('/media', fs.name)), stderr=True)
             if s[0] != 0:
                 raise Exception('Failed to mount %s: %s'%(fs.name, s[1]))
             apis.poicontrol(self.app).add(fs.name, 'disk', 
-                fs.mount, 'filesystems', False)
+                fs.mount, 'filesystems', 'gen-storage', False)
 
     def umount(self, fs, rm=False):
         if not fs.mount:

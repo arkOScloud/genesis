@@ -1,5 +1,15 @@
 <xsl:template match="tabheader">
     <li class="{x:iif(@active or (../@active = @id), 'active', '')}">
+        <xsl:if test="../@live = 'True' or @live = 'True'">
+            <xsl:attribute name="onclick">
+                <xsl:if test="@form">
+                    return Genesis.submit('<xsl:value-of select="@form" />', '<xsl:value-of select="@id" />');
+                </xsl:if>
+                <xsl:if test="not(@form)">
+                    return Genesis.query('/handle/tab/click/<xsl:value-of select="@id" />');
+                </xsl:if>
+            </xsl:attribute>
+        </xsl:if>
         <a href="#{@id}" data-toggle="tab">
             <xsl:value-of select="@text" />
         </a>

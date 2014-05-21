@@ -1,3 +1,4 @@
+from base64 import b64encode, b64decode
 import re
 import os
 
@@ -19,6 +20,7 @@ class FSPlugin(CategoryPlugin):
         self._devs, self._vdevs = self._fsc.get_filesystems()
 
     def on_session_start(self):
+        self._redirect = None
         self._editing = -1
         self._tab = 0
         self._fsc = backend.FSControl(self.app)
@@ -27,6 +29,11 @@ class FSPlugin(CategoryPlugin):
         self._auth = None
 
     def get_ui(self):
+        if self._redirect is not None:
+            r = self._redirect
+            self._redirect = None
+            return r
+
         ui = self.app.inflate('filesystems:main')
 
         t = ui.find('vdlist')
@@ -37,7 +44,7 @@ class FSPlugin(CategoryPlugin):
                 UI.Label(text=x.name),
                 UI.Label(text='Encrypted Disk' if x.fstype == 'crypt' else 'Virtual Disk'),
                 UI.Label(text=str_fsize(x.size)),
-                UI.Label(text=x.mount if x.mount else 'Not Mounted'),
+                UI.LinkLabel(text=x.mount, id='open/%s'%self.enc_file(x.mount)) if x.mount else UI.Label(text='Not Mounted'),
                 UI.HContainer(
                     UI.TipIcon(iconfont='gen-key', 
                         text='Encrypt Disk', 
@@ -202,6 +209,13 @@ class FSPlugin(CategoryPlugin):
         ui.find('dump_p').set('value', e.dump_p)
         ui.find('fsck_p').set('value', e.fsck_p)
 
+    def enc_file(self, path):
+        path = path.replace('//','/')
+        return b64encode(path, altchars='+-').replace('=', '*')
+
+    def dec_file(self, b64):
+        return b64decode(b64.replace('*', '='), altchars='+-')
+
     @event('button/click')
     @event('linklabel/click')
     def on_click(self, event, params, vars=None):
@@ -255,6 +269,12 @@ class FSPlugin(CategoryPlugin):
                 self.put_message('info', 'Virtual disk deleted successfully')
             except Exception, e:
                 self.put_message('err', str(e))
+        if params[0] == 'open':
+            s = self.send_order('fileman', 'open', 
+                os.path.join(self.dec_file(params[1])),
+                open=True)
+            if s is not None:
+                self._redirect = s
 
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):

@@ -1,8 +1,7 @@
 <xml>
     <pad id="main" />
 
-    <label text="Clipboard" size="5" />
-
+    <label text="Clipboard" size="3" />
     <pad>
     <dt id="clipboard">
         <dtr header="True" width="100%">
