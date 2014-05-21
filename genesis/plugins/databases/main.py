@@ -77,6 +77,8 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 						UI.Authorization(
 							app='Databases',
 							reason='Unlock %s database engine'%dbtype[0],
+							label='Please enter your %s root password'%dbtype[0],
+							status=self.auth_context if hasattr(self, 'auth_context') else '',
 							meta=dbtype[0])
 					)
 					self._rootpwds[dbtype[0]] = True
@@ -330,7 +332,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 						store=self.app.session['dbconns'],
 						passwd=login)
 				except DBAuthFail, e:
-					self.put_message('err', str(e))
+					self.auth_context = str(e)
 			else:
 				self.put_message('err', 'You refused to authenticate to %s. '
 					'You will not be able to perform operations with this database type. '

@@ -177,9 +177,13 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				'Please add this via the Databases screen.' % self._dbauth[0])
 			self._dbauth = ('','','')
 		if self._dbauth[0]:
-			ui.append('main', UI.InputBox(id='dlgAuth%s' % self._dbauth[0], 
-				text='Enter the database password for %s' 
-				% self._dbauth[0], password=True))
+			ui.append('main', 
+				UI.Authorization(
+					app='Webapps',
+					reason='%s a website'%('Adding' if self._dbauth[2] == 'add' else 'Removing'),
+					label='Please enter your %s root password'%self._dbauth[0],
+					status=self.auth_context if hasattr(self, 'auth_context') else '')
+				)
 
 		return ui
 
@@ -314,23 +318,28 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						if spmsg:
 							self.put_message('info', spmsg)
 			self._setup = None
-		if params[0].startswith('dlgAuth'):
-			dbtype = params[0].split('dlgAuth')[1]
+		if params[0] == 'dlgAuthorize':
 			if vars.getvalue('action', '') == 'OK':
-				login = vars.getvalue('value', '')
+				login = vars.getvalue('auth-string', '')
 				try:
 					dbauth = self._dbauth
 					self._dbauth = ('','','')
-					self.dbops.get_interface(dbtype).connect(
+					self.dbops.get_interface(dbauth[0]).connect(
 						store=self.app.session['dbconns'],
 						passwd=login)
 					if dbauth[2] == 'drop':
-						w = WAWorker(self, 'drop', dbauth[1])
-						w.start()
+						try:
+							self.mgr.remove(self, dbauth[1])
+						except Exception, e:
+							self.put_message('err', 'Website removal failed: ' + str(e))
+							self.app.log.error('Website removal failed: ' + str(e))
+						else:
+							self.put_message('info', 'Website successfully removed')
+							self.ncops.remove_webapp(dbauth[1].name)
 					elif dbauth[2] == 'add':
 						self._setup = self._current
 				except DBAuthFail, e:
-					self.put_message('err', str(e))
+					self.auth_context = str(e)
 			else:
 				self.put_message('info', 'Website %s cancelled' % self._dbauth[2])
 				self._dbauth = ('','','')

@@ -121,6 +121,10 @@ a:link, a:focus, a:active {
   color: #008CBA;
 }
 
+.btn i {
+  line-height: 1;
+}
+
 .btn-tipicon {
   margin: 2px;
   padding: 0;
@@ -141,7 +145,7 @@ td a, td p, td span {
   padding: 5px;
 }
 
-.btn-outline-inverse {
+.btn-outline-inverse, .btn-outline-inverse-gray {
   color: #fff;
   background-color: transparent;
   border-color: #E0EBF3;
@@ -159,9 +163,9 @@ td a, td p, td span {
   background-color: #fff;
   border-color: #fff;
 }
-.outline-inverse-gray:hover,
-.outline-inverse-gray:focus,
-.outline-inverse-gray:active {
+.btn-outline-inverse-gray:hover,
+.btn-outline-inverse-gray:focus,
+.btn-outline-inverse-gray:active {
   color: #3E3E3E;
   text-shadow: none;
   background-color: #fff;
@@ -275,13 +279,13 @@ td a, td p, td span {
   word-wrap: break-word;
 }
 
-#whiteout {
+#whiteout, #shadeback {
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.3);
+  background: #000;
   z-index: 1000000;
 }
 
@@ -477,8 +481,20 @@ td a, td p, td span {
   color: #FFF;
 }
 
+.shadebox i {
+  line-height: 1;
+}
+
 .shadebox h3 {
   margin-top: 0;
+}
+
+.shadebox-footer {
+  text-align: right;
+}
+
+.shadebox-footer .btn {
+  margin-left: 5px;
 }
 
 #warning-text {

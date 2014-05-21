@@ -13,6 +13,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
     folder = 'servers'
 
     def on_session_start(self):
+        self._skip = False
         self._edit = None
         self._addbox = None
         self._addalias = None
@@ -27,27 +28,38 @@ class MailPlugin(apis.services.ServiceControlPlugin):
         try:
             self._domains = self._mc.list_domains()
         except DBConnFail:
-            pass
+            self._domains = []
 
     def get_main_ui(self):
         ui = self.app.inflate('email:main')
+        connstat = apis.databases(self.app).get_dbconn('MariaDB')
 
         if not apis.databases(self.app).get_interface('MariaDB').checkpwstat():
             self.put_message('err', 'MariaDB does not have a root password set. '
                 'Please add this via the Databases screen.')
             return ui
-        elif not apis.databases(self.app).get_dbconn('MariaDB'):
-            ui.append('main', UI.InputBox(id='dlgAuth', 
-                text='Enter the database password for MariaDB', 
-                password=True))
+        elif not connstat and not self._skip:
+            ui.append('main', UI.Authorization(
+                app='Mailserver',
+                reason='Unlocking mail accounts database',
+                label='Please enter your MariaDB root password',
+                status=self.auth_context if hasattr(self, 'auth_context') else '')
+            )
             return ui
-
-        is_setup = self._mc.is_setup()
-        if self.app.get_config(self._mc).reinitialize \
-        or not is_setup:
-            if not is_setup:
-                self.put_message('err', 'Your mailserver does not appear to be properly configured. Please rerun this setup.')
-            return UI.Btn(iconfont="gen-cog", text="Setup Mailserver", id="setup")
+        elif not connstat and self._skip:
+            self.put_message('err', 'You refused to authenticate to MariaDB. '
+                'You will not be able to perform operations with this database type. '
+                'Go to Databases and click Settings > Reauthenticate to retry.')
+            self._domains, self._aliases, self._boxes = [], [], []
+        elif connstat and self._skip:
+            self._skip = False
+        else:
+            is_setup = self._mc.is_setup()
+            if self.app.get_config(self._mc).reinitialize \
+            or not is_setup:
+                if not is_setup:
+                    self.put_message('err', 'Your mailserver does not appear to be properly configured. Please rerun this setup.')
+                return UI.Btn(iconfont="gen-cog", text="Setup Mailserver", id="setup")
 
         t = ui.find('list')
         for x in self._domains:
@@ -182,7 +194,10 @@ class MailPlugin(apis.services.ServiceControlPlugin):
         elif params[0] == 'addalias':
             self._addalias = True
         elif params[0] == 'adddom':
-            self._adddom = True
+            if self._skip:
+                self.put_message('err', 'You must authenticate with MariaDB in the Databases pane before you can add a domain.')
+            else:
+                self._adddom = True
         elif params[0] == 'list':
             self._list = self._domains[int(params[1])]
         elif params[0] == 'edit':
@@ -294,12 +309,15 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                         self.app.log.error('Mailbox %s@%s could not be edited. Error: %s' % (self._edit['username'],self._edit['domain'],str(e)))
                         self.put_message('err', 'Mailbox could not be edited')
             self._edit = None
-        if params[0].startswith('dlgAuth'):
+        if params[0] == 'dlgAuthorize':
             if vars.getvalue('action', '') == 'OK':
-                login = vars.getvalue('value', '')
+                login = vars.getvalue('auth-string', '')
                 try:
                     apis.databases(self.app).get_interface('MariaDB').connect(
                         store=self.app.session['dbconns'],
                         passwd=login)
+                    self._skip = False
                 except DBAuthFail, e:
-                    self.put_message('err', str(e))
+                    self.auth_context = str(e)
+            else:
+                self._skip = True

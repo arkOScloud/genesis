@@ -57,7 +57,14 @@
 
 <xsl:template match="simpleform">
     <div id="{@id}" style="display:inherit;">
-        <input id="{@id}-url" type="hidden" name="__url" value="/handle/form/submit/{@id}"/>
+        <xsl:choose>
+            <xsl:when test="@type = 'dialog'">
+                <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <input id="{@id}-url" type="hidden" name="__url" value="/handle/form/submit/{@id}"/>
+            </xsl:otherwise>
+        </xsl:choose>
         <xsl:apply-templates />
     </div>
 </xsl:template>

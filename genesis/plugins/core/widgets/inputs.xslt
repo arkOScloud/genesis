@@ -137,5 +137,26 @@
 </xsl:template>
 
 <xsl:template match="authorization">
-    <script>Genesis.showAuthorization('<xsl:value-of select="@app"/>', '<xsl:value-of select="@reason"/>', '<xsl:value-of select="@meta"/>');</script>
+    <div class="shadebox" id="authbox">
+        <h3><i class="gen-key pull-right"></i>Authorization required</h3>
+        <xsl:if test="@status != ''">
+            <systemmessage cls="danger" iconfont="gen-close" text="{@status}" />
+        </xsl:if>
+        <p id="auth-text"><strong><xsl:value-of select="@app"/></strong> needs your authorization for the following operation:</p>
+        <p id="auth-reason"><xsl:value-of select="@reason"/></p>
+        <simpleform id="dlgAuthorize" type="dialog">
+            <input type="hidden" id="auth-metadata" name="auth-metadata" value="{@meta}" />
+            <formline text="{@label}">
+                <textinput name="auth-string" id="auth-string" password="true" />
+            </formline>
+            <div class="shadebox-footer">
+                <btn text="Authorize" action="OK" design="outline-inverse-warn" size="reg" form="dlgAuthorize" onclick="form" />
+                <btn text="Cancel" action="Cancel" href="#" design="outline-inverse-gray" size="reg" form="dlgAuthorize" onclick="form">Cancel</btn>
+            </div>
+        </simpleform>
+    </div>
+    <script>
+        Genesis.showAuthorization()
+        Genesis.submitOnEnter('dlgAuthorize');
+    </script>
 </xsl:template>

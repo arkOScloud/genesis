@@ -140,15 +140,11 @@ class FSPlugin(CategoryPlugin):
             ))
 
         if self._auth:
-            ui.append('main', UI.DialogBox(
-                UI.FormLine(
-                    UI.Label(text=self._auth.name),
-                    text='For disk:'
-                ),
-                UI.FormLine(
-                    UI.TextInput(name='authpasswd', password=True),
-                    text='Password'
-                ), id='dlgAuth'
+            ui.append('main', UI.Authorization(
+                app='Filesystems',
+                reason='Decrypt %s'%self._auth.img,
+                label='Please enter your encryption passphrase',
+                status=self.auth_context if hasattr(self, 'auth_context') else ''
             ))
 
         return ui
@@ -314,13 +310,15 @@ class FSPlugin(CategoryPlugin):
                     self.fstab.append(e)
                 backend.save(self.fstab)
             self._editing = -1
-        if params[0] == 'dlgAuth':
+        if params[0] == 'dlgAuthorize':
             if vars.getvalue('action', '') == 'OK':
                 try:
-                    self._fsc.mount(self._auth, vars.getvalue('authpasswd', ''))
+                    self._fsc.mount(self._auth, vars.getvalue('auth-string', ''))
                     self.put_message('info', 'Virtual disk decrypted and mounted successfully')
+                    self._auth = None
                 except Exception, e:
-                    self.put_message('err', str(e))
+                    self.auth_context = str(e)
+            else:
                 self._auth = None
         if params[0] == 'dlgEnc':
             if vars.getvalue('action', '') == 'OK':
