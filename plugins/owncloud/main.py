@@ -142,8 +142,8 @@ class ownCloud(Plugin):
         f.close()
 
         # Return an explicatory message
-        if detect_architecture()[1] == 'Raspberry Pi':
-            return ('ownCloud takes a long time to set up on the RPi. '
+        if detect_architecture()[1] in ['BeagleBone Black,' 'Raspberry Pi']:
+            return ('ownCloud takes a long time to set up on this platform. '
             'Once you open the page for the first time, it may take 5-10 '
             'minutes for the content to appear. Please do not refresh the '
             'page.')
@@ -177,6 +177,7 @@ class ownCloud(Plugin):
         dbase.usermod(dbname, 'del', '', conn)
         if datadir:
             shutil.rmtree(datadir)
+            phpctl = apis.langassist(self.app).get_interface('PHP')
             phpctl.open_basedir('del', datadir)
 
     def post_remove(self, name):
