@@ -27,25 +27,31 @@
             <span id="topplaceholder-top"/>
             <span id="topplaceholder-bottom"/>
             <div class="pull-right">
-                <popover id="power-pop" placement="bottom" class="ui-el-top-category gen-switch"></popover>
+                <popover id="tools-pop" placement="bottom" class="ui-el-top-category" iconfont="gen-tools">Tools</popover>
                 <div class="popover bottom">
-                  <div id="power-pop-content" class="popover-inner">
-                    <ul>
-                        <li><a class="popover-link" href="#" onclick="Genesis.showWarning('Are you sure you want to reload the Genesis process?', 'gen_reload');"><i class="gen-arkos-round"></i> Reload Genesis</a></li>
-                        <li><a class="popover-link" href="#" onclick="Genesis.showWarning('Are you sure you want to shutdown your system?', 'gen_shutdown');"><i class="gen-switch"></i> Shutdown System</a></li>
-                        <li><a class="popover-link" href="#" onclick="Genesis.showWarning('Are you sure you want to restart your system?', 'gen_reboot');"><i class="gen-loop-2"></i> Restart System</a></li>
-                    </ul>
+                  <div id="tools-pop-content" class="popover-inner">
+                    <ul id="tools-placeholder" />
                   </div>
                 </div>
-                <popover id="settings-pop" placement="bottom" styles="float:right;" class="ui-el-top-category gen-settings"></popover>
+                <popover id="settings-pop" placement="bottom" class="ui-el-top-category" iconfont="gen-settings">Settings</popover>
                 <div class="popover bottom">
                   <div id="settings-pop-content" class="popover-inner">
                     <ul>
-                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('pluginmanager');"><i class="gen-box-add"></i> Applications</a></li>
-                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('recoveryplugin');"><i class="gen-history"></i> Recovery</a></li>
-                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('configplugin');"><i class="gen-arkos-round"></i> Genesis Settings</a></li>
-                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('networkplugin');"><i class="gen-network"></i> Network Settings</a></li>
-                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('sysconfigplugin');"><i class="gen-cog"></i> System Settings</a></li>
+                        <popoverlink onclick="return Genesis.selectCategory('pluginmanager');" text="Applications" iconfont="gen-box-add" />
+                        <popoverlink onclick="return Genesis.selectCategory('recoveryplugin');" text="Recovery" iconfont="gen-history" />
+                        <popoverlink onclick="return Genesis.selectCategory('configplugin');" text="Genesis Settings" iconfont="gen-arkos-round" />
+                        <popoverlink onclick="return Genesis.selectCategory('networkplugin');" text="Network Settings" iconfont="gen-network" />
+                        <popoverlink onclick="return Genesis.selectCategory('sysconfigplugin');" text="System Settings" iconfont="gen-cog" />
+                    </ul>
+                  </div>
+                </div>
+                <popover id="power-pop" placement="bottom" class="ui-el-top-category" iconfont="gen-switch">Power</popover>
+                <div class="popover bottom">
+                  <div id="power-pop-content" class="popover-inner">
+                    <ul>
+                        <popoverlink onclick="Genesis.showWarning('Are you sure you want to reload the Genesis process?', 'gen_reload');" text="Reload Genesis" iconfont="gen-arkos-round" />
+                        <popoverlink onclick="Genesis.showWarning('Are you sure you want to shutdown your system?', 'gen_shutdown');" text="Shutdown System" iconfont="gen-switch" />
+                        <popoverlink onclick="Genesis.showWarning('Are you sure you want to restart your system?', 'gen_reboot');" text="Restart System" iconfont="gen-loop-2" />
                     </ul>
                   </div>
                 </div>

@@ -246,7 +246,10 @@
 
 <xsl:template match="popover">
     <xsl:variable name="id" select="x:id(@id)" />
-    <a id="{$id}" style="display:inline-block; {@styles}" class="pop-trigger {@class}" onclick="{@onclick}">
+    <a id="{$id}" style="display:inline-block; {@styles}" class="pop-trigger {@class}" onclick="{@onclick}" href="#">
+        <xsl:if test="@iconfont">
+            <i class="{@iconfont}"></i>&#160;
+        </xsl:if>
         <xsl:apply-templates />
     </a>
     <script>
@@ -265,6 +268,11 @@
             trigger: '<xsl:value-of select="x:attr(@trigger, 'click')" />',
         });
     </script>
+</xsl:template>
+
+
+<xsl:template match="popoverlink">
+    <li><a class="popover-link" href="#" onclick="{@onclick}"><xsl:if test="@iconfont"><i class="{@iconfont}"></i></xsl:if>&#160;<xsl:value-of select="@text" /></a></li>
 </xsl:template>
 
 

@@ -19,13 +19,12 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         'hardware': 'HARDWARE',
         'apps': 'APPLICATIONS',
         'servers': 'SERVERS',
-        'tools': 'TOOLS',
         'advanced': 'ADVANCED',
         'other': 'OTHER',
     }
 
     # Folder order
-    folder_ids = ['cluster', 'apps', 'servers', 'system', 'hardware', 'tools', 'advanced', 'other']
+    folder_ids = ['cluster', 'apps', 'servers', 'system', 'hardware', 'advanced', 'other']
 
     def on_session_start(self):
         self._cat_selected = 'firstrun' if self.is_firstrun() else 'dashboard'
@@ -174,6 +173,13 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
                             iconfont=c.iconfont,
                             counter=c.get_counter(),
                             selected=c==self.selected_category
+                        )
+                    )
+                elif c.folder == 'tools':
+                    templ.append(
+                        'tools-placeholder',
+                        UI.PopoverLink(iconfont=c.iconfont, text=c.text,
+                            onclick="Genesis.selectCategory('"+c.plugin_id+"');", 
                         )
                     )
             templ.append('_head', UI.HeadTitle(text='Genesis @ %s'%platform.node()))
