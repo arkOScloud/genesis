@@ -216,7 +216,6 @@ Genesis = (function() {
             $('.ui-el-category').removeClass('selected');
             $('.ui-el-top-category').removeClass('selected');
             $('#'+id).addClass('selected');
-            Genesis.UI.closePopovers();
             Genesis.query('/handle/category/click/' + id);
             $('html').scrollTop(0);
             return false;
@@ -279,33 +278,6 @@ Genesis = (function() {
                 $('#'+id).modal('hide');
                 $('body').removeClass('modal-open');
                 $('.modal-backdrop').fadeTo(250, 0, function () { $(this).remove(); });
-            },
-
-            popoverEvent: null,
-
-            prepPopover: function (event, id) {
-                $('#'+id).toggleClass('selected');
-                if(Genesis.UI.popoverEvent !== null) { document.removeEventListener(Genesis.UI.popoverEvent);}
-                Genesis.UI.popoverEvent = document.attachEventListener('click',Genesis.UI.closePopovers);
-                Genesis.UI.closeOtherPopovers(id);
-                event.stopPropagation();
-            },
-
-            closePopovers: function () {
-                $('.pop-trigger').popover('hide');
-                $('.pop-trigger').removeClass('selected');
-                $('.popover').css('display', 'none');
-                    $(document).off('click.popover.close');
-            },
-
-            closeOtherPopovers: function (id) {
-                $('.pop-trigger').each(function (i) {
-                    if ( this.id != id ) {
-                        $('#'+this.id).popover('hide');
-                        $('.popover').css('display', 'none');
-                        $('#'+this.id).removeClass('selected');
-                    }
-                });
             },
 
             showLoader: function (visible) {
@@ -384,3 +356,16 @@ function noenter() {
 function ui_fill_custom_html(id, html) {
     document.getElementById(id).innerHTML = Base64.decode(html);
 }
+
+$(document).click(function (e) {
+    $('.pop-trigger').each(function () {
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            //$(this).popover('hide');
+            if ($(this).data('bs.popover').tip().hasClass('in')) {
+                $(this).popover('toggle');
+            }
+            
+            return;
+        }
+    });
+});

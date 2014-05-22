@@ -246,7 +246,7 @@
 
 <xsl:template match="popover">
     <xsl:variable name="id" select="x:id(@id)" />
-    <a id="{$id}" style="display:inline-block; {@styles}" class="pop-trigger {@class}" onclick="Genesis.UI.prepPopover(event, '{@id}');{@onclick}">
+    <a id="{$id}" style="display:inline-block; {@styles}" class="pop-trigger {@class}" onclick="{@onclick}">
         <xsl:apply-templates />
     </a>
     <script>
