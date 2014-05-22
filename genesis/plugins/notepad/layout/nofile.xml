@@ -1,0 +1,10 @@
+<xml>
+    <div id="main" class="text-center">
+        <label size="5">Welcome to Notepad</label>
+        <label size="1">You have no files open. To open a file or create a new one, use the buttons below:</label>
+        <buttongroup size="lg">
+            <btn id="new" text="New..." iconfont="gen-folder"/>
+            <btn id="open" text="Open..." iconfont="gen-folder"/>
+        </buttongroup>
+    </div>
+</xml>

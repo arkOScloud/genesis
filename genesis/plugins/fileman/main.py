@@ -2,6 +2,7 @@
 from genesis.ui import *
 from genesis.api import *
 from genesis.plugins.core.api import *
+from genesis.plugins.notepad.main import NotepadPlugin
 from genesis.utils import *
 import os
 from base64 import b64encode, b64decode
@@ -30,18 +31,13 @@ class FMPlugin(CategoryPlugin, URLHandler):
         self._cbs = None
         self._renaming = []
         self._newfolder = None
+        self._newfile = None
         self._upload = None
-        self._redirect = None
         self._archupl = []
         self._showhidden = self._config.showhidden
         self.add_tab()
 
     def get_ui(self):
-        if self._redirect is not None:
-            r = self._redirect
-            self._redirect = None
-            return r
-
         ui = self.app.inflate('fileman:main')
         tc = UI.TabControl(active=self._tab)
 
@@ -106,6 +102,13 @@ class FMPlugin(CategoryPlugin, URLHandler):
                     lbreak=True, bold=True),
                 id='dlgArchUpl', yesno=True))
 
+        if self._newfile:
+            ui.append('main', UI.InputBox(
+                text='Enter path for file',
+                value='',
+                id='dlgNewFile'
+            ))
+
         if self._newfolder:
             ui.append('main', UI.InputBox(
                 text='Enter path for folder',
@@ -119,6 +122,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
         ui = self.app.inflate('fileman:tab')
 
         ui.find('paste').set('id', 'paste/%i'%tidx)
+        ui.find('newfile').set('id', 'newfile/%i'%tidx)
         ui.find('newfld').set('id', 'newfld/%i'%tidx)
         ui.find('close').set('id', 'close/%i'%tidx)
         for x in sorted(apis.poicontrol(self.app).get_pois(), key=lambda x: x.name):
@@ -132,9 +136,6 @@ class FMPlugin(CategoryPlugin, URLHandler):
         if self._showhidden:
             ui.find('hidden').set('text', 'Hide hidden')
             ui.find('hidden').set('iconfont', 'gen-eye-blocked')
-
-        # Is Notepad present?
-        notepad = self.can_order('notepad')
 
         # Generate breadcrumbs
         path = tab
@@ -208,13 +209,15 @@ class FMPlugin(CategoryPlugin, URLHandler):
             if not isdir and not path.startswith('/dev'):
                 tc = ''.join(map(chr, [7,8,9,10,12,13,27] + range(0x20, 0x100)))
                 ibs = lambda b: bool(b.translate(None, tc))
-                if not notepad or ibs(open(np).read(1024)):
+                if ibs(open(np).read(1024)):
                     item = UI.Label(text=name)
                 else:
-                    item = UI.LinkLabel(text=name, id='open/%i/%s' % (
+                    item = UI.Tooltip(UI.LinkLabelRedirect(text=name, 
+                        id='open/%i/%s' % (
                         tidx,
                         self.enc_file(np)
-                    ))
+                    ), redirect="notepadplugin"
+                    ), text="Open in Notepad")
             else:
                 item = UI.LinkLabel(text=name, id='goto/%i/%s' % (
                     tidx,
@@ -338,11 +341,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
             self._tab = len(self._tabs)
             self._tabs.append(self.dec_file(params[2]))
         if params[0] == 'open':
-            s = self.send_order('notepad', 'open', 
-                os.path.join(self._tabs[int(params[1])],self.dec_file(params[2])),
-                open=True)
-            if s is not None:
-                self._redirect = s
+            NotepadPlugin(self.app).open(
+                os.path.join(self._tabs[int(params[1])],
+                    self.dec_file(params[2])))
         if params[0] == 'rmClipboard':
             self._clipboard.remove(self._clipboard[int(params[1])])
         if params[0] == 'close' and len(self._tabs)>1:
@@ -358,6 +359,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
             self.work(self._cbs, self._clipboard, path)
         if params[0] == 'upload':
             self._upload = True
+        if params[0] == 'newfile':
+            self._tab = int(params[1])
+            self._newfile = self._tabs[int(params[1])]
         if params[0] == 'newfld':
             self._tab = int(params[1])
             self._newfolder = self._tabs[int(params[1])]
@@ -461,6 +465,20 @@ class FMPlugin(CategoryPlugin, URLHandler):
                 except Exception, e:
                     self.put_message('err', 'Failed to extract %s: %s' % (f[1], str(e)))
             self._archupl.remove(f)
+        if params[0] == 'dlgNewFile':
+            if vars.getvalue('action', '') == 'OK' and vars.getvalue('value', ''):
+                filename = vars.getvalue('value', '')
+                if filename[0] != '/':
+                    filename = os.path.join(self._newfile, filename)
+                if os.path.exists(filename):
+                    self.put_message('err', 'That file already exists!')
+                else:
+                    try:
+                        open(filename, 'w')
+                        self.put_message('info', 'File created: %s' % filename)
+                    except Exception, e:
+                        self.put_message('err', 'File creation failed: %s' % str(e))
+            self._newfile = None
         if params[0] == 'dlgNewFolder':
             if vars.getvalue('action', '') == 'OK' and vars.getvalue('value', ''):
                 fld = vars.getvalue('value', '')

@@ -30,7 +30,7 @@
 
 <!-- Button magic -->
 <xsl:template match="buttongroup">
-    <div class="btn-group">
+    <div class="btn-group{x:iif(@size = 'lg', ' btn-group-lg', '')}">
         <xsl:apply-templates />
     </div>
 </xsl:template>
@@ -203,6 +203,15 @@
 
 <xsl:template match="linklabel">
     <a href="#" onclick="javascript:return Genesis.query('/handle/linklabel/click/{@id}');" class="ui-el-link" style="{x:iif(@bold, 'font-weight: bold;', '')}">
+        <xsl:if test="@iconfont">
+            <i class="{@iconfont}"></i>&#160;
+        </xsl:if>
+        <xsl:value-of select="@text" />
+    </a>
+</xsl:template>
+
+<xsl:template match="linklabelredirect">
+    <a href="#" onclick="javascript:Genesis.query('/handle/linklabel/click/{@id}');return Genesis.selectCategory('{@redirect}');" class="ui-el-link" style="{x:iif(@bold, 'font-weight: bold;', '')}">
         <xsl:if test="@iconfont">
             <i class="{@iconfont}"></i>&#160;
         </xsl:if>

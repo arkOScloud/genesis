@@ -1,0 +1,12 @@
+<xml>
+    <buttongroup>
+        <btn id="new" text="New..." iconfont="gen-folder"/>
+        <btn id="open" text="Open..." iconfont="gen-folder"/>
+        <btn id="save" text="Save" iconfont="gen-disk"/>
+        <btn id="close" text="Close" iconfont="gen-cancel-circle" />
+    </buttongroup>
+
+    <hcontainer>
+        <codeinputarea id="data" width="551" height="500" value="" />
+    </hcontainer>
+</xml>
