@@ -139,9 +139,6 @@
 <xsl:template match="authorization">
     <div class="shadebox" id="authbox">
         <h3><i class="gen-key pull-right"></i>Authorization required</h3>
-        <xsl:if test="@status != ''">
-            <systemmessage cls="danger" iconfont="gen-close" text="{@status}" />
-        </xsl:if>
         <p id="auth-text"><strong><xsl:value-of select="@app"/></strong> needs your authorization for the following operation:</p>
         <p id="auth-reason"><xsl:value-of select="@reason"/></p>
         <simpleform id="dlgAuthorize" type="dialog">

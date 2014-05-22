@@ -33,7 +33,7 @@
 
 
 <xsl:template match="systemmessage">
-    <div class="alert alert-{@cls} alert-dismissable">
+    <div class="alert alert-{@cls} alert-dismissable fade in">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&#215;</button>
         <i class="{x:attr(@iconfont,'gen-checkmark')}" style="line-height:1;"></i> <xsl:value-of select="@text" />
     </div>

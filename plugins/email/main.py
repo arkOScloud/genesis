@@ -42,8 +42,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
             ui.append('main', UI.Authorization(
                 app='Mailserver',
                 reason='Unlocking mail accounts database',
-                label='Please enter your MariaDB root password',
-                status=self.auth_context if hasattr(self, 'auth_context') else '')
+                label='Please enter your MariaDB root password')
             )
             return ui
         elif not connstat and self._skip:
@@ -318,6 +317,6 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                         passwd=login)
                     self._skip = False
                 except DBAuthFail, e:
-                    self.auth_context = str(e)
+                    self.put_message('err', str(e))
             else:
                 self._skip = True

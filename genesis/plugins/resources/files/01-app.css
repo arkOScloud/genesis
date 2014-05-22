@@ -210,6 +210,20 @@ td a, td p, td span {
   margin-bottom:30px;
 }
 
+.message-box-wr {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  padding: 20px 10px;
+  z-index: 1000002;
+}
+
+.alert {
+  width: 500px;
+  overflow: hidden;
+  margin: 0 0 5px;
+}
+
 .alert-warning {
   background-color:#F4A425;
   color: #FFF;
@@ -224,6 +238,12 @@ td a, td p, td span {
 
 .alert-info {
   background-color:#5BC0DE;
+  color: #FFF;
+  border: 0px;
+}
+
+.alert-success {
+  background-color:#43AC6A;
   color: #FFF;
   border: 0px;
 }

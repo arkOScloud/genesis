@@ -181,8 +181,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 				UI.Authorization(
 					app='Webapps',
 					reason='%s a website'%('Adding' if self._dbauth[2] == 'add' else 'Removing'),
-					label='Please enter your %s root password'%self._dbauth[0],
-					status=self.auth_context if hasattr(self, 'auth_context') else '')
+					label='Please enter your %s root password'%self._dbauth[0])
 				)
 
 		return ui
@@ -339,7 +338,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 					elif dbauth[2] == 'add':
 						self._setup = self._current
 				except DBAuthFail, e:
-					self.auth_context = str(e)
+					self.put_message('err', str(e))
 			else:
 				self.put_message('info', 'Website %s cancelled' % self._dbauth[2])
 				self._dbauth = ('','','')

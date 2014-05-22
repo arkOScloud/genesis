@@ -150,8 +150,7 @@ class FSPlugin(CategoryPlugin):
             ui.append('main', UI.Authorization(
                 app='Filesystems',
                 reason='Decrypt %s'%self._auth.img,
-                label='Please enter your encryption passphrase',
-                status=self.auth_context if hasattr(self, 'auth_context') else ''
+                label='Please enter your encryption passphrase'
             ))
 
         return ui
@@ -337,7 +336,7 @@ class FSPlugin(CategoryPlugin):
                     self.put_message('info', 'Virtual disk decrypted and mounted successfully')
                     self._auth = None
                 except Exception, e:
-                    self.auth_context = str(e)
+                    self.put_message('err', str(e))
             else:
                 self._auth = None
         if params[0] == 'dlgEnc':

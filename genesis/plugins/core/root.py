@@ -60,7 +60,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
                 else:
                     msgcls, ift = 'danger', 'gen-close'
                 templ.append(
-                    'system-messages',
+                    'message-box',
                     UI.SystemMessage(
                         cls=msgcls,
                         iconfont=ift,
