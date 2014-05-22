@@ -458,10 +458,11 @@ td a, td p, td span {
   overflow-y: auto;
   overflow-x: hidden;
   list-style: none;
+  padding-left: 0;
 }
 
 .ui-el-list li {
-  padding: 2px;
+  padding: 2px 10px;
   width: 100%;
   line-height: 16px;
   color: #555;

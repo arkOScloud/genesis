@@ -118,6 +118,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 			provs.append(
 					UI.ListItem(
 						UI.Label(text=apptype.name),
+						iconfont=apptype.iconfont,
 						id=apptype.name,
 						active=apptype.name==self._current.name
 					)

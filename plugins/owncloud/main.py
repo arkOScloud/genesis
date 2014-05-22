@@ -256,5 +256,6 @@ class ownCloud(Plugin):
     def show_opts_add(self, ui):
         poi_sel = []
         for x in sorted(apis.poicontrol(self.app).get_pois(), key=lambda x: x.name):
-            poi_sel.append(UI.SelectOption(text=x.name, value=x.path))
+            if x.ptype in ['disk', 'vdisk']:
+                poi_sel.append(UI.SelectOption(text=x.name, value=x.path))
         ui.appendAll('oc-ddir', *poi_sel)

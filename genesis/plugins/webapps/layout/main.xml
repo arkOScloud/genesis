@@ -18,27 +18,33 @@
         </dt>
     </pad>
 
-    <dialogbox id="dlgAdd">
+    <dialogbox id="dlgAdd" size="large">
         <pad>
-            <hcontainer>
-                <list id="provs" width="200" height="300" />
-                <scrollcontainer width="400" height="300">
-                    <div id="logo" style="text-align:center;">
-                    </div>
-                    <formline text="Name">
-                        <label name="appname" id="appname" />
-                    </formline>
-                    <formline text="Intro">
-                        <label name="short" id="short" />
-                    </formline>
-                    <formline text="Website">
-                        <outlinklabel id="website" />
-                    </formline>
-                    <formline text="Description">
-                        <label name="desc" id="desc" />
-                    </formline>
-                </scrollcontainer>
-            </hcontainer>
+            <table class="layout" style="width:100%;height:auto;">
+                 <tr>
+                    <td>
+                        <list id="provs" width="200" height="500" />
+                    </td>
+                    <td style="width:100%">
+                        <scrollcontainer width="100%" height="500" style="padding: 10px 20px;">
+                            <div id="logo" style="text-align:center;">
+                            </div>
+                            <formline text="Name">
+                                <label name="appname" id="appname" />
+                            </formline>
+                            <formline text="Intro">
+                                <label name="short" id="short" />
+                            </formline>
+                            <formline text="Website">
+                                <outlinklabel id="website" />
+                            </formline>
+                            <formline text="Description">
+                                <label name="desc" id="desc" />
+                            </formline>
+                        </scrollcontainer>
+                    </td>  
+                 </tr>
+            </table>
         </pad>
     </dialogbox>
 

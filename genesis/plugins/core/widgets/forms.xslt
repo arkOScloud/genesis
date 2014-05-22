@@ -58,7 +58,7 @@
 <xsl:template match="dialogbox">
 <div>
     <div id="{@id}" class="modal fade">
-        <div class="modal-dialog">
+        <div class="modal-dialog{x:iif(@size = 'large', ' modal-lg', '')}">
             <div class="modal-content">
                 <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
                 <div class="modal-body">
