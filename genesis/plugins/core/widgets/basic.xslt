@@ -239,7 +239,7 @@
 
 <xsl:template match="tooltip">
     <xsl:variable name="id" select="x:id(@id)" />
-    <div style="display:inline-block; {@styles}" id="{$id}" class="ui-tooltip" data-animation="true" data-placement="{x:attr(@placement, 'right')}" data-html="true" data-delay="{x:attr(@delay, '0')}" data-title="{x:jsesc(x:attr(@text, ''))}" data-trigger="{x:attr(@trigger, 'hover')}">
+    <div style="display:inline-block; {@styles}" id="{$id}" class="ui-tooltip" data-toggle="tooltip" title="{x:jsesc(x:attr(@text, ''))}">
         <xsl:apply-templates />
     </div>
 </xsl:template>
