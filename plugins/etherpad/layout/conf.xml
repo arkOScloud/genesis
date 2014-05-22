@@ -1,0 +1,46 @@
+<xml>
+    <label text="These options are MANDATORY! Especially the password." />
+	<formline text="Admin Username">
+	    <textinput name="ether_admin" id="ether_admin" value="Admin" />
+	</formline>
+	<formline text="Admin Password">
+	    <textinput name="ether_pass" id="ether_pass" password="True" />
+	</formline>
+    <label text="Plugins to be preinstalled. Plugins settings are later to be found under http://your-etherpad-domain/admin/plugins" />
+<!--<checkbox name="ep_plugin/align" text="align - Add text alignment buttons." checked="True" />-->
+    <checkbox name="ep_plugin/adminpads" text="adminpads - Gives the ability to list and administrate all pads on admin page." checked="True" />
+<!--<checkbox name="ep_plugin/codepad" text="codepad - Finetuning Etherpad Lite for code editing." checked="False" />-->
+<!--<checkbox name="draw" text="draw - Really real time Collaborative painting and drawing with Etherpad" checked="True" />-->
+    <checkbox name="ep_plugin/aa_file_menu_toolbar" text="file menu bar - File / Menu style toolbar." checked="True" />
+    <checkbox name="ep_plugin/font_color" text="font color - Apply colors to fonts." checked="True" />
+    <checkbox name="ep_plugin/font_family" text="font family - Change the font family of some text." checked="True" />
+    <checkbox name="ep_plugin/font_size" text="font size - Change the font size." checked="True" />
+    <checkbox name="ep_plugin/headings" text="headings - Adds heading support to Etherpad Lite." checked="True" />
+    <checkbox name="ep_plugin/historicalsearch" text="historicalsearch - Search through the history of documents to find when a query/search pattern or string existed." checked="True" />
+    <checkbox name="ep_plugin/offline_edit" text="offline edit - View your pad data even if you are disconnected from the Internets." checked="True" />
+    <checkbox name="ep_plugin/page_view" text="page view - Add support to do 'page view', with a toggle on/off option in Settings, also Page Breaks with Control Enter." checked="True" />
+    <checkbox name="ep_plugin/set_title_on_pad" text="set title on pad - Set the title on a pad in Etherpad, also includes real time updates to the UI." checked="True" />
+    <checkbox name="ep_plugin/timesliderdiff" text="timesliderdiff - See a diff view showing the changes between the latest pad and a revision." checked="False" />
+<!--<checkbox name="ep_plugin/tables" text="tables - Adds tables to etherpad-lite." checked="False" />-->
+<!--<checkbox name="ep_plugin/webrtc" text="webrtc - WebRTC based audio/video chat to Etherpad." checked="False" />-->
+</xml>
+<!--
+TODO: checkout theeese fancy plugins:
+sketchspace
+sketchspace_pdfbackground
+latex
+latexexport
+mathjax
+prompt_for_name
+speechinput
+subscript
+superscript
+speechinput
+text_to_speech
+user_pad
+user_pad_frontend
+embedmedia
+colors
+ether-o-meter
+plugin for password on a certain pad??
+-->
