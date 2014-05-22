@@ -31,9 +31,9 @@
                 <div class="popover bottom">
                   <div id="power-pop-content" class="popover-inner">
                     <ul>
-                        <li><a class="danger top-link" onclick="Genesis.showWarning('Are you sure you want to reload the Genesis process?', 'gen_reload');"><i class="gen-arkos-round"></i> Reload Genesis</a></li>
-                        <li><a class="danger" onclick="Genesis.showWarning('Are you sure you want to shutdown your system?', 'gen_shutdown');"><i class="gen-switch"></i> Shutdown System</a></li>
-                        <li><a class="danger bottom-link" onclick="Genesis.showWarning('Are you sure you want to restart your system?', 'gen_reboot');"><i class="gen-loop-2"></i> Restart System</a></li>
+                        <li><a class="popover-link" href="#" onclick="Genesis.showWarning('Are you sure you want to reload the Genesis process?', 'gen_reload');"><i class="gen-arkos-round"></i> Reload Genesis</a></li>
+                        <li><a class="popover-link" href="#" onclick="Genesis.showWarning('Are you sure you want to shutdown your system?', 'gen_shutdown');"><i class="gen-switch"></i> Shutdown System</a></li>
+                        <li><a class="popover-link" href="#" onclick="Genesis.showWarning('Are you sure you want to restart your system?', 'gen_reboot');"><i class="gen-loop-2"></i> Restart System</a></li>
                     </ul>
                   </div>
                 </div>
@@ -41,11 +41,11 @@
                 <div class="popover bottom">
                   <div id="settings-pop-content" class="popover-inner">
                     <ul>
-                        <li><a class="default top-link" onclick="return Genesis.selectCategory('pluginmanager');"><i class="gen-box-add"></i> Applications</a></li>
-                        <li><a class="default" onclick="return Genesis.selectCategory('recoveryplugin');"><i class="gen-history"></i> Recovery</a></li>
-                        <li><a class="default" onclick="return Genesis.selectCategory('configplugin');"><i class="gen-arkos-round"></i> Genesis Settings</a></li>
-                        <li><a class="default" onclick="return Genesis.selectCategory('networkplugin');"><i class="gen-network"></i> Network Settings</a></li>
-                        <li><a class="default bottom-link" onclick="return Genesis.selectCategory('sysconfigplugin');"><i class="gen-cog"></i> System Settings</a></li>
+                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('pluginmanager');"><i class="gen-box-add"></i> Applications</a></li>
+                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('recoveryplugin');"><i class="gen-history"></i> Recovery</a></li>
+                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('configplugin');"><i class="gen-arkos-round"></i> Genesis Settings</a></li>
+                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('networkplugin');"><i class="gen-network"></i> Network Settings</a></li>
+                        <li><a class="popover-link" href="#" onclick="return Genesis.selectCategory('sysconfigplugin');"><i class="gen-cog"></i> System Settings</a></li>
                     </ul>
                   </div>
                 </div>

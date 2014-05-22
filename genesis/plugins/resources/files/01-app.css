@@ -9,8 +9,9 @@ html, body, h1, h2, h3, h4, h5, h6, p, a, span {
   font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', sans-serif;
 }
 
-a:link, a:focus, a:active {
+a:link, a:focus, a:active, a:hover {
   outline: 0;
+  text-decoration: none;
 }
 
 .navbar-inverse .navbar-brand {
@@ -520,4 +521,27 @@ td a, td p, td span {
 #warning-text {
   display: inherit;
   margin-bottom: 10px;
+}
+
+.popover-content {
+  padding: 9px 0px;
+}
+
+.popover ul {
+  list-style: none;
+  margin: 0;
+  text-align: center;
+  min-width:150px;
+  padding-left: 0;
+}
+
+.popover li a {
+  padding: 6px 12px;
+  display: block;
+  width: 100%;
+  color: #333;
+}
+
+.popover li:hover {
+  background-color: #F5F5F5;
 }

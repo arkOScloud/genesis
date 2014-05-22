@@ -359,7 +359,7 @@ function ui_fill_custom_html(id, html) {
 
 $(document).click(function (e) {
     $('.pop-trigger').each(function () {
-        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+        if ((!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0)||($(e.target).is('.popover-link'))) {
             //$(this).popover('hide');
             if ($(this).data('bs.popover').tip().hasClass('in')) {
                 $(this).popover('toggle');
