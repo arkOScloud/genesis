@@ -1,10 +1,13 @@
 <xml>
-    <div id="main" class="text-center">
-        <label size="5">Welcome to Notepad</label>
-        <label size="1">You have no files open. To open a file or create a new one, use the buttons below:</label>
-        <buttongroup size="lg">
-            <btn id="new" text="New..." iconfont="gen-folder"/>
-            <btn id="open" text="Open..." iconfont="gen-folder"/>
-        </buttongroup>
+    <div id="main">
+        <div class="text-center">
+            <label size="5" text="Notepad" />
+            <h1 class="gen-file-2" style="font-size:20em;line-height:1em;"></h1>
+            <label size="lead" text="You have no files open. To open a file or create a new one, use the buttons below:" />
+            <buttongroup size="lg">
+                <btn id="new" text="New..." iconfont="gen-folder"/>
+                <btn id="open" text="Open..." iconfont="gen-folder"/>
+            </buttongroup>
+        </div>
     </div>
 </xml>

@@ -9,6 +9,9 @@
         <xsl:when test="@size = '3'">
             <h3 class="page-header"><xsl:value-of select="@text" /></h3>
         </xsl:when>
+        <xsl:when test="@size = 'lead'">
+            <p class="lead"><xsl:value-of select="@text" /></p>
+        </xsl:when>
         <xsl:otherwise>
             <span class="ui-el-label-{x:attr(@size, '1')} {@class}" style="{x:iif(@bold, 'font-weight: bold;', '')} {x:iif(@monospace, 'font-family: monospace;', '')} {x:iif(@lbreak, 'max-width: 500px;', '')}">
                 <xsl:value-of select="@text" />
@@ -31,6 +34,18 @@
 <!-- Button magic -->
 <xsl:template match="buttongroup">
     <div class="btn-group{x:iif(@size = 'lg', ' btn-group-lg', '')}">
+        <xsl:apply-templates />
+    </div>
+</xsl:template>
+
+<xsl:template match="inputgroup">
+    <div class="input-group {@class}">
+        <xsl:apply-templates />
+    </div>
+</xsl:template>
+
+<xsl:template match="inputgroupbtn">
+    <div class="input-group-btn">
         <xsl:apply-templates />
     </div>
 </xsl:template>
@@ -176,13 +191,13 @@
     <xsl:variable name="size">
         <xsl:choose>
             <xsl:when test="@size != ''">
-                <xsl:value-of select="@size" />
+                btn-<xsl:value-of select="@size" />
             </xsl:when>
-            <xsl:otherwise>sm</xsl:otherwise>
+            <xsl:otherwise>btn-sm</xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
 
-    <a href="{@href}" onclick="{$onclickjs}" class="btn btn-{$design} btn-{$size}">
+    <a href="{@href}" onclick="{$onclickjs}" class="btn btn-{$design} {x:iif($size, $size, '')}">
         <xsl:choose>
             <xsl:when test="@iconfont != ''">
                 <i class="{@iconfont}"></i>

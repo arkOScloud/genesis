@@ -1,12 +1,21 @@
 <xml>
-    <buttongroup>
-        <btn id="new" text="New..." iconfont="gen-folder"/>
-        <btn id="open" text="Open..." iconfont="gen-folder"/>
-        <btn id="save" text="Save" iconfont="gen-disk"/>
-        <btn id="close" text="Close" iconfont="gen-cancel-circle" />
-    </buttongroup>
+	<div class="row" style="margin-bottom: 15px;">
+		<div class="col-lg-6">
+			<buttongroup>
+			    <btn id="save" action="save" text="Save" iconfont="gen-disk" onclick="form" form="frmEdit" />
+			    <btn id="close" action="close" text="Close" iconfont="gen-cancel-circle" onclick="form" form="frmEdit" />
+			</buttongroup>
+		</div>
+		<div class="col-lg-6">
+			<inputgroup>
+				<textinput id="path" name="path" value="" />
+				<inputgroupbtn>
+				    <btn id="new" action="new" text="New" iconfont="gen-file-plus" onclick="form" form="frmEdit" />
+				    <btn id="open" action="open" text="Open" iconfont="gen-folder" onclick="form" form="frmEdit" />
+				</inputgroupbtn>
+			</inputgroup>
+		</div>
+	</div>
 
-    <hcontainer>
-        <codeinputarea id="data" width="551" height="500" value="" />
-    </hcontainer>
+    <codeinputarea id="data" width="100%" height="500" value="" />
 </xml>
