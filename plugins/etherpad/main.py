@@ -110,7 +110,7 @@ class Etherpad(Plugin):
         # Install deps right away
         if not shell(os.path.join(path, 'bin/installDeps.sh') + ' || exit 1'):
             raise RuntimeError(
-                "Sorry Bro, could not install etherpad dependencies.")
+                "Etherpad dependencies could not be installed.")
 
         # Install selected plugins
         mods = os.path.join(path, "node_modules")
