@@ -114,7 +114,8 @@ class Etherpad(Plugin):
 
         # Install selected plugins
         mods = os.path.join(path, "node_modules")
-        os.mkdir(mods)
+        if not os.path.exists(mods):
+            os.mkdir(mods)
         for var in vars:
             var = str(var)
             if var.startswith('ep_plugin/') and int(vars.getvalue(var)):
