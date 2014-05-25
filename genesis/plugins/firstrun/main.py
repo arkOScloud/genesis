@@ -35,10 +35,10 @@ class FirstRun(CategoryPlugin, URLHandler):
         if self._step == 4:
             if self.arch[1] != 'Raspberry Pi':
                 ui.remove('rpi-ogm')
-            if self.arch[1] not in ['Cubieboard2', 'Cubietruck']:
-                ui.remove('cbb-mac')
             if self.arch[1] in ['Unknown', 'General']:
                 ui.remove('sdc')
+            if self.arch[1] not in ['Cubieboard2', 'Cubietruck']:
+                ui.remove('cbb-mac')
             else:
                 mac = ':'.join(map(lambda x: "%02x" % x, 
                     [0x54, 0xb3, 0xeb, random.randint(0x00, 0x7f), 
