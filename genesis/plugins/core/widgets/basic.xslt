@@ -33,7 +33,7 @@
 
 <!-- Button magic -->
 <xsl:template match="buttongroup">
-    <div class="btn-group{x:iif(@size = 'lg', ' btn-group-lg', '')}">
+    <div id="{@id}" class="btn-group{x:iif(@size = 'lg', ' btn-group-lg', '')}">
         <xsl:apply-templates />
     </div>
 </xsl:template>
@@ -63,14 +63,14 @@
     <xsl:variable name="size">
         <xsl:choose>
             <xsl:when test="@size != ''">
-                <xsl:value-of select="@size" />
+                btn-<xsl:value-of select="@size" />
             </xsl:when>
-            <xsl:otherwise>sm</xsl:otherwise>
+            <xsl:otherwise>btn-sm</xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
 
     <buttongroup>
-        <a class="btn btn-{$design} btn-{$size} dropdown-toggle" data-toggle="dropdown">
+        <a class="btn btn-{$design} {x:iif($size, $size, '')} dropdown-toggle" data-toggle="dropdown">
             <xsl:choose>
                 <xsl:when test="@iconfont != ''">
                     <i class="{@iconfont}"></i>
@@ -96,7 +96,8 @@
             <xsl:when test="@warning != ''">
                 return Genesis.showWarning('<xsl:value-of select="@warning"/>',
                     '<xsl:value-of select="@id"/>',
-                    '<xsl:value-of select="@cls"/>'<xsl:choose><xsl:when test="@onclick = 'form'">,
+                    <xsl:choose><xsl:when test="@cls != ''">, 
+                    '<xsl:value-of select="@cls"/>'</xsl:when><xsl:otherwise>undefined</xsl:otherwise></xsl:choose><xsl:choose><xsl:when test="@onclick = 'form'">,
                     '<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />'</xsl:when></xsl:choose>);
             </xsl:when>
 
@@ -149,7 +150,8 @@
             <xsl:when test="@warning != ''">
                 return Genesis.showWarning('<xsl:value-of select="@warning"/>',
                     '<xsl:value-of select="@id"/>',
-                    '<xsl:value-of select="@cls"/>'<xsl:choose><xsl:when test="@onclick = 'form'">,
+                    <xsl:choose><xsl:when test="@cls != ''">, 
+                    '<xsl:value-of select="@cls"/>'</xsl:when><xsl:otherwise>undefined</xsl:otherwise></xsl:choose><xsl:choose><xsl:when test="@onclick = 'form'">,
                     '<xsl:value-of select="@form" />', '<xsl:value-of select="@action" />'</xsl:when></xsl:choose>);
             </xsl:when>
 

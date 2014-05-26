@@ -224,13 +224,11 @@ class FMPlugin(CategoryPlugin, URLHandler):
                     self.enc_file(np)
                 ))
             row = UI.DTR(
-                UI.HContainer(
-                    UI.Checkbox(name='%i/%s' % (
-                        tidx,
-                        self.enc_file(np)
-                    )),
-                    UI.IconFont(iconfont=iconfont),
-                ),
+                UI.Checkbox(name='%i/%s' % (
+                    tidx,
+                    self.enc_file(np)
+                )),
+                UI.IconFont(iconfont=iconfont),
                 UI.HContainer(
                     item,
                     UI.LinkLabel(
@@ -348,6 +346,10 @@ class FMPlugin(CategoryPlugin, URLHandler):
             self._clipboard.remove(self._clipboard[int(params[1])])
         if params[0] == 'close' and len(self._tabs)>1:
             self._tabs.remove(self._tabs[int(params[1])])
+            self._tab = 0
+        elif params[0] == 'close':
+            self._tabs = []
+            self.add_tab()
             self._tab = 0
         if params[0] == 'closeall':
             self._tabs = []
