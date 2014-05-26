@@ -70,10 +70,7 @@
     </div>
     
     <div class="container">
-        <div class="row">
-            <div class="sidebar col-md-2" id="leftplaceholder" />
-       	    <div class="content col-md-10" id="rightplaceholder" />
-        </div>
+   	    <div class="content" id="content" />
     </div>
 
     <div class="footer">

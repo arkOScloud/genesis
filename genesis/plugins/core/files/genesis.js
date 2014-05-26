@@ -162,9 +162,9 @@ Genesis = (function() {
 
                 // $('.ui-tooltip').tooltip('hide');
 
-                $('#rightplaceholder').empty();
-                $('#rightplaceholder').html(data);
-                $('#rightplaceholder script').each(function (i,e) {
+                $('#content').empty();
+                $('#content').html(data);
+                $('#content script').each(function (i,e) {
                     try {
                         eval($(e).text);
                     } catch (err) { }

@@ -123,44 +123,9 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         else:
             templ = self.app.get_template('index.xml')
 
-        cat = None
-        v = UI.VContainer(spacing=0)
-
-        # Sort plugins by name
+        # Sort plugins into menus where necessary
         cats = self.app.grab_plugins(ICategoryProvider)
         cats = sorted(cats, key=lambda p: p.text)
-
-        for fld in self.folder_ids:
-            cat_vc = UI.VContainer(spacing=0)
-            if self.folders[fld] == '':
-                cat_folder = cat_vc # Omit wrapper for special folders
-            else:
-                cat_folder = UI.CategoryFolder(
-                                cat_vc,
-                                text=self.folders[fld],
-                                icon='/dl/core/ui/catfolders/'+ fld + '.png'
-                                    if self.folders[fld] != '' else '',
-                                id=fld
-                             )
-            # cat_vc will be VContainer or CategoryFolder
-
-            exp = False
-            empty = True
-            for c in cats:
-                if c.folder == fld: # Put corresponding plugins in this folder
-                    empty = False
-                    if c == self.selected_category:
-                        exp = True
-                    cat_vc.append(UI.Category(
-                        iconfont=c.plugin_info.iconfont if hasattr(c.plugin_info, 'iconfont') else c.iconfont,
-                        name=c.text,
-                        id=c.plugin_id,
-                        counter=c.get_counter(),
-                        selected=c == self.selected_category
-                    ))
-
-            if not empty: v.append(cat_folder)
-            cat_folder['expanded'] = exp
 
         if not self.is_firstrun():
             for c in cats:
@@ -183,7 +148,6 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
                         )
                     )
             templ.append('_head', UI.HeadTitle(text='Genesis @ %s'%platform.node()))
-            templ.append('leftplaceholder', v)
             templ.append('version', UI.Label(text='Genesis '+version(), size=2))
             templ.insertText('cat-username', self.app.auth.user)
             templ.appendAll('links', 

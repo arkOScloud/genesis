@@ -124,6 +124,15 @@
     </xsl:choose>
 </xsl:template>
 
+<xsl:template match="homebutton">
+    <div class="ui-homebutton" id="{@id}" onclick="Genesis.selectCategory('{@id}')">
+        <div class="pull-left" style="height:100%;">
+            <h2 class="{@iconfont}"></h2>
+        </div>
+        <h4><xsl:value-of select="@name"/></h4>
+    </div>
+</xsl:template>
+
 <xsl:template match="appselect">
     <div class="ui-firstrun-appselect" id="{@id}" onclick="Genesis.appListClick('{@id}')">
         <input type="checkbox" name="install-{@id}" />

@@ -14,7 +14,7 @@
                 <img src="/dl/core/ui/ajax.gif" />
             </div>
         </div>
-        <div class="content" id="rightplaceholder" />
+        <div class="content" id="content" />
 
         <script>
             Genesis.init();
