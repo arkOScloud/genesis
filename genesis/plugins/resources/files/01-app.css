@@ -281,6 +281,10 @@ td a, td p, td span {
   height: 150px;
 }
 
+.ui-homebutton {
+  padding: 0;
+}
+
 .ui-firstrun-appselect.selected {
   background-color: #2ECC71;
   color: #FFF;

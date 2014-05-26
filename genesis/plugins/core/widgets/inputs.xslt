@@ -126,10 +126,8 @@
 
 <xsl:template match="homebutton">
     <div class="ui-homebutton" id="{@id}" onclick="Genesis.selectCategory('{@id}')">
-        <div class="pull-left" style="height:100%;">
-            <h2 class="{@iconfont}"></h2>
-        </div>
-        <h4><xsl:value-of select="@name"/></h4>
+        <h1 class="{@iconfont} text-center"></h1>
+        <h4 class="text-center"><xsl:value-of select="@name"/></h4>
     </div>
 </xsl:template>
 
