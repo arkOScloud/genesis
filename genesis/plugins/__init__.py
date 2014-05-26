@@ -11,13 +11,11 @@ from genesis.plugins.pkgman import *
 from genesis.plugins.recovery import *
 from genesis.plugins.advancedcontrols import *
 from genesis.plugins.security import *
-from genesis.plugins.shell import *
 from genesis.plugins.sysmon import *
 from genesis.plugins.sysalerts import *
 from genesis.plugins.users import *
 from genesis.plugins.network import *
 from genesis.plugins.notepad import *
-from genesis.plugins.taskmgr import *
 from genesis.plugins.terminal import *
 from genesis.plugins.databases import *
 from genesis.plugins.webapps import *
@@ -27,5 +25,5 @@ from genesis.plugins.sysconfig import *
 plist = ['resources', 'core', 'cron', 'advancedcontrols', 'dashboard', 
 'firstrun', 'fileman', 'filesystems', 'home', 'databases', 'sysconfig', 
 'config', 'plugins', 'pkgman', 'network', 'notepad', 'recovery', 
-'security', 'shell', 'sysmon', 'sysalerts', 'taskmgr', 'terminal', 
-'users', 'webapps', 'certificates']
+'security', 'sysmon', 'sysalerts', 'terminal', 'users', 'webapps', 
+'certificates']

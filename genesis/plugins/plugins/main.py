@@ -7,7 +7,7 @@ from genesis.plugmgr import ImSorryDave, PluginLoader, RepositoryManager
 class PluginManager(CategoryPlugin, URLHandler):
     text = 'Applications'
     iconfont = 'gen-box-add'
-    folder = None
+    folder = 'bottom'
 
     def on_session_start(self):
         self._mgr = RepositoryManager(self.app.log, self.app.config)

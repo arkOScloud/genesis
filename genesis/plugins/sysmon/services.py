@@ -1,15 +1,26 @@
+#coding: utf-8
 from genesis.com import implements
 from genesis.api import *
 from genesis.ui import *
+from genesis.utils import *
 from genesis import apis
 
 from groups import *
 
+import psutil
+import signal
+import os
+
 
 class ServicesPlugin(CategoryPlugin):
-    text = 'Services'
+    text = 'Services/Tasks'
     iconfont = 'gen-atom'
-    folder = 'system'
+    folder = 'tools'
+
+    rev_sort = [
+        'get_cpu_percent',
+        'get_memory_percent',
+    ]
 
     def on_init(self):
         self.svc_mgr = self.app.get_backend(apis.services.IServiceManager)
@@ -17,6 +28,12 @@ class ServicesPlugin(CategoryPlugin):
         
     def on_session_start(self):
         self._editing = None
+        self._sort = ('pid', False)
+        self._info = None
+
+    def sort_key(self, x):
+        z = getattr(x,self._sort[0])
+        return z() if callable(z) else z
 
     def get_ui(self):
         ui = self.app.inflate('sysmon:services')
@@ -68,6 +85,61 @@ class ServicesPlugin(CategoryPlugin):
                 ))
             ui.append('main', eui)
 
+        l = psutil.get_process_list()
+        l = sorted(l, key=self.sort_key)
+        if self._sort[1]:
+            l = reversed(l)
+
+        for x in l:
+            try:
+                ui.append('tlist', UI.DTR(
+                    UI.IconFont(iconfont='gen-%s'%('play-2' if x.is_running() else 'stop')),
+                    UI.Label(text=str(x.pid)),
+                    UI.Label(text=str(int(x.get_cpu_percent()))),
+                    UI.Label(text=str(int(x.get_memory_percent()))),
+                    UI.Label(text=x.username()),
+                    UI.Label(text=x.name()),
+                    UI.TipIcon(
+                        iconfont='gen-info',
+                        id='info/%i'%x.pid,
+                        text='Info'
+                    )
+                ))
+            except:
+                pass
+
+        hdr = ui.find('sort/'+self._sort[0])
+        hdr.set('text', ('↑ ' if self._sort[1] else '↓ ')+ hdr['text'])
+
+        if self._info is not None:
+            try:
+                p = filter(lambda x:x.pid==self._info, l)[0]
+                iui = self.app.inflate('sysmon:sysmon-info')
+                iui.find('name').set('text', '%i / %s'%(p.pid,p.name()))
+                iui.find('cmd').set('text', ' '.join("'%s'"%x for x in p.cmdline()))
+                iui.find('uid').set('text', '%s (%s)'%(p.username(),p.uids().real))
+                iui.find('gid').set('text', str(p.gids().real))
+                iui.find('times').set('text', ' / '.join(str(x) for x in p.get_cpu_times()))
+                if p.parent():
+                    iui.find('parent').set('text', p.parent().name())
+                    iui.find('parentinfo').set('id', 'info/%i'%p.parent().pid)
+                else:
+                    iui.remove('parentRow')
+
+                sigs = [
+                    (x, getattr(signal, x))
+                    for x in dir(signal)
+                    if x.startswith('SIG')
+                ]
+
+                for x in sigs:
+                    iui.append('sigs', UI.SelectOption(
+                        text=x[0], value=x[1]
+                    ))
+                ui.append('main', iui)
+            except:
+                pass
+
         return ui
 
     def get_row(self, svc):
@@ -94,32 +166,52 @@ class ServicesPlugin(CategoryPlugin):
     def on_click(self, event, params, vars=None):
         if params[0] == 'start':
             self.svc_mgr.start(params[1])
-        if params[0] == 'restart':
+        elif params[0] == 'restart':
             self.svc_mgr.restart(params[1])
-        if params[0] == 'stop':
+        elif params[0] == 'stop':
             self.svc_mgr.stop(params[1])
-        if params[0] == 'enable':
+        elif params[0] == 'enable':
             self.svc_mgr.enable(params[1])
-        if params[0] == 'disable':
+        elif params[0] == 'disable':
             self.svc_mgr.disable(params[1])
-        if params[0] == 'gstart':
+        elif params[0] == 'gstart':
             for s in self.groupmgr.groups[params[1]]:
                 self.svc_mgr.start(s)
-        if params[0] == 'grestart':
+        elif params[0] == 'grestart':
             for s in self.groupmgr.groups[params[1]]:
                 self.svc_mgr.restart(s)
-        if params[0] == 'gstop':
+        elif params[0] == 'gstop':
             for s in self.groupmgr.groups[params[1]]:
                 self.svc_mgr.stop(s)
-        if params[0] == 'addGroup':
+        elif params[0] == 'addGroup':
             self._editing = ''
-        if params[0] == 'delete':
+        elif params[0] == 'delete':
             del self.groupmgr.groups[params[1]]
             self.groupmgr.save()
-        if params[0] == 'edit':
+        elif params[0] == 'edit':
             self._editing = params[1]
+        if params[0] == 'info':
+            self._info = int(params[1])
+        elif params[0] == 'suspend':
+            try:
+                x = filter(lambda p:p.pid==self._info, psutil.get_process_list())[0].suspend()
+            except:
+                pass
+        elif params[0] == 'resume':
+            try:
+                filter(lambda p:p.pid==self._info, psutil.get_process_list())[0].resume()
+            except:
+                pass
+
+    @event('linklabel/click')
+    def on_sort(self, event, params, vars=None):
+        if params[1] == self._sort[0]:
+            self._sort = (self._sort[0], not self._sort[1])
+        else:
+            self._sort = (params[1], params[1] in self.rev_sort)
 
     @event('dialog/submit')
+    @event('form/submit')
     def on_submit(self, event, params, vars=None):
         if params[0] == 'dlgEdit':
             if vars.getvalue('action') == 'OK':
@@ -132,4 +224,13 @@ class ServicesPlugin(CategoryPlugin):
                 self.groupmgr.groups[vars.getvalue('name')] = sorted(svcs)
                 self.groupmgr.save()
             self._editing = None
-
+        if params[0] == 'dlgInfo':
+            self._info = None
+        if params[0] == 'frmKill':
+            self._info = None
+            try:
+                x = filter(lambda p:p.pid==self._info, psutil.get_process_list())[0]
+                x.kill(int(vars.getvalue('signal', None)))
+                self.put_message('info', 'Killed process')
+            except:
+                self.put_message('err', 'Can\'t kill process')

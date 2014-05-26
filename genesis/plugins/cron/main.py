@@ -7,7 +7,7 @@ import backend
 class CronPlugin(helpers.CategoryPlugin):
     text = 'Scheduled Tasks'
     iconfont = 'gen-alarm'
-    folder = 'system'
+    folder = 'Tools'
 
     def on_init(self):
         self._tasks, self._others = backend.read_crontab(self._user)

@@ -8,7 +8,7 @@ import backend
 class SSHPlugin(apis.services.ServiceControlPlugin):
     text = 'SSH'
     iconfont = 'gen-console'
-    folder = 'advanced'
+    folder = 'system'
 
     def on_init(self):
         ss = backend.SSHConfig(self.app)

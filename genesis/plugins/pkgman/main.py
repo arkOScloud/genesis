@@ -10,7 +10,7 @@ from genesis import apis
 class PackageManagerPlugin(CategoryPlugin):
     text = 'Packages'
     iconfont = 'gen-cube'
-    folder = 'advanced'
+    folder = 'tools'
 
     def on_init(self):
         self.mgr = ComponentManager.get().find('pkgman')

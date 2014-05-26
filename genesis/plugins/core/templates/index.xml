@@ -30,17 +30,19 @@
                 <popover id="tools-pop" placement="bottom" class="ui-el-top-category" iconfont="gen-tools">Tools</popover>
                 <div class="popover bottom">
                   <div id="tools-pop-content" class="popover-inner">
-                    <ul id="tools-placeholder" />
+                    <ul id="tools-placeholder">
+                        <popoverlink onclick="return Genesis.selectCategory('sysmon');" text="Statistics" iconfont="gen-chart" />
+                    </ul>
                   </div>
                 </div>
                 <popover id="settings-pop" placement="bottom" class="ui-el-top-category" iconfont="gen-settings">Settings</popover>
                 <div class="popover bottom">
                   <div id="settings-pop-content" class="popover-inner">
                     <ul>
-                        <popoverlink onclick="return Genesis.selectCategory('pluginmanager');" text="Applications" iconfont="gen-box-add" />
                         <popoverlink onclick="return Genesis.selectCategory('recoveryplugin');" text="Recovery" iconfont="gen-history" />
+                        <popoverlink onclick="return Genesis.selectCategory('networkplugin');" text="Networking" iconfont="gen-network" />
+                        <popoverlink onclick="return Genesis.selectCategory('securityplugin');" text="Security" iconfont="gen-lock-2" />
                         <popoverlink onclick="return Genesis.selectCategory('configplugin');" text="Genesis Settings" iconfont="gen-arkos-round" />
-                        <popoverlink onclick="return Genesis.selectCategory('networkplugin');" text="Network Settings" iconfont="gen-network" />
                         <popoverlink onclick="return Genesis.selectCategory('sysconfigplugin');" text="System Settings" iconfont="gen-cog" />
                     </ul>
                   </div>

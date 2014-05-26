@@ -8,19 +8,15 @@ from genesis import apis
 from genesis.plugins.core.updater import UpdateCheck
 
 
-class Dashboard(CategoryPlugin):
-    text = 'System Monitor'
+class SysMon(CategoryPlugin):
+    text = 'Statistics'
     iconfont = 'gen-chart'
-    folder = 'top'
+    folder = None
 
     def on_session_start(self):
         self._adding_widget = None
         self._failed = []
-
-        # start widget manager and show SSL warning if applicable
         self._mgr = apis.dashboard.WidgetManager(self.app)
-        if self.app.gconfig.get('genesis', 'ssl') == '0':
-            self.put_message('warn', 'Please enable SSL to ensure secure communication with the server')
 
     def fill(self, side, lst, ui, tgt):
         for x in lst:

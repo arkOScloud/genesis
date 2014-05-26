@@ -1,20 +1,57 @@
 <xml>
-    <toolbar>
-        <btn text="Add new group" id="addGroup" iconfont="gen-plus-circle" />
-    </toolbar>
+    <tabcontrol id="tabs" active="0">
+        <tabheader text="Services" id="0"/>
+        <tabheader text="Tasks" id="1"/>
 
-    <pad id="main">
-        <hcontainer spacing="20">
-            <dt id="list" width="300">
-                <dtr header="True">
-                    <dth width="20" />
-                    <dth>
-                        <label text="Name" />
-                    </dth>
-                    <dth width="1"/>
-                </dtr>
-            </dt>
-            <div id="groups" />
-        </hcontainer>
-    </pad>
+        <tabbody id="0">
+            <toolbar>
+                <btn text="Add new group" id="addGroup" iconfont="gen-plus-circle" />
+            </toolbar>
+
+            <pad id="main">
+                <hcontainer spacing="20">
+                    <dt id="list" width="300">
+                        <dtr header="True">
+                            <dth width="20" />
+                            <dth>
+                                <label text="Name" />
+                            </dth>
+                            <dth width="1"/>
+                        </dtr>
+                    </dt>
+                    <div id="groups" />
+                </hcontainer>
+            </pad>
+        </tabbody>
+
+        <tabbody id="1">
+            <toolbar spacing="0">
+                <toolbutton id="btnRefresh" text="Reload" iconfont="gen-loop-2" />
+            </toolbar>
+
+            <pad id="tmain">
+                <dt id="tlist" width="100%">
+                    <dtr header="True">
+                        <dth width="1" />
+                        <dth>
+                            <linklabel text="PID" id="sort/pid" />
+                        </dth>
+                        <dth>
+                            <linklabel text="CPU %" id="sort/get_cpu_percent" />
+                        </dth>
+                        <dth>
+                            <linklabel text="RAM %" id="sort/get_memory_percent" />
+                        </dth>
+                        <dth>
+                            <linklabel text="UID" id="sort/uid" />
+                        </dth>
+                        <dth>
+                            <linklabel text="Name" id="sort/name" />
+                        </dth>
+                        <dth width="1" />
+                    </dtr>
+                </dt>
+            </pad>
+        </tabbody>
+    </tabcontrol>
 </xml>

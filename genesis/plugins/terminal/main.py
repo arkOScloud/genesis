@@ -28,7 +28,7 @@ TERM_H = 40
 class TerminalPlugin(CategoryPlugin, URLHandler):
     text = 'Terminal'
     iconfont = 'gen-console'
-    folder = 'advanced'
+    folder = 'tools'
 
     def on_session_start(self):
         self._terminals = {}

@@ -13,7 +13,7 @@ import backend
 class FSPlugin(CategoryPlugin):
     text = 'Filesystems'
     iconfont = 'gen-storage'
-    folder = 'advanced'
+    folder = 'tools'
 
     def on_init(self):
         self.fstab = backend.read()

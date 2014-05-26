@@ -27,7 +27,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
     folder_ids = ['cluster', 'apps', 'servers', 'system', 'hardware', 'advanced', 'other']
 
     def on_session_start(self):
-        self._cat_selected = 'firstrun' if self.is_firstrun() else 'dashboard'
+        self._cat_selected = 'firstrun' if self.is_firstrun() else 'homeplugin'
         self._about_visible = False
         self._module_config = None
 

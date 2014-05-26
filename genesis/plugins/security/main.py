@@ -13,7 +13,7 @@ from backend import *
 class SecurityPlugin(apis.services.ServiceControlPlugin):
     text = 'Security'
     iconfont = 'gen-lock-2'
-    folder = 'system'
+    folder = None
     services = [{"name": 'Intrusion Prevention', "binary": 'fail2ban', "ports": []}]
     f2b_name = 'Genesis'
     f2b_icon = 'gen-arkos-round'

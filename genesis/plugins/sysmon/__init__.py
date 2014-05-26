@@ -1,7 +1,5 @@
 from api import *
-from config import *
 from groups import *
-from logs import *
 from main import *
 from meters import *
 from widget import * 
