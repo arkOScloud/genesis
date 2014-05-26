@@ -1,6 +1,6 @@
 # Plugin metadata
 NAME = 'PHP'
-TYPE = 'plugin'
+TYPE = 'extension'
 ICON = 'gen-code'
 DESCRIPTION = 'Extension functions for PHP websites'
 CATEGORIES = [

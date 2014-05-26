@@ -1,6 +1,6 @@
 # Plugin metadata
 NAME = 'NodeJS'
-TYPE = 'plugin'
+TYPE = 'extension'
 ICON = 'gen-code'
 DESCRIPTION = 'Extension functions for NodeJS applications and websites'
 CATEGORIES = [

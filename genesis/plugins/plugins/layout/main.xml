@@ -1,11 +1,15 @@
 <xml>
-    <div style="padding: 2px 0px;">
-        <div style="float:right;">
-            <btn text="Update plugin list" id="update" iconfont="gen-loop-2" />
-        </div>
-        <label size="5" text="Installed Applications" />
-    </div>
+    <pad id="upg" />
+    <spacer height="10" />
 
+    <label size="3" text="Available Applications" />
+    <pad id="avail" />
+    <spacer height="10" />
+
+    <div style="float:right;">
+        <btn text="Update plugin list" id="update" iconfont="gen-loop-2" />
+    </div>
+    <label size="3" text="Installed Applications" />
     <pad id="main">
         <dt width="100%" id="list">
             <dtr header="True">
@@ -28,34 +32,10 @@
         </dt>
     </pad>
 
-    <label size="5" text="Available Applications" />
-
-    <pad>
-        <dt width="100%" id="avail">
-            <dtr header="True">
-                <dth />
-                <dth />
-                <dth>
-                    <label text="Name" />
-                </dth>
-                <dth>
-                    <label text="Description" />
-                </dth>
-                <dth>
-                    <label text="Version" />
-                </dth>
-                <dth>
-                    <label text="Author" />
-                </dth>
-                <dth />
-            </dtr>
-        </dt>
-
-        <spacer height="5" />
-        <label size="1" text="If any required Python modules are missing, a Genesis reload is required to rediscover them after being installed." />
-        <spacer height="10" />
-        <label size="2" text="Upload plugin package" />
-        <spacer height="5" />
-        <uploader url="/upload_plugin" text="Install" />
-    </pad>
+    <spacer height="5" />
+    <label size="1" text="If any required Python modules are missing, a Genesis reload is required to rediscover them after being installed." />
+    <spacer height="10" />
+    <label size="2" text="Upload plugin package" />
+    <spacer height="5" />
+    <uploader url="/upload_plugin" text="Install" />
 </xml>

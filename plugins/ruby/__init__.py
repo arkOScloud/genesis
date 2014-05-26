@@ -1,6 +1,6 @@
 # Plugin metadata
 NAME = 'Ruby'
-TYPE = 'plugin'
+TYPE = 'extension'
 ICON = 'gen-code'
 DESCRIPTION = 'Extension functions for Ruby websites and applications'
 CATEGORIES = [

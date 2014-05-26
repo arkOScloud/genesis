@@ -1,6 +1,6 @@
 # Plugin metadata
 NAME = 'Python'
-TYPE = 'plugin'
+TYPE = 'extension'
 ICON = 'gen-code'
 DESCRIPTION = 'Extension functions for Python applications and websites'
 CATEGORIES = [

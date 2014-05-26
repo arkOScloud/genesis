@@ -55,42 +55,47 @@ class PluginManager(CategoryPlugin, URLHandler):
 
         lst = sorted(self._mgr.available, key=lambda x: x.name.lower())
 
-        btn = UI.Btn(text='Check for updates', id='update')
-        if len(lst) == 0:
-            btn['text'] = 'Download plugin list'
-
+        firstupg = False
+        newapps = {}
         for k in lst:
-            row = self.app.inflate('plugins:item')
-            row.find('name').set('text', k.name)
-            row.find('desc').set('text', k.description)
-            row.find('icon').set('class', k.icon)
-            row.find('version').set('text', k.version)
-            row.find('author').set('text', k.author)
-            row.find('author').set('url', k.homepage)
-
             for p in inst:
                 if k.id == p.id and not p.problem:
-                    row.find('status').set('iconfont', 'gen-arrow-up-2')
-                    row.find('status').set('text', 'Upgrade Available')
-
-            reqs = k.str_req()
-
-            url = 'http://%s/view/plugins.php?id=%s' % (
-                    self.app.config.get('genesis', 'update_server'),
-                    k.id
-                   )
-
-            if reqs == '':
-                row.append('buttons', UI.TipIcon(
-                        iconfont="gen-box-add",
-                        text='Download and install',
-                        id='install/'+k.id,
-                    ))
+                    if not firstupg:
+                        ui.append('upg', 
+                            UI.Label(
+                                size=3,
+                                text="Updates Available"
+                                )
+                            )
+                    ui.append('upg', 
+                        UI.AppButton(
+                            name=k.name,
+                            iconfont=k.icon,
+                            version=k.version
+                            )
+                        )
+                    firstupg = True
+                    break
             else:
-                row.append('reqs', UI.Icon(iconfont="gen-warning", text=reqs))
-
-            ui.append('avail', row)
-
+                for x in k.categories:
+                    if not newapps.has_key(x['primary']):
+                        newapps[x['primary']] = []
+                    newapps[x['primary']].append(k)
+        for x in newapps:
+            ui.append('avail', 
+                UI.Label(
+                    size=3,
+                    text=x
+                    )
+                )
+            for y in newapps[x]:
+                ui.append('avail', 
+                    UI.AppButton(
+                        name=y.name,
+                        iconfont=y.icon,
+                        version=y.version
+                        )
+                    )
         return ui
 
     def get_ui_upload(self):

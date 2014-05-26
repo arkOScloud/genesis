@@ -269,7 +269,7 @@ td a, td p, td span {
   text-align: center;
 }
 
-.ui-firstrun-appselect, .ui-homebutton {
+.ui-firstrun-appselect, .ui-homebutton, .ui-appbutton {
   display: inline-block;
   vertical-align: top;
   text-align: left;
@@ -281,8 +281,12 @@ td a, td p, td span {
   height: 150px;
 }
 
-.ui-homebutton {
+.ui-homebutton, .ui-appbutton {
   padding: 0;
+}
+
+.ui-appbutton h1 {
+  line-height: 1.5;
 }
 
 .ui-firstrun-appselect.selected {
@@ -296,7 +300,7 @@ td a, td p, td span {
   border-color: #1DB35C;
 }
 
-.ui-firstrun-appselect:hover, .ui-homebutton:hover {
+.ui-firstrun-appselect:hover, .ui-homebutton:hover, .ui-appbutton:hover {
   background-color: #EBEBEB;
   border-color: #ADADAD;
 }

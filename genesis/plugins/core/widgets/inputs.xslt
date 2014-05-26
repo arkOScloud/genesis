@@ -124,6 +124,14 @@
     </xsl:choose>
 </xsl:template>
 
+<xsl:template match="appbutton">
+    <div class="ui-appbutton" id="{@id}" onclick="Genesis.selectCategory('{@id}')">
+        <h1 class="{@iconfont} text-center"></h1>
+        <h4 class="text-center"><xsl:value-of select="@name"/></h4>
+        <h6 class="text-center">Version <xsl:value-of select="@version"/></h6>
+    </div>
+</xsl:template>
+
 <xsl:template match="homebutton">
     <div class="ui-homebutton" id="{@id}" onclick="Genesis.selectCategory('{@id}')">
         <h1 class="{@iconfont} text-center"></h1>
