@@ -133,7 +133,7 @@
 </xsl:template>
 
 <xsl:template match="homebutton">
-    <div class="ui-homebutton" id="{@id}" onclick="Genesis.selectCategory('{@id}')">
+    <div class="ui-homebutton" id="{@id}" onclick="Genesis.selectCategory('{x:iif(@type = 'plugin', @id, 'webappsplugin')}')">
         <h1 class="{@iconfont} text-center"></h1>
         <h4 class="text-center"><xsl:value-of select="@name"/></h4>
     </div>

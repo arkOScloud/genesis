@@ -1,9 +1,9 @@
-from genesis.api import *
 from genesis.ui import *
 from genesis import apis
+from genesis import api
 
-class HomePlugin(CategoryPlugin):
-    text = 'Home'
+class HomePlugin(api.CategoryPlugin):
+    text = 'My Apps'
     iconfont = 'gen-home'
     folder = 'top'
 
@@ -28,18 +28,30 @@ class HomePlugin(CategoryPlugin):
 
     def get_ui(self):   
         ui = self.app.inflate('home:home')
-        cats = self.app.grab_plugins(ICategoryProvider)
-        cats = sorted(cats, key=lambda p: p.text)
+        cats = self.app.grab_plugins(api.ICategoryProvider)
+        webs = self.app.grab_plugins(apis.webapps.IWebapp)
+        btnlist = []
 
-        for fld in self.folder_ids:
-            for x in cats:
-                if x.folder == fld:
-                    ui.append('main', 
-                        UI.HomeButton(
-                            id=x.plugin_id,
-                            iconfont=x.plugin_info.iconfont if hasattr(x.plugin_info, 'iconfont') else x.iconfont,
-                            name=x.text
-                            )
-                        )
+        for x in cats:
+            if x.folder in self.folder_ids:
+                btnlist.append({'id': x.plugin_id, 
+                    'type': 'plugin',
+                    'icon': x.plugin_info.iconfont if hasattr(x.plugin_info, 'iconfont') else x.iconfont,
+                    'name': x.text})
+        for x in webs:
+            btnlist.append({'id': x.plugin_info.id,
+                'type': 'webapp',
+                'icon': x.plugin_info.iconfont,
+                'name': x.plugin_info.name})
+        
+        for x in sorted(btnlist, key=lambda y: y['name']):
+            ui.append('main', 
+                UI.HomeButton(
+                    id=x['id'],
+                    type=x['type'],
+                    iconfont=x['icon'],
+                    name=x['name']
+                    )
+                )
 
         return ui

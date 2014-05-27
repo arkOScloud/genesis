@@ -16,7 +16,7 @@ from api import Webapp
 class WebAppsPlugin(apis.services.ServiceControlPlugin):
 	text = 'Websites'
 	iconfont = 'gen-earth'
-	folder = 'servers'
+	folder = None
 	services = []
 
 	def on_init(self):

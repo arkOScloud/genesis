@@ -17,7 +17,7 @@ import utils
 class FMPlugin(CategoryPlugin, URLHandler):
     text = 'File Manager'
     iconfont = 'gen-files'
-    folder = 'tools'
+    folder = 'bottom'
 
     def on_init(self):
         self._has_acls = shell_status('which getfacl')==0

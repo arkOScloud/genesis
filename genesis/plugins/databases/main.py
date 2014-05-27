@@ -8,7 +8,7 @@ from utils import *
 class DatabasesPlugin(apis.services.ServiceControlPlugin):
 	text = 'Databases'
 	iconfont = 'gen-database'
-	folder = 'system'
+	folder = 'tools'
 	services = []
 
 	def on_init(self):

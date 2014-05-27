@@ -14,7 +14,7 @@ import re
 class CertificatesPlugin(CategoryPlugin, URLHandler):
     text = 'Certificates'
     iconfont = 'gen-certificate'
-    folder = 'system'
+    folder = 'tools'
 
     def on_init(self):
         self.certs = sorted(self._cc.get_certs(),

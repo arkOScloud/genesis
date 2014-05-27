@@ -5,7 +5,7 @@ from genesis.plugmgr import ImSorryDave, PluginLoader, RepositoryManager
 
 
 class PluginManager(CategoryPlugin, URLHandler):
-    text = 'Applications'
+    text = 'App Store'
     iconfont = 'gen-box-add'
     folder = 'bottom'
 
