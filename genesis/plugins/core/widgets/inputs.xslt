@@ -1,15 +1,26 @@
 <xsl:template match="formline">
-    <div class="{x:iif(@checkbox, 'checkbox', 'form-group')}{x:iif(@feedback != '', ' has-feedback', '')}">
-        <hlabel class="control-label" for="{@iid}" text="{@text}" />
-        <xsl:apply-templates />
-        <xsl:if test="@feedback">
-            <span class="{@feedback} form-control-feedback"></span>
-        </xsl:if>
-        <xsl:if test="@help">
-            <span class="help-block">
-                <xsl:value-of select="@help" />
-            </span>
-        </xsl:if>
+    <div class="{x:iif(@horizontal, ' form-horizontal', '')}">
+        <div class="{x:iif(@checkbox, 'checkbox', 'form-group')}{x:iif(@feedback != '', ' has-feedback', '')}">
+            <hlabel class="control-label{x:iif(@horizontal, ' col-sm-2', '')}" for="{@iid}" text="{@text}" />
+            <xsl:choose>
+                <xsl:when test="@horizontal">
+                    <div class="col-md-10">
+                        <xsl:apply-templates />
+                    </div>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates />
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:if test="@feedback">
+                <span class="{@feedback} form-control-feedback"></span>
+            </xsl:if>
+            <xsl:if test="@help">
+                <span class="help-block">
+                    <xsl:value-of select="@help" />
+                </span>
+            </xsl:if>
+        </div>
     </div>
 </xsl:template>
 
@@ -99,11 +110,15 @@
 </xsl:template>
 
 <xsl:template match="selecttextinput">
-    <input name="{@name}" value="{@value}" id="{@id}" class="{@design}" onkeypress="return noenter()" type="text"/>
-    <select onchange="$('#{@id}').val(this.value)" id='{@id}-hints' class="{@design}">
-        <option selected="">...</option>
-        <xsl:apply-templates/>
-    </select>
+    <inputgroup>
+        <input name="{@name}" value="{@value}" id="{@id}" type="text" class="form-control" />
+        <inputgroupbtn>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">&#160;<span class="caret"></span></button>
+            <ul class="dropdown-menu pull-right">
+                <xsl:apply-templates/>
+            </ul>
+        </inputgroupbtn>
+    </inputgroup>
 </xsl:template>
 
 <xsl:template match="uploader">

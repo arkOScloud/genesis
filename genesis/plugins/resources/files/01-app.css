@@ -155,10 +155,6 @@ a:link, a:focus, a:active, a:hover {
   padding: 0;
 }
 
-td a, td p, td span {
-  line-height: 2;
-}
-
 .ui-user-info {
   color: #FFF;
   padding: 15px 0px;
@@ -492,7 +488,7 @@ td a, td p, td span {
   background: #eee;
 }
 
-.ui-el-list li:active {
+.ui-el-list li:active, .ui-el-list li.active {
   background-color: #2980B9;
   color: white;
   font-weight: bold;
@@ -569,4 +565,13 @@ td a, td p, td span {
 
 .page-header {
   margin-top:0;
+}
+
+.form-group > .col-md-10 {
+  padding-top: 7px;
+  margin-bottom: 0;
+}
+
+.table > tbody > tr > td > a, .table > tbody > tr > td > span {
+  line-height: 2;
 }

@@ -257,5 +257,5 @@ class ownCloud(Plugin):
         poi_sel = []
         for x in sorted(apis.poicontrol(self.app).get_pois(), key=lambda x: x.name):
             if x.ptype in ['disk', 'vdisk']:
-                poi_sel.append(UI.SelectOption(text=x.name, value=x.path))
+                poi_sel.append(UI.DButtonItem(text=x.name, href="#", iconfont="gen-storage", onclick="$('#oc-ddir').val('"+x.path+"')"))
         ui.appendAll('oc-ddir', *poi_sel)

@@ -153,11 +153,12 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 						return ui
 			try:
 				cfgui = self.app.inflate(self._setup.id + ':conf')
+				ui.append('app-config', UI.Label(size=3, text="App Settings"))
 				if hasattr(self.apiops.get_interface(self._setup.wa_plugin), 'show_opts_add'):
 					self.apiops.get_interface(self._setup.wa_plugin).show_opts_add(cfgui)
 				ui.append('app-config', cfgui)
 			except:
-				ui.find('app-config').append(UI.Label(text="No config options available for this app"))
+				pass
 		else:
 			ui.remove('dlgSetup')
 

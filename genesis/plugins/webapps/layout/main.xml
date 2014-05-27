@@ -3,6 +3,7 @@
         <btn id="add" text="Add website" iconfont="gen-plus-circle" />
     </toolbar>
 
+    <label size="4" text="Your Websites" />
     <pad id="main">
         <dt id="list" width="100%">
             <dtr header="True">
@@ -29,16 +30,16 @@
                         <scrollcontainer width="100%" height="500" style="padding: 10px 20px;">
                             <div id="logo" style="text-align:center;">
                             </div>
-                            <formline text="Name">
+                            <formline text="Name" horizontal="true">
                                 <label name="appname" id="appname" />
                             </formline>
-                            <formline text="Intro">
+                            <formline text="Intro" horizontal="true">
                                 <label name="short" id="short" />
                             </formline>
-                            <formline text="Website">
+                            <formline text="Website" horizontal="true">
                                 <outlinklabel id="website" />
                             </formline>
-                            <formline text="Description">
+                            <formline text="Description" horizontal="true">
                                 <label name="desc" id="desc" />
                             </formline>
                         </scrollcontainer>
@@ -49,27 +50,18 @@
     </dialogbox>
 
     <dialogbox id="dlgSetup">
-        <tabcontrol id="stabs" active="0">
-            <tabheader id="0" text="General Settings" />
-            <tabheader id="1" text="App Settings" />
+        <label size="3" text="General Settings" />
+        <formline text="Site Name" help="An internal name to help you identify this site within Genesis. Must not contain spaces or dashes.">
+            <textinput name="name" id="name" />
+        </formline>
+        <formline text="Address" help="This should be the web address you want this app to be visible on. For example, 'www.example.com'. It must be a DNS-resolvable name pointing at this server.">
+            <textinput name="addr" id="addr" value="localhost" />
+        </formline>
+        <formline text="Port" help="If you don't know what to put here, leave it at default (port 80).">
+            <textinput name="port" id="port" value="80" />
+        </formline>
 
-            <tabbody id="0">
-                <formline text="Site Name" help="An internal name to help you identify this site within Genesis. Must not contain spaces or dashes.">
-                    <textinput name="name" id="name" />
-                </formline>
-                <formline text="Address" help="This should be the web address you want this app to be visible on. For example, 'www.example.com'. It must be a DNS-resolvable name pointing at this server.">
-                    <textinput name="addr" id="addr" value="localhost" />
-                </formline>
-                <formline text="Port" help="If you don't know what to put here, leave it at default (port 80).">
-                    <textinput name="port" id="port" value="80" />
-                </formline>
-            </tabbody>
-
-            <tabbody id="1">
-                <pad id="app-config">
-                </pad>
-            </tabbody>
-        </tabcontrol>
+        <pad id="app-config" />
     </dialogbox>
 
     <dialogbox id="dlgEdit">

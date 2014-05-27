@@ -111,9 +111,10 @@ class FSControl(Plugin):
     def add_vdisk(self, name, size, mkfs=True, mount=False):
         with open(os.path.join('/vdisk', name+'.img'), 'wb') as f:
             written = 0
+            zero = file('/dev/zero', 'r')
             while (int(size)*1048576) > written:
                 written += 1024
-                f.write(os.urandom(1024))
+                f.write(zero.read(1024))
             f.close()
         if mkfs:
             l = losetup.find_unused_loop_device()
