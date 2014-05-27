@@ -1,41 +1,49 @@
 <xml>
-    <pad id="upg" />
-    <spacer height="10" />
+    <tabcontrol id="tabs" active="0">
+        <tabheader text="Available" id="0"/>
+        <tabheader text="Installed" id="1"/>
 
-    <label size="3" text="Available Applications" />
-    <pad id="avail" />
-    <spacer height="10" />
+        <tabbody id="0">
+            <pad id="upg" />
+            <spacer height="10" />
 
-    <div style="float:right;">
-        <btn text="Update plugin list" id="update" iconfont="gen-loop-2" />
-    </div>
-    <label size="3" text="Installed Applications" />
-    <pad id="main">
-        <dt width="100%" id="list">
-            <dtr header="True">
-                <dth />
-                <dth />
-                <dth>
-                    <label text="Name" />
-                </dth>
-                <dth>
-                    <label text="Description" />
-                </dth>
-                <dth>
-                    <label text="Version" />
-                </dth>
-                <dth>
-                    <label text="Author" />
-                </dth>
-                <dth />
-            </dtr>
-        </dt>
-    </pad>
+            <pad id="avail" />
+            <spacer height="10" />
+        </tabbody>
 
-    <spacer height="5" />
-    <label size="1" text="If any required Python modules are missing, a Genesis reload is required to rediscover them after being installed." />
-    <spacer height="10" />
-    <label size="2" text="Upload plugin package" />
-    <spacer height="5" />
-    <uploader url="/upload_plugin" text="Install" />
+        <tabbody id="1">
+            <div style="float:right;">
+                <btn text="Update plugin list" id="update" iconfont="gen-loop-2" />
+            </div>
+            <label size="3" text="Installed Applications" />
+            <pad id="main">
+                <dt width="100%" id="list">
+                    <dtr header="True">
+                        <dth />
+                        <dth />
+                        <dth>
+                            <label text="Name" />
+                        </dth>
+                        <dth>
+                            <label text="Description" />
+                        </dth>
+                        <dth>
+                            <label text="Version" />
+                        </dth>
+                        <dth>
+                            <label text="Author" />
+                        </dth>
+                        <dth />
+                    </dtr>
+                </dt>
+            </pad>
+
+            <spacer height="5" />
+            <label size="1" text="If any required Python modules are missing, a Genesis reload is required to rediscover them after being installed." />
+            <spacer height="10" />
+            <label size="2" text="Upload plugin package" />
+            <spacer height="5" />
+            <uploader url="/upload_plugin" text="Install" />
+        </tabbody>
+    </tabcontrol>
 </xml>
