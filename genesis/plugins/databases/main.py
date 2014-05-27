@@ -134,8 +134,11 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 				st.append(UI.Label(text='You must authenticate before changing these settings.'))
 			elif self.dbops.get_info(dbtype[0]).multiuser:
 				st.append(UI.SimpleForm(
-					UI.Formline(UI.EditPassword(id='newpasswd', value='Click to change'),
-						text="New root password"
+					UI.Formline(UI.TextInput(id='newpasswd', name="newpasswd", password=True, verify="password", verifywith="newpasswd"),
+						text="New root password", feedback="gen-lock", iid="newpasswd"
+					),
+					UI.Formline(UI.TextInput(id='newpasswdb', name="newpasswdb", password=True, verify="password", verifywith="newpasswd"),
+						text="Confirm root password", feedback="gen-lock", iid="newpasswdb"
 					),
 					UI.Formline(UI.Btn(onclick="form", form="frmPasswd%s" % dbtype[0],
 						design="primary", action="OK", text="Change Password")),

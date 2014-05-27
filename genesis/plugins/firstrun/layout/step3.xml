@@ -16,10 +16,10 @@
             </div>
             <div id="veriferr" />
             <formline text="New admin password:" help="Your password must be at least six characters." feedback="gen-lock" iid="rootpasswd">
-                <textinput name="rootpasswd" id="rootpasswd" password="True" verify="password" verify-with="rootpasswd" />
+                <textinput name="rootpasswd" id="rootpasswd" password="True" verify="password" verifywith="rootpasswd" />
             </formline>
             <formline text="Please confirm your new admin password:" feedback="gen-lock" iid="rootpasswdb">
-                <textinput name="rootpasswdb" id="rootpasswdb" password="True" verify="password" verify-with="rootpasswd" />
+                <textinput name="rootpasswdb" id="rootpasswdb" password="True" verify="password" verifywith="rootpasswd" />
             </formline>
         </wizardform>
     </div>

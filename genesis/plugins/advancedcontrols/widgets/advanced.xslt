@@ -21,16 +21,10 @@
                     $('#<xsl:value-of select="@id"/>')[0],
                     {
                         theme: 'default',
-                        lineNumbers: true,
-                        enterMode: 'keep',
-                        onChange: function (e) {
-                            e.save();
-                        }
+                        lineNumbers: true
                     }
                 );
+                cm.setSize('<xsl:value-of select="x:css(@width, '200')"/>', '<xsl:value-of select="x:css(@height, '200')"/>')
                 $('#<xsl:value-of select="@id"/>')[0].editor = cm;
-                var cms = $('.CodeMirror-scroll', cm.getWrapperElement())[0];
-                cms.style.width = '<xsl:value-of select="x:css(@width, '200')"/>';
-                cms.style.height = '<xsl:value-of select="x:css(@height, '200')"/>';
             </script>
 </xsl:template>

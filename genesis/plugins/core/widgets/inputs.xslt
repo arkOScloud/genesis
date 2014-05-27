@@ -32,7 +32,7 @@
         <xsl:if test="@verify != ''">
             <xsl:choose>
                 <xsl:when test="@verify = 'password'">
-                    <xsl:attribute name="onkeypress">Genesis.verify('passwd', '<xsl:value-of select="@verify-with" />', '<xsl:value-of select="@verify-with" />b', event)</xsl:attribute>
+                    <xsl:attribute name="onkeypress">Genesis.verify('passwd', '<xsl:value-of select="@verifywith" />', '<xsl:value-of select="@verifywith" />b', event)</xsl:attribute>
                 </xsl:when>
                 <xsl:when test="@verify = 'username'">
                     <xsl:attribute name="onblur">Genesis.verify('user', '<xsl:value-of select="@id" />', '', event)</xsl:attribute>
@@ -91,8 +91,7 @@
 </xsl:template>
 
 <xsl:template match="textinputarea">
-    <textarea class="ui-el-textarea" name="{@name}" style="width: {x:css(@width, '200')}; height: {x:css(@height, '200')};" 
-        id="{@id}">
+    <textarea class="ui-el-textarea form-control" name="{@name}" style="width: {x:css(@width, '')}; height: {x:css(@height, '200')};" id="{@id}">
         <xsl:if test="@disabled = 'True'">
             <xsl:attribute name="disabled"/>
         </xsl:if>
