@@ -123,6 +123,10 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         else:
             templ = self.app.get_template('index.xml')
 
+        if self.app.platform == 'arkos':
+            templ.remove('navbar-brand')
+            templ.append('navbar-brand-div', UI.Image(cls='navbar-brand', file='/dl/core/ui/arkos.png'))
+
         # Sort plugins into menus where necessary
         cats = self.app.grab_plugins(ICategoryProvider)
         cats = sorted(cats, key=lambda p: p.text)

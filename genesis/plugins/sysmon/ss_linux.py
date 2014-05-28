@@ -16,7 +16,7 @@ class LinuxSysStat(Plugin):
         return open('/proc/loadavg', 'r').read().split()[0:3]
 
     def get_temp(self):
-        if detect_architecture()[1] == 'Raspberry Pi':
+        if self.app.board == 'Raspberry Pi':
             return '%3.1f°C'%(float(shell('cat /sys/class/thermal/thermal_zone0/temp').split('\n')[0])/1000)
         else:
             if os.path.exists('/sys/class/hwmon/hwmon1/temp1_input'):

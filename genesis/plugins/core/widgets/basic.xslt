@@ -22,7 +22,7 @@
 
 
 <xsl:template match="image">
-    <img class="ui-el-image" src="{@file}" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')};" />
+    <img id='{@id}' class="{x:attr(@cls, 'ui-el-image')}" src="{@file}" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')};" />
 </xsl:template>
 
 

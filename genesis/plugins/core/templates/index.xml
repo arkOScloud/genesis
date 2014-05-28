@@ -10,8 +10,8 @@
 <div id="page">
     <div class="navbar navbar-inverse navbar-static-top">
         <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand"><i class="gen-arkos-round"></i> Genesis</a>
+            <div id="navbar-brand-div" class="navbar-header">
+                <a id="navbar-brand" class="navbar-brand"><i class="gen-arkos-round"></i> Genesis</a>
             </div>
             <div class="ui-user-info pull-right">
                 <strong id="cat-username"></strong>

@@ -142,7 +142,7 @@ class ownCloud(Plugin):
         f.close()
 
         # Return an explicatory message
-        if detect_architecture()[1] in ['BeagleBone Black,' 'Raspberry Pi']:
+        if self.app.board in ['BeagleBone Black,' 'Raspberry Pi']:
             return ('ownCloud takes a long time to set up on this platform. '
             'Once you open the page for the first time, it may take 5-10 '
             'minutes for the content to appear. Please do not refresh the '

@@ -17,7 +17,6 @@ class FirstRun(CategoryPlugin, URLHandler):
     def on_init(self):
         self.nb = backend.Config(self.app)
         self.ub = UsersBackend(self.app)
-        self.arch = detect_architecture()
 
     def on_session_start(self):
         self._step = 1
@@ -29,7 +28,7 @@ class FirstRun(CategoryPlugin, URLHandler):
         step = self.app.inflate('firstrun:step%i'%self._step)
         ui.append('content', step)
 
-        if detect_platform() == 'arkos':
+        if self.app.platform == 'arkos':
             ui.find('welcomemsg').insertText('Welcome to arkOS')
 
         for x in self._veriferr:
@@ -47,15 +46,15 @@ class FirstRun(CategoryPlugin, URLHandler):
             ui.find('hostname').set('value', self._opts['hostname'] if self._opts.has_key('hostname') else 'arkos')
             ui.find('ssh_as_root').set('checked', 'True' if self._opts.has_key('ssh_as_root') and self._opts['ssh_as_root'] == '1' else 'False')
 
-            if self.arch[1] == 'Raspberry Pi':
+            if self.app.board == 'Raspberry Pi':
                 ui.find('resize').set('checked', 'True' if self._opts.has_key('resize') and self._opts['resize'] == '1' else 'False')
                 ui.find('gpumem').set('checked', 'True' if self._opts.has_key('gpumem') and self._opts['gpumem'] == '1' else 'False')
             else:
                 ui.remove('sdc')
                 ui.remove('rpi-ogm')
-            if self.arch[1] in ['Unknown', 'General']:
+            if self.app.board in ['Unknown', 'General']:
                 ui.remove('sdc')
-            if self.arch[1] not in ['Cubieboard2', 'Cubietruck']:
+            if self.app.board not in ['Cubieboard2', 'Cubietruck']:
                 ui.remove('cbb-mac')
             else:
                 mac = ':'.join(map(lambda x: "%02x" % x, 
@@ -196,8 +195,8 @@ class FirstRun(CategoryPlugin, URLHandler):
             if vars.getvalue('action', 'OK') == 'OK':
                 self._opts['hostname'] = vars.getvalue('hostname', '')
                 self._opts['zone'] = vars.getvalue('zoneselect', 'UTC')
-                self._opts['resize'] = vars.getvalue('resize', '0') if self.arch[1] == 'Raspberry Pi' else '0'
-                self._opts['gpumem'] = vars.getvalue('gpumem', '0') if self.arch[1] == 'Raspberry Pi' else '0'
+                self._opts['resize'] = vars.getvalue('resize', '0') if self.app.board == 'Raspberry Pi' else '0'
+                self._opts['gpumem'] = vars.getvalue('gpumem', '0') if self.app.board == 'Raspberry Pi' else '0'
                 self._opts['ssh_as_root'] = vars.getvalue('ssh_as_root', '0')
 
                 if not self._opts['hostname']:
@@ -250,9 +249,9 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self.nb.sethostname(self._opts['hostname'])
 
                 # set MAC address
-                if macaddr != '' and self.arch[1] == 'Cubieboard2':
+                if macaddr != '' and self.app.board == 'Cubieboard2':
                     open('/boot/uEnv.txt', 'w').write('extraargs=mac_addr=%s\n'%macaddr)
-                elif macaddr != '' and self.arch[1] == 'Cubietruck':
+                elif macaddr != '' and self.app.board == 'Cubietruck':
                     open('/etc/modprobe.d/gmac.conf', 'w').write('options sunxi_gmac mac_str="%s"\n'%macaddr)
 
                 # allow SSH as root
