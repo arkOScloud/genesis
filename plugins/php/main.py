@@ -46,8 +46,8 @@ class PHP(Plugin):
 
     def open_basedir(self, op, path):
         if op == 'add':
-            ic = open('/etc/php/php.ini', 'r').readlines()
-            f = open('/etc/php/php.ini', 'w')
+            with open('/etc/php/php.ini', 'r') as f:
+                ic = f.readlines()
             oc = []
             for l in ic:
                 if 'open_basedir = ' in l and path not in l:
@@ -55,11 +55,11 @@ class PHP(Plugin):
                     oc.append(l)
                 else:
                     oc.append(l)
-            f.writelines(oc)
-            f.close()
+            with open('/etc/php/php.ini', 'w') as f:
+                f.writelines(oc)
         elif op == 'del':
-            ic = open('/etc/php/php.ini', 'r').readlines()
-            f = open('/etc/php/php.ini', 'w')
+            with open('/etc/php/php.ini', 'r') as f:
+                ic = f.readlines()
             oc = []
             for l in ic:
                 if 'open_basedir = ' in l and path in l:
@@ -68,5 +68,16 @@ class PHP(Plugin):
                     oc.append(l)
                 else:
                     oc.append(l)
-            f.writelines(oc)
-            f.close()
+            with open('/etc/php/php.ini', 'w') as f:
+                f.writelines(oc)
+
+    def set_large_upload_size(self):
+        with open('/etc/php/php.ini', 'r') as f:
+            lines = f.readlines()
+        for i, l in enumerate(lines):
+            if 'upload_max_filesize = ' in l:
+                lines[i] = 'upload_max_filesize = 2G'
+            if 'post_max_size = ' in l:
+                lines[i] = 'post_max_size = 2G'
+        with open('/etc/php/php.ini', 'w') as f:
+            f.writelines(lines)
