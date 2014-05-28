@@ -42,10 +42,10 @@ class NotepadPlugin(CategoryPlugin):
 
                 if root:
                     ui.find('data').set('value', data)
-                    ui.find('save').set('action', 'save/%i'%idx)
-                    ui.find('data').set('name', 'data/%i'%idx)
-                    ui.find('close').set('action', 'close/%i'%idx)
-                    ui.find('data').set('id', 'data%i'%idx)
+                ui.find('save').set('action', 'save/%i'%idx)
+                ui.find('data').set('name', 'data/%i'%idx)
+                ui.find('close').set('action', 'close/%i'%idx)
+                ui.find('data').set('id', 'data%i'%idx)
 
                 idx += 1
         if self._new:

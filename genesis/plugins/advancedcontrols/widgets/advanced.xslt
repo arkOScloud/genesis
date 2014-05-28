@@ -26,5 +26,8 @@
                 );
                 cm.setSize('<xsl:value-of select="x:css(@width, '200')"/>', '<xsl:value-of select="x:css(@height, '200')"/>')
                 $('#<xsl:value-of select="@id"/>')[0].editor = cm;
+                cm.on('blur', function() {
+                    cm.save();
+                });
             </script>
 </xsl:template>
