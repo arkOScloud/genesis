@@ -46,8 +46,8 @@ class PHP(Plugin):
 
     def open_basedir(self, op, path):
         if op == 'add':
-            ic = open('/etc/php/php.ini', 'r').readlines()
-            f = open('/etc/php/php.ini', 'w')
+            with open('/etc/php/php.ini', 'r') as f:
+                ic = f.readlines()
             oc = []
             for l in ic:
                 if 'open_basedir = ' in l and path not in l:
@@ -55,11 +55,11 @@ class PHP(Plugin):
                     oc.append(l)
                 else:
                     oc.append(l)
-            f.writelines(oc)
-            f.close()
+            with open('/etc/php/php.ini', 'w') as f:
+                f.writelines(oc)
         elif op == 'del':
-            ic = open('/etc/php/php.ini', 'r').readlines()
-            f = open('/etc/php/php.ini', 'w')
+            with open('/etc/php/php.ini', 'r') as f:
+                ic = f.readlines()
             oc = []
             for l in ic:
                 if 'open_basedir = ' in l and path in l:
@@ -68,5 +68,6 @@ class PHP(Plugin):
                     oc.append(l)
                 else:
                     oc.append(l)
-            f.writelines(oc)
-            f.close()
+            with open('/etc/php/php.ini', 'w') as f:
+                f.writelines(oc)
+
