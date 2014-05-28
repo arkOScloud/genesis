@@ -71,3 +71,13 @@ class PHP(Plugin):
             with open('/etc/php/php.ini', 'w') as f:
                 f.writelines(oc)
 
+    def set_large_upload_size(self):
+        with open('/etc/php/php.ini', 'r') as f:
+            lines = f.readlines()
+        for i, l in enumerate(lines):
+            if 'upload_max_filesize = ' in l:
+                lines[i] = 'upload_max_filesize = 2G'
+            if 'post_max_size = ' in l:
+                lines[i] = 'post_max_size = 2G'
+        with open('/etc/php/php.ini', 'w') as f:
+            f.writelines(lines)
