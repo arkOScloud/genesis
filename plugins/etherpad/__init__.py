@@ -1,7 +1,7 @@
 # Plugin metadata
 NAME = 'Etherpad'
 TYPE = 'webapp'
-ICON = 'gen-pen'
+ICON = 'gen-pencil'
 DESCRIPTION = 'Collaborative Text Editing'
 LONG_DESCRIPTION = ('Etherpad allows you to edit documents collaboratively in '
                     'real-time, much like a live multi-player editor that runs '
