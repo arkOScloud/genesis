@@ -1,31 +1,35 @@
 <xml>
   <pad>
-    <img style="float:left;display:inline-block;padding:0 20px;" src="/dl/core/ui/bug.png" />
-    <div style="float:left;display:inline-block;width: 400px;">
-        <label size="4" text="Boom!"/>
-        <label size="1" text="Genesis has experienced an error"/><br/>
+    <img style="float:left;display:inline-block;padding:0 20px;" src="/dl/core/ui/error.png" />
+    <div style="float:left;display:inline-block;width: 550px;">
+        <label size="4" text="Sorry, an error has occurred."/>
         <br/>
-        <label size="3" text="So what do I do now?" /><br/>
-        <ul>
-            <li>
-                <label size="1" text="You may want to " />
-                <btn onclick="document.location.reload();return false" text="Refresh page" />
-                <label size="1" text=" or " />
-                <btn onclick="document.location.href='/session_reset';return false" text="Start new session" />
-                <br/>
-            </li>
-            <li>
-                Or if you believe you did nothing wrong and this is a bug, please let us know about the problem by
-                <outlinklabel url="https://github.com/cznweb/genesis/issues" text="filing this bug to our tracker" />
-                and attaching the crash report.<br/>
+        <label size="3" text="You can try again:" />
+            <p>
+               <btn onclick="document.location.reload();return false" text="Refresh page" />
+            </p>
+            <p>
+               If refreshing the page doesn't work, try:
+            </p>
+            <p>
+               <btn onclick="document.location.href='/session_reset';return false" text="Start new session" />
+            </p>
+        <label size="3" text="Still having trouble?" />
+            <p>
+                If you think this is a bug, please let us know about the problem by
+                <outlinklabel url="https://github.com/cznweb/genesis/issues" text="filing an issue to our tracker" /> and attaching the crash report.
+            </p>
+            <p>
                 <btn onclick="$('#report').fadeIn();$(this).hide();return false;" text="Show crash report" />
-                <div id="report" style="display:none"/><br/><br/>
-            </li>
-            <li>
+                <div id="report" style="display:none"/>
+            </p>
+            <p>
+                The stacktrace may also show useful error information:
+            </p>
+            <p>
                 <btn onclick="$('#trace').fadeIn();$(this).hide();return false;" text="View stacktrace" />
-                <div id="trace" style="display:none"/><br/>
-            </li>
-        </ul>              
+                <div id="trace" style="display:none"/>
+            </p>
     </div>
 </pad>
 </xml>
