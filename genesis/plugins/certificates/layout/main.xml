@@ -87,6 +87,12 @@
         <formline text="Expires">
             <label name="exipres" id="expires" />
         </formline>
+        <formline text="SHA1 Fingerprint">
+            <label id="sha1" />
+        </formline>
+        <formline text="MD5 Fingerprint">
+            <label id="md5" />
+        </formline>
         <formline text="Assign to:">
             <dt id="certassign" width="100%">
                 <dtr header="True">

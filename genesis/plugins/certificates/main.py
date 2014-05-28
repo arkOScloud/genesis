@@ -111,6 +111,8 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             exp = self._cinfo['expiry']
             exp = exp[0:4] + '-' + exp[4:6] + '-' + exp[6:8] + ', ' + exp[8:10] + ':' + exp[10:12]
             ui.find('expires').set('text', exp)
+            ui.find('sha1').set('text', self._cinfo['sha1'])
+            ui.find('md5').set('text', self._cinfo['md5'])
 
             alist = []
             for cert in self.certs:

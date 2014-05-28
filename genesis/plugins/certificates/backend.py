@@ -1,5 +1,6 @@
 import ConfigParser
 import glob
+import hashlib
 import OpenSSL
 import os
 
@@ -17,19 +18,29 @@ class CertControl(Plugin):
 
 	def get_certs(self):
 		# Find all certs added by Genesis and return basic information
+		# TODO: move assign list to checking individual sites/plugins
 		certs = []
 		if not os.path.exists('/etc/ssl/certs/genesis'):
 			os.mkdir('/etc/ssl/certs/genesis')
 		if not os.path.exists('/etc/ssl/private/genesis'):
 			os.mkdir('/etc/ssl/private/genesis')
-		for x in glob.glob('/etc/ssl/certs/genesis/*.gcinfo'):
+		for x in glob.glob('/etc/ssl/certs/genesis/*.crt'):
+			h, m = hashlib.sha1(), hashlib.md5()
+			name = os.path.splitext(os.path.basename(x))[0]
+			c = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, open(x, 'r').read())
+			k = OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, open(os.path.join('/etc/ssl/private/genesis', name+'.key'), 'r').read())
+			h.update(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_ASN1, c))
+			m.update(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_ASN1, c))
+			h, m = h.hexdigest(), m.hexdigest()
 			cfg = ConfigParser.ConfigParser()
-			cfg.read(x)
-			certs.append({'name': cfg.get('cert', 'name'),
-				'expiry': cfg.get('cert', 'expiry') if cfg.has_option('cert', 'expiry') else 'Unknown',
-				'domain': cfg.get('cert', 'domain') if cfg.has_option('cert', 'domain') else 'Unknown',
-				'keytype': cfg.get('cert', 'keytype') if cfg.has_option('cert', 'keytype') else 'Unknown',
-				'keylength': cfg.get('cert', 'keylength') if cfg.has_option('cert', 'keylength') else 'Unknown',
+			cfg.read(os.path.join('/etc/ssl/certs/genesis', name+'.gcinfo'))
+			certs.append({'name': name,
+				'expiry': c.get_notAfter(),
+				'domain': c.get_subject().CN,
+				'keytype': 'RSA' if k.type() == OpenSSL.crypto.TYPE_RSA else ('DSA' if k.type() == OpenSSL.crypto.TYPE_DSA else 'Unknown'),
+				'keylength': str(int(k.bits())),
+				'sha1': ':'.join([h[i:i+2].upper() for i in range(0,len(h), 2)]),
+				'md5': ':'.join([m[i:i+2].upper() for i in range(0,len(m), 2)]),
 				'assign': cfg.get('cert', 'assign').split('\n') if cfg.has_option('cert', 'assign') else 'Unknown'})
 		return certs
 
