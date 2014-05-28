@@ -176,6 +176,7 @@ class ownCloud(Plugin):
         dbase.remove(dbname, conn)
         dbase.usermod(dbname, 'del', '', conn)
         phpctl = apis.langassist(self.app).get_interface('PHP')
+        phpctl.set_large_upload_size()
         if datadir:
             shutil.rmtree(datadir)
             phpctl.open_basedir('del', datadir)
