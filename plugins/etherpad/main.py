@@ -8,7 +8,6 @@ import json
 import nginx
 import os
 import random
-import subprocess
 
 
 class Etherpad(Plugin):
@@ -110,16 +109,20 @@ class Etherpad(Plugin):
         # Install deps right away
         if not shell(os.path.join(path, 'bin/installDeps.sh') + ' || exit 1'):
             raise RuntimeError(
-                "Sorry Bro, could not install etherpad dependencies.")
+                "Etherpad dependencies could not be installed.")
 
         # Install selected plugins
-        mods = os.path.join(path, "node_modules")
-        os.mkdir(mods)
-        for var in vars:
-            var = str(var)
-            if var.startswith('ep_plugin/') and int(vars.getvalue(var)):
-                var = var.split("/")[1]
-                shell('cd %s && npm install ep_%s' % (mods, var))
+        mods = list(                            # e.g. "ep_plugin/ep_adminpads"
+            str(var).split("/")[1]              #                 ^^^^^^^^^^^^
+            for var in vars
+            if var.startswith('ep_plugin/') and int(vars.getvalue(var))
+        )
+        if mods:
+            mod_inst_path = os.path.join(path, "node_modules")
+            if not os.path.exists(mod_inst_path):
+                os.mkdir(mod_inst_path)
+            nodectl = apis.langassist(self.app).get_interface('NodeJS')
+            nodectl.install(*mods, install_path=mod_inst_path)
 
         # Make supervisor entry
         s = apis.orders(self.app).get_interface('supervisor')
@@ -140,8 +143,6 @@ class Etherpad(Plugin):
 
         # Change owner of everything in the etherpad path
         shell('chown -R etherpad ' + path)
-        #TODO: make more user friendly: supervisor process
-        #TODO: make more user friendly: enabling ssl
         #TODO: user auth with nginx??
 
     def pre_remove(self, name, path):

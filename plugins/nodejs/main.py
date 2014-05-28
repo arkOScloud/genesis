@@ -12,7 +12,8 @@ class NodeJS(Plugin):
     name = 'NodeJS'
 
     def install(self, *mods, **kwargs):
-        s = shell_cs('npm install %s%s' % (' '.join(x for x in mods), (' --'+' --'.join(x for x in kwargs['opts']) if kwargs.has_key('opts') else '')), stderr=True)
+        cd = ('cd %s;' % kwargs['install_path']) if 'install_path' in kwargs else ''
+        s = shell_cs('%s npm install %s%s' % (cd, ' '.join(x for x in mods), (' --'+' --'.join(x for x in kwargs['opts']) if kwargs.has_key('opts') else '')), stderr=True)
         if s[0] != 0:
             self.app.log.error('Failed to install %s via npm; log output follows:\n%s'%(' '.join(x for x in mods),s[1]))
             raise Exception('Failed to install %s via npm, check logs for info'%' '.join(x for x in mods))
