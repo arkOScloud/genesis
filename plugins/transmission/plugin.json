@@ -1,0 +1,42 @@
+{
+    "name": "Transmission",
+    "type": "plugin",
+    "icon": "gen-download",
+    "description": {
+        "short": "Manage Transmission headless Bittorrent client",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Downloads",
+            "secondary": ["Torrents"]
+        }
+    ],
+    "version": "0.1",
+    "author": "Will",
+    "homepage": "https://arkos.io",
+    "app_author": "Transmission Project",
+    "app_homepage": "https://www.transmissionbt.com/",
+    "logo": true,
+    "screenshots": ["screen-1.jpg"],
+    "services": [
+        {
+            "name": "Transmission Client",
+            "binary": "transmission",
+            "ports": [["tcp", "9091"]]
+        }
+    ],
+    "modules": ["main", "backend"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "Transmission (CLI)",
+                "package": "transmission-cli",
+                "binary": "transmission"
+            }
+        ]
+    },
+    "generation": 1
+}

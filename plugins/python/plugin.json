@@ -1,0 +1,48 @@
+{
+    "name": "Python",
+    "type": "extension",
+    "icon": "gen-code",
+    "description": {
+        "short": "Extension functions for Python applications and websites",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Management",
+            "secondary": []
+        }
+    ],
+    "version": "0.1",
+    "author": "arkOS",
+    "homepage": "http://arkos.io",
+    "app_author": "Python Software Foundation",
+    "app_homepage": "https://www.python.org/",
+    "logo": false,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "Python 2.x",
+                "package": "python2",
+                "binary": "python2"
+            },
+            {
+                "type": "module",
+                "name": "gunicorn",
+                "package": "gunicorn",
+                "binary": "gunicorn"
+            },
+            {
+                "type": "module",
+                "name": "django",
+                "package": "django",
+                "binary": "django"
+            }
+        ]
+    },
+    "generation": 1
+}

@@ -1,0 +1,92 @@
+{
+    "name": "Wallabag",
+    "type": "webapp",
+    "icon": "gen-feed",
+    "description": {
+        "short": "Self-hosted app for saving web pages and RSS feeds",
+        "long": "Wallabag (formerly poche) is a self-hostable application for saving web pages. Unlike other services, wallabag is free (as in freedom) and open-source."
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["News Readers (RSS)"]
+        }
+    ],
+    "version": "1.6.1b-1",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "Nicholas Lœuillet",
+    "app_homepage": "https://www.wallabag.org/",
+    "logo": true,
+    "screenshots": ["screen-1.jpg", "screen-2.jpg", "screen-3.jpg"],
+    "services": [
+        {
+            "name": "MariaDB",
+            "binary": "mysqld",
+            "ports": []
+        },
+        {
+            "name": "PHP FastCGI",
+            "binary": "php-fpm",
+            "ports": []
+        }
+    ],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "MariaDB",
+                "package": "mariadb",
+                "binary": "mysqld"
+            },
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            },
+            {
+                "type": "app",
+                "name": "php",
+                "package": "php",
+                "binary": null
+            },
+            {
+                "type": "app",
+                "name": "PHP FastCGI",
+                "package": "php-fpm",
+                "binary": "php-fpm"
+            },
+            {
+                "type": "app",
+                "name": "PHP xCache",
+                "package": "php-xcache",
+                "binary": null
+            },
+            {
+                "type": "app",
+                "name": "PHP Tidy",
+                "package": "php-tidy",
+                "binary": null
+            },
+            {
+                "type": "plugin",
+                "name": "MariaDB",
+                "package": "db-mariadb"
+            },
+            {
+                "type": "plugin",
+                "name": "PHP",
+                "package": "php"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "Wallabag",
+    "download_url": "https://github.com/wallabag/wallabag/archive/1.6.1b.tar.gz",
+    "database_engines": ["MariaDB"],
+    "uses_php": true,
+    "uses_ssl": true
+}

@@ -1,0 +1,81 @@
+{
+    "name": "Calendar",
+    "type": "plugin",
+    "icon": "gen-calendar",
+    "description": {
+        "short": "Host your own calendar and contacts (CalDAV/CardDAV)  sync server",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "File Storage",
+            "secondary": ["Calendar", "Contacts"]
+        }
+    ],
+    "version": "0.5",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "Radicale",
+    "app_homepage": "https://www.radicale.org/",
+    "logo": false,
+    "screenshots": [],
+    "services": [
+        {
+            "name": "Calendar/Contacts Server",
+            "binary": null,
+            "ports": [["tcp", "5232"]]
+        }
+    ],
+    "modules": ["main", "backend"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "Python 2.x",
+                "package": "python2",
+                "binary": "python2"
+            },
+            {
+                "type": "app",
+                "name": "uWSGI",
+                "package": "uwsgi",
+                "binary": "uwsgi"
+            },
+            {
+                "type": "app",
+                "name": "uWSGI Common Plugin",
+                "package": "uwsgi-plugin-common",
+                "binary": null
+            },
+            {
+                "type": "app",
+                "name": "uWSGI Python2 Plugin",
+                "package": "uwsgi-plugin-python2",
+                "binary": null
+            },
+            {
+                "type": "module",
+                "name": "Radicale",
+                "package": "radicale",
+                "binary": "radicale"
+            },
+            {
+                "type": "plugin",
+                "name": "Python",
+                "package": "python"
+            },
+            {
+                "type": "plugin",
+                "name": "Reverse Proxy",
+                "package": "reverseproxy"
+            },
+            {
+                "type": "plugin",
+                "name": "Supervisor",
+                "package": "supervisor"
+            }
+        ]
+    },
+    "generation": 1
+}

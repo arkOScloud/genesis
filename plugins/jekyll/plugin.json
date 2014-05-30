@@ -1,0 +1,52 @@
+{
+    "name": "Jekyll",
+    "type": "webapp",
+    "icon": "gen-earth",
+    "description": {
+        "short": "Run a statically-generated website or blog",
+        "long": "Jekyll is a simple, blog-aware, static site generator. It takes a template directory containing raw text files in various formats, runs it through Markdown (or Textile) and Liquid converters, and spits out a complete, ready-to-publish static website suitable for serving with your favorite web server."
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["Blogs", "Websites", "Static Sites"]
+        }
+    ],
+    "version": "1.1",
+    "author": "arkOS",
+    "homepage": "http://arkos.io",
+    "app_author": "Tom Preson-Werner, Nick Quaranto et al",
+    "app_homepage": "http://jekyllrb.com/",
+    "logo": true,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            },
+            {
+                "type": "app",
+                "name": "ruby",
+                "package": "ruby",
+                "binary": "ruby"
+            },
+            {
+                "type": "plugin",
+                "name": "Ruby",
+                "package": "ruby"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "Jekyll",
+    "download_url": "https://pkg.arkos.io/resources/jekyll-sample.tar.gz",
+    "database_engines": [],
+    "uses_php": false,
+    "uses_ssl": true
+}

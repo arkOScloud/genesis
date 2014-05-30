@@ -1,0 +1,36 @@
+{
+    "name": "NodeJS",
+    "type": "extension",
+    "icon": "gen-code",
+    "description": {
+        "short": "Extension functions for NodeJS applications and websites",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Management",
+            "secondary": []
+        }
+    ],
+    "version": "0.3",
+    "author": "arkOS",
+    "homepage": "http://arkos.io",
+    "app_author": "Joyent",
+    "app_homepage": "http://nodejs.org/",
+    "logo": false,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "NodeJS",
+                "package": "nodejs",
+                "binary": "npm"
+            }
+        ]
+    },
+    "generation": 1
+}

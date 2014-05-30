@@ -1,0 +1,41 @@
+{
+    "name": "Reverse Proxy",
+    "type": "webapp",
+    "icon": "gen-globe",
+    "description": {
+        "short": "Set up reverse proxies for custom applications",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Development",
+            "secondary": ["Personal Cloud"]
+        }
+    ],
+    "version": "0.1",
+    "author": "arkOS",
+    "homepage": "http://arkos.io",
+    "app_author": "",
+    "app_homepage": "",
+    "logo": false,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "ReverseProxy",
+    "download_url": null,
+    "database_engines": [],
+    "uses_php": false,
+    "uses_ssl": true
+}

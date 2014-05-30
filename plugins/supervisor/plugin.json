@@ -1,0 +1,42 @@
+{
+    "name": "Supervisor",
+    "type": "plugin",
+    "icon": "gen-bullhorn",
+    "description": {
+        "short": "Control processes under supervisord",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Management",
+            "secondary": []
+        }
+    ],
+    "version": "0.1",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "Supervisor",
+    "app_homepage": "https://supervisord.org/",
+    "logo": false,
+    "screenshots": [],
+    "services": [
+        {
+            "name": "Supervisor",
+            "binary": "supervisord",
+            "ports": [["tcp", "9001"]]
+        }
+    ],
+    "modules": ["main", "widget"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "Supervisor",
+                "package": "supervisor",
+                "binary": "supervisorctl"
+            }
+        ]
+    },
+    "generation": 1
+}

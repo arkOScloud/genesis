@@ -1,0 +1,41 @@
+{
+    "name": "Basic Website",
+    "type": "webapp",
+    "icon": "gen-earth",
+    "description": {
+        "short": "Upload your own HTML/PHP files",
+        "long": "Create a custom website with your own HTML or PHP files."
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["Websites", "Static Sites"]
+        }
+    ],
+    "version": "2",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "",
+    "app_homepage": "",
+    "logo": false,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "Website",
+    "download_url": null,
+    "database_engines": [],
+    "uses_php": false,
+    "uses_ssl": true
+}

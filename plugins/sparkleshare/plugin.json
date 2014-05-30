@@ -1,0 +1,40 @@
+{
+    "name": "SparkleShare",
+    "type": "plugin",
+    "icon": "gen-upload-2",
+    "description": {
+        "short": "Revision-controlled file storage and sync",
+        "long": "SparkleShare is an Open Source collaboration and sharing tool that is designed to keep things simple and to stay out of your way. It allows you to instantly sync with Git repositories and has clients available for Linux distributions, Mac and Windows."
+    },
+    "categories": [
+        {
+            "primary": "File Storage",
+            "secondary": ["Documents", "Collaboration"]
+        },
+        {
+            "primary": "Project Management",
+            "secondary": []
+        }
+    ],
+    "version": "0.1",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "SparkleShare",
+    "app_homepage": "https://sparkleshare.org/",
+    "logo": true,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main", "backend"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "Git",
+                "package": "git",
+                "binary": "git"
+            }
+        ]
+    },
+    "generation": 1
+}

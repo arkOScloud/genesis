@@ -1,0 +1,52 @@
+{
+    "name": "Mumble (VoIP)",
+    "type": "plugin",
+    "icon": "gen-phone",
+    "description": {
+        "short": "Host your own gaming VoIP server with Mumble",
+        "long": "uMurmur is the server application for Mumble, an open source Voice-over-IP (VoIP) client. This plugin hosts the umurmur server and lets you manage it."
+    },
+    "categories": [
+        {
+            "primary": "Communication",
+            "secondary": ["Voice-over-IP (VoIP)"]
+        }
+    ],
+    "version": "0.1",
+    "author": "Heiner",
+    "homepage": "https://github.com/heinzK1X",
+    "app_author": "The Mumble Community",
+    "app_homepage": "https://mumble.sourceforge.net",
+    "logo": true,
+    "screenshots": [],
+    "services": [
+        {
+            "name": "Mumble VoIP Server",
+            "binary": "umurmur",
+            "ports": [["tcp", "64738"], ["udp", "64738"]]
+        }
+    ],
+    "modules": ["main", "backend"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "uMurmur",
+                "package": "umurmur",
+                "binary": "umurmurd"
+            },
+            {
+                "type": "module",
+                "name": "pyparsing",
+                "package": "pyparsing"
+            },
+            {
+                "type": "module",
+                "name": "pylibconfig2",
+                "package": "pylibconfig2"
+            }
+        ]
+    },
+    "generation": 1
+}

@@ -1,0 +1,51 @@
+{
+    "name": "Ghost",
+    "type": "webapp",
+    "icon": "gen-earth",
+    "description": {
+        "short": "Host a blog with Ghost",
+        "long": "Ghost is a platform dedicated to one thing: Publishing. It's beautifully designed, completely customisable and completely Open Source. Ghost allows you to write and publish your own blog, giving you the tools to make it easy and even fun to do."
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["Blogs", "Websites", "CMS"]
+        }
+    ],
+    "version": "0.4.2-2",
+    "author": "ajvb",
+    "homepage": "http://arkos.io",
+    "app_author": "Ghost",
+    "app_homepage": "https://ghost.org/",
+    "logo": true,
+    "screenshots": ["screen-1.jpg", "screen-2.jpg", "screen-3.jpg"],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            },
+            {
+                "type": "plugin",
+                "name": "NodeJS",
+                "package": "nodejs"
+            },
+            {
+                "type": "plugin",
+                "name": "Supervisor",
+                "package": "supervisor"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "Ghost",
+    "download_url": "https://github.com/TryGhost/Ghost/releases/download/0.4.2/Ghost-0.4.2.zip",
+    "database_engines": [],
+    "uses_php": false,
+    "uses_ssl": true
+}

@@ -1,0 +1,74 @@
+{
+    "name": "Etherpad",
+    "type": "webapp",
+    "icon": "gen-pencil",
+    "description": {
+        "short": "Collaborative Text Editing",
+        "long": "Etherpad allows you to edit documents collaboratively in real-time, much like a live multi-player editor that runs in your browser. Write articles, press releases, to-do lists, etc. together with your friends, fellow students or colleagues, all working on the same document at the same time."
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["Personal Cloud", "Writing"]
+        }
+    ],
+    "version": "1.4.0-1",
+    "author": "Heiner",
+    "homepage": "https://github.com/heinzK1X",
+    "app_author": "The Etherpad Foundation",
+    "app_homepage": "http://etherpad.org/",
+    "logo": true,
+    "screenshots": ["screen-1.jpg"],
+    "services": [
+        {
+            "name": "MariaDB",
+            "binary": "mysqld",
+            "ports": []
+        }
+    ],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            },
+            {
+                "type": "plugin",
+                "name": "NodeJS",
+                "package": "nodejs"
+            },
+            {
+                "type": "app",
+                "name": "MariaDB",
+                "package": "mariadb",
+                "binary": "mysqld"
+            },
+            {
+                "type": "plugin",
+                "name": "MariaDB",
+                "package": "db-mariadb"
+            },
+            {
+                "type": "app",
+                "name": "make",
+                "package": "make",
+                "binary": "make"
+            },
+            {
+                "type": "plugin",
+                "name": "Supervisor",
+                "package": "supervisor"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "Etherpad",
+    "download_url": "https://github.com/ether/etherpad-lite.git",
+    "database_engines": ["MariaDB"],
+    "uses_php": false,
+    "uses_ssl": true
+}

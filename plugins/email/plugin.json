@@ -1,0 +1,69 @@
+{
+    "name": "Mailserver",
+    "type": "plugin",
+    "icon": "gen-envelop",
+    "description": {
+        "short": "Host your email server and accounts",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Communication",
+            "secondary": ["Email"]
+        }
+    ],
+    "version": "0.1",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "",
+    "app_homepage": "",
+    "logo": false,
+    "screenshots": [],
+    "services": [
+        {
+            "name": "Mail Transport",
+            "binary": "postfix",
+            "ports": [["tcp", "25"], ["tcp", "587"]]
+        },
+        {
+            "name": "Mail Delivery",
+            "binary": "dovecot",
+            "ports": [["tcp", "143"]]
+        },
+        {
+            "name": "MariaDB",
+            "binary": "mysqld",
+            "ports": []
+        }
+    ],
+    "modules": ["main", "backend", "config"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "Postfix",
+                "package": "postfix",
+                "binary": "postfix"
+            },
+            {
+                "type": "app",
+                "name": "Dovecot",
+                "package": "dovecot",
+                "binary": "dovecot"
+            },
+            {
+                "type": "app",
+                "name": "MariaDB",
+                "package": "mariadb",
+                "binary": "mysqld"
+            },
+            {
+                "type": "plugin",
+                "name": "MariaDB",
+                "package": "db-mariadb"
+            }
+        ]
+    },
+    "generation": 1
+}

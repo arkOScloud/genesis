@@ -1,0 +1,86 @@
+{
+    "name": "WordPress",
+    "type": "webapp",
+    "icon": "gen-earth",
+    "description": {
+        "short": "Open-source CMS and blogging platform",
+        "long": "WordPress started as just a blogging system, but has evolved to be used as full content management system and so much more through the thousands of plugins, widgets, and themes, WordPress is limited only by your imagination. (And tech chops.)"
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["Blogs", "Websites", "CMS"]
+        }
+    ],
+    "version": "3.8.2-1",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "Automattic",
+    "app_homepage": "https://wordpress.org",
+    "logo": true,
+    "screenshots": ["screen-1.jpg", "screen-2.jpg", "screen-3.jpg", "screen-4.jpg"],
+    "services": [
+        {
+            "name": "MariaDB",
+            "binary": "mysqld",
+            "ports": []
+        },
+        {
+            "name": "PHP FastCGI",
+            "binary": "php-fpm",
+            "ports": []
+        }
+    ],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "MariaDB",
+                "package": "mariadb",
+                "binary": "mysqld"
+            },
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            },
+            {
+                "type": "app",
+                "name": "php",
+                "package": "php",
+                "binary": null
+            },
+            {
+                "type": "app",
+                "name": "PHP FastCGI",
+                "package": "php-fpm",
+                "binary": "php-fpm"
+            },
+            {
+                "type": "app",
+                "name": "PHP xCache",
+                "package": "php-xcache",
+                "binary": null
+            },
+            {
+                "type": "plugin",
+                "name": "MariaDB",
+                "package": "db-mariadb"
+            },
+            {
+                "type": "plugin",
+                "name": "PHP",
+                "package": "php"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "WordPress",
+    "download_url": "https://wordpress.org/wordpress-3.8.2.tar.gz",
+    "database_engines": ["MariaDB"],
+    "uses_php": true,
+    "uses_ssl": true
+}

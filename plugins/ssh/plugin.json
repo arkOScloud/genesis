@@ -1,0 +1,47 @@
+{
+    "name": "Secure Shell (SSH)",
+    "type": "plugin",
+    "icon": "gen-console",
+    "description": {
+        "short": "Change SSH settings and manage public keys",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Utilities",
+            "secondary": ["Advanced", "Command line (CLI)", "Remote Management"]
+        }
+    ],
+    "version": "0.3",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "OpenSSH",
+    "app_homepage": "https://www.openssh.com/",
+    "logo": false,
+    "screenshots": [],
+    "services": [
+        {
+            "name": "SSH Server",
+            "binary": "sshd",
+            "ports": [["tcp", "22"]]
+        }
+    ],
+    "fail2ban": [
+        {
+            "name": "sshd"
+        }
+    ],
+    "modules": ["main", "backend"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "OpenSSH",
+                "package": "openssh",
+                "binary": "sshd"
+            }
+        ]
+    },
+    "generation": 1
+}

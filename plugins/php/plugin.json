@@ -1,0 +1,42 @@
+{
+    "name": "PHP",
+    "type": "extension",
+    "icon": "gen-code",
+    "description": {
+        "short": "Extension functions for PHP websites",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Management",
+            "secondary": []
+        }
+    ],
+    "version": "0.2",
+    "author": "arkOS",
+    "homepage": "http://arkos.io",
+    "app_author": "The PHP Group",
+    "app_homepage": "http://nodejs.net/",
+    "logo": false,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "PHP",
+                "package": "php",
+                "binary": null
+            },
+            {
+                "type": "app",
+                "name": "PHP FastCGI",
+                "package": "php-fpm",
+                "binary": "php-fpm"
+            }
+        ]
+    },
+    "generation": 1
+}

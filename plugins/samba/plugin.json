@@ -1,0 +1,42 @@
+{
+    "name": "Fileshares (SMB)",
+    "type": "plugin",
+    "icon": "gen-upload-2",
+    "description": {
+        "short": "Add, remove and manage Windows (SMB/CIFS) network fileshares",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "File Storage",
+            "secondary": ["Documents", "Music", "Photos"]
+        }
+    ],
+    "version": "0.1",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "The Samba Team",
+    "app_homepage": "https://www.samba.org/",
+    "logo": false,
+    "screenshots": [],
+    "services": [
+        {
+            "name": "Samba",
+            "binary": "smbd",
+            "ports": [["tcp", "137"], ["tcp", "138"], ["tcp", "139"]]
+        }
+    ],
+    "modules": ["main", "backend"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "Samba",
+                "package": "samba",
+                "binary": "smbd"
+            }
+        ]
+    },
+    "generation": 1
+}

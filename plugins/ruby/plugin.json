@@ -1,0 +1,36 @@
+{
+    "name": "Ruby",
+    "type": "extension",
+    "icon": "gen-code",
+    "description": {
+        "short": "Extension functions for Ruby applications and websites",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Management",
+            "secondary": []
+        }
+    ],
+    "version": "0.1",
+    "author": "arkOS",
+    "homepage": "http://arkos.io",
+    "app_author": "The Ruby Community",
+    "app_homepage": "https://www.ruby-lang.org/",
+    "logo": false,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "ruby",
+                "package": "ruby",
+                "binary": "ruby"
+            }
+        ]
+    },
+    "generation": 1
+}

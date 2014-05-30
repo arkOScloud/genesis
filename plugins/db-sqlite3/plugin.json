@@ -1,0 +1,40 @@
+{
+    "name": "SQLite3",
+    "type": "database",
+    "icon": "gen-database",
+    "description": {
+        "short": "Manage SQLite3 databases",
+        "long": ""
+    },
+    "categories": [
+        {
+            "primary": "Databases",
+            "secondary": []
+        }
+    ],
+    "version": "1",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "SQLite Consortium",
+    "app_homepage": "https://www.sqlite.org/",
+    "logo": false,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "SQLite3",
+                "package": "sqlite3",
+                "binary": "sqlite3"
+            }
+        ]
+    },
+    "generation": 1,
+    "database_plugin": "SQLite3",
+    "database_task": null,
+    "database_multiuser": false,
+    "database_requires_connection": false
+}
