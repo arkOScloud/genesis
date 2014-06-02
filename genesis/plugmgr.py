@@ -231,9 +231,11 @@ class PluginLoader:
 
         try:
             mod = imp.load_module(plugin, *imp.find_module(plugin, [path]))
-            log.debug('  -- version ' + mod.VERSION)
-        except:
+            meta = json.load(open(os.path.join(path, plugin, 'plugin.json'), 'r'))
+            log.debug('  -- version ' + meta['version'])
+        except Exception, e:
             log.warn(' *** Plugin not loadable: ' + plugin)
+            log.warn(str(e))
             return
 
         info = PluginInfo()
@@ -241,48 +243,48 @@ class PluginLoader:
             d = None
             # Save info
             info.id = plugin
-            info.ptype = mod.TYPE
-            info.iconfont = mod.ICON
-            info.services = mod.SERVICES if hasattr(mod, 'SERVICES') else []
-            info.name, info.version = mod.NAME, mod.VERSION
-            info.desc, info.longdesc = mod.DESCRIPTION, mod.LONG_DESCRIPTION if hasattr(mod, 'LONG_DESCRIPTION') else ''
-            info.author, info.homepage, info.logo = mod.AUTHOR, mod.HOMEPAGE, mod.LOGO if hasattr(mod, 'LOGO') else False
-            info.app_author, info.app_homepage = mod.APP_AUTHOR if hasattr(mod, 'APP_AUTHOR') else None, \
-                mod.APP_HOMEPAGE if hasattr(mod, 'APP_HOMEPAGE') else None
-            info.cats = mod.CATEGORIES
+            info.ptype = meta['type']
+            info.iconfont = meta['icon']
+            info.services = meta['services'] if meta.has_key('services') else []
+            info.name, info.version = meta['name'], meta['version']
+            info.desc, info.longdesc = meta['description']['short'], meta['description']['long'] if meta['description'].has_key('long') else ''
+            info.author, info.homepage, info.logo = meta['author'], meta['homepage'], meta['logo'] if meta.has_key('logo') else False
+            info.app_author, info.app_homepage = meta['app_author'] if meta.has_key('app_author') else None, \
+                meta['app_homepage'] if meta.has_key('app_homepage') else None
+            info.cats = meta['categories']
             info.deps = []
             info.problem = None
             info.installed = True
-            info.descriptor = mod
+            info.descriptor = meta
 
             # Add special information
             if info.ptype == 'webapp':
-                info.wa_plugin, info.dpath = mod.WA_PLUGIN, mod.DPATH
-                info.dbengine = mod.DBENGINE if hasattr(mod, 'DBENGINE') else None
-                info.php, info.nomulti, info.ssl = mod.PHP, mod.NOMULTI, mod.SSL
+                info.wa_plugin, info.dpath = meta['website_plugin'], meta['download_url']
+                info.dbengines = meta['database_engines'] if meta.has_key('database_engines') else []
+                info.php, info.ssl = meta['uses_php'], meta['uses_ssl']
             elif info.ptype == 'database':
-                info.db_name, info.db_plugin, info.db_task = mod.DB_NAME, mod.DB_PLUGIN, mod.DB_TASK
-                info.multiuser, info.requires_conn = mod.MULTIUSER, mod.REQUIRES_CONN
-            info.f2b = mod.F2B if hasattr(mod, 'F2B') else None
-            info.f2b_name = mod.F2B_NAME if hasattr(mod, 'F2B_NAME') else None
-            info.f2b_icon = mod.F2B_ICON if hasattr(mod, 'F2B_ICON') else None
+                info.db_plugin, info.db_task = meta['database_plugin'], meta['database_task']
+                info.multiuser, info.requires_conn = meta['database_multiuser'], meta['database_requires_connection']
+            info.f2b = meta['fail2ban'] if meta.has_key('fail2ban') else None
+            info.f2b_name = meta['fail2ban_name'] if meta.has_key('fail2ban_name') else None
+            info.f2b_icon = meta['fail2ban_icon'] if meta.has_key('fail2ban_icon') else None
 
             PluginLoader.__plugins[plugin] = info
 
             # Verify platform
-            if mod.PLATFORMS != ['any'] and not platform in mod.PLATFORMS:
-                raise PlatformRequirementError(mod.PLATFORMS)
+            if meta['platforms'] != ['any'] and not platform in meta['platforms']:
+                raise PlatformRequirementError(meta['platforms'])
 
             # Verify version
-            if not hasattr(mod, 'GENERATION') or mod.GENERATION != generation:
+            if not meta.has_key('generation') or meta['generation'] != generation:
                 raise GenesisVersionRequirementError('other Genesis platform generation')
 
             # Verify dependencies
-            if hasattr(mod, 'DEPENDENCIES'):
+            if meta.has_key('dependencies'):
                 deps = []
-                for k in mod.DEPENDENCIES:
+                for k in meta['dependencies']:
                     if platform.lower() in k or 'any' in k:
-                        deps = mod.DEPENDENCIES[k]
+                        deps = meta['dependencies'][k]
                         break
                 info.deps = deps
                 for req in deps:
@@ -292,7 +294,7 @@ class PluginLoader:
             PluginLoader.__submods[plugin] = {}
 
             # Load submodules
-            for submod in mod.MODULES:
+            for submod in meta['modules']:
                 try:
                     log.debug('  -> %s' % submod)
                     PluginManager.start_tracking()
@@ -586,7 +588,9 @@ class RepositoryManager:
         if not os.path.exists('/var/lib/genesis'):
             os.mkdir('/var/lib/genesis')
         try:
-            data = download('http://%s/genesis/list/%s' % (self.server, PluginLoader.platform), crit=crit)
+            req = urllib2.Request('https://%s/' % self.server)
+            req.add_header('Content-type', 'application/json')
+            data = urllib2.urlopen(req, json.dumps({'get': 'list', 'distro': PluginLoader.platform})).read()
             open('/var/lib/genesis/plugins.list', 'w').write(data)
         except urllib2.HTTPError, e:
             self.log.error('Application list retrieval failed with HTTP Error %s' % str(e.code))
