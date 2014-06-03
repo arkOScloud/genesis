@@ -53,7 +53,8 @@ class GeneralConfig(ModuleConfig):
 
 class UMurmurSSLPlugin(Plugin):
     implements(ISSLPlugin)
-    text = "Mumble Server (uMurmur)"
+    pid = 'umurmur'
+    text = "Mumble (VoIP)"
     iconfont = "gen-phone"
     cert_type = 'cert-key'
 

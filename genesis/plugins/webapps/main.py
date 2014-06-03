@@ -143,14 +143,6 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
 		if self._setup is not None:
 			ui.find('addr').set('value', self.app.get_backend(IHostnameManager).gethostname().lower())
-			if self._setup.nomulti is True:
-				for site in self.sites:
-					if self._setup.wa_plugin in site.stype:
-						ui.remove('dlgSetup')
-						ui.remove('dlgEdit')
-						self.put_message('err', 'Only one site of this type at any given time')
-						self._setup = None
-						return ui
 			try:
 				cfgui = self.app.inflate(self._setup.id + ':conf')
 				ui.append('app-config', UI.Label(size=3, text="App Settings"))
@@ -226,21 +218,28 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 	def on_submit(self, event, params, vars = None):
 		if params[0] == 'dlgAdd':
 			if vars.getvalue('action', '') == 'OK':
-				if hasattr(self._current, 'dbengine') and self._current.dbengine:
+				if hasattr(self._current, 'dbengines') and self._current.dbengines:
+					if len(self._current.dbengines) > 1 and hasattr(self._current, 'selected_dbengine'):
+						dbengine = self._current.selected_dbengine
+					elif len(self._current.dbengines) > 1:
+						self._current.selected_dbengine = self._current.dbengines[0]
+						dbengine = self._current.dbengines[0]
+					else:
+						dbengine = self._current.dbengines[0]
 					on = False
 					for dbtype in self.dbops.get_dbtypes():
-						if self._current.dbengine == dbtype[0] and dbtype[2] == True:
+						if dbengine == dbtype[0] and dbtype[2] == True:
 							on = True
-						elif self._current.dbengine == dbtype[0] and dbtype[2] == None:
+						elif dbengine == dbtype[0] and dbtype[2] == None:
 							on = True
 					if on:
-						if self.dbops.get_info(self._current.dbengine).requires_conn and \
-						not self.dbops.get_dbconn(self._current.dbengine):
-							self._dbauth = (self._current.dbengine, '', 'add')
+						if self.dbops.get_info(dbengine).requires_conn and \
+						not self.dbops.get_dbconn(dbengine):
+							self._dbauth = (dbengine, '', 'add')
 						else:
 							self._setup = self._current
 					else:
-						self.put_message('err', 'The database engine for %s is not running. Please start it via the Status button.' % self._current.dbengine)
+						self.put_message('err', 'The database engine for %s is not running. Please start it via the Status button.' % dbengine)
 				else:
 					self._setup = self._current
 			self._add = None

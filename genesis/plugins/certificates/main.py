@@ -46,7 +46,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             lst.append(UI.DTR(
                 UI.IconFont(iconfont='gen-certificate'),
                 UI.Label(text=s['name']),
-                UI.Label(text=', '.join(filter(None, s['assign']))),
+                UI.Label(text=', '.join([x['name'] for x in s['assign']])),
                 UI.HContainer(
                     UI.TipIcon(iconfont='gen-info', text='Information',
                         id='info/' + str(self.certs.index(s))),
@@ -118,11 +118,10 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             for cert in self.certs:
                 if cert != self._cinfo:
                     for i in cert['assign']:
-                        if i != '':
-                            alist.append(i)
+                        alist.append(i)
 
-            if not 'Genesis SSL' in alist:
-                if 'Genesis SSL' in self._cinfo['assign']:
+            if not 'genesis' in [x['type'] for x in alist]:
+                if 'genesis' in [x['type'] for x in self._cinfo['assign']]:
                     ic, ict, show = 'gen-checkmark-circle', 'Assigned', 'd'
                 else:
                     ic, ict, show = None, None, 'e'
@@ -143,8 +142,8 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                     )
                 )
             for x in self._wal:
-                if not (x.name+' ('+x.stype+')') in alist:
-                    if (x.name+' ('+x.stype+')') in self._cinfo['assign']:
+                if not x.name in [y['name'] for y in alist if y['type'] == 'website']:
+                    if x.name in [y['name'] for y in self._cinfo['assign'] if y['type'] == 'website']:
                         ic, ict, show = 'gen-checkmark-circle', 'Assigned', 'd'
                     else:
                         ic, ict, show = None, None, 'e'
@@ -164,8 +163,8 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                         )
                     )
             for x in self._pal:
-                if not x.text in alist:
-                    if x.text in self._cinfo['assign']:
+                if not x.pid in [y['id'] for y in alist if y['type'] == 'plugin']:
+                    if x.pid in [y['id'] for y in self._cinfo['assign'] if y['type'] == 'plugin']:
                         ic, ict, show = 'gen-checkmark-circle', 'Assigned', 'd'
                     else:
                         ic, ict, show = None, None, 'e'
@@ -221,7 +220,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             self._gen = True
         elif params[0] == 'del':
             self._tab = 0
-            self._cc.remove(self.certs[int(params[1])]['name'])
+            self._cc.remove(self.certs[int(params[1])])
             self.put_message('info', 'Certificate successfully deleted')
         elif params[0] == 'ac' and params[2] == 'p':
             self._tab = 0
@@ -232,7 +231,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
         elif params[0] == 'ac' and params[2] == 'w':
             self._tab = 0
             self._cc.assign(self._cinfo['name'],
-                [('webapp', self._wal[int(params[3])])])
+                [('website', self._wal[int(params[3])])])
             self.put_message('info', '%s added to %s webapp' % (self._cinfo['name'], self._wal[int(params[3])].name))
             self._cinfo = None
         elif params[0] == 'ac' and params[2] == 'g':
@@ -242,19 +241,17 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             self._cinfo = None
         elif params[0] == 'uc' and params[2] == 'p':
             self._tab = 0
-            self._cc.unassign(self._cinfo['name'], 
-                [('plugin', self._pal[int(params[3])])])
+            self._cc.unassign(('plugin', self._pal[int(params[3])]))
             self.put_message('info', '%s removed from %s plugin, and SSL disabled.' % (self._cinfo['name'], self._pal[int(params[3])].text))
             self._cinfo = None
         elif params[0] == 'uc' and params[2] == 'w':
             self._tab = 0
-            self._cc.unassign(self._cinfo['name'],
-                [('webapp', self._wal[int(params[3])])])
+            self._cc.unassign(('website', self._wal[int(params[3])]))
             self.put_message('info', '%s removed from %s webapp, and SSL disabled.' % (self._cinfo['name'], self._wal[int(params[3])].name))
             self._cinfo = None
         elif params[0] == 'uc' and params[2] == 'g':
             self._tab = 0
-            self._cc.unassign(self._cinfo['name'], [[('genesis')]])
+            self._cc.unassign(('genesis'))
             self.put_message('info', 'Certificate removed and SSL disabled for Genesis. Reload Genesis for changes to take effect')
             self._cinfo = None
         elif params[0] == 'upl':

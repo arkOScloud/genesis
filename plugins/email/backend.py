@@ -676,6 +676,7 @@ class MailControl(Plugin):
 
 class MailSSLPlugin(Plugin):
     implements(ISSLPlugin)
+    pid = 'email'
     text = 'Mailserver'
     iconfont = 'gen-envelop'
     cert_type = 'cert-key'

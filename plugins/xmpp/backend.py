@@ -346,6 +346,7 @@ class XMPPUserControl:
 
 class XMPPSSLPlugin(Plugin):
     implements(ISSLPlugin)
+    pid = 'xmpp'
     text = 'XMPP Chat'
     iconfont = 'gen-bubbles'
     cert_type = 'cert-key'

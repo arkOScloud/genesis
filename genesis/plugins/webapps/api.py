@@ -57,22 +57,23 @@ class Webapps(apis.API):
         if not os.path.exists('/etc/nginx/sites-enabled'):
             os.makedirs('/etc/nginx/sites-enabled')
 
-        for site in os.listdir('/etc/nginx/sites-available'):
+        for site in glob.glob('/etc/nginx/sites-available/.*.ginf'):
+            g = ConfigParser.SafeConfigParser()
+            g.read(site)
             w = Webapp()
             # Set default values and regexs to use
-            w.name = site
+            w.name = g.get('website', 'name')
             w.addr = False
             w.port = '80'
             w.stype = 'Unknown'
-            w.path = os.path.join('/etc/nginx/sites-available', site)
-            rtype = re.compile('GENESIS ((?:[a-z][a-z]+))', flags=re.IGNORECASE)
+            w.path = os.path.join('/etc/nginx/sites-available', g.get('website', 'name'))
             rport = re.compile('(\\d+)\s*(.*)')
 
             # Get actual values
             try:
                 s = None
                 c = nginx.loadf(w.path)
-                w.stype = re.match(rtype, c.filter('Comment')[0].comment).group(1)
+                w.stype = g.get('website', 'stype')
                 # Get the right serverblock - SSL if it's here
                 for x in c.servers:
                     if 'ssl' in x.filter('Key', 'listen')[0].value:
@@ -86,12 +87,14 @@ class Webapps(apis.API):
                 w.php = True if 'php' in s.filter('Key', 'index')[0].value else False
             except IndexError:
                 pass
+            w.dbengine = g.get('website', 'dbengine', None)
+            w.dbname = g.get('website', 'dbname', None)
+            w.dbuser = g.get('website', 'dbuser', None)
 
-            w.enabled = True if os.path.exists(os.path.join('/etc/nginx/sites-enabled', site)) else False
+            w.enabled = True if os.path.exists(os.path.join('/etc/nginx/sites-enabled', g.get('website', 'name'))) else False
 
             w.sclass = self.get_interface(w.stype)
             w.sinfo = self.get_info(w.stype)
-            w.dbengine = w.sinfo.dbengine if hasattr(w.sinfo, 'dbengine') else None
             w.ssl_able = w.sinfo.ssl if hasattr(w.sinfo, 'ssl') else False
 
             applist.append(w)
@@ -106,24 +109,3 @@ class Webapps(apis.API):
         cs = filter(lambda x: x.__class__.__name__ == name,
             self.app.grab_plugins(apis.webapps.IWebapp))
         return cs[0] if len(cs) else None
-
-    def cert_remove_notify(self, name, stype):
-        # Called by webapp when removed.
-        # Removes the associated entry from gcinfo tracker file
-        # Placed here for now to avoid awkward circular import
-        try:
-            cfg = ConfigParser.ConfigParser()
-            for x in glob.glob('/etc/ssl/certs/genesis/*.gcinfo'):
-                cfg.read(x)
-                alist = []
-                write = False
-                for i in cfg.get('cert', 'assign').split('\n'):
-                    if i != (name+' ('+stype+')'):
-                        alist.append(i)
-                    else:
-                        write = True
-                if write == True:
-                    cfg.set('cert', 'assign', '\n'.join(alist))
-                    cfg.write(open(x, 'w'))
-        except:
-            pass

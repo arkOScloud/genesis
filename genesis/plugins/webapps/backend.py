@@ -3,6 +3,7 @@ from genesis.utils import shell, shell_cs, download
 from genesis import apis
 from api import Webapp
 
+import ConfigParser
 import nginx
 import os
 import re
@@ -32,7 +33,7 @@ class ReloadError(Exception):
 
 
 class WebappControl(Plugin):
-	def add(self, cat, name, wa, vars, enable=True):
+	def add(self, cat, name, wa, vars, dbinfo, enable=True):
 		specialmsg = ''
 		webapp = apis.webapps(self.app).get_interface(wa.wa_plugin)
 
@@ -109,11 +110,16 @@ class WebappControl(Plugin):
 			w.addr = vars.getvalue('addr', 'localhost')
 			w.port = vars.getvalue('port', '80')
 			w.php = True if wa.php is True or php is '1' else False
+			w.dbengine = dbinfo['engine'] if dbinfo else None
+			w.dbname = dbinfo['name'] if dbinfo else None
+			w.dbuser = dbinfo['user'] if dbinfo else None
 			self.nginx_add(site=w, 
 				add=addtoblock if addtoblock else webapp.addtoblock, 
 				)
 		except Exception, e:
 			raise PartialError('nginx serverblock couldn\'t be written - '+str(e))
+
+		# TODO core database provisioning will go here
 
 		try:
 			cat.statusmsg('Running post-install configuration...')
@@ -181,8 +187,6 @@ class WebappControl(Plugin):
 		else:
 			shutil.rmtree(site.path)
 		self.nginx_remove(site)
-		apis.webapps(self.app).cert_remove_notify(site.name,
-			site.stype)
 		if site.sclass != '' and site.stype != 'ReverseProxy':
 			cat.statusmsg('Cleaning up...')
 			apis.poicontrol(self.app).drop_by_path(site.path)
@@ -192,7 +196,6 @@ class WebappControl(Plugin):
 		if site.path == '':
 			site.path = os.path.join('/srv/http/webapps/', site.name)
 		c = nginx.Conf()
-		c.add(nginx.Comment('GENESIS %s %s' % (site.stype, 'http://'+site.addr+':'+site.port)))
 		s = nginx.Server(
 			nginx.Key('listen', site.port),
 			nginx.Key('server_name', site.addr),
@@ -203,11 +206,22 @@ class WebappControl(Plugin):
 			s.add(*[x for x in add])
 		c.add(s)
 		nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', site.name))
+		# Write configuration file with info Genesis needs to know the site
+		f = open(os.path.join('/etc/nginx/sites-available', '.'+site.name+'.ginf'), 'w')
+		c = ConfigParser.SafeConfigParser()
+		c.add_section('website')
+		c.set('website', 'name', site.name)
+		c.set('website', 'stype', site.stype)
+		c.set('website', 'ssl', '')
+		c.set('website', 'dbengine', site.dbengine if site.dbengine else '')
+		c.set('website', 'dbname', site.dbname if site.dbname else '')
+		c.set('website', 'dbuser', site.dbuser if site.dbuser else '')
+		c.write(f)
+		f.close()
 
 	def nginx_edit(self, oldsite, site):
 		# Update the nginx serverblock
 		c = nginx.loadf(os.path.join('/etc/nginx/sites-available', oldsite.name))
-		c.filter('Comment')[0].comment = 'GENESIS %s %s' % (site.stype, (('https://' if site.ssl else 'http://')+site.addr+':'+site.port))
 		s = c.servers[0]
 		if oldsite.ssl and oldsite.port == '443':
 			for x in c.servers:
@@ -247,6 +261,7 @@ class WebappControl(Plugin):
 		except:
 			pass
 		os.unlink(os.path.join('/etc/nginx/sites-available', site.name))
+		os.unlink(os.path.join('/etc/nginx/sites-available', '.'+site.name+'.ginf'))
 
 	def nginx_enable(self, site, reload=True):
 		origin = os.path.join('/etc/nginx/sites-available', site.name)
@@ -277,7 +292,7 @@ class WebappControl(Plugin):
 		if status[0] >= 1:
 			raise Exception('PHP FastCGI failed to reload.')
 
-	def ssl_enable(self, data, cpath, kpath):
+	def ssl_enable(self, data, cname, cpath, kpath):
 		# If no cipher preferences set, use the default ones
 		# As per Mozilla recommendations, but substituting 3DES for RC4
 		from genesis.plugins.certificates.backend import CertControl
@@ -335,8 +350,10 @@ class WebappControl(Plugin):
 			nginx.Key('ssl_prefer_server_ciphers', 'on'),
 			nginx.Key('ssl_session_cache', 'shared:SSL:50m'),
 			)
-		c.filter('Comment')[0].comment = 'GENESIS %s https://%s:%s' \
-			% (stype, data.addr, port)
+		g = ConfigParser.SafeConfigParser()
+		g.read(os.path.join('/etc/nginx/sites-available', '.'+name+'.ginf'))
+		g.set('website', 'ssl', cname)
+		g.write(open(os.path.join('/etc/nginx/sites-available', '.'+name+'.ginf'), 'w'))
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 		apis.webapps(self.app).get_interface(stype).ssl_enable(
 			os.path.join('/srv/http/webapps', name), cpath, kpath)
@@ -361,8 +378,10 @@ class WebappControl(Plugin):
 			l.value = l.value.rstrip(' ssl')
 			port = l.value
 		s.remove(*[x for x in s.filter('Key') if x.name.startswith('ssl_')])
-		c.filter('Comment')[0].comment = 'GENESIS %s http://%s:%s' \
-			% (stype, data.addr, port)
+		g = ConfigParser.SafeConfigParser()
+		g.read(os.path.join('/etc/nginx/sites-available', '.'+name+'.ginf'))
+		g.set('website', 'ssl', '')
+		g.write(open(os.path.join('/etc/nginx/sites-available', '.'+name+'.ginf'), 'w'))
 		nginx.dumpf(c, '/etc/nginx/sites-available/'+name)
 		apis.webapps(self.app).get_interface(stype).ssl_disable(
 			os.path.join('/srv/http/webapps', name))

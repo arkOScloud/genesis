@@ -51,7 +51,7 @@ class Databases(apis.API):
             active = None
             if plugin.plugin_info.db_task:
                 status = shell_status('systemctl is-active %s' % plugin.plugin_info.db_task)
-                if status is 0:
+                if status == 0:
                     active = True
                 else:
                     active = False

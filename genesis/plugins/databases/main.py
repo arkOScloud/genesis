@@ -21,7 +21,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 			key=lambda db: db[0])
 		for dbtype in self.dbtypes:
 			ok = True
-			if dbtype[1] == '':
+			if not dbtype[1]:
 				ok = False
 			for svc in self.services:
 				if svc['binary'] == dbtype[1]:
