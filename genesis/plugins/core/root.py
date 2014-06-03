@@ -1,6 +1,7 @@
 import gevent
 import platform
 import json
+import urllib2
 
 from genesis.ui import UI
 from genesis.com import *
@@ -84,6 +85,24 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         ui = self.app.inflate('core:about')
         ui.find('ver').set('text', version())
         return ui
+
+    @url('^/error$')
+    def handle_errorrpt(self, req, sr):
+        url = self.app.config.get('genesis', 'update_server', 'grm.arkos.io')
+        try:
+            rpt = json.loads(req['wsgi.input'].read())
+            req = urllib2.Request('https://%s' % url)
+            req.add_header('Content-type', 'application/json')
+            resp = urllib2.urlopen(req, json.dumps({'put': 'crashreport', 'report': rpt['report'], 'comments': rpt['comments']}))
+            if json.loads(resp.read())['status'] == 200:
+                self.app.log.info('An automatic error report was filed to %s' % url)
+                return json.dumps({"status": 200})
+            else:
+                self.app.log.error('Automatic error report filing failed: An unspecified server error occurred, please contact arkOS maintainers')
+                return json.dumps({"status": 500})
+        except Exception, e:
+            self.app.log.error('Automatic error report filing failed: %s' % str(e))
+            return json.dumps({"status": 500})
 
     @url('^/core/progress$')
     def serve_progress(self, req, sr):

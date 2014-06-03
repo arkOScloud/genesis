@@ -269,6 +269,29 @@ Genesis = (function() {
             return false;
         },
 
+        addAlert: function (cls, msg, ico) {
+            $('#message-box').append('<div class="alert alert-'+cls+' alert-dismissable fade in"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&#215;</button><i class="'+ico+'" style="line-height:1;"></i> '+msg+'</div>');
+        },
+
+        submitBugReport: function (rptid) {
+            var rpt = $(rptid).val();
+            $.ajax({
+                type: "POST",
+                url: "/error",
+                data: JSON.stringify({"report": rpt, "comments": ""}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (d) {
+                    if (d.status == 200) {
+                        Genesis.addAlert('success', 'Your error report was submitted successfully. Thank you!', 'gen-checkmark');
+                    } else {
+                        Genesis.addAlert('danger', 'Your error report was not submitted properly. Please open an issue manually.', 'gen-close');
+                    };
+                },
+                failure: function (e) {Genesis.addAlert('danger', 'Your error report was not submitted properly. Please open an issue manually.', 'gen-close');}
+            })
+        },
+
         UI: {
             showAsModal: function (id) {
                 $('#'+id).modal({backdrop: 'static', keyboard: false, show: true});

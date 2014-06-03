@@ -55,7 +55,7 @@ class Databases(apis.API):
                     active = True
                 else:
                     active = False
-            dblist.append((plugin.plugin_info.db_name, plugin.plugin_info.db_task, active))
+            dblist.append((plugin.plugin_info.name, plugin.plugin_info.db_task, active))
         return dblist
 
     def get_databases(self):
@@ -64,7 +64,7 @@ class Databases(apis.API):
             for plugin in self.app.grab_plugins(apis.databases.IDatabase):
                 if plugin.plugin_info.multiuser:
                     try:
-                        dbconn = self.app.session['dbconns'][plugin.plugin_info.db_name]
+                        dbconn = self.app.session['dbconns'][plugin.plugin_info.name]
                         for item in plugin.get_dbs(dbconn):
                             dblist.append(item)
                     except:
@@ -90,7 +90,7 @@ class Databases(apis.API):
             for plugin in self.app.grab_plugins(apis.databases.IDatabase):
                 if plugin.plugin_info.multiuser:
                     try:
-                        dbconn = self.app.session['dbconns'][plugin.plugin_info.db_name]
+                        dbconn = self.app.session['dbconns'][plugin.plugin_info.name]
                         for item in plugin.get_users(dbconn):
                             userlist.append(item)
                     except:

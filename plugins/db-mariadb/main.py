@@ -17,13 +17,13 @@ class MariaDB(Plugin):
     def connect(self, store, user='root', passwd='', db=None):
         if db:
             self.db = _mysql.connect('localhost', user, passwd, db)
-            store[self.plugin_info.db_name] = self.db
+            store[self.plugin_info.name] = self.db
         else:
             try:
                 self.db = _mysql.connect('localhost', user, passwd)
             except _mysql_exceptions.OperationalError:
-                raise DBAuthFail(self.plugin_info.db_name)
-            store[self.plugin_info.db_name] = self.db
+                raise DBAuthFail(self.plugin_info.name)
+            store[self.plugin_info.name] = self.db
 
     def checkpwstat(self):
         try:
@@ -74,7 +74,7 @@ class MariaDB(Plugin):
         if self.db:
             self.db.query('DROP DATABASE %s' % dbname)
         else:
-            raise DBConnFail(self.plugin_info.db_name)
+            raise DBConnFail(self.plugin_info.name)
 
     def usermod(self, user, action, passwd, conn=None):
         if not self.db and conn:
@@ -140,7 +140,7 @@ class MariaDB(Plugin):
             else:
                 return parse
         else:
-            raise DBConnFail(self.plugin_info.db_name)
+            raise DBConnFail(self.plugin_info.name)
 
     def get_dbs(self, conn=None):
         dblist = []
@@ -153,7 +153,7 @@ class MariaDB(Plugin):
             r = self.db.store_result()
             dbs = r.fetch_row(0)
         else:
-            raise DBConnFail(self.plugin_info.db_name)
+            raise DBConnFail(self.plugin_info.name)
         for db in dbs:
             if not db[0] in excludes and db[0].split():
                 dblist.append({
@@ -173,7 +173,7 @@ class MariaDB(Plugin):
             r = self.db.store_result()
             output = r.fetch_row(0)
         else:
-            raise DBConnFail(self.plugin_info.db_name)
+            raise DBConnFail(self.plugin_info.name)
         for usr in output:
             if not usr[0] in userlist and not usr[0] in excludes:
                 userlist.append({

@@ -49,7 +49,7 @@ def format_exception(app, err):
     templ.append('trace',
             UI.TextInputArea(value=err, width=550))
     templ.append('report',
-            UI.TextInputArea(value=make_report(app, err), width=550))
+            UI.TextInputArea(id="report-data", value=make_report(app, err), width=550))
     return templ.render()
 
 

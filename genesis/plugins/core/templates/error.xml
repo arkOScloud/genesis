@@ -1,35 +1,35 @@
 <xml>
-  <pad>
-    <img style="float:left;display:inline-block;padding:0 20px;" src="/dl/core/ui/error.png" />
-    <div style="float:left;display:inline-block;width: 550px;">
-        <label size="4" text="Sorry, an error has occurred."/>
-        <br/>
-        <label size="3" text="You can try again:" />
-            <p>
-               <btn onclick="document.location.reload();return false" text="Refresh page" />
-            </p>
-            <p>
-               If refreshing the page doesn't work, try:
-            </p>
-            <p>
-               <btn onclick="document.location.href='/session_reset';return false" text="Start new session" />
-            </p>
-        <label size="3" text="Still having trouble?" />
-            <p>
-                If you think this is a bug, please let us know about the problem by
-                <outlinklabel url="https://github.com/cznweb/genesis/issues" text="filing an issue to our tracker" /> and attaching the crash report.
-            </p>
-            <p>
-                <btn onclick="$('#report').fadeIn();$(this).hide();return false;" text="Show crash report" />
-                <div id="report" style="display:none"/>
-            </p>
-            <p>
-                The stacktrace may also show useful error information:
-            </p>
-            <p>
-                <btn onclick="$('#trace').fadeIn();$(this).hide();return false;" text="View stacktrace" />
-                <div id="trace" style="display:none"/>
-            </p>
+    <div style="margin-left:auto;margin-right:auto;width:675px;">
+        <h1 class="gen-warning" style="float:left;display:inline-block;padding:0 20px;font-size:56px;line-height:0.5;" />
+        <div style="float:left;display:inline-block;width: 550px;">
+            <label size="4" text="Sorry, an error has occurred."/>
+            <label size="1" text="Genesis encountered an error when trying to perform your last requested operation, and it cannot continue it." />
+            <br />
+            <br />
+            <label size="3" text="You can try again..." />
+            <label size="1" text="...by refreshing the page. In some cases, resetting the session may also help." />
+            <br />
+            <br />
+            <buttongroup>
+                <btn onclick="document.location.reload();return false" text="Refresh page" iconfont="gen-loop-2" />
+                <btn onclick="document.location.href='/session_reset';return false" text="Start new session" iconfont="gen-play-2" />
+            </buttongroup>
+            <br />
+            <br />
+            <label size="3" text="Still having trouble?" />
+            <label size="1" text="If you think this is a bug, please let us know about the problem by automatically submitting a crash report. You can also manually do this by" />
+            <outlinklabel url="https://github.com/cznweb/genesis/issues" text="filing an issue to our tracker." />
+            <label size="1" text="Please include the full crash report when filing manually." />
+            <br />
+            <br />
+            <buttongroup>
+                <btn onclick="Genesis.submitBugReport('#report-data');return false;" text="Submit crash report" iconfont="gen-bug" />
+                <btn onclick="$('#trace').fadeIn();$(this).hide();return false;" text="View stacktrace" iconfont="gen-search" />
+                <btn onclick="$('#report').fadeIn();$(this).hide();return false;" text="Show full crash report" iconfont="gen-search" />
+            </buttongroup>
+            <div id="report" style="display:none"/>
+            <div id="trace" style="display:none"/>
+            <div class="message-box-wr" id="message-box" />
+        </div>
     </div>
-</pad>
 </xml>

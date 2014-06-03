@@ -3,8 +3,8 @@ from genesis import apis
 from genesis import api
 
 class HomePlugin(api.CategoryPlugin):
-    text = 'My Apps'
-    iconfont = 'gen-home'
+    text = 'My Applications'
+    iconfont = 'fa fa-home'
     folder = 'top'
 
     folders = {
