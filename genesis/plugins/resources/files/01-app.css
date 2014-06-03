@@ -53,19 +53,18 @@ a:link, a:focus, a:active, a:hover {
 }
 
 #ui-lower-bar {
-  background-color: #FFF;
-  border-bottom: 1px solid #DDD;
+  background-color: #3498DB;
   margin-bottom: 20px;
-  height: 28px;
+  height: 30px;
 }
 
 .ui-el-top-category {
   display: inline-block;
   float: left;
-  margin: 0 2px 0;
   padding: 2px 8px;
-  height: 28px;
-  color: #2C3E50;
+  margin: 0 2px;
+  height: 30px;
+  color: #FFF;
   font-size: 13px;
   line-height: 28px;
   text-decoration: none;
@@ -76,10 +75,21 @@ a:link, a:focus, a:active, a:hover {
   padding: 5px 5px 0;
 }
 
+.ui-el-top-category > .badge {
+  background: #FFF;
+  color: #3498DB;
+}
+
 .ui-el-top-category.selected,
 .ui-el-top-category:hover {
-  background: #CFD9DB;
-  color: #2C3E50;
+  background: #2980B9;
+  color: #FFF;
+}
+
+.ui-el-top-category.selected > .badge,
+.ui-el-top-category:hover > .badge {
+  background: #FFF;
+  color: #3498DB;
 }
 
 .ui-el-categoryfolder {
@@ -108,11 +118,6 @@ a:link, a:focus, a:active, a:hover {
   background: #008CBA;
 }
 
-.ui-el-category.selected {
-  background: #008CBA;
-  border-radius: 2px;
-}
-
 .ui-el-category .text {
   color: #008CBA;
   font-size: 13px;
@@ -121,29 +126,8 @@ a:link, a:focus, a:active, a:hover {
   padding: 0 0 2px;
 }
 
-.ui-el-category.selected .text {
-  color: white;
-  line-height: 16px;
-  font-weight: bold;
-}
-
-.ui-el-category.selected i {
-  color: white;
-  line-height: 16px;
-  padding: 5px 0 0 5px;
-}
-
-.ui-el-category:hover .text,
-.ui-el-category:hover i {
-  color: #ECF0F1;
-}
-
-.ui-el-category i {
-  width: 16px;
-  height: 16px;
-  padding: 0 0 0 5px;
-  float: left;
-  color: #008CBA;
+.btn {
+  border-radius: 0;
 }
 
 .btn i {
@@ -270,7 +254,6 @@ a:link, a:focus, a:active, a:hover {
   vertical-align: top;
   text-align: left;
   border: 1px solid #CCC;
-  border-radius: 6px;
   margin: 10px;
   padding: 0px 10px 10px 15px;
   width: 200px;
@@ -299,6 +282,7 @@ a:link, a:focus, a:active, a:hover {
 .ui-firstrun-appselect:hover, .ui-homebutton:hover, .ui-appbutton:hover {
   background-color: #EBEBEB;
   border-color: #ADADAD;
+  cursor: pointer;
 }
 
 .ui-firstrun-appselect input {

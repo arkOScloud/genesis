@@ -1,7 +1,7 @@
 {
     "name": "WordPress",
     "type": "webapp",
-    "icon": "gen-earth",
+    "icon": "fa fa-wordpress",
     "description": {
         "short": "Open-source CMS and blogging platform",
         "long": "WordPress started as just a blogging system, but has evolved to be used as full content management system and so much more through the thousands of plugins, widgets, and themes, WordPress is limited only by your imagination. (And tech chops.)"
