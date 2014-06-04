@@ -12,7 +12,10 @@ import sqlite3
 class SQLite3(Plugin):
     implements(apis.databases.IDatabase)
 
-    def add(self, dbname):
+    def validate(self, name='', user='', passwd='', conn=None):
+        pass
+
+    def add(self, dbname, conn=None):
         if re.search('\.|-|`|\\\\|\/|[ ]', dbname):
             raise Exception('Name must not contain spaces, dots, dashes or other special characters')
         self.chkpath()
@@ -21,16 +24,16 @@ class SQLite3(Plugin):
         if status[0] >= 1:
             raise Exception(status[1])
 
-    def remove(self, dbname):
+    def remove(self, dbname, conn=None):
         shell('rm /var/lib/sqlite3/%s.db' % dbname)
 
-    def usermod(self):
+    def usermod(self, user, action, passwd, conn=None):
         pass
 
-    def chperm(self):
+    def chperm(self, dbname, user, action, conn=None):
         pass
 
-    def execute(self, dbname, command):
+    def execute(self, dbname, command, conn=None):
         try:
             cmds = command.split(';')
             conn = sqlite3.connect('/var/lib/sqlite3/%s.db' % dbname)

@@ -72,6 +72,12 @@
                 "binary": null
             },
             {
+                "type": "app",
+                "name": "PHP SQLite3",
+                "package": "php-sqlite",
+                "binary": null
+            },
+            {
                 "type": "plugin",
                 "name": "MariaDB",
                 "package": "db-mariadb"
@@ -85,8 +91,8 @@
     },
     "generation": 1,
     "website_plugin": "Wallabag",
-    "download_url": "https://github.com/wallabag/wallabag/archive/1.7.tar.gz",
-    "database_engines": ["MariaDB"],
+    "download_url": "https://github.com/wallabag/wallabag/archive/1.7.0.tar.gz",
+    "database_engines": ["MariaDB", "SQLite3"],
     "uses_php": true,
     "uses_ssl": true
 }

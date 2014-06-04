@@ -44,33 +44,15 @@ class Wallabag(Plugin):
         ]
 
     def pre_install(self, name, vars):
-        dbname = vars.getvalue('wb-dbname', '')
-        dbpasswd = vars.getvalue('wb-dbpasswd', '')
-        if dbname and dbpasswd:
-            apis.databases(self.app).get_interface('MariaDB').validate(
-                dbname, dbname, dbpasswd)
-        elif dbname:
-            raise Exception('You must enter a database password if you specify a database name!')
-        elif dbpasswd:
-            raise Exception('You must enter a database name if you specify a database password!')
+        pass
 
-    def post_install(self, name, path, vars):
-        # Get the database object, and determine proper values
+    def post_install(self, name, path, vars, dbinfo={}):
         phpctl = apis.langassist(self.app).get_interface('PHP')
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
-        if vars.getvalue('wb-dbname', '') == '':
-            dbname = name
-        else:
-            dbname = vars.getvalue('wb-dbname')
         secret_key = hashlib.sha1(str(random.random())).hexdigest()
-        if vars.getvalue('wb-dbpasswd', '') == '':
-            passwd = secret_key[0:8]
-        else:
-            passwd = vars.getvalue('wb-dbpasswd')
+        dbengine = 'mysql' if dbinfo['engine'] == 'MariaDB' else 'sqlite'
 
         # Write a standard Wallabag config file
-        shutil.copy(os.path.join(path, 'inc/poche/config.inc.php.new'),
+        shutil.copy(os.path.join(path, 'inc/poche/config.inc.default.php'),
             os.path.join(path, 'inc/poche/config.inc.php'))
         ic = open(os.path.join(path, 'inc/poche/config.inc.php'), 'r').readlines()
         f = open(os.path.join(path, 'inc/poche/config.inc.php'), 'w')
@@ -80,16 +62,19 @@ class Wallabag(Plugin):
                 l = 'define (\'SALT\', \''+secret_key+'\');\n'
                 oc.append(l)
             elif 'define (\'STORAGE\'' in l:
-                l = 'define (\'STORAGE\', \'mysql\');\n'
+                l = 'define (\'STORAGE\', \''+dbengine+'\');\n'
                 oc.append(l)
-            elif 'define (\'STORAGE_DB\'' in l:
-                l = 'define (\'STORAGE_DB\', \''+dbname+'\');\n'
+            elif 'define (\'STORAGE_SQLITE\'' in l and dbengine == 'sqlite':
+                l = 'define (\'STORAGE_SQLITE\', \'/var/lib/sqlite3/'+dbinfo['name']+'.db\');\n'
                 oc.append(l)
-            elif 'define (\'STORAGE_USER\'' in l:
-                l = 'define (\'STORAGE_USER\', \''+dbname+'\');\n'
+            elif 'define (\'STORAGE_DB\'' in l and dbengine == 'mysql':
+                l = 'define (\'STORAGE_DB\', \''+dbinfo['name']+'\');\n'
                 oc.append(l)
-            elif 'define (\'STORAGE_PASSWORD\'' in l:
-                l = 'define (\'STORAGE_PASSWORD\', \''+passwd+'\');\n'
+            elif 'define (\'STORAGE_USER\'' in l and dbengine == 'mysql':
+                l = 'define (\'STORAGE_USER\', \''+dbinfo['user']+'\');\n'
+                oc.append(l)
+            elif 'define (\'STORAGE_PASSWORD\'' in l and dbengine == 'mysql':
+                l = 'define (\'STORAGE_PASSWORD\', \''+dbinfo['passwd']+'\');\n'
                 oc.append(l)
             else:
                 oc.append(l)
@@ -97,18 +82,23 @@ class Wallabag(Plugin):
         f.close()
 
         # Make sure that the correct PHP settings are enabled
-        phpctl.enable_mod('mysql', 'pdo_mysql', 'zip', 
-            'tidy', 'xcache', 'openssl')
+        phpctl.enable_mod('mysql', 'pdo_mysql' if dbengine == 'mysql' else 'pdo_sqlite', 
+            'zip', 'tidy', 'xcache', 'openssl')
 
         # Set up Composer and install the proper modules
         phpctl.composer_install(path)
 
         # Set up the database then delete the install folder
-        dbase.add(dbname, conn)
-        dbase.usermod(dbname, 'add', passwd, conn)
-        dbase.chperm(dbname, dbname, 'grant', conn)
-        dbase.execute(dbname, 
-            open(os.path.join(path, 'install/mysql.sql')).read(), conn)
+        if dbengine == 'mysql':
+            dbase = apis.databases(self.app).get_interface(dbinfo['engine'])
+            conn = apis.databases(self.app).get_dbconn(dbinfo['engine'])
+            dbase.execute(dbinfo['name'], 
+                open(os.path.join(path, 'install/mysql.sql')).read(), conn)
+        else:
+            shutil.copy(os.path.join(path, 'install/poche.sqlite'), '/var/lib/sqlite3/%s.db' % dbinfo['name'])
+            phpctl.open_basedir('add', '/var/lib/sqlite3')
+            shell('chown http:http /var/lib/sqlite3/%s.db' % dbinfo['name'])
+            shell('chmod 755 /var/lib/sqlite3/%s.db' % dbinfo['name'])
         shutil.rmtree(os.path.join(path, 'install'))
 
         # Finally, make sure that permissions are set so that Poche
@@ -118,18 +108,8 @@ class Wallabag(Plugin):
             +os.path.join(path, 'db/'))
         shell('chown -R http:http '+path)
 
-    def pre_remove(self, name, path):
-        f = open(os.path.join(path, 'inc/poche/config.inc.php'), 'r')
-        for line in f.readlines():
-            if 'STORAGE_DB' in line:
-                data = line.split('\'')[1::2]
-                dbname = data[1]
-                break
-        f.close()
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
-        dbase.remove(dbname, conn)
-        dbase.usermod(dbname, 'del', '', conn)
+    def pre_remove(self, site):
+        pass
 
     def post_remove(self, name):
         pass

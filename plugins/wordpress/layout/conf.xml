@@ -1,9 +1,0 @@
-<xml>
-	<label text="All of these options are OPTIONAL, if you do not choose them, then they will be automatically generated for you on install." />
-	<formline text="Database Name" help="A database user with full rights on this database will be created of the same name.">
-	    <textinput name="wp-dbname" id="wp-dbname" />
-	</formline>
-	<formline text="Database User Password">
-	    <textinput name="wp-dbpasswd" id="wp-dbpasswd" password="True" />
-	</formline>
-</xml>

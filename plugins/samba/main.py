@@ -11,7 +11,7 @@ import re
 
 
 class SambaPlugin(apis.services.ServiceControlPlugin):
-    text = 'Fileshares (Win)'
+    text = 'Fileshares (SMB)'
     iconfont = 'gen-upload-2'
     folder = 'servers'
     

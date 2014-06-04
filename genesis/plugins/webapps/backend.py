@@ -4,8 +4,10 @@ from genesis import apis
 from api import Webapp
 
 import ConfigParser
+import hashlib
 import nginx
 import os
+import random
 import re
 import shutil
 
@@ -33,8 +35,9 @@ class ReloadError(Exception):
 
 
 class WebappControl(Plugin):
-	def add(self, cat, name, wa, vars, dbinfo, enable=True):
+	def add(self, cat, wa, vars, dbinfo={}, enable=True):
 		specialmsg = ''
+		name = vars.getvalue('name', '').lower()
 		webapp = apis.webapps(self.app).get_interface(wa.wa_plugin)
 
 		if not wa.dpath:
@@ -56,6 +59,21 @@ class WebappControl(Plugin):
 			webapp.pre_install(name, vars)
 		except Exception, e:
 			raise InstallError('Webapp config - '+str(e))
+
+		if dbinfo:
+			pwd = hashlib.sha1(str(random.random())).hexdigest()[0:16]
+			dbinfo['name'] = dbinfo['name'] if dbinfo['name'] else name
+			dbinfo['user'] = dbinfo['user'] if dbinfo['user'] else name
+			dbinfo['passwd'] = dbinfo['passwd'] if dbinfo['passwd'] else pwd
+			try:
+				db = apis.databases(cat.app)
+				dbase = db.get_interface(dbinfo['engine'])
+				conn = db.get_dbconn(dbinfo['engine'])
+				dbase.add(dbinfo['name'], conn)
+				dbase.usermod(dbinfo['user'], 'add', dbinfo['passwd'], conn)
+				dbase.chperm(dbinfo['name'], dbinfo['user'], 'grant', conn)
+			except Exception, e:
+				raise InstallError('Databases could not be created - %s' % str(e))
 
 		# Make sure the target directory exists, but is empty
 		# Testing for sites with the same name should have happened by now
@@ -119,11 +137,9 @@ class WebappControl(Plugin):
 		except Exception, e:
 			raise PartialError('nginx serverblock couldn\'t be written - '+str(e))
 
-		# TODO core database provisioning will go here
-
 		try:
 			cat.statusmsg('Running post-install configuration...')
-			specialmsg = webapp.post_install(name, target_path, vars)
+			specialmsg = webapp.post_install(name, target_path, vars, dbinfo)
 		except Exception, e:
 			shutil.rmtree(target_path, True)
 			self.nginx_remove(w, False)
@@ -178,7 +194,7 @@ class WebappControl(Plugin):
 	def remove(self, cat, site):
 		if site.sclass != '' and site.stype != 'ReverseProxy':
 			cat.statusmsg('Preparing for removal...')
-			site.sclass.pre_remove(site.name, site.path)
+			site.sclass.pre_remove(site)
 		cat.statusmsg('Removing website...')
 		if site.path.endswith('_site'):
 			shutil.rmtree(site.path.split('/_site')[0])
@@ -186,11 +202,20 @@ class WebappControl(Plugin):
 			shutil.rmtree(site.path.split('/htdocs')[0])
 		else:
 			shutil.rmtree(site.path)
+		if hasattr(site, 'dbengine') and site.dbengine:
+			try:
+				db = apis.databases(cat.app)
+				dbase = db.get_interface(site.dbengine)
+				conn = db.get_dbconn(site.dbengine)
+				dbase.remove(site.dbname, conn)
+				dbase.usermod(site.dbuser, 'del', '', conn)
+			except Exception, e:
+				cat.put_message('warn', 'Databases could not be removed - maybe they are gone already? Please check manually.')
 		self.nginx_remove(site)
 		if site.sclass != '' and site.stype != 'ReverseProxy':
 			cat.statusmsg('Cleaning up...')
 			apis.poicontrol(self.app).drop_by_path(site.path)
-			site.sclass.post_remove(site.name)
+			site.sclass.post_remove(site)
 
 	def nginx_add(self, site, add):
 		if site.path == '':
