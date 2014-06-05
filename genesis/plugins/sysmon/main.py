@@ -5,7 +5,6 @@ from genesis.ui import UI
 from genesis.utils import detect_distro, detect_platform
 from genesis.api import *
 from genesis import apis
-from genesis.plugins.core.updater import UpdateCheck
 
 
 class SysMon(CategoryPlugin):
@@ -71,9 +70,6 @@ class SysMon(CategoryPlugin):
 
         elif self._adding_widget != None:
             ui.append('main', self._mgr.get_by_name(self._adding_widget).get_config_dialog())
-
-        if UpdateCheck.get().get_status()[0] == True:
-            self.put_message('info', 'An update for Genesis is available. See the Settings pane for details.')
 
         return ui
 

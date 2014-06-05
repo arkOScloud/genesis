@@ -98,7 +98,7 @@ class SysConfigPlugin(CategoryPlugin):
         if params[0] == 'settime':
             try:
                 self._st.set_datetime()
-                self.put_message('info', 'System time updated successfully')
+                self.put_message('success', 'System time updated successfully')
             except Exception, e:
                 self.app.log.error('Could not set time. Please check your connection. Error: %s' % str(e))
                 self.put_message('err', 'Could not set time. Please check your connection.')
@@ -126,4 +126,4 @@ class SysConfigPlugin(CategoryPlugin):
                 if os.path.exists('/etc/localtime'):
                     os.remove('/etc/localtime')
                 os.symlink(zonepath, '/etc/localtime')
-                self.put_message('info', 'Settings saved.')
+                self.put_message('success', 'Settings saved.')

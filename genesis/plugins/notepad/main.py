@@ -82,7 +82,7 @@ class NotepadPlugin(CategoryPlugin):
                 self._tab = idx
                 if root is not None:
                     open(root, 'w').write(self._data[idx])
-                    self.put_message('info', 'Saved %s'%root)
+                    self.put_message('success', 'Saved %s'%root)
             elif vars.getvalue('action', '') == 'close/%i'%idx:
                 self._tab = 0
                 del self._roots[idx]
@@ -97,7 +97,7 @@ class NotepadPlugin(CategoryPlugin):
                 try:
                     open(filename, 'w')
                     self.open(filename)
-                    self.put_message('info', 'File created and opened: %s' % filename)
+                    self.put_message('success', 'File created and opened: %s' % filename)
                 except Exception, e:
                     self.put_message('err', 'File creation failed: %s' % str(e))
         elif params[0] == 'frmEdit' and vars.getvalue('action', None) == 'open':
@@ -117,7 +117,7 @@ class NotepadPlugin(CategoryPlugin):
                     try:
                         open(filename, 'w')
                         self.open(filename)
-                        self.put_message('info', 'File created and opened: %s' % filename)
+                        self.put_message('success', 'File created and opened: %s' % filename)
                     except Exception, e:
                         self.put_message('err', 'File creation failed: %s' % str(e))
             self._new = None

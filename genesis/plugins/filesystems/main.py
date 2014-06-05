@@ -237,14 +237,14 @@ class FSPlugin(CategoryPlugin):
             self._tab = 1
             try:
                 self._fsc.mount(self._devs[int(params[1])])
-                self.put_message('info', 'Disk mounted successfully')
+                self.put_message('success', 'Disk mounted successfully')
             except Exception, e:
                 self.put_message('err', str(e))
         if params[0] == 'umd':
             self._tab = 1
             try:
                 self._fsc.umount(self._devs[int(params[1])], rm=True)
-                self.put_message('info', 'Disk unmounted successfully')
+                self.put_message('success', 'Disk unmounted successfully')
             except Exception, e:
                 self.put_message('err', str(e))
         if params[0] == 'mvd':
@@ -253,19 +253,19 @@ class FSPlugin(CategoryPlugin):
             else:
                 try:
                     self._fsc.mount(self._vdevs[int(params[1])])
-                    self.put_message('info', 'Virtual disk mounted successfully')
+                    self.put_message('success', 'Virtual disk mounted successfully')
                 except Exception, e:
                     self.put_message('err', str(e))
         if params[0] == 'umvd':
             try:
                 self._fsc.umount(self._vdevs[int(params[1])], rm=True)
-                self.put_message('info', 'Virtual disk unmounted successfully')
+                self.put_message('success', 'Virtual disk unmounted successfully')
             except Exception, e:
                 self.put_message('err', str(e))
         if params[0] == 'delvd':
             try:
                 self._fsc.delete(self._vdevs[int(params[1])])
-                self.put_message('info', 'Virtual disk deleted successfully')
+                self.put_message('success', 'Virtual disk deleted successfully')
             except Exception, e:
                 self.put_message('err', str(e))
         if params[0] == 'open':
@@ -333,7 +333,7 @@ class FSPlugin(CategoryPlugin):
             if vars.getvalue('action', '') == 'OK':
                 try:
                     self._fsc.mount(self._auth, vars.getvalue('auth-string', ''))
-                    self.put_message('info', 'Virtual disk decrypted and mounted successfully')
+                    self.put_message('success', 'Virtual disk decrypted and mounted successfully')
                     self._auth = None
                 except Exception, e:
                     self.put_message('err', str(e))
@@ -348,7 +348,7 @@ class FSPlugin(CategoryPlugin):
                     try:
                         self._fsc.umount(self._enc)
                         self._fsc.encrypt_vdisk(self._enc, passwd, mount=True)
-                        self.put_message('info', 'Virtual disk encrypted and mounted successfully')
+                        self.put_message('success', 'Virtual disk encrypted and mounted successfully')
                     except Exception, e:
                         self.put_message('err', str(e))
             self._enc = None

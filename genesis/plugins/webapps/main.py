@@ -213,7 +213,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                     self.put_message('err', 'Website removal failed: ' + str(e))
                     self.app.log.error('Website removal failed: ' + str(e))
                 else:
-                    self.put_message('info', 'Website successfully removed')
+                    self.put_message('success', 'Website successfully removed')
                     self.ncops.remove_webapp(site.name)
         elif params[0] == 'enable':
             self.mgr.nginx_enable(self.sites[int(params[1])])
@@ -267,7 +267,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                     w.php = self._edit.php
                     self.mgr.nginx_edit(self._edit, w)
                     self.ncops.change_webapp(self._edit, w)
-                    self.put_message('info', 'Site edited successfully')
+                    self.put_message('success', 'Site edited successfully')
             self._edit = None
         if params[0] == 'dlgSetup':
             if vars.getvalue('action', '') == 'OK':
@@ -352,7 +352,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                             self.put_message('err', 'Website removal failed: ' + str(e))
                             self.app.log.error('Website removal failed: ' + str(e))
                         else:
-                            self.put_message('info', 'Website successfully removed')
+                            self.put_message('success', 'Website successfully removed')
                             self.ncops.remove_webapp(dbauth[2].name)
                     elif dbauth[0] == 'add':
                         if dbauth[3].getvalue('dbname') and dbauth[3].getvalue('dbpass'):
@@ -391,7 +391,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
             self.put_message('err', str(e))
             self.app.log.error(str(e))
         else:
-            self.put_message('info', '%s added sucessfully' % name)
+            self.put_message('success', '%s added sucessfully' % name)
             self.ncops.add_webapp((name, stype.name, port))
             if spmsg:
                 self.put_message('info', spmsg)

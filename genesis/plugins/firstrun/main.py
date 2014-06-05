@@ -295,7 +295,7 @@ class FirstRun(CategoryPlugin, URLHandler):
                 if self._opts.has_key('resize') and self._opts['resize'] != '0':
                     self.statusmsg('Programming SD filesystem resize...')
                     self.resize()
-                    self.put_message('info', 'Your settings have been '
+                    self.put_message('success', 'Your settings have been '
                         'successfully applied. You must restart your arkOS '
                         'server for them to take effect. To do this, choose '
                         '"Restart arkOS" in the Power menu.')

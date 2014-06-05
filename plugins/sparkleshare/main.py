@@ -68,7 +68,7 @@ class SSPlugin(CategoryPlugin):
             self._link = True
         if params[0] == 'remove':
             self._sc.del_project(params[1])
-            self.put_message('info', 'Project deleted successfully')
+            self.put_message('success', 'Project deleted successfully')
 
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):
@@ -83,7 +83,7 @@ class SSPlugin(CategoryPlugin):
                 else:
                     try:
                         self._sc.add_project(name, crypto=vars.getvalue('crypt', '')=='1')
-                        self.put_message('info', 'Project created successfully')
+                        self.put_message('success', 'Project created successfully')
                     except Exception, e:
                         self.put_message('err', str(e))
             self._add = None

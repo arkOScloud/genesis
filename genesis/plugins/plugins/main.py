@@ -161,7 +161,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                 self.put_message('err', str(e))
                 self.app.log.error(str(e))
             else:
-                self.put_message('info', 'Plugin list updated')
+                self.put_message('success', 'Plugin list updated')
         elif params[0] == 'remove':
             try:
                 self._mgr.check_conflict(params[1], 'remove')

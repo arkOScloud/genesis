@@ -2,6 +2,8 @@ from genesis.ui import *
 from genesis import apis
 from genesis import api
 
+from genesis.plugins.core.updater import UpdateCheck
+
 class HomePlugin(api.CategoryPlugin):
     text = 'My Applications'
     iconfont = 'fa fa-home'
@@ -53,5 +55,8 @@ class HomePlugin(api.CategoryPlugin):
                     name=x['name']
                     )
                 )
+
+        if UpdateCheck.get().get_status()[0] == True:
+            self.put_message('info', 'An update for Genesis is available. See the Settings pane for details.')
 
         return ui

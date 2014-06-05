@@ -110,7 +110,7 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
             try:
                 u = self._users[int(params[1])]
                 self._uc.del_user(u[0], u[1])
-                self.put_message('info', 'User deleted successfully')
+                self.put_message('success', 'User deleted successfully')
             except Exception, e:
                 self.app.log.error('XMPP user could not be deleted. Error: %s' % str(e))
                 self.put_message('err', 'User could not be deleted')
@@ -122,7 +122,7 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                     candel = False
             if candel:
                 del self._config.config['_VirtualHost_%s'%self._domains[int(params[1])]]
-                self.put_message('info', 'Domain deleted')
+                self.put_message('success', 'Domain deleted')
                 self._config.save()
 
     @event('dialog/submit')
@@ -145,7 +145,7 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                 else:
                     try:
                         self._uc.add_user(acct, dom, passwd)
-                        self.put_message('info', 'User added successfully')
+                        self.put_message('success', 'User added successfully')
                     except Exception, e:
                         self.app.log.error('XMPP user %s@%s could not be added. Error: %s' % (acct,dom,str(e)))
                         self.put_message('err', 'User could not be added')
@@ -160,7 +160,7 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                 else:
                     self._config.set('_VirtualHost_%s'%v, {'enabled': False})
                     self._config.save()
-                    self.put_message('info', 'Domain added successfully')
+                    self.put_message('success', 'Domain added successfully')
             self._adddom = None
         elif params[0] == 'dlgChpasswd':
             passwd = vars.getvalue('chpasswd', '')
@@ -173,7 +173,7 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                     try:
                         self._uc.chpasswd(self._chpasswd[0], 
                             self._chpasswd[1], passwd)
-                        self.put_message('info', 'Password changed successfully')
+                        self.put_message('success', 'Password changed successfully')
                     except Exception, e:
                         self.app.log.error('XMPP password for %s@%s could not be changed. Error: %s' % (self._chpasswd[0],self._chpasswd[1],str(e)))
                         self.put_message('err', 'Password could not be changed')
@@ -184,4 +184,4 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                 self._config.config['c2s_require_encryption'] = True if vars.getvalue('c2s_require_encryption', '') == '1' else False
                 self._config.config['s2s_secure_auth'] = True if vars.getvalue('s2s_secure_auth', '') == '1' else False
                 self._config.save()
-                self.put_message('info', 'Settings saved')
+                self.put_message('success', 'Settings saved')

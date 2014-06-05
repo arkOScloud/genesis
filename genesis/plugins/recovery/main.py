@@ -117,7 +117,7 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
             p = self.manager.find_provider(params[1])
             try:
                 self.manager.backup(p)
-                self.put_message('info', 'Stored backup for %s.' % p.name)
+                self.put_message('success', 'Stored backup for %s.' % p.name)
             except:
                 self.put_message('err', 'Failed to backup %s.' % p.name)
         if params[0] == 'backupall':
@@ -125,18 +125,18 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
             if errs != []:
                 self.put_message('err', 'Backup failed for %s.' % ', '.join(errs))
             else:
-                self.put_message('info', 'Stored full backup')
+                self.put_message('success', 'Stored full backup')
         if params[0] == 'restore':
             p = self.manager.find_provider(params[1])
             try:
                 self.manager.restore(p, params[2])
-                self.put_message('info', 'Restored configuration of %s (rev %s).' % (p.name, params[2]))
+                self.put_message('success', 'Restored configuration of %s (rev %s).' % (p.name, params[2]))
             except:
                 self.put_message('err', 'Failed to recover %s.' % p.name)
         if params[0] == 'drop':
             try:
                 self.manager.delete_backup(params[1], params[2])
-                self.put_message('info', 'Deleted backup rev %s for %s.' % (params[2], params[1]))
+                self.put_message('success', 'Deleted backup rev %s for %s.' % (params[2], params[1]))
             except:
                 self.put_message('err', 'Failed to delete backup rev %s for %s.' % (params[2], params[1]))
         if params[0] == 'upload':
@@ -157,7 +157,7 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
                 f = vars['file']
                 try:
                     self.manager.upload(f)
-                    self.put_message('info', 'Upload successful.')
+                    self.put_message('success', 'Upload successful.')
                 except Exception, e:
                     self.put_message('err', 'Failed to upload backup: %s' % str(e))
         self._uploader = None

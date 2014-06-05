@@ -103,7 +103,7 @@ class ConfigPlugin(CategoryPlugin):
                 self.app.gconfig.set('genesis', 'updcheck', vars.getvalue('updcheck', '1'))
                 self.app.gconfig.set('genesis', 'purge', vars.getvalue('purge', '0'))
                 self.app.gconfig.save()
-                self.put_message('info', 'Settings saved.')
+                self.put_message('success', 'Settings saved.')
         if params[0] == 'dlgEditModuleConfig':
             if vars.getvalue('action','') == 'OK':
                 cfg = self.app.get_config_by_classname(self._config)

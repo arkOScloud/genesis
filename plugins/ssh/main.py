@@ -103,4 +103,4 @@ class SSHPlugin(apis.services.ServiceControlPlugin):
                 self.ssh['passwd'] = True if vars.getvalue('passwd', True) is '1' else False
                 self.ssh['epasswd'] = True if vars.getvalue('epasswd', False) is '1' else False
                 backend.SSHConfig(self.app).save(self.ssh)
-                self.put_message('info', 'Saved')
+                self.put_message('success', 'Saved')

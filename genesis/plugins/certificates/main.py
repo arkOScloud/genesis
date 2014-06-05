@@ -221,38 +221,38 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
         elif params[0] == 'del':
             self._tab = 0
             self._cc.remove(self.certs[int(params[1])])
-            self.put_message('info', 'Certificate successfully deleted')
+            self.put_message('success', 'Certificate successfully deleted')
         elif params[0] == 'ac' and params[2] == 'p':
             self._tab = 0
             self._cc.assign(self._cinfo['name'], 
                 [('plugin', self._pal[int(params[3])])])
-            self.put_message('info', '%s added to %s plugin' % (self._cinfo['name'], self._pal[int(params[3])].text))
+            self.put_message('success', '%s added to %s plugin' % (self._cinfo['name'], self._pal[int(params[3])].text))
             self._cinfo = None
         elif params[0] == 'ac' and params[2] == 'w':
             self._tab = 0
             self._cc.assign(self._cinfo['name'],
                 [('website', self._wal[int(params[3])])])
-            self.put_message('info', '%s added to %s webapp' % (self._cinfo['name'], self._wal[int(params[3])].name))
+            self.put_message('success', '%s added to %s website' % (self._cinfo['name'], self._wal[int(params[3])].name))
             self._cinfo = None
         elif params[0] == 'ac' and params[2] == 'g':
             self._tab = 0
             self._cc.assign(self._cinfo['name'], [[('genesis')]])
-            self.put_message('info', '%s serving as Genesis certificate. Restart Genesis for changes to take effect' % self._cinfo['name'])
+            self.put_message('success', '%s serving as Genesis certificate. Restart Genesis for changes to take effect' % self._cinfo['name'])
             self._cinfo = None
         elif params[0] == 'uc' and params[2] == 'p':
             self._tab = 0
             self._cc.unassign(('plugin', self._pal[int(params[3])]))
-            self.put_message('info', '%s removed from %s plugin, and SSL disabled.' % (self._cinfo['name'], self._pal[int(params[3])].text))
+            self.put_message('success', '%s removed from %s plugin, and SSL disabled.' % (self._cinfo['name'], self._pal[int(params[3])].text))
             self._cinfo = None
         elif params[0] == 'uc' and params[2] == 'w':
             self._tab = 0
             self._cc.unassign(('website', self._wal[int(params[3])]))
-            self.put_message('info', '%s removed from %s webapp, and SSL disabled.' % (self._cinfo['name'], self._wal[int(params[3])].name))
+            self.put_message('success', '%s removed from %s website, and SSL disabled.' % (self._cinfo['name'], self._wal[int(params[3])].name))
             self._cinfo = None
         elif params[0] == 'uc' and params[2] == 'g':
             self._tab = 0
             self._cc.unassign(('genesis'))
-            self.put_message('info', 'Certificate removed and SSL disabled for Genesis. Reload Genesis for changes to take effect')
+            self.put_message('success', 'Certificate removed and SSL disabled for Genesis. Reload Genesis for changes to take effect')
             self._cinfo = None
         elif params[0] == 'upl':
             self._tab = 0
@@ -304,7 +304,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                         self._cc.gencert(name, vars, self._hostname)
                         self.statusmsg('Assigning new certificate...')
                         self._cc.assign(name, lst)
-                        self.put_message('info', 'Certificate successfully generated')
+                        self.put_message('success', 'Certificate successfully generated')
                     except Exception, e:
                         self.put_message('err', str(e))
                         self.app.log.error(str(e))
@@ -336,7 +336,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                         self._cc.add_ext_cert(vars.getvalue('certname'), 
                             vars['certfile'].value, vars['keyfile'].value,
                             vars['chainfile'].value if vars.has_key('chainfile') else None)
-                        self.put_message('info', 'Certificate %s installed' % vars.getvalue('certname'))
+                        self.put_message('success', 'Certificate %s installed' % vars.getvalue('certname'))
                     except Exception, e:
                         self.put_message('err', 'Couldn\'t add certificate: %s' % str(e[0]))
                         self.app.log.error('Couldn\'t add certificate: %s - Error: %s' % (str(e[0]), str(e[1])))
@@ -349,4 +349,4 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                 cfg.keytype = vars.getvalue('keytype', 'RSA')
                 cfg.ciphers = vars.getvalue('ciphers', '')
                 cfg.save()
-                self.put_message('info', 'Settings saved successfully')     
+                self.put_message('success', 'Settings saved successfully')     

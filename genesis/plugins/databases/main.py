@@ -234,7 +234,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 				self.put_message('err', 'Database drop failed: ' + str(e))
 				self.app.log.error('Database drop failed: ' + str(e))
 			else:
-				self.put_message('info', 'Database successfully dropped')
+				self.put_message('success', 'Database successfully dropped')
 		if params[0] == 'deluser':
 			self._tab = 1
 			try:
@@ -245,7 +245,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 				self.put_message('err', 'User drop failed: ' + str(e))
 				self.app.log.error('User drop failed: ' + str(e))
 			else:
-				self.put_message('info', 'User deleted') 
+				self.put_message('success', 'User deleted') 
 		if params[0] == 'reauth':
 			if params[1] in self._cancelauth:
 				self._cancelauth.remove(params[1])
@@ -275,7 +275,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 						self.app.log.error('Database add failed: ' 
 							+ str(e))
 					else:
-						self.put_message('info', 
+						self.put_message('success', 
 							'Database %s added sucessfully' % name)
 			self._add = None
 		elif params[0] == 'dlgExec':
@@ -307,7 +307,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 						self.app.log.error('User add failed: '
 							+ str(e))
 					else:
-						self.put_message('info',
+						self.put_message('success',
 							'User %s added successfully' % username)
 			self._useradd = None
 		elif params[0] == 'dlgChmod':
@@ -322,7 +322,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 					self.app.log.error('Permission change failed: '
 						+ str(e))
 				else:
-					self.put_message('info',
+					self.put_message('success',
 						'Permissions for %s changed successfully' % self._chmod['name'])
 			self._chmod = None
 		elif params[0] == 'dlgAuthorize':
@@ -357,7 +357,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
 						vars.getvalue('newpasswd'),
 						self.app.session['dbconns'][dbtype]
 						)
-					self.put_message('info', 'Password for %s changed successfully' % dbtype)
+					self.put_message('success', 'Password for %s changed successfully' % dbtype)
 				except Exception, e:
 					self.put_message('err', 'Error changing password for %s: %s' % (dbtype, str(e)))
 			self._tab = 2

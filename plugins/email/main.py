@@ -209,7 +209,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                 b = self._boxes[int(params[1])]
                 self._boxes = []
                 self._mc.del_mailbox(b['username'], b['domain'])
-                self.put_message('info', 'Mailbox deleted successfully')
+                self.put_message('success', 'Mailbox deleted successfully')
             except Exception, e:
                 self.app.log.error('Mailbox could not be deleted. Error: %s' % str(e))
                 self.put_message('err', 'Mailbox could not be deleted')
@@ -218,7 +218,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                 a = self._aliases[int(params[1])]
                 self._aliases = []
                 self._mc.del_alias(a['address'], a['forward'])
-                self.put_message('info', 'Alias deleted successfully')
+                self.put_message('success', 'Alias deleted successfully')
             except Exception, e:
                 self.app.log.error('Alias could not be deleted. Error: %s' % str(e))
                 self.put_message('err', 'Alias could not be deleted')
@@ -229,7 +229,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                     break
             else:
                 self._mc.del_domain(self._domains[int(params[1])])
-                self.put_message('info', 'Domain deleted')
+                self.put_message('success', 'Domain deleted')
 
     @event('dialog/submit')
     @event('form/submit')
@@ -253,7 +253,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                 else:
                     try:
                         self._mc.add_mailbox(acct, dom, passwd, fullname, quota)
-                        self.put_message('info', 'Mailbox added successfully')
+                        self.put_message('success', 'Mailbox added successfully')
                     except Exception, e:
                         self.app.log.error('Mailbox %s@%s could not be added. Error: %s' % (acct,dom,str(e)))
                         self.put_message('err', 'Mailbox could not be added')
@@ -271,7 +271,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                 else:
                     try:
                         self._mc.add_alias(acct, dom, forward)
-                        self.put_message('info', 'Alias added successfully')
+                        self.put_message('success', 'Alias added successfully')
                     except Exception, e:
                         self.app.log.error('Alias from %s@%s to %s could not be added. Error: %s' % (acct,dom,forward,str(e)))
                         self.put_message('err', 'Alias could not be added')
@@ -286,7 +286,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                 else:
                     try:
                         self._mc.add_domain(v)
-                        self.put_message('info', 'Domain added successfully')
+                        self.put_message('success', 'Domain added successfully')
                     except Exception, e:
                         self.app.log.error('Domain %s could not be added. Error: %s' % (v,str(e)))
                         self.put_message('err', 'Domain could not be added')
@@ -303,7 +303,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                     try:
                         self._mc.edit(self._edit['username'], self._edit['domain'], 
                             quota, passwd)
-                        self.put_message('info', 'Mailbox edited successfully')
+                        self.put_message('success', 'Mailbox edited successfully')
                     except Exception, e:
                         self.app.log.error('Mailbox %s@%s could not be edited. Error: %s' % (self._edit['username'],self._edit['domain'],str(e)))
                         self.put_message('err', 'Mailbox could not be edited')

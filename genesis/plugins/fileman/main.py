@@ -9,7 +9,6 @@ from base64 import b64encode, b64decode
 from stat import ST_UID, ST_GID, ST_MODE, ST_SIZE
 import grp, pwd
 import shutil
-import threading
 from acl import *
 import utils
 
@@ -375,7 +374,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
                     shutil.rmtree(f)
                 else:
                     os.unlink(f)
-                self.put_message('info', 'Deleted %s'%f)
+                self.put_message('success', 'Deleted %s'%f)
             except Exception, e:
                 self.put_message('err', str(e))
         if params[0] == 'download':
@@ -421,7 +420,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
                             self.app.log.error('Failed to delete %s: %s'%(x,str(e)))
                             err.append(x)
                     if suc:
-                        self.put_message('info', 'Deleted %s'%(', '.join(suc)))
+                        self.put_message('success', 'Deleted %s'%(', '.join(suc)))
                     if err:
                         self.put_message('err', 'Deleting of %s failed'%(', '.join(suc)))
             self._tab = tab
@@ -444,12 +443,12 @@ class FMPlugin(CategoryPlugin, URLHandler):
                         open(os.path.join(self._tabs[self._tab], x.filename), 'w').write(x.value)
                         names.append(x.filename)
                         files.append((self._tabs[self._tab], x.filename))
-                    self.put_message('info', 'Uploaded the following files to %s: %s'
+                    self.put_message('success', 'Uploaded the following files to %s: %s'
                         % (self._tabs[self._tab], ', '.join(names)))
                 else:
                     f = vars['file']
                     open(os.path.join(self._tabs[self._tab], f.filename), 'w').write(f.value)
-                    self.put_message('info', 'Uploaded %s to %s'
+                    self.put_message('success', 'Uploaded %s to %s'
                         % (f.filename, self._tabs[self._tab]))
                     files.append((self._tabs[self._tab], f.filename))
                 for x in files:
@@ -477,7 +476,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
                 else:
                     try:
                         open(filename, 'w')
-                        self.put_message('info', 'File created: %s' % filename)
+                        self.put_message('success', 'File created: %s' % filename)
                     except Exception, e:
                         self.put_message('err', 'File creation failed: %s' % str(e))
             self._newfile = None
@@ -488,7 +487,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
                     fld = os.path.join(self._newfolder, fld)
                 try:
                     os.makedirs(fld)
-                    self.put_message('info', 'Folder(s) created: %s' % fld)
+                    self.put_message('success', 'Folder(s) created: %s' % fld)
                 except Exception, e:
                     self.put_message('err', 'Folder creation failed: %s' % str(e))
             self._newfolder = None

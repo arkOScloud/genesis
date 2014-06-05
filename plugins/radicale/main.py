@@ -90,7 +90,7 @@ class RadicalePlugin(CategoryPlugin):
             try:
                 u = self._users[int(params[1])]
                 self._rc.del_user(u)
-                self.put_message('info', 'User deleted successfully')
+                self.put_message('success', 'User deleted successfully')
             except Exception, e:
                 self.app.log.error('Calendar user could not be deleted. Error: %s' % str(e))
                 self.put_message('err', 'User could not be deleted')
@@ -133,7 +133,7 @@ class RadicalePlugin(CategoryPlugin):
                 else:
                     try:
                         self._rc.add_user(acct, passwd)
-                        self.put_message('info', 'User added successfully')
+                        self.put_message('success', 'User added successfully')
                     except Exception, e:
                         self.app.log.error('Calendar user %s could not be added. Error: %s' % (acct,str(e)))
                         self.put_message('err', 'User could not be added')
@@ -148,7 +148,7 @@ class RadicalePlugin(CategoryPlugin):
                 else:
                     try:
                         self._rc.edit_user(self._edit, passwd)
-                        self.put_message('info', 'Password changed successfully')
+                        self.put_message('success', 'Password changed successfully')
                     except Exception, e:
                         self.app.log.error('Calendar password for %s could not be changed. Error: %s' % (self._edit,str(e)))
                         self.put_message('err', 'Password could not be changed')
