@@ -22,7 +22,16 @@
 
 
 <xsl:template match="image">
-    <img id='{@id}' class="{x:attr(@cls, 'ui-el-image')}" src="{@file}" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')};" />
+    <xsl:choose>
+        <xsl:when test="@lightbox != ''">
+            <a href="{@file}" data-lightbox="{@lightbox}">
+                <img id='{@id}' class="{x:attr(@cls, 'ui-el-image')}" src="{@file}" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')};" />
+            </a>
+        </xsl:when>
+        <xsl:otherwise>
+            <img id='{@id}' class="{x:attr(@cls, 'ui-el-image')}" src="{@file}" style="width: {x:css(@width, 'auto')}; height: {x:css(@height, 'auto')};" />
+        </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 

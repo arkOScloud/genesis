@@ -318,7 +318,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                                         vars.getvalue('dbname'), vars.getvalue('dbname'), 
                                         vars.getvalue('dbpass'), self.dbops.get_dbconn(dbengine))
                                 except Exception, e:
-                                    self.put_message(str(e))
+                                    self.put_message('err', str(e))
                                     return
                             elif vars.getvalue('dbname'):
                                 self.put_message('err', 'You must enter a database password if you specify a database name!')

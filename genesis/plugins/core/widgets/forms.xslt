@@ -72,7 +72,7 @@
                         <btn text="Yes" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
                     </xsl:when>
                     <xsl:otherwise>
-                        <btn text="OK" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
+                        <btn text="{x:iif(@oktext != '', @oktext, 'OK')}" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>

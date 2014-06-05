@@ -665,11 +665,18 @@ class RepositoryManager:
 
         if cat:
             cat.statusmsg('Downloading plugin package...')
-        download('http://%s/genesis/plugin/%s' % (self.server, id),
-            file='%s/plugin.tar.gz'%dir, crit=True)
-
-        self.remove(id)
-        self.install_tar(load=load, cat=cat)
+        try:
+            req = urllib2.Request('https://%s/' % self.server)
+            req.add_header('Content-type', 'application/json')
+            data = urllib2.urlopen(req, json.dumps({'get': 'plugin', 'id': id})).read()
+            open('%s/plugin.tar.gz'%dir, 'wb').write(data)
+        except urllib2.HTTPError, e:
+            self.log.error('Plugin retrieval failed with HTTP Error %s' % str(e.code))
+        except urllib2.URLError, e:
+            self.log.error('Plugin retrieval failed - Server not found or URL malformed. Please check your Internet settings.')
+        else:
+            self.remove(id)
+            self.install_tar(load=load, cat=cat)
 
     def install_stream(self, stream):
         """

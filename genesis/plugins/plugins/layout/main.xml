@@ -46,4 +46,34 @@
             <uploader url="/upload_plugin" text="Install" />
         </tabbody>
     </tabcontrol>
+
+    <dialogbox id="dlgInfo" size="large" oktext="Install">
+        <scrollcontainer width="100%" height="500" style="padding: 10px 20px;">
+            <div id="app-logo" style="text-align: center;" />
+            <formline text="Name" horizontal="true">
+                <label id="app-name" />
+            </formline>
+            <formline text="Version" horizontal="true">
+                <label id="app-version" />
+            </formline>
+            <formline text="Categories" horizontal="true">
+                <label id="app-cats" />
+            </formline>
+            <formline text="Intro" horizontal="true">
+                <label id="app-short" />
+            </formline>
+            <formline text="Description" horizontal="true">
+                <label id="app-desc" />
+            </formline>
+            <formline text="Application by" horizontal="true" id="app-plugauth">
+                <label id="app-plugauthor" />
+                <outlinklabel id="app-plughomepage" />
+            </formline>
+            <formline text="Plugin by" horizontal="true">
+                <label id="app-author" />
+                <outlinklabel id="app-homepage" />
+            </formline>
+            <div id="app-screens" class="text-center" />
+        </scrollcontainer>
+    </dialogbox>
 </xml>

@@ -3,6 +3,9 @@ from genesis.ui import *
 from genesis import apis
 from genesis.plugmgr import ImSorryDave, PluginLoader, RepositoryManager
 
+import json
+import urllib2
+
 
 class PluginManager(CategoryPlugin, URLHandler):
     text = 'App Store'
@@ -12,6 +15,7 @@ class PluginManager(CategoryPlugin, URLHandler):
     def on_session_start(self):
         self._mgr = RepositoryManager(self.app.log, self.app.config)
         self._nc = apis.networkcontrol(self.app)
+        self._info = None
 
     def on_init(self):
         self._mgr.refresh()
@@ -69,6 +73,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                             )
                     ui.append('upg', 
                         UI.AppButton(
+                            id=k.id,
                             name=k.name,
                             iconfont=k.icon,
                             version=k.version
@@ -91,11 +96,43 @@ class PluginManager(CategoryPlugin, URLHandler):
             for y in newapps[x]:
                 ui.append('avail', 
                     UI.AppButton(
+                        id=y.id,
                         name=y.name,
                         iconfont=y.icon,
                         version=y.version
                         )
                     )
+
+        if self._info:
+            info = [x for x in self._mgr.available if x.id==self._info][0]
+            if info.assets:
+                try:
+                    req = urllib2.Request('https://'+self.app.gconfig.get('genesis', 'update_server'))
+                    req.add_header('Content-type', 'application/json')
+                    resp = urllib2.urlopen(req, json.dumps({'get': 'assets', 'id': info.id}))
+                    resp = json.loads(resp.read())
+                    ui.find('app-logo').append(UI.Image(file="data:image/png;base64,%s" % resp['logo'], cls='app-logo'))
+                    for x in resp['screenshots']:
+                        ui.find('app-screens').append(UI.Image(file="data:image/jpeg;base64,%s" % x, cls="img-responsive img-thumbnail app-screenshot", lightbox=self._info))
+                except:
+                    pass
+            ui.find('app-short').set('text', info.description)
+            ui.find('app-version').set('text', info.version)
+            ui.find('app-cats').set('text', '<br/>'.join(['%s: %s'%(x['primary'], ', '.join(x['secondary'])) for x in info.categories]))
+            ui.find('app-name').set('text', info.name)
+            ui.find('app-desc').set('text', info.long_description)
+            if info.app_author:
+                ui.find('app-plugauthor').set('text', info.app_author)
+                ui.find('app-plughomepage').set('text', info.app_homepage)
+                ui.find('app-plughomepage').set('url', info.app_homepage)
+            else:
+                ui.remove('app-plugauth')
+            ui.find('app-author').set('text', info.author)
+            ui.find('app-homepage').set('text', info.homepage)
+            ui.find('app-homepage').set('url', info.homepage)
+        else:
+            ui.remove('dlgInfo')
+
         return ui
 
     def get_ui_upload(self):
@@ -125,7 +162,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                 self.app.log.error(str(e))
             else:
                 self.put_message('info', 'Plugin list updated')
-        if params[0] == 'remove':
+        elif params[0] == 'remove':
             try:
                 self._mgr.check_conflict(params[1], 'remove')
                 lr = LiveRemove(self._mgr, params[1], self)
@@ -133,24 +170,21 @@ class PluginManager(CategoryPlugin, URLHandler):
                 self._nc.remove(params[1])
             except ImSorryDave, e:
                 self.put_message('err', str(e))
-        if params[0] == 'reload':
-            try:
-                PluginLoader.unload(params[1])
-            except:
-                pass
-            try:
-                PluginLoader.load(params[1])
-            except:
-                pass
-            self.put_message('info', 'Plugin reloaded. Refresh page for changes to take effect.')
-        if params[0] == 'restart':
-            self.app.restart()
-        if params[0] == 'install':
-            try:
-                self._mgr.check_conflict(params[1], 'install')
-                self._mgr.install(params[1], True, self)
-                ComponentManager.get().rescan()
-                ConfManager.get().rescan()
-                self._nc.refresh()
-            except Exception, e:
-                self.put_message('err', str(e))
+        elif params[0] == 'info':
+            self._info = params[1]
+
+    @event('dialog/submit')
+    def on_submit(self, event, params, vars = None):
+        if params[0] == 'dlgInfo':
+            if vars.getvalue('action', '') == 'OK':
+                try:
+                    self._mgr.check_conflict(self._info, 'install')
+                    self._mgr.install(self._info, True, self)
+                    ComponentManager.get().rescan()
+                    ConfManager.get().rescan()
+                    self._nc.refresh()
+                except Exception, e:
+                    self.put_message('err', str(e))
+                finally:
+                    self.put_message('success', 'Plugin installed successfully!')
+            self._info = None

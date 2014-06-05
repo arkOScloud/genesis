@@ -559,3 +559,12 @@ a:link, a:focus, a:active, a:hover {
 .table > tbody > tr > td > a, .table > tbody > tr > td > span {
   line-height: 2;
 }
+
+.app-logo {
+  max-height: 150px;
+}
+
+.app-screenshot {
+  margin: 5px 5px;
+  max-width: 200px;
+}
