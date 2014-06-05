@@ -63,7 +63,7 @@
 
 
 <xsl:template match="scrollcontainer">
-    <div class="ui-el-scrollcontainer" style="max-width: {x:css(@width, '100%')}; height: {x:css(@height, '200')}; {x:iif(@noborder, 'border: none', '')}{@style}">
+    <div class="ui-el-scrollcontainer" style="max-width: {x:css(@width, '100%')}; height: {x:css(@height, '200')}; {x:iif(@noborder, 'border: none; ', '')}{@style}">
         <xsl:apply-templates />
     </div>
 </xsl:template>

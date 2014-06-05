@@ -16,14 +16,16 @@ __all__ = [
 import os
 import imp
 import json
+import shutil
 import sys
+import tarfile
 import traceback
 import weakref
 import urllib2
 
 from genesis.api import *
 from genesis.com import *
-from genesis.utils import BackgroundWorker, detect_platform, shell, shell_cs, shell_status, download
+from genesis.utils import detect_platform, shell, shell_cs, shell_status
 import genesis
 
 RETRY_LIMIT = 10
@@ -244,7 +246,7 @@ class PluginLoader:
             # Save info
             info.id = plugin
             info.ptype = meta['type']
-            info.iconfont = meta['icon']
+            info.icon = meta['icon']
             info.services = meta['services'] if meta.has_key('services') else []
             info.name, info.version = meta['name'], meta['version']
             info.desc, info.longdesc = meta['description']['short'], meta['description']['long'] if meta['description'].has_key('long') else ''
@@ -404,16 +406,15 @@ class PluginLoader:
             if ((dep['binary'] and shell_status('which '+dep['binary']) != 0) \
             or not dep['binary']) and shell_status('pacman -Q '+dep['package']) != 0:
                 if platform == 'arch' or platform == 'arkos':
-                    try:
-                        if cat:
-                            cat.statusmsg('Installing dependency %s...' % dep['name'])
-                        log.warn('Missing %s, which is required by a plugin. Attempting to install...' % dep['name'])
-                        shell('pacman -Sy --noconfirm --needed '+dep['package'])
-                        if dep['binary']:
-                            shell('systemctl enable '+dep['binary'])
-                    except Exception, e:
-                        log.error('Failed to install %s - %s' % (dep['name'], str(e)))
+                    if cat:
+                        cat.statusmsg('Installing dependency %s...' % dep['name'])
+                    log.warn('Missing %s, which is required by a plugin. Attempting to install...' % dep['name'])
+                    s = shell_cs('pacman -Sy --noconfirm --needed '+dep['package'], stderr=True)
+                    if s[0] != 0:
+                        log.error('Failed to install %s - %s' % (dep['name'], str(s[1])))
                         raise SoftwareRequirementError(dep)
+                    if dep['binary']:
+                        shell('systemctl enable '+dep['binary'])
                 elif platform == 'debian':
                     try:
                         shell('apt-get -y --force-yes install '+dep['package'])
@@ -500,22 +501,23 @@ class RepositoryManager:
         Check if an operation can be performed due to dependency conflict
         """
         pdata = PluginLoader.list_plugins()
+        metoo = []
         if op == 'remove':
-            for i in pdata:
-                for dep in pdata[i].deps:
-                    if dep['type'] == 'plugin' and dep['package'] == id and dep['package'] in [x.id for x in self.installed]:
-                        raise ImSorryDave(pdata[dep['package']].name, pdata[i].name, op)
+            for i in self.installed:
+                for dep in i.deps:
+                    if dep['type'] == 'plugin' and dep['package'] == id:
+                        metoo.append(('Remove', i))
+                        metoo += self.check_conflict(i.id, 'remove')
         elif op == 'install':
             t = self.list_available()
-            try:
-                for i in t[id].deps:
-                    for dep in t[id].deps[i]:
-                        if dep['type'] == 'plugin' and dep['package'] not in [x.id for x in self.installed]:
-                            raise ImSorryDave(t[id].name, t[dep['package']].name, op)
-            except KeyError:
-                raise Exception('There was a problem in checking dependencies. '
-                    'Please try again after refreshing the plugin list. '
-                    'If this problem persists, please contact Genesis maintainers.')
+            for i in t[id].deps:
+                for dep in t[id].deps[i]:
+                    if dep['type'] == 'plugin' and dep['package'] not in [x.id for x in self.installed]:
+                        for x in self.available:
+                            if x.id == dep['package']:
+                                metoo.append(('Install', x))
+                                metoo += self.check_conflict(x.id, 'install')
+        return metoo
 
     def refresh(self):
         """
@@ -569,15 +571,11 @@ class RepositoryManager:
         """
         upg = []
         for p in self.available:
-            u = False
-            g = None
             for g in self.installed:
                 if g.id == p.id and g.version != p.version:
-                    u = True
+                    g.upgradable = p.upgradable = True
+                    upg += [p]
                     break
-            if u:
-                g.upgradable = p.upgradable = True
-                upg += [g]
         self.upgradable = upg
 
     def update_list(self, crit=False):
@@ -621,7 +619,7 @@ class RepositoryManager:
         if cat:
             cat.statusmsg('Removing plugin...')
         dir = self.config.get('genesis', 'plugins')
-        shell('rm -r %s/%s' % (dir, id))
+        shutil.rmtree(os.path.join(dir, id))
 
         if id in PluginLoader.list_plugins():
             depends = []
@@ -648,8 +646,6 @@ class RepositoryManager:
 
         self.update_installed()
         self.update_available()
-        if cat:
-            cat.message('info', 'Plugin removed. Refresh page for changes to take effect.')
 
     def install(self, id, load=True, cat=''):
         """
@@ -668,14 +664,21 @@ class RepositoryManager:
         try:
             req = urllib2.Request('https://%s/' % self.server)
             req.add_header('Content-type', 'application/json')
-            data = urllib2.urlopen(req, json.dumps({'get': 'plugin', 'id': id})).read()
-            open('%s/plugin.tar.gz'%dir, 'wb').write(data)
+            data = urllib2.urlopen(req, json.dumps({'get': 'plugin', 'id': id}))
+            if data.info()['Content-type'].startswith('application/json'):
+                j = json.loads(data.read())
+                self.log.error('Plugin retrieval failed - %s' % str(j['info']))
+                raise Exception('Plugin retrieval failed - %s' % str(j['info']))
+            else:
+                open('%s/plugin.tar.gz'%dir, 'w').write(data.read())
         except urllib2.HTTPError, e:
             self.log.error('Plugin retrieval failed with HTTP Error %s' % str(e.code))
+            raise Exception('Plugin retrieval failed with HTTP Error %s' % str(e.code))
         except urllib2.URLError, e:
             self.log.error('Plugin retrieval failed - Server not found or URL malformed. Please check your Internet settings.')
+            raise Exception('Plugin retrieval failed - Server not found or URL malformed. Please check your Internet settings.')
         else:
-            self.remove(id)
+            #self.remove(id)
             self.install_tar(load=load, cat=cat)
 
     def install_stream(self, stream):
@@ -700,10 +703,15 @@ class RepositoryManager:
 
         if cat:
             cat.statusmsg('Extracting plugin package...')
-        id = shell('tar tzf %s/plugin.tar.gz'%dir).split('\n')[0].strip('/')
 
-        shell('cd %s; tar xf plugin.tar.gz' % dir)
-        shell('rm %s/plugin.tar.gz' % dir)
+        t = tarfile.open(os.path.join(dir, 'plugin.tar.gz'), 'r:gz')
+        id = t.getmembers()[0].name
+        t.extractall(dir)
+        t.close()
+        os.unlink(os.path.join(dir, 'plugin.tar.gz'))
+
+        if cat:
+            cat.statusmsg('Loading plugin...')
 
         if load:
             PluginLoader.load(id, cat=cat)
@@ -726,25 +734,3 @@ class PluginInfo:
         self.upgradable = False
         self.problem = None
         self.deps = []
-
-    def str_req(self):
-        """
-        Formats plugin's unmet requirements into human-readable string
-
-        :returns:    str
-        """
-
-        reqs = []
-        for p in self.deps:
-            if any(x in [PluginLoader.platform, 'any'] for x in p[0]):
-                for r in p[1]:
-                    try:
-                        PluginLoader.verify_dep(r)
-                    except Exception, e:
-                        reqs.append(str(e))
-        return ', '.join(reqs)
-
-class LiveRemove(BackgroundWorker):
-    def run(self, rm, id, cat):
-        rm.remove(id, cat)
-        cat._reloadfw = True

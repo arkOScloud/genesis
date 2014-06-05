@@ -161,7 +161,7 @@ class WebappControl(Plugin):
 
 		# Add the new path to tracked points of interest (POIs)
 		apis.poicontrol(self.app).add(name, 'website', target_path, 'webapps',
-            webapp.plugin_info.iconfont, False)
+            webapp.plugin_info.icon, False)
 
 		if specialmsg:
 			return specialmsg

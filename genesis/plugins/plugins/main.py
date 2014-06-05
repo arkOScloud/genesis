@@ -16,6 +16,7 @@ class PluginManager(CategoryPlugin, URLHandler):
         self._mgr = RepositoryManager(self.app.log, self.app.config)
         self._nc = apis.networkcontrol(self.app)
         self._info = None
+        self._metoo = []
 
     def on_init(self):
         self._mgr.refresh()
@@ -33,7 +34,7 @@ class PluginManager(CategoryPlugin, URLHandler):
             desc = '<span class="ui-el-label-1" style="padding-left: 5px;">%s</span>'%k.desc
             row.find('name').set('text', k.name)
             row.find('desc').set('text', k.desc)
-            row.find('icon').set('class', k.iconfont)
+            row.find('icon').set('class', k.icon)
             row.find('version').set('text', k.version)
             row.find('author').set('text', k.author)
             row.find('author').set('url', k.homepage)
@@ -47,7 +48,7 @@ class PluginManager(CategoryPlugin, URLHandler):
             if k.problem:
                 row.find('status').set('iconfont', 'gen-close-2 text-error')
                 row.find('status').set('text', k.problem)
-                row.find('icon').set('class', k.iconfont + ' text-error')
+                row.find('icon').set('class', k.icon + ' text-error')
                 row.find('name').set('class', 'text-error')
                 row.find('desc').set('class', 'text-error')
                 row.append('reqs', UI.IconFont(iconfont="gen-warning text-error", text=k.problem))
@@ -56,44 +57,30 @@ class PluginManager(CategoryPlugin, URLHandler):
                 row.find('status').set('text', 'Installed and Enabled')
             ui.append('list', row)
 
+        lst = {}
+        for x in self._mgr.available:
+            if x in self._mgr.upgradable:
+                continue
+            for y in x.categories:
+                if not lst.has_key(y['primary']):
+                    lst[y['primary']] = []
+                lst[y['primary']].append(x)
 
-        lst = sorted(self._mgr.available, key=lambda x: x.name.lower())
-
-        firstupg = False
-        newapps = {}
-        for k in lst:
-            for p in inst:
-                if k.id == p.id and not p.problem:
-                    if not firstupg:
-                        ui.append('upg', 
-                            UI.Label(
-                                size=3,
-                                text="Updates Available"
-                                )
-                            )
-                    ui.append('upg', 
-                        UI.AppButton(
-                            id=k.id,
-                            name=k.name,
-                            iconfont=k.icon,
-                            version=k.version
-                            )
+        if self._mgr.upgradable:
+            ui.append('upg', UI.Label(size=3, text="Updates Available"))
+            for x in self._mgr.upgradable:
+                ui.append('upg', 
+                    UI.AppButton(
+                        id=x.id,
+                        name=x.name,
+                        iconfont=x.icon,
+                        version=x.version
                         )
-                    firstupg = True
-                    break
-            else:
-                for x in k.categories:
-                    if not newapps.has_key(x['primary']):
-                        newapps[x['primary']] = []
-                    newapps[x['primary']].append(k)
-        for x in newapps:
-            ui.append('avail', 
-                UI.Label(
-                    size=3,
-                    text=x
                     )
-                )
-            for y in newapps[x]:
+        
+        for x in lst:
+            ui.append('avail', UI.Label(size=3, text=x))
+            for y in sorted(lst[x], key=lambda z: z.name.lower()):
                 ui.append('avail', 
                     UI.AppButton(
                         id=y.id,
@@ -118,7 +105,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                     pass
             ui.find('app-short').set('text', info.description)
             ui.find('app-version').set('text', info.version)
-            ui.find('app-cats').set('text', '<br/>'.join(['%s: %s'%(x['primary'], ', '.join(x['secondary'])) for x in info.categories]))
+            ui.find('app-cats').set('text', '; '.join(['%s: %s'%(x['primary'], ', '.join(x['secondary'])) for x in info.categories]))
             ui.find('app-name').set('text', info.name)
             ui.find('app-desc').set('text', info.long_description)
             if info.app_author:
@@ -132,6 +119,16 @@ class PluginManager(CategoryPlugin, URLHandler):
             ui.find('app-homepage').set('url', info.homepage)
         else:
             ui.remove('dlgInfo')
+
+        if self._metoo:
+            for x in self._metoo:
+                ui.append('prereqs', UI.DTR(
+                    UI.DTD(UI.IconFont(iconfont=x[1].icon), width='1'),
+                    UI.DTD(UI.Label(text=x[0], bold=True)),
+                    UI.DTD(UI.Label(text=x[1].name))
+                ))
+        else:
+            ui.remove('dlgMeToo')
 
         return ui
 
@@ -163,13 +160,18 @@ class PluginManager(CategoryPlugin, URLHandler):
             else:
                 self.put_message('success', 'Plugin list updated')
         elif params[0] == 'remove':
-            try:
-                self._mgr.check_conflict(params[1], 'remove')
-                lr = LiveRemove(self._mgr, params[1], self)
-                lr.start()
-                self._nc.remove(params[1])
-            except ImSorryDave, e:
-                self.put_message('err', str(e))
+            metoo = self._mgr.check_conflict(params[1], 'remove')
+            if metoo:
+                self._metoo = metoo
+                self._metoo.append(('Remove', next(x for x in self._mgr.installed if x.id == params[1])))
+            else:
+                try:
+                    self._mgr.remove(params[1], self)
+                    self._nc.remove(params[1])
+                except Exception, e:
+                    self.put_message('err', str(e))
+                finally:
+                    self.put_message('success', 'Plugin removed successfully.')
         elif params[0] == 'info':
             self._info = params[1]
 
@@ -177,14 +179,38 @@ class PluginManager(CategoryPlugin, URLHandler):
     def on_submit(self, event, params, vars = None):
         if params[0] == 'dlgInfo':
             if vars.getvalue('action', '') == 'OK':
-                try:
-                    self._mgr.check_conflict(self._info, 'install')
-                    self._mgr.install(self._info, True, self)
-                    ComponentManager.get().rescan()
-                    ConfManager.get().rescan()
-                    self._nc.refresh()
-                except Exception, e:
-                    self.put_message('err', str(e))
-                finally:
-                    self.put_message('success', 'Plugin installed successfully!')
+                metoo = self._mgr.check_conflict(self._info, 'install')
+                if metoo:
+                    self._metoo = metoo
+                    self._metoo.append(('Install', next(x for x in self._mgr.available if x.id == self._info)))
+                else:
+                    try:
+                        self.install(self._info)
+                    except Exception, e:
+                        self.put_message('err', str(e))
+                    finally:
+                        self.put_message('success', 'Plugin installed successfully!')
             self._info = None
+        elif params[0] == 'dlgMeToo':
+            success = False
+            try:
+                for x in self._metoo:
+                    if x[0] == 'Install':
+                        self.install(x[1].id)
+                        success = 'installed'
+                    elif x[0] == 'Remove':
+                        self._mgr.remove(x[1].id, self)
+                        self._nc.remove(x[1].id)
+                        success = 'removed'
+            except Exception, e:
+                success = False
+                self.put_message('err', str(e))
+            if success:
+                self.put_message('success', 'Plugins %s successfully.' % success)
+            self._metoo = []
+
+    def install(self, id):
+        self._mgr.install(x, True, self)
+        ComponentManager.get().rescan()
+        ConfManager.get().rescan()
+        self._nc.refresh()

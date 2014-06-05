@@ -38,12 +38,12 @@ class HomePlugin(api.CategoryPlugin):
             if x.folder in self.folder_ids:
                 btnlist.append({'id': x.plugin_id, 
                     'type': 'plugin',
-                    'icon': x.plugin_info.iconfont if hasattr(x.plugin_info, 'iconfont') else x.iconfont,
+                    'icon': x.plugin_info.icon if hasattr(x.plugin_info, 'icon') else x.iconfont,
                     'name': x.text})
         for x in webs:
             btnlist.append({'id': x.plugin_info.id,
                 'type': 'webapp',
-                'icon': x.plugin_info.iconfont,
+                'icon': x.plugin_info.icon,
                 'name': x.plugin_info.name})
         
         for x in sorted(btnlist, key=lambda y: y['name']):

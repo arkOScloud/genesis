@@ -40,7 +40,7 @@ class ConfigPlugin(CategoryPlugin):
         for c in cfgs:
             if c.target:
                 t.append(UI.DTR(
-                UI.IconFont(iconfont=(None if not hasattr(c.target, 'iconfont') else c.target.iconfont)),
+                UI.IconFont(iconfont=(None if not hasattr(c.target, 'icon') else c.target.icon)),
                 UI.Label(text=(c.target.__name__ if not hasattr(c.target, 'text') else c.target.text)),
                 UI.TipIcon(text='Edit', iconfont="gen-pencil-2", id='editconfig/'+c.target.__name__),
             ))

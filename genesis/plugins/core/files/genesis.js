@@ -234,6 +234,7 @@ Genesis = (function() {
             $('#warning-text').html(text);
             $('html').append('<div id="shadeback" style="display:none;opacity:0"></div>');
             $('#shadeback').stop().fadeTo(250, 0.8, function () { $(this).show(); });
+            $('html').scrollTop(0);
             $('#warningbox').center().fadeTo(250, 1, function () { $(this).show(); });
             return false;
         },

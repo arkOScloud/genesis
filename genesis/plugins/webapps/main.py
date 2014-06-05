@@ -84,7 +84,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                 addr = False
 
             t.append(UI.DTR(
-                UI.Iconfont(iconfont=s.sclass.plugin_info.iconfont if s.sclass and hasattr(s.sclass.plugin_info, 'iconfont') else 'gen-earth'),
+                UI.Iconfont(iconfont=s.sclass.plugin_info.icon if s.sclass and hasattr(s.sclass.plugin_info, 'iconfont') else 'gen-earth'),
                 (UI.OutLinkLabel(
                     text=s.name,
                     url=addr
@@ -118,7 +118,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
             provs.append(
                     UI.ListItem(
                         UI.Label(text=apptype.name),
-                        iconfont=apptype.iconfont,
+                        iconfont=apptype.icon,
                         id=apptype.name,
                         active=apptype.name==self._current.name
                     )

@@ -171,7 +171,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                     ui.find('certassign').append(
                         UI.DTR(
                             UI.IconFont(iconfont=ic, text=ict),
-                            UI.IconFont(iconfont=x.iconfont),
+                            UI.IconFont(iconfont=x.icon),
                             UI.Label(text=x.text),
                             UI.HContainer(
                                 (UI.TipIcon(iconfont='gen-checkmark-circle',

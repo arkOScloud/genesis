@@ -107,7 +107,7 @@ class F2BManager(Plugin):
 					'f2b': c.plugin_info.f2b})
 			elif hasattr(c.plugin_info, 'f2b') and c.plugin_info.f2b:
 				lst.append({'name': c.text,
-					'icon': c.plugin_info.iconfont,
+					'icon': c.plugin_info.icon,
 					'f2b': c.plugin_info.f2b})
 			elif hasattr(c, 'f2b') and hasattr(c, 'f2b_name') and \
 			c.f2b and c.f2b_name:
@@ -116,7 +116,7 @@ class F2BManager(Plugin):
 					'f2b': c.f2b})
 			elif hasattr(c, 'f2b') and c.f2b:
 				lst.append({'name': c.text,
-					'icon': c.iconfont,
+					'icon': c.icon,
 					'f2b': c.f2b})
 		for s in apis.webapps(self.app).get_apptypes():
 			if hasattr(s.plugin_info, 'f2b') and s.plugin_info.f2b:

@@ -66,12 +66,12 @@ class NetworkControl(apis.API):
                     r = rm.get(sg)
                     rm.remove(sg)
                     sm.update(p['binary'], p['binary'], p['name'], 
-                        s.iconfont, p['ports'])
+                        s.icon, p['ports'])
                     rm.set(sg, r)
                 elif p['ports'] != []:
                     sg = sm.get(p['binary'])[0]
                     sm.add(s.plugin_id, p['binary'], p['name'], 
-                        s.iconfont, p['ports'])
+                        s.icon, p['ports'])
                     rm.set(sg, 2)
                 FWMonitor(self.app).regen()
                 FWMonitor(self.app).save()

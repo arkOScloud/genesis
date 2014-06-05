@@ -91,7 +91,7 @@ class ServerManager(Plugin):
 						try:
 							if p['ports'] != []:
 								self.add(lst[c].id, p['binary'], p['name'], 
-									lst[c].iconfont, p['ports'])
+									lst[c].icon, p['ports'])
 						except IndexError:
 							pass
 

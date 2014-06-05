@@ -48,7 +48,7 @@
     </tabcontrol>
 
     <dialogbox id="dlgInfo" size="large" oktext="Install">
-        <scrollcontainer width="100%" height="500" style="padding: 10px 20px;">
+        <scrollcontainer width="100%" height="500" style="padding: 10px 20px;" noborder="True">
             <div id="app-logo" style="text-align: center;" />
             <formline text="Name" horizontal="true">
                 <label id="app-name" />
@@ -74,6 +74,13 @@
                 <outlinklabel id="app-homepage" />
             </formline>
             <div id="app-screens" class="text-center" />
+        </scrollcontainer>
+    </dialogbox>
+
+    <dialogbox id="dlgMeToo" oktext="Accept">
+        <label size="1" text="The application you selected require some additional things to be done in order to function properly. These actions will also be performed; click OK to accept this." />
+        <scrollcontainer height="300">
+            <dt id="prereqs" width="100%" noborder="True" />
         </scrollcontainer>
     </dialogbox>
 </xml>

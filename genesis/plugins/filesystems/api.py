@@ -54,7 +54,7 @@ class POIControl(apis.API):
                 self.add(x.name, 'vdisk', x.mount, 'filesystems', 'gen-storage', False)
         for x in ws:
             self.add(x.name, 'website', x.path, 'webapps',
-                x.sclass.plugin_info.iconfont if x.sclass and \
+                x.sclass.plugin_info.icon if x.sclass and \
                 hasattr(x.sclass.plugin_info, 'iconfont') else 'gen-earth',
                 False
             )
