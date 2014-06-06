@@ -1,23 +1,6 @@
 <xml>
-    <toolbar>
-        <btn id="add" text="Add website" iconfont="gen-plus-circle" />
-    </toolbar>
-
     <label size="4" text="Your Websites" />
-    <pad id="main">
-        <dt id="list" width="100%">
-            <dtr header="True">
-                <dth width="1" />
-                <dth>
-                    <label text="Name" />
-                </dth>
-                <dth>
-                    <label text="Type" />
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
-    </pad>
+    <pad id="main" />
 
     <dialogbox id="dlgAdd" size="large">
         <pad>

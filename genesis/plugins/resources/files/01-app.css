@@ -126,7 +126,7 @@ a:link, a:focus, a:active, a:hover {
   padding: 0 0 2px;
 }
 
-.btn {
+.btn, .btn-group-lg > .btn {
   border-radius: 0;
 }
 
@@ -567,4 +567,19 @@ a:link, a:focus, a:active, a:hover {
 .app-screenshot {
   margin: 5px 5px;
   max-width: 200px;
+}
+
+.ui-tblbtn {
+  margin: 0 10px 0px 10px;
+}
+
+.tblbtn-icons {
+  text-align: center;
+  margin: 5px 10px;
+  width: 200px;
+}
+
+.ui-tblbtn-cont {
+  display: inline-block;
+  vertical-align: top;
 }

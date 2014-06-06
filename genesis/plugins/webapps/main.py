@@ -73,7 +73,6 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
     def get_main_ui(self):
         ui = self.app.inflate('webapps:main')
-        t = ui.find('list')
 
         for s in self.sites:
             if s.addr and s.ssl:
@@ -83,15 +82,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
             else:
                 addr = False
 
-            t.append(UI.DTR(
-                UI.Iconfont(iconfont=s.sclass.plugin_info.icon if s.sclass and hasattr(s.sclass.plugin_info, 'iconfont') else 'gen-earth'),
-                (UI.OutLinkLabel(
-                    text=s.name,
-                    url=addr
-                    ) if s.addr is not False else UI.Label(text=s.name)
-                ),
-                UI.Label(text=s.stype),
-                UI.HContainer(
+            ui.find('main').append(
+                UI.TblBtn(
                     UI.TipIcon(
                         iconfont='gen-minus-circle' if s.enabled else 'gen-checkmark-circle',
                         id=('disable/' if s.enabled else 'enable/') + str(self.sites.index(s)),
@@ -108,9 +100,21 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                         text='Delete',
                         warning='Are you sure you wish to delete site %s? This action is irreversible.%s'%(s.name,
                             ' If this Reverse Proxy was set up automatically by Genesis, this may cause the associated plugin to stop functioning.' if s.stype == 'ReverseProxy' else '')
-                        )
                     ),
-                ))
+                    id=s.name,
+                    outlink=addr,
+                    icon=s.sclass.plugin_info.icon if s.sclass and hasattr(s.sclass.plugin_info, 'icon') else 'gen-earth',
+                    name=s.name,
+                    subtext=s.stype
+                    )
+                )
+        ui.find('main').append(
+            UI.TblBtn(
+                id='add',
+                icon='gen-plus-circle',
+                name='Add new site'
+                )
+            )
 
         provs = ui.find('provs')
 

@@ -54,42 +54,17 @@ class ownCloud(Plugin):
         ]
 
     def pre_install(self, name, vars):
-        dbname = vars.getvalue('oc-dbname', '')
-        dbpasswd = vars.getvalue('oc-dbpasswd', '')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
-        if dbname and dbpasswd:
-            apis.databases(self.app).get_interface('MariaDB').validate(
-                dbname, dbname, dbpasswd, conn)
-        elif dbname:
-            raise Exception('You must enter a database password if you specify a database name!')
-        elif dbpasswd:
-            raise Exception('You must enter a database name if you specify a database password!')
         if vars.getvalue('oc-username', '') == '':
             raise Exception('Must choose an ownCloud username')
         elif vars.getvalue('oc-logpasswd', '') == '':
             raise Exception('Must choose an ownCloud password')
 
-    def post_install(self, name, path, vars):
+    def post_install(self, name, path, vars, dbinfo={}):
         phpctl = apis.langassist(self.app).get_interface('PHP')
         datadir = ''
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
-        if vars.getvalue('oc-dbname', '') == '':
-            dbname = name
-        else:
-            dbname = vars.getvalue('oc-dbname')
         secret_key = hashlib.sha1(str(random.random())).hexdigest()
-        if vars.getvalue('oc-dbpasswd', '') == '':
-            passwd = secret_key[0:8]
-        else:
-            passwd = vars.getvalue('oc-dbpasswd')
         username = vars.getvalue('oc-username')
         logpasswd = vars.getvalue('oc-logpasswd')
-
-        # Request a database and user to interact with it
-        dbase.add(dbname, conn)
-        dbase.usermod(dbname, 'add', passwd, conn)
-        dbase.chperm(dbname, dbname, 'grant', conn)
 
         # Set ownership as necessary
         if not os.path.exists(os.path.join(path, 'data')):
@@ -114,9 +89,9 @@ class ownCloud(Plugin):
             '   "adminlogin" => "'+username+'",\n'
             '   "adminpass" => "'+logpasswd+'",\n'
             '   "dbtype" => "mysql",\n'
-            '   "dbname" => "'+dbname+'",\n'
-            '   "dbuser" => "'+dbname+'",\n'
-            '   "dbpass" => "'+passwd+'",\n'
+            '   "dbname" => "'+dbinfo['name']+'",\n'
+            '   "dbuser" => "'+dbinfo['user']+'",\n'
+            '   "dbpass" => "'+dbinfo['passwd']+'",\n'
             '   "dbhost" => "localhost",\n'
             '   "dbtableprefix" => "",\n'
             '   "directory" => "'+os.path.join(datadir if datadir else path, 'data')+'",\n'
@@ -148,39 +123,28 @@ class ownCloud(Plugin):
             'minutes for the content to appear. Please do not refresh the '
             'page.')
 
-    def pre_remove(self, name, path):
+    def pre_remove(self, site):
         datadir = ''
-        dbname = name
-        if os.path.exists(os.path.join(path, 'config', 'config.php')):
-            f = open(os.path.join(path, 'config', 'config.php'), 'r')
+        if os.path.exists(os.path.join(site.path, 'config', 'config.php')):
+            f = open(os.path.join(site.path, 'config', 'config.php'), 'r')
             for line in f.readlines():
-                if 'dbname' in line:
-                    data = line.split('\'')[1::2]
-                    dbname = data[1]
-                elif 'datadirectory' in line:
-                    data = line.split('\'')[1::2]
+                if 'datadirectory' in line:
+                    data = line.split('"')[1::2]
                     datadir = data[1]
             f.close()
-        elif os.path.exists(os.path.join(path, 'config', 'autoconfig.php')):
-            f = open(os.path.join(path, 'config', 'autoconfig.php'), 'r')
+        elif os.path.exists(os.path.join(site.path, 'config', 'autoconfig.php')):
+            f = open(os.path.join(site.path, 'config', 'autoconfig.php'), 'r')
             for line in f.readlines():
-                if 'dbname' in line:
-                    data = line.split('\"')[1::2]
-                    dbname = data[1]
-                elif 'directory' in line:
-                    data = line.split('\'')[1::2]
+                if 'directory' in line:
+                    data = line.split('"')[1::2]
                     datadir = data[1]
             f.close()
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
-        dbase.remove(dbname, conn)
-        dbase.usermod(dbname, 'del', '', conn)
         if datadir:
             shutil.rmtree(datadir)
             phpctl = apis.langassist(self.app).get_interface('PHP')
             phpctl.open_basedir('del', datadir)
 
-    def post_remove(self, name):
+    def post_remove(self, site):
         pass
 
     def ssl_enable(self, path, cfile, kfile):

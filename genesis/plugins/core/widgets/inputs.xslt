@@ -138,6 +138,29 @@
     </xsl:choose>
 </xsl:template>
 
+<xsl:template match="tblbtn">
+    <xsl:variable name="action">
+        <xsl:choose>
+            <xsl:when test="@outlink != ''">
+                window.open('<xsl:value-of select="@outlink"/>', '_blank')
+            </xsl:when>
+            <xsl:otherwise>
+                Genesis.query('/handle/button/click/<xsl:value-of select="@id"/>')
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+    <div class="ui-tblbtn-cont">
+        <div class="ui-appbutton ui-tblbtn" id="{@id}" onclick="{$action}">
+            <h1 class="{@icon} text-center"></h1>
+            <h4 class="text-center"><xsl:value-of select="@name"/></h4>
+            <h6 class="text-center"><xsl:value-of select="@subtext"/></h6>
+        </div>
+        <div class="tblbtn-icons">
+            <xsl:apply-templates/>
+        </div>
+    </div>
+</xsl:template>
+
 <xsl:template match="appbutton">
     <div class="ui-appbutton" id="{@id}" onclick="Genesis.query('/handle/button/click/info/{@id}')">
         <h1 class="{@iconfont} text-center"></h1>
