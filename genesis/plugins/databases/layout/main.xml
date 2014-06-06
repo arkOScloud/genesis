@@ -1,8 +1,4 @@
 <xml>
-    <toolbar id="toolbar">
-        <btn id="add" text="Add database" iconfont="gen-plus-circle" />
-    </toolbar>
-
     <pad id="main">
         <tabcontrol id="tabs" active="0">
             <tabheader text="Databases" id="0"/>
@@ -10,33 +6,11 @@
             <tabheader text="Settings" id="2"/>
 
             <tabbody id="0">
-                <dt id="list" width="100%">
-                    <dtr header="True">
-                        <dth width="1" />
-                        <dth>
-                            <label text="Name" />
-                        </dth>
-                        <dth>
-                            <label text="Type" />
-                        </dth>
-                        <dth width="1" />
-                    </dtr>
-                </dt>
+                <pad id="dblist" />
             </tabbody>
 
             <tabbody id="1">
-                <dt id="usrlist" width="100%">
-                    <dtr header="True">
-                        <dth width="1" />
-                        <dth>
-                            <label text="Username" />
-                        </dth>
-                        <dth>
-                            <label text="Database Type" />
-                        </dth>
-                        <dth width="1" />
-                    </dtr>
-                </dt>
+                <pad id="uslist" />
             </tabbody>
 
             <tabbody id="2">
@@ -48,8 +22,8 @@
 
     <dialogbox id="dlgAdd">
         <formline text="Type">
-            <select name="type" id="type">
-            </select>
+            <selectinput name="type" id="type">
+            </selectinput>
         </formline>
         <formline text="Name">
             <textinput name="name" id="name" />
@@ -74,8 +48,8 @@
 
     <dialogbox id="dlgAddUser">
         <formline text="Type">
-            <select name="usertype" id="usertype">
-            </select>
+            <selectinput name="usertype" id="usertype">
+            </selectinput>
         </formline>
         <formline text="Username">
             <textinput name="username" id="username" />

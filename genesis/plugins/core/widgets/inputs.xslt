@@ -141,6 +141,8 @@
 <xsl:template match="tblbtn">
     <xsl:variable name="action">
         <xsl:choose>
+            <xsl:when test="@action = 'none'">
+            </xsl:when>
             <xsl:when test="@outlink != ''">
                 window.open('<xsl:value-of select="@outlink"/>', '_blank')
             </xsl:when>

@@ -200,6 +200,7 @@ class Services(API):
             res = UI.DT(UI.DTR(
                     UI.DTH(width=20),
                     UI.DTH(UI.Label(text='Service')),
+                    UI.DTH(),
                     UI.DTH(width=20),
                     header=True
                   ), width='100%', noborder=True)
@@ -236,7 +237,8 @@ class Services(API):
                             UI.IconFont(iconfont='gen-' + ('play-2' if st == 'running' else 'stop')),
                             UI.IconFont(iconfont='gen-' + ('checkmark' if en == 'enabled' else 'close-2')),
                         ),
-                        UI.Label(text='%s (%s)'%(s['name'], s['binary'])),
+                        UI.Label(text=s['name']),
+                        UI.Label(text=s['binary'], fade=True),
                         ctl
                     )
                 res.append(t)

@@ -478,6 +478,10 @@ a:link, a:focus, a:active, a:hover {
   font-weight: bold;
 }
 
+.modal-content {
+  border-radius: 0;
+}
+
 .modal-footer {
   padding: 15px 20px 15px;
 }
@@ -582,4 +586,5 @@ a:link, a:focus, a:active, a:hover {
 .ui-tblbtn-cont {
   display: inline-block;
   vertical-align: top;
+  margin-bottom: 10px;
 }
