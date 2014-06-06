@@ -513,10 +513,8 @@ class RepositoryManager:
             for i in t[id].deps:
                 for dep in t[id].deps[i]:
                     if dep['type'] == 'plugin' and dep['package'] not in [x.id for x in self.installed]:
-                        for x in self.available:
-                            if x.id == dep['package']:
-                                metoo.append(('Install', x))
-                                metoo += self.check_conflict(x.id, 'install')
+                        metoo.append(('Install', t[dep['package']]))
+                        metoo += self.check_conflict(t[dep['package']].id, 'install')
         return metoo
 
     def refresh(self):

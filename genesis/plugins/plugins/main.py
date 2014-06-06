@@ -210,7 +210,7 @@ class PluginManager(CategoryPlugin, URLHandler):
             self._metoo = []
 
     def install(self, id):
-        self._mgr.install(x, True, self)
+        self._mgr.install(id, True, self)
         ComponentManager.get().rescan()
         ConfManager.get().rescan()
         self._nc.refresh()
