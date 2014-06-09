@@ -2,6 +2,7 @@ var Genesis;
 
 var warning_button_id;
 var isProcessing;
+var timedAlerts;
 
 Genesis = (function() {
     var firstPasswordEntry = true;
@@ -171,6 +172,9 @@ Genesis = (function() {
                     $(e).text('');
                 });
                 $('.ui-tooltip').tooltip();
+                if (timedAlerts && timedAlerts > 0) {
+                    setTimeout(function () {$('.alert').alert('close')}, timedAlerts * 1000);
+                };
                 Genesis.UI.showLoader(false);
             },
 

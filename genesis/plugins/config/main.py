@@ -23,6 +23,7 @@ class ConfigPlugin(CategoryPlugin):
         # General
         ui.find('bind_host').set('value', self.app.gconfig.get('genesis', 'bind_host', ''))
         ui.find('bind_port').set('value', self.app.gconfig.get('genesis', 'bind_port', ''))
+        ui.find('timedalert').set('value', self.app.gconfig.get('genesis', 'timedalert', ''))
         ui.find('dformat').set('value', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
         ui.find('tformat').set('value', self.app.gconfig.get('genesis', 'tformat', '%H:%M'))
         ui.find('ssl').set('text', ('Enabled' if self.app.gconfig.get('genesis', 'ssl', '')=='1' else 'Disabled'))
@@ -40,7 +41,7 @@ class ConfigPlugin(CategoryPlugin):
         for c in cfgs:
             if c.target:
                 t.append(UI.DTR(
-                UI.IconFont(iconfont=(None if not hasattr(c.target, 'icon') else c.target.icon)),
+                UI.IconFont(iconfont=(None if not hasattr(c.target, 'iconfont') else c.target.iconfont)),
                 UI.Label(text=(c.target.__name__ if not hasattr(c.target, 'text') else c.target.text)),
                 UI.TipIcon(text='Edit', iconfont="gen-pencil-2", id='editconfig/'+c.target.__name__),
             ))
@@ -59,9 +60,7 @@ class ConfigPlugin(CategoryPlugin):
                 self.app.get_config_by_classname(self._config).get_ui_edit()
             )
 
-        if self._update is not None:
-            pass
-        else:
+        if not self._update:
             ui.remove('dlgUpdate')
 
         if self._changed:
@@ -98,6 +97,7 @@ class ConfigPlugin(CategoryPlugin):
                 self.app.gconfig.set('genesis', 'bind_port', vars.getvalue('bind_port', '8000'))
                 self.app.gconfig.set('genesis', 'dformat', vars.getvalue('dformat', '%d %b %Y'))
                 self.app.gconfig.set('genesis', 'tformat', vars.getvalue('tformat', '%H:%M'))
+                self.app.gconfig.set('genesis', 'timedalert', vars.getvalue('timedalert', ''))
                 self.app.gconfig.set('genesis', 'auth_enabled', vars.getvalue('httpauth', '0'))
                 self.app.gconfig.set('genesis', 'nofx', vars.getvalue('nofx', '0'))
                 self.app.gconfig.set('genesis', 'updcheck', vars.getvalue('updcheck', '1'))

@@ -42,6 +42,9 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         if self.app.config.get('genesis', 'nofx', '') != '1':
             templ.remove('fx-disable')
 
+        ta = self.app.config.get('genesis', 'timedalert', '')
+        templ.find('timed-alerts').append(UI.JS(code='var timedAlerts = %s;'%ta if ta else '0'))
+
         if self._about_visible:
             templ.append('main-content', self.get_ui_about())
 

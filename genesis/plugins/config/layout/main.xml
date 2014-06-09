@@ -4,56 +4,61 @@
         <btn id="updaction" iconfont="gen-loop-2" text="Check for updates" />
     </div>
 
-    <label size="5" text="General Settings" />
-    <br />
-        <simpleform id="frmGeneral">
-            <formline text="Host">
-                <textinput name="bind_host" id="bind_host"/>
-            </formline>
-            <formline text="Port">
-                <textinput name="bind_port" id="bind_port"/>
-            </formline>
-            <formline text="Authorization" help="See 'Users' for authorized accounts">
-                <checkbox id="httpauth" name="httpauth" text="Enable" />
-            </formline>
-            <formline text="Default date format">
-                <textinput name="dformat" id="dformat"/>
-            </formline>
-            <formline text="Default time format">
-                <textinput name="tformat" id="tformat"/>
-            </formline>
-            <formline text="SSL" help="You can enable/disable SSL by assigning certificates in the Certificates plugin.">
-                <label id="ssl" text="" />
-            </formline>
-            <formline text="Visual effects" help="Smooth transitions and others">
-                <checkbox id="nofx" name="nofx" text="Disable" />
-            </formline>
-            <formline text="Automatically check for updates?" help="If yes, Genesis will check for updates on startup, and once every day">
-                <checkbox id="updcheck" name="updcheck" text="Yes"/>
-            </formline>
-            <formline text="Wipe configuration on plugin removal" help="When you remove a plugin from the Applications list, its associated configurations will also be purged">
-                <checkbox id="purge" name="purge" text="Yes" />
-            </formline>
-            <formline>
-                <btn onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
-            </formline>
-        </simpleform>
-
+    <div class="row">
+        <div class="col-md-9">
+            <label size="3" text="General Settings" />
+                <simpleform id="frmGeneral">
+                    <formline text="Host">
+                        <textinput name="bind_host" id="bind_host"/>
+                    </formline>
+                    <formline text="Port">
+                        <textinput name="bind_port" id="bind_port"/>
+                    </formline>
+                    <formline text="Default date format">
+                        <textinput name="dformat" id="dformat"/>
+                    </formline>
+                    <formline text="Default time format">
+                        <textinput name="tformat" id="tformat"/>
+                    </formline>
+                    <formline text="SSL" help="You can enable/disable SSL by assigning certificates in the Certificates plugin.">
+                        <label id="ssl" text="" />
+                    </formline>
+                    <formline text="Alert message timeout" help="Time (in seconds) that alert messages should be displayed. If none (or zero), alerts will stay open until you close them">
+                        <textinput id="timedalert" name="timedalert" />
+                    </formline>
+                    <formline help="See 'Users' for authorized accounts" checkbox="True">
+                        <checkbox id="httpauth" name="httpauth" text="Authorization" />
+                    </formline>
+                    <formline help="Smooth transitions and others" checkbox="True">
+                        <checkbox id="nofx" name="nofx" text="Disable visual effects" />
+                    </formline>
+                    <formline help="If yes, Genesis will check for updates on startup, and once every day" checkbox="True">
+                        <checkbox id="updcheck" name="updcheck" text="Automatically check for updates"/>
+                    </formline>
+                    <formline help="When you remove a plugin from the Applications list, its associated configurations will also be purged" checkbox="True">
+                        <checkbox id="purge" name="purge" text="Wipe configuration on plugin removal" />
+                    </formline>
+                    <formline>
+                        <btn onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
+                    </formline>
+                </simpleform>
+            </div>
+            <div class="col-md-3">
+                <label size="3" text="Plugin Options" />
+                <pad>
+                    <dt width="300" id="configs">
+                        <dtr header="True">
+                            <dth width="20" />
+                            <dth>
+                                <label text="Name"/>
+                            </dth>
+                            <dth width="1" />
+                        </dtr>
+                    </dt>
+                </pad>
+            </div>
+        </div>
     <pad id="main">
-    </pad>
-
-    <label size="5" text="Plugin Options" />
-
-    <pad>
-        <dt width="300" id="configs">
-            <dtr header="True">
-                <dth width="20" />
-                <dth>
-                    <label text="Name"/>
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
     </pad>
 
     <dialogbox id="dlgUpdate">

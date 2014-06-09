@@ -18,5 +18,7 @@
 				}
 			</style>
 		</div>
+
+		<div id="timed-alerts" />
     </div>
 </xml>
