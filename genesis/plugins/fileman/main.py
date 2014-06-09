@@ -75,10 +75,32 @@ class FMPlugin(CategoryPlugin, URLHandler):
         if self._editing_acl is not None:
             dlg = self.app.inflate('fileman:acl')
             ui.append('main', dlg)
+            ui.find('dlgAcl').set('title', 'Permissions for %s' % self._editing_acl)
             acls = get_acls(self._editing_acl)
             idx = 0
+            mode = self.mode_string(os.stat(self._editing_acl)[ST_MODE])
+            dlg.append('plist', UI.DTR(
+                UI.Label(size=1, text='User'),
+                UI.Checkbox(name='user-read', checked=mode[0]=='r'),
+                UI.Checkbox(name='user-write', checked=mode[1]=='w'),
+                UI.Checkbox(name='user-exec', checked=mode[2]=='x'),
+            ))
+            dlg.append('plist', UI.DTR(
+                UI.Label(size=1, text='Group'),
+                UI.Checkbox(name='group-read', checked=mode[3]=='r'),
+                UI.Checkbox(name='group-write', checked=mode[4]=='w'),
+                UI.Checkbox(name='group-exec', checked=mode[5]=='x'),
+            ))
+            dlg.append('plist', UI.DTR(
+                UI.Label(size=1, text='Other'),
+                UI.Checkbox(name='other-read', checked=mode[6]=='r'),
+                UI.Checkbox(name='other-write', checked=mode[7]=='w'),
+                UI.Checkbox(name='other-exec', checked=mode[8]=='x'),
+            ))
+            if os.path.isdir(self._editing_acl):
+                dlg.append('recur', UI.Formline(UI.Checkbox(name='recursive', text='Set permissions recursively?', checked=True), checkbox="true"))
             for acl in acls:
-                dlg.append('list', UI.DTR(
+                dlg.append('alist', UI.DTR(
                     UI.Editable(id='edAclSubject/%i'%idx, value=acl[0]),
                     UI.Editable(id='edAclPerm/%i'%idx, value=acl[1]),
                     UI.TipIcon(
@@ -251,7 +273,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
                     ),
                     UI.TipIcon(
                         iconfont='gen-lock',
-                        text='ACLs',
+                        text='Permissions',
                         id='acls/%i/%s'%(
                             tidx,
                             self.enc_file(np)
@@ -433,6 +455,18 @@ class FMPlugin(CategoryPlugin, URLHandler):
                     ))
             self._renaming.remove(self._renaming[0])
         if params[0] == 'dlgAcl':
+            if vars.getvalue('action', '') == 'OK':
+                user = (int(vars.getvalue('user-read', '1'))*4) + (int(vars.getvalue('user-write', '1'))*2) + (int(vars.getvalue('user-exec', '0')))
+                group = (int(vars.getvalue('group-read', '1'))*4) + (int(vars.getvalue('group-write', '0'))*2) + (int(vars.getvalue('group-exec', '0')))
+                other = (int(vars.getvalue('other-read', '1'))*4) + (int(vars.getvalue('other-write', '0'))*2) + (int(vars.getvalue('other-exec', '0')))
+                bm = int(str((user*100)+(group*10)+other), 8)
+                os.chmod(self._editing_acl, bm)
+                if vars.getvalue('recursive', '0') == '1':
+                    for r, d, f in os.walk(self._editing_acl):
+                        for x in d:
+                            os.chmod(os.path.join(r, x), bm)
+                        for x in f:
+                            os.chmod(os.path.join(r, x), bm)
             self._editing_acl = None
         if params[0] == 'dlgUpload':
             if vars.getvalue('action', '') == 'OK' and vars.has_key('file'):
@@ -453,6 +487,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
                     files.append((self._tabs[self._tab], f.filename))
                 for x in files:
                     archives = ['.tar.gz', '.tgz', '.gz', '.tar.bz2', '.tbz2', '.bz2', '.zip']
+                    if self.app.auth.user != 'anonymous':
+                        uid, gid = pwd.getpwnam(self.app.auth.user).pw_uid, pwd.getpwnam(self.app.auth.user).pw_gid
+                        os.chown(os.path.join(x[0], x[1]), uid, gid)
                     for y in archives:
                         if x[1].endswith(y):
                             self._archupl.append((x[0], x[1], y))

@@ -61,6 +61,11 @@
         <div class="modal-dialog{x:iif(@size = 'large', ' modal-lg', '')}">
             <div class="modal-content">
                 <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
+                <xsl:if test="@title != ''">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><xsl:value-of select="@title" /></h4>
+                    </div>
+                </xsl:if>
                 <div class="modal-body">
                     <xsl:apply-templates />
                 </div>

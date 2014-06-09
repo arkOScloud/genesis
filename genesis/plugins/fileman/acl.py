@@ -4,7 +4,7 @@ def get_acls(f):
     ss = shell('getfacl -cp -- "%s"' % f).split('\n')
     r = []
     for s in ss:
-        if not s.startswith('#') and not s.startswith('getfacl'):
+        if not s.startswith(('#', 'getfacl')):
             try:
                 x = [z.strip() for z in s.split(':')]
                 x[-1] = x[-1].split()[0]
