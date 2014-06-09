@@ -1,5 +1,6 @@
 import ConfigParser
 import glob
+import grp
 import hashlib
 import OpenSSL
 import os
@@ -9,6 +10,7 @@ from genesis.com import *
 from genesis.utils import SystemTime
 from genesis.utils.error import SystemTimeError
 from genesis.plugins.core.api import ISSLPlugin
+from genesis.plugins.users.backend import UsersBackend
 from genesis.plugins.webapps.backend import WebappControl
 
 
@@ -117,7 +119,15 @@ class CertControl(Plugin):
 			keytype = 'DSA'
 		else:
 			keytype = 'Unknown'
+
+		try:
+			gid = grp.getgrnam('ssl-cert').gr_gid
+		except ValueError:
+			UsersBackend(self.app).add_group('ssl-cert')
+			gid = grp.getgrnam('ssl-cert').gr_gid
+		os.chown(os.path.join('/etc/ssl/certs/genesis', name + '.crt'), -1, gid)
 		os.chmod(os.path.join('/etc/ssl/certs/genesis', name + '.crt'), 0660)
+		os.chown(os.path.join('/etc/ssl/private/genesis', name + '.key'), -1, gid)
 		os.chmod(os.path.join('/etc/ssl/private/genesis', name + '.key'), 0660)
 
 	def gencert(self, name, vars, hostname):
@@ -170,15 +180,22 @@ class CertControl(Plugin):
 			crt.sign(ca_key, 'sha1')
 		except Exception, e:
 			raise Exception('Error generating self-signed certificate: '+str(e))
+		try:
+			gid = grp.getgrnam('ssl-cert').gr_gid
+		except ValueError:
+			UsersBackend(self.app).add_group('ssl-cert')
+			gid = grp.getgrnam('ssl-cert').gr_gid
 		open('/etc/ssl/certs/genesis/'+name+'.crt', "wt").write(
 			OpenSSL.crypto.dump_certificate(
 				OpenSSL.crypto.FILETYPE_PEM, crt)
 			)
+		os.chown('/etc/ssl/certs/genesis/'+name+'.crt', -1, gid)
 		os.chmod('/etc/ssl/certs/genesis/'+name+'.crt', 0660)
 		open('/etc/ssl/private/genesis/'+name+'.key', "wt").write(
 			OpenSSL.crypto.dump_privatekey(
 				OpenSSL.crypto.FILETYPE_PEM, key)
 			)
+		os.chown('/etc/ssl/private/genesis/'+name+'.key', -1, gid)
 		os.chmod('/etc/ssl/private/genesis/'+name+'.key', 0660)
 
 		if key.type() == OpenSSL.crypto.TYPE_RSA:
