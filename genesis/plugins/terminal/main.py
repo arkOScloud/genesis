@@ -18,7 +18,7 @@ from PIL import Image, ImageDraw
 from gevent.event import Event
 import gevent
 
-import pyte
+import pyte.screens, pyte.streams
 
 
 TERM_W = 160
@@ -38,9 +38,26 @@ class TerminalPlugin(CategoryPlugin, URLHandler):
     def get_ui(self):
         ui = self.app.inflate('terminal:main')
         for id in self._terminals:
-            ui.append('main', UI.TerminalThumbnail(
-                id=id
-            ))
+            ui.find('main').append(
+                UI.TblBtn(
+                    UI.TipIcon(
+                        iconfont='gen-cancel-circle',
+                        id='kill/' + str(id),
+                        text='Close'
+                    ),
+                    id=id,
+                    outlink='/terminal/%s' % id,
+                    icon='gen-console',
+                    name='Terminal #%s' % id
+                    )
+                )
+        ui.find('main').append(
+            UI.TblBtn(
+                id='add',
+                icon='gen-plus-circle',
+                name='New Terminal'
+                )
+            )
         return ui
 
     @event('button/click')
@@ -48,13 +65,11 @@ class TerminalPlugin(CategoryPlugin, URLHandler):
         if params[0] == 'add':
             self._terminals[self._tid] = Terminal()
             self._tid += 1
+        elif params[0] == 'kill':
+            id = int(params[1])
+            self._terminals[id].kill()
+            del self._terminals[id]
 
-    @event('term/kill')
-    def onkill(self, event, params, vars=None):
-        id = int(params[0])
-        self._terminals[id].kill()
-        del self._terminals[id]
-    
     @url('^/terminal/.*$')
     def get(self, req, start_response):
         params = req['PATH_INFO'].split('/')[1:] + ['']
@@ -88,41 +103,6 @@ class TerminalPlugin(CategoryPlugin, URLHandler):
             code='termInit(\'%i\');'%id
         ))
         return page.render()
-
-
-    @url('^/terminal-thumb/.*$')
-    def get_thumb(self, req, start_response):
-        params = req['PATH_INFO'].split('/')[1:]
-        id = int(params[1])
-
-        if self._terminals[id].dead():
-            self._terminals[id].start(self.app.get_config(self).shell)
-
-        img = Image.new("RGB", (TERM_W, TERM_H*2+20))
-        draw = ImageDraw.Draw(img)
-        draw.rectangle([0,0,TERM_W,TERM_H], fill=(0,0,0))
-
-        colors = ['black', 'darkgrey', 'darkred', 'red', 'darkgreen',
-                  'green', 'brown', 'yellow', 'darkblue', 'blue',
-                  'darkmagenta', 'magenta', 'darkcyan', 'cyan',
-                  'lightgrey', 'white'] 
-
-        for y in range(0,TERM_H):
-            for x in range(0,TERM_W):
-                fc = self._terminals[id]._proc.term[y][x][1]
-                if fc == 'default': fc = 'lightgray'
-                fc = ImageDraw.ImageColor.getcolor(fc, 'RGB')
-                bc = self._terminals[id]._proc.term[y][x][2]
-                if bc == 'default': bc = 'black'
-                bc = ImageDraw.ImageColor.getcolor(bc, 'RGB')
-                ch = self._terminals[id]._proc.term[y][x][0]
-                draw.point((x,10+y*2+1),fill=(fc if ord(ch) > 32 else bc))
-                draw.point((x,10+y*2),fill=bc)
-
-        sio = StringIO.StringIO()
-        img.save(sio, 'PNG')
-        start_response('200 OK', [('Content-type', 'image/png')])
-        return sio.getvalue()
 
 
 class Terminal:
@@ -177,8 +157,8 @@ class PTYProtocol():
 
         self.mstream = os.fdopen(self.master, 'r+')
         gevent.sleep(2)
-        self.term = pyte.DiffScreen(TERM_W,TERM_H)
-        self.stream = pyte.Stream()
+        self.term = pyte.screens.DiffScreen(TERM_W,TERM_H)
+        self.stream = pyte.streams.Stream()
         self.stream.attach(self.term)
         self.data = ''
         self.unblock()
@@ -222,10 +202,10 @@ class PTYProtocol():
         l = {}
         self.term.dirty.add(self.term.cursor.y)
         for k in self.term.dirty:
-            l[k] = self.term[k]
+            l[k] = self.term.buffer[k]
         self.term.dirty.clear()
         r = {
-            'lines': self.term if full else l,
+            'lines': self.term.buffer if full else l,
             'cx': self.term.cursor.x,
             'cy': self.term.cursor.y,
             'cursor': not self.term.cursor.hidden,

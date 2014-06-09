@@ -1,8 +1,4 @@
 <xml>
-    <toolbar>
-        <btn id="add" text="New terminal" iconfont="gen-plus-circle" />
-    </toolbar>
-
-<pad id="main">
-</pad>    
+	<label size="3" text="Terminals" />
+	<pad id="main" />  
 </xml>
