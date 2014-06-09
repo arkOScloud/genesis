@@ -1,27 +1,12 @@
 <xml>
-    <toolbar>
-        <btn id="gen" text="Generate certificate" iconfont="gen-certificate" />
-        <btn id="upl" text="Upload certificate" iconfont="gen-file-upload" />
-    </toolbar>
-
+    <label size="4" text="SSL/TLS Certificates" />
     <pad id="main">
     <tabcontrol id="tabs" active="0">
         <tabheader text="My Certificates" id="0"/>
         <tabheader text="Settings" id="1"/>
 
         <tabbody id="0">
-            <dt id="certlist" width="100%">
-                <dtr header="True">
-                    <dth width="1" />
-                    <dth>
-                        <label text="Name" />
-                    </dth>
-                    <dth>
-                        <label text="Attached to" />
-                    </dth>
-                    <dth width="1" />
-                </dtr>
-            </dt>
+            <pad id="certlist" />
         </tabbody>
 
         <tabbody id="1">
@@ -37,16 +22,16 @@
                         <selectoption id="ktrsa" value="RSA" text="RSA" />
                     </select>
                 </formline>
-                <formline text="Cipher string">
+                <formline text="Cipher string (for websites)">
                     <textinput name="ciphers" id="ciphers" />
                 </formline>
                 <formline>
                     <btn onclick="form" form="frmCertSettings" design="primary" action="OK" text="Save" />
                 </formline>
             </simpleform>
-            <label size="5" text="Certificate Authority" />
-            <pad id="certauth">
-            </pad>
+            <br />
+            <label size="3" text="Certificate Authority" />
+            <pad id="certauth" />
         </tabbody>
     </tabcontrol>
     </pad>
@@ -74,23 +59,23 @@
         </formline>
     </dialogbox>
 
-    <dialogbox id="dlgInfo" hidecancel="True">
-        <formline text="Certificate name">
+    <dialogbox id="dlgInfo" hidecancel="True" miscbtn="Delete" miscbtnid="del" miscbtnstyle="danger" miscbtnwarn="Are you sure you wish to remove this certificate? SSL on all associated services will be disabled.">
+        <formline text="Name" horizontal="True">
             <label name="certname" id="certname" />
         </formline>
-        <formline text="Key type">
+        <formline text="Key type" horizontal="True">
             <label name="ikeytype" id="ikeytype" />
         </formline>
-        <formline text="Serves domain">
+        <formline text="Domain" horizontal="True">
             <label name="domain" id="domain" />
         </formline>
-        <formline text="Expires">
+        <formline text="Expires" horizontal="True">
             <label name="exipres" id="expires" />
         </formline>
-        <formline text="SHA1 Fingerprint">
+        <formline text="SHA1" horizontal="True">
             <label id="sha1" />
         </formline>
-        <formline text="MD5 Fingerprint">
+        <formline text="MD5" horizontal="True">
             <label id="md5" />
         </formline>
         <formline text="Assign to:">

@@ -2,7 +2,7 @@ from genesis.com import *
 from genesis.api import *
 from genesis.ui import *
 from genesis import apis
-from genesis.utils import *
+from genesis.utils import SystemTime
 from genesis.plugins.network.backend import IHostnameManager
 
 from backend import CertControl
@@ -41,28 +41,35 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
         ui.find('kt'+cfg.keytype.lower()).set('selected', True)
         ui.find('ciphers').set('value', cfg.ciphers)
 
-        lst = ui.find('certlist')
         for s in self.certs:
-            lst.append(UI.DTR(
-                UI.IconFont(iconfont='gen-certificate'),
-                UI.Label(text=s['name']),
-                UI.Label(text=', '.join([x['name'] for x in s['assign']])),
-                UI.HContainer(
-                    UI.TipIcon(iconfont='gen-info', text='Information',
-                        id='info/' + str(self.certs.index(s))),
-                    UI.TipIcon(iconfont='gen-close', text='Delete',
-                        id='del/' + str(self.certs.index(s)),
-                        warning=('Are you sure you wish to remove this certificate? '
-                            'SSL on all associated services will be disabled'), ),
-                    ),
-               ))
+            ui.find('certlist').append(
+                UI.TblBtn(
+                    id='info/'+str(self.certs.index(s)),
+                    icon='gen-certificate',
+                    name=s['name'],
+                    subtext=s['keylength']+'-bit '+s['keytype']
+                    )
+                )
+        ui.find('certlist').append(
+            UI.TblBtn(
+                id='gen',
+                icon='gen-plus-circle',
+                name='Generate certificate'
+                )
+            )
+        ui.find('certlist').append(
+            UI.TblBtn(
+                id='upl',
+                icon='gen-file-upload',
+                name='Upload certificate'
+                )
+            )
 
         lst = ui.find('certauth')
         if not self.cas:
-            lst.append(UI.Btn(text="Generate New", id="cagen"))
+            lst.append(UI.Btn(text="Generate New", klid="cagen"))
         for s in self.cas:
-            exp = s['expiry']
-            exp = exp[0:4] + '-' + exp[4:6] + '-' + exp[6:8] + ', ' + exp[8:10] + ':' + exp[10:12]
+            exp = SystemTime().convert(s['expiry'], '%Y%m%d%H%M%SZ', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
             lst.append(UI.FormLine(
                 UI.HContainer(
                     UI.Label(text='Expires '+exp),
@@ -71,7 +78,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                         onclick='window.open("/certificates/dl", "_blank")'),
                     UI.TipIcon(iconfont='gen-close', text='Delete',
                         id='cadel/' + str(self.cas.index(s))),
-                    ), text=s['name']
+                    ), text=s['name'], horizontal=True
                ))
 
         if self._gen:
@@ -108,11 +115,11 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             ui.find('certname').set('text', self._cinfo['name'])
             ui.find('domain').set('text', self._cinfo['domain'])
             ui.find('ikeytype').set('text', self._cinfo['keylength']+'-bit '+self._cinfo['keytype'])
-            exp = self._cinfo['expiry']
-            exp = exp[0:4] + '-' + exp[4:6] + '-' + exp[6:8] + ', ' + exp[8:10] + ':' + exp[10:12]
+            exp = SystemTime().convert(self._cinfo['expiry'], '%Y%m%d%H%M%SZ', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
             ui.find('expires').set('text', exp)
             ui.find('sha1').set('text', self._cinfo['sha1'])
             ui.find('md5').set('text', self._cinfo['md5'])
+            ui.find('dlgInfo').set('miscbtnid', 'del/' + str(self.certs.index(self._cinfo)))
 
             alist = []
             for cert in self.certs:
@@ -171,7 +178,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                     ui.find('certassign').append(
                         UI.DTR(
                             UI.IconFont(iconfont=ic, text=ict),
-                            UI.IconFont(iconfont=x.icon),
+                            UI.IconFont(iconfont=x.iconfont),
                             UI.Label(text=x.text),
                             UI.HContainer(
                                 (UI.TipIcon(iconfont='gen-checkmark-circle',
@@ -220,6 +227,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             self._gen = True
         elif params[0] == 'del':
             self._tab = 0
+            self._cinfo = None
             self._cc.remove(self.certs[int(params[1])])
             self.put_message('success', 'Certificate successfully deleted')
         elif params[0] == 'ac' and params[2] == 'p':

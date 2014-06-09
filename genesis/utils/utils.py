@@ -29,6 +29,9 @@ class SystemTime:
         if e[0] != 0:
             raise Exception('System time could not be set. Error: %s' % str(e[1]))
 
+    def convert(self, intime, infmt, outfmt):
+        return time.strftime(outfmt, time.strptime(intime, infmt))
+
     def get_serial_time(self):
         return time.strftime('%Y%m%d%H%M%S')
 

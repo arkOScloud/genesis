@@ -65,30 +65,34 @@
                     <xsl:apply-templates />
                 </div>
 
-        <div class="modal-footer">
-            <xsl:if test="not(@hideok = 'True')">
-                <xsl:choose>
-                    <xsl:when test="@yesno != ''">
-                        <btn text="Yes" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <btn text="{x:iif(@oktext != '', @oktext, 'OK')}" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:if>
-            <xsl:if test="not(@hidecancel = 'True')">
-                <xsl:choose>
-                    <xsl:when test="@yesno != ''">
-                        <btn text="No" onclick="form" action="Cancel" form="{@id}" size="reg" />
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" size="reg" />
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:if>
-            <xsl:if test="@miscbtn">
-                <btn text="{@miscbtn}" id="{@miscbtnid}" size="reg" />
-            </xsl:if>
+                <div class="modal-footer">
+                    <xsl:if test="not(@hideok = 'True')">
+                        <xsl:choose>
+                            <xsl:when test="@yesno != ''">
+                                <btn text="Yes" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <btn text="{x:iif(@oktext != '', @oktext, 'OK')}" onclick="form" action="OK" form="{@id}" size="reg" design="primary" />
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:if>
+                    <xsl:if test="not(@hidecancel = 'True')">
+                        <xsl:choose>
+                            <xsl:when test="@yesno != ''">
+                                <btn text="No" onclick="form" action="Cancel" form="{@id}" size="reg" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <btn text="Cancel" onclick="form" action="Cancel" form="{@id}" size="reg" />
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:if>
+                    <xsl:if test="@miscbtn">
+                        <btn text="{@miscbtn}" id="{@miscbtnid}" design="{@miscbtnstyle} pull-left" size="reg">
+                            <xsl:if test="@miscbtnwarn != ''">
+                                <xsl:attribute name="warning"><xsl:value-of select="@miscbtnwarn" /></xsl:attribute>
+                            </xsl:if>
+                        </btn>
+                    </xsl:if>
                 </div>
             </div>
         </div>
