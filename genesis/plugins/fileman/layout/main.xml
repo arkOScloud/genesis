@@ -1,15 +1,16 @@
 <xml>
+    <btn id="clip" text="Clipboard" iconfont="gen-paste" design="default pull-right" />
     <pad id="main" />
 
-    <label text="Clipboard" size="3" />
-    <pad>
-    <dt id="clipboard">
-        <dtr header="True" width="100%">
-             <dth width="100%">
-                  <label text="File" />
-             </dth>
-             <dth />
-        </dtr>
-    </dt>
-    </pad>
+    <dialogbox id="dlgClip" hidecancel="True" miscbtn="Clear" miscbtnid="clrclip" miscbtnstyle="danger">
+        <dt id="clipboard">
+            <dtr header="True" width="100%">
+                <dth />
+                <dth width="100%">
+                    <label text="File" />
+                </dth>
+                <dth />
+            </dtr>
+        </dt>
+    </dialogbox>
 </xml>

@@ -13,6 +13,8 @@
                     <dbuttonitem text="Cut" form="files" onclick="form" action="cut" iconfont="gen-file-minus" />
                     <dbuttonitem text="Copy" form="files" onclick="form" action="copy" iconfont="gen-copy" />
                     <dbuttonitem id="paste" text="Paste" iconfont="gen-paste" />
+                    <dbuttonitem id="selall" text="Select All" iconfont="gen-file-check" href="#" onclick="$('td input:checkbox').prop('checked', true);" />
+                    <dbuttonitem id="desall" text="Deselect All" iconfont="gen-file-remove" href="#" onclick="$('td input:checkbox').prop('checked', false);" />
                     <dbuttonitem text="Delete" form="files" onclick="form" action="delete" warning="Are you sure you wish to remove the selected files?" iconfont="gen-file-remove" />
                 </dbutton>
                 <dbutton text="View" iconfont="gen-search">

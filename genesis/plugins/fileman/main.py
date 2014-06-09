@@ -29,6 +29,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
         self._clipboard = []
         self._cbs = None
         self._renaming = []
+        self._clipdlg = None
         self._newfolder = None
         self._newfile = None
         self._upload = None
@@ -47,14 +48,14 @@ class FMPlugin(CategoryPlugin, URLHandler):
         tc.add('+', None)
 
         self._clipboard = sorted(self._clipboard)
+        if self._clipboard:
+            ui.find('clip').set('badge', len(self._clipboard))
         idx = 0
         for f in self._clipboard:
             ui.append('clipboard', UI.DTR(
-                UI.HContainer(
-                    UI.IconFont(iconfont='gen-'+
-                        ('folder' if os.path.isdir(f) else 'file')),
-                    UI.Label(text=f),
-                ),
+                UI.IconFont(iconfont='gen-'+
+                    ('folder' if os.path.isdir(f) else 'file')),
+                UI.Label(text=f),
                 UI.TipIcon(
                     iconfont='gen-cancel-circle',
                     text='Remove from clipboard',
@@ -136,6 +137,9 @@ class FMPlugin(CategoryPlugin, URLHandler):
                 value='',
                 id='dlgNewFolder'
             ))
+
+        if not self._clipdlg:
+            ui.remove('dlgClip')
 
         return ui
 
@@ -407,6 +411,11 @@ class FMPlugin(CategoryPlugin, URLHandler):
         if params[0] == 'delAcl':
             idx = int(params[1])
             del_acl(self._editing_acl, get_acls(self._editing_acl)[idx][0])
+        if params[0] == 'clip':
+            self._clipdlg = True
+        if params[0] == 'clrclip':
+            self._clipboard = []
+            self._clipdlg = None
 
     @event('form/submit')
     @event('dialog/submit')
@@ -542,6 +551,8 @@ class FMPlugin(CategoryPlugin, URLHandler):
             perm = get_acls(self._editing_acl)[idx][1]
             del_acl(self._editing_acl, get_acls(self._editing_acl)[idx][0])
             set_acl(self._editing_acl, vars.getvalue('value', None), perm)
+        if params[0] == 'dlgClip':
+            self._clipdlg = None
 
     def work(self, action, files, target):
         w = FMWorker(self, action, files, target)

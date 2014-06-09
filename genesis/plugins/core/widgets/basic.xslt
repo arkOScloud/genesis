@@ -208,16 +208,16 @@
         </xsl:choose>
     </xsl:variable>
 
-    <a href="{@href}" onclick="{$onclickjs}" class="btn btn-{$design} {x:iif($size, $size, '')}">
+    <a id="{@id}" href="{@href}" onclick="{$onclickjs}" class="btn btn-{$design} {x:iif($size, $size, '')}">
         <xsl:choose>
             <xsl:when test="@iconfont != ''">
                 <i class="{@iconfont}"></i>
                 <xsl:if test="@text">
-                    &#160;<xsl:value-of select="@text" />
+                    &#160;<xsl:value-of select="@text" /><xsl:if test="@badge != ''">&#160;<span class="badge"><xsl:value-of select="@badge" /></span></xsl:if>
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="@text" />
+                <xsl:value-of select="@text" /><xsl:if test="@badge != ''">&#160;<span class="badge"><xsl:value-of select="@badge" /></span></xsl:if>
             </xsl:otherwise>
         </xsl:choose>
     </a>
