@@ -215,6 +215,7 @@ a:link, a:focus, a:active, a:hover {
   width: 500px;
   overflow: hidden;
   margin: 0 0 5px;
+  border-radius: 0;
 }
 
 .alert-warning {
@@ -241,8 +242,8 @@ a:link, a:focus, a:active, a:hover {
   border: 0px;
 }
 
-.alert > i {
-  margin-right: 5px;
+.alert-dismissable .close {
+  opacity: 0.4;
 }
 
 #ui-firstrun-appselectfield {
@@ -587,4 +588,18 @@ a:link, a:focus, a:active, a:hover {
   display: inline-block;
   vertical-align: top;
   margin-bottom: 10px;
+}
+
+.alert > i {
+  line-height: 1;
+  float: left;
+  display: inline-block;
+  font-size: 36px;
+  margin: 2px 10px 0 0;
+}
+
+.ui-alert-text {
+  display: inline-block;
+  float: left;
+  width: 80%;
 }

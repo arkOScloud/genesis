@@ -35,6 +35,7 @@
 <xsl:template match="systemmessage">
     <div class="alert alert-{@cls} alert-dismissable fade in">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&#215;</button>
-        <i class="{x:attr(@iconfont,'gen-checkmark')}" style="line-height:1;"></i> <xsl:value-of select="@text" />
+        <i class="ui-alert-icon {x:attr(@iconfont,'gen-checkmark')}"></i>
+        <p class="ui-alert-text"><xsl:value-of select="@text" /></p>
     </div>
 </xsl:template>
