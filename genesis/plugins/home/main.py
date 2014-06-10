@@ -23,7 +23,7 @@ class HomePlugin(api.CategoryPlugin):
 
     def on_session_start(self):
         if self.app.gconfig.get('genesis', 'ssl') == '0':
-            self.put_message('warn', 'Please enable SSL to ensure secure communication with the server')
+            self.put_message('warn', 'HTTPS is not enabled; you should enable it to help secure communication with arkOS. Go to Tools > Certificates to do so.')
 
     def on_init(self):
         pass
