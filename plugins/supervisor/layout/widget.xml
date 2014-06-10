@@ -1,5 +1,0 @@
-    <div style="float:right;">
-	    <tipicon id="start" text="Start" iconfont="gen-play-2" />
-	    <tipicon id="stop" text="Stop" iconfont="gen-stop" />
-	    <tipicon id="restart" text="Restart" iconfont="gen-loop-2" />
-    </div>
