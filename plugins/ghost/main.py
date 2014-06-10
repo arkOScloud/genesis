@@ -45,15 +45,21 @@ class Ghost(Plugin):
         nodectl.install_from_package(path, 'production')
         users.add_user('ghost')
 
-        s = apis.orders(self.app).get_interface('supervisor')
-        if s:
-            s[0].order('new', 'ghost', 'program', 
-                [('directory', path), ('user', 'ghost'), 
-                ('command', 'node %s'%os.path.join(path, 'index.js')),
-                ('autostart', 'true'), ('autorestart', 'true'),
-                ('environment', 'NODE_ENV="production"'),
-                ('stdout_logfile', '/var/log/ghost.log'),
-                ('stderr_logfile', '/var/log/ghost.log')])
+        s = self.app.get_backend(apis.services.IServiceManager)
+        s.edit('ghost',
+            {
+                'stype': 'program',
+                'directory': path,
+                'user': 'ghost',
+                'command': 'node %s'%os.path.join(path, 'index.js'),
+                'autostart': 'true',
+                'autorestart': 'true',
+                'environment': 'NODE_ENV="production"',
+                'stdout_logfile': '/var/log/ghost.log',
+                'stderr_logfile': '/var/log/ghost.log'
+            }
+        )
+        s.enable('ghost', 'supervisor')
 
         addr = vars.getvalue('addr', 'localhost')
         port = vars.getvalue('port', '80')
@@ -101,9 +107,8 @@ class Ghost(Plugin):
     def post_remove(self, name):
         users = UsersBackend(self.app)
         users.del_user('ghost')
-        s = apis.orders(self.app).get_interface('supervisor')
-        if s:
-            s[0].order('del', 'ghost')
+        s = self.app.get_backend(apis.services.IServiceManager)
+        s.delete('ghost', 'supervisor')
 
     def ssl_enable(self, path, cfile, kfile):
         name = os.path.basename(path)
@@ -123,9 +128,8 @@ class Ghost(Plugin):
                 'production: {\n        url: \'https://')
             config_file.write(f)
             config_file.close()
-        s = apis.orders(self.app).get_interface('supervisor')
-        if s:
-            s[0].order('rel', 'ghost')
+        s = self.app.get_backend(apis.services.IServiceManager)
+        s.restart('ghost', 'supervisor')
 
     def ssl_disable(self, path):
         name = os.path.basename(path)
@@ -141,6 +145,5 @@ class Ghost(Plugin):
                 'production: {\n        url: \'http://')
             config_file.write(f)
             config_file.close()
-        s = apis.orders(self.app).get_interface('supervisor')
-        if s:
-            s[0].order('rel', 'ghost')
+        s = self.app.get_backend(apis.services.IServiceManager)
+        s.restart('ghost', 'supervisor')

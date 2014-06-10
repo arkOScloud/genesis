@@ -47,7 +47,7 @@ class ServicesPlugin(CategoryPlugin):
         for g in sorted(self.groupmgr.groups.keys()):
             gui = self.app.inflate('sysmon:group')
             gui.find('edit').set('id', 'edit/'+g)
-            gui.find('delete').set('id', 'delete/'+g)
+            gui.find('delete').set('id', 'delgrp/'+g)
             gui.find('name').set('text', g)
             show_run = False
             show_stop = False
@@ -145,14 +145,16 @@ class ServicesPlugin(CategoryPlugin):
     def get_row(self, svc):
         ctl = UI.HContainer()
         if svc.status == 'running':
-            ctl.append(UI.TipIcon(text='Stop', iconfont='gen-stop', id='stop/' + svc.name))
-            ctl.append(UI.TipIcon(text='Restart', iconfont='gen-loop-2', id='restart/' + svc.name))
+            ctl.append(UI.TipIcon(text='Stop', iconfont='gen-stop', id='stop/%s/%s'%(svc.name, svc.stype)))
+            ctl.append(UI.TipIcon(text='Restart', iconfont='gen-loop-2', id='restart/%s/%s'%(svc.name, svc.stype)))
         else:
-            ctl.append(UI.TipIcon(text='Start', iconfont='gen-play-2', id='start/' + svc.name))
+            ctl.append(UI.TipIcon(text='Start', iconfont='gen-play-2', id='start/%s/%s'%(svc.name, svc.stype)))
         if svc.enabled == 'enabled':
-            ctl.append(UI.TipIcon(text='Disable', iconfont='gen-minus-circle', id='disable/' + svc.name))
+            ctl.append(UI.TipIcon(text='Disable', iconfont='gen-minus-circle', id='disable/%s/%s'%(svc.name, svc.stype)))
         else:
-            ctl.append(UI.TipIcon(text='Enable', iconfont='gen-plus-circle', id='enable/' + svc.name))
+            ctl.append(UI.TipIcon(text='Enable', iconfont='gen-plus-circle', id='enable/%s/%s'%(svc.name, svc.stype)))
+        if svc.stype == 'supervisor':
+            ctl.append(UI.TipIcon(text='Delete', iconfont='gen-cancel-circle', id='delete/%s/%s'%(svc.name, svc.stype)))
 
         fn = 'gen-' + ('play-2' if svc.status == 'running' else 'stop')
         row = UI.DTR(
@@ -165,27 +167,29 @@ class ServicesPlugin(CategoryPlugin):
     @event('button/click')
     def on_click(self, event, params, vars=None):
         if params[0] == 'start':
-            self.svc_mgr.start(params[1])
+            self.svc_mgr.start(params[1], params[2])
         elif params[0] == 'restart':
-            self.svc_mgr.restart(params[1])
+            self.svc_mgr.restart(params[1], params[2])
         elif params[0] == 'stop':
-            self.svc_mgr.stop(params[1])
+            self.svc_mgr.stop(params[1], params[2])
         elif params[0] == 'enable':
-            self.svc_mgr.enable(params[1])
+            self.svc_mgr.enable(params[1], params[2])
         elif params[0] == 'disable':
-            self.svc_mgr.disable(params[1])
+            self.svc_mgr.disable(params[1], params[2])
+        elif params[0] == 'delete':
+            self.svc_mgr.delete(params[1], params[2])
         elif params[0] == 'gstart':
             for s in self.groupmgr.groups[params[1]]:
-                self.svc_mgr.start(s)
+                self.svc_mgr.start(s, params[2])
         elif params[0] == 'grestart':
             for s in self.groupmgr.groups[params[1]]:
-                self.svc_mgr.restart(s)
+                self.svc_mgr.restart(s, params[2])
         elif params[0] == 'gstop':
             for s in self.groupmgr.groups[params[1]]:
-                self.svc_mgr.stop(s)
+                self.svc_mgr.stop(s, params[2])
         elif params[0] == 'addGroup':
             self._editing = ''
-        elif params[0] == 'delete':
+        elif params[0] == 'delgrp':
             del self.groupmgr.groups[params[1]]
             self.groupmgr.save()
         elif params[0] == 'edit':

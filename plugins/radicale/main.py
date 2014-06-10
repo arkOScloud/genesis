@@ -7,7 +7,7 @@ from genesis.plugins.network.backend import IHostnameManager
 
 import backend
 
-class RadicalePlugin(CategoryPlugin):
+class RadicalePlugin(apis.services.ServiceControlPlugin):
     text = 'Calendar'
     iconfont = 'gen-calendar'
     folder = 'servers'
@@ -20,6 +20,7 @@ class RadicalePlugin(CategoryPlugin):
         self._edit = None
 
     def on_init(self):
+        self.services = []
         self._users = self._rc.list_users()
         self.site = filter(lambda x: x.name=='radicale', self._wa.get_sites())
         if self.site:
@@ -27,20 +28,23 @@ class RadicalePlugin(CategoryPlugin):
         else:
             self.site = None
 
-    def get_ui(self):
+    def get_main_ui(self):
         is_installed = self._rc.is_installed()
         if not self.app.get_config(self._config).first_run_complete \
-        or not is_installed:
+        or is_installed == 'no':
             ui = self.app.inflate('radicale:setup')
             ui.find('addr').set('value', self.app.get_backend(IHostnameManager).gethostname())
-            if not is_installed:
+            if is_installed == 'no':
                 self.put_message('err', 'Your Calendar/Contacts server does not appear to be properly configured. Please rerun this setup.')
             return ui
         ui = self.app.inflate('radicale:main')
 
+        infotxt = 'Your Calendar/Contacts server is listening at http%s://%s%s'%('s' if self.site.ssl else '', self.site.addr, ':'+self.site.port if self.site.port not in ['80', '443'] else '')
+        if is_installed == 'off':
+            infotxt = 'Your Calendar/Contacts server is installed but not running. Please start the radicale and/or supervisord service(s) in Tools > Services.'
         ui.find('rinfo').append(
             UI.Label(size='1', bold=True,
-                text='Your Calendar/Contacts server is listening at http%s://%s%s'%('s' if self.site.ssl else '', self.site.addr, ':'+self.site.port if self.site.port not in ['80', '443'] else ''))
+                text=infotxt)
             )
 
         t = ui.find('list')

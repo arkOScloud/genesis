@@ -1,3 +1,4 @@
+import ConfigParser
 import glob
 import os
 import re
@@ -34,67 +35,123 @@ class ArchServiceManager(Plugin):
         r = []
         for s in services:
             svc = apis.services.Service()
+            svc.stype = 'system'
             svc.name = s[0]
             svc._status = s[1]
             svc._enabled = s[2]
             svc.mgr = self
             r.append(svc)
 
+        if not os.path.exists('/etc/supervisor.d'):
+            os.mkdir('/etc/supervisor.d')
+        for x in os.listdir('/etc/supervisor.d'):
+            x = x.split('.ini')[0]
+            svc = apis.services.Service()
+            svc.stype = 'supervisor'
+            svc.name = x
+            svc._status = self.get_status(x, 'supervisor') if self.get_status('supervisord') == 'running' else 'unknown'
+            svc._enabled = self.get_enabled(x, 'supervisor')
+            svc.mgr = self
+            r.append(svc)
+
         return sorted(r, key=lambda s: s.name)
 
-    def get_status(self, name):
-        if self.use_systemd:
+    def get_status(self, name, stype='system'):
+        if stype == 'supervisor':
+            status = shell("supervisorctl status {}".format(name))
+            return 'running' if 'RUNNING' in status else 'stopped'
+        elif self.use_systemd:
             status = shell_status("systemctl --no-ask-password is-active {}.service".format(name))
-            if status != 0:
-                return 'stopped'
-            else:
-                return 'running'
+            return 'stopped' if status != 0 else 'running'
         else:
             s = shell('/etc/rc.d/{} status'.format(name))
             return 'running' if 'running' in s else 'stopped'
 
-    def get_enabled(self, name):
-        if self.use_systemd:
+    def get_enabled(self, name, stype='system'):
+        if stype == 'supervisor':
+            return 'enabled' if os.path.exists(os.path.join('/etc/supervisor.d', name+'.ini')) else 'disabled'
+        elif self.use_systemd:
             status = shell_status("systemctl --no-ask-password is-enabled {}.service".format(name))
-            if status != 0:
-                return 'disabled'
-            else:
-                return 'enabled'
+            return 'disabled' if status != 0 else 'enabled'
         else:
             return 'unknown'
 
-    def start(self, name):
-        if self.use_systemd:
+    def get_log(self, name, stype='system'):
+        if stype == 'supervisor':
+            s = shell("supervisorctl tail {}".format(name), stderr=True)
+        elif self.use_systemd:
+            s = shell("systemctl --no-ask-password status {}.service".format(name), stderr=True)
+        else:
+            s = shell('/etc/rc.d/{} status'.format(name), stderr=True)
+        return s
+
+    def start(self, name, stype='system'):
+        if stype == 'supervisor':
+            shell("supervisorctl start {}".format(name))
+        elif self.use_systemd:
             shell("systemctl --no-ask-password start {}.service".format(name))
         else:
             shell('/etc/rc.d/{} start'.format(name))
 
-    def stop(self, name):
-        if self.use_systemd:
+    def stop(self, name, stype='system'):
+        if stype == 'supervisor':
+            shell("supervisorctl stop {}".format(name))
+        elif self.use_systemd:
             shell("systemctl --no-ask-password stop {}.service".format(name))
         else:
             shell('/etc/rc.d/{} stop'.format(name))
 
-    def restart(self, name):
-        if self.use_systemd:
+    def restart(self, name, stype='system'):
+        if stype == 'supervisor':
+            shell("supervisorctl restart {}".format(name))
+        elif self.use_systemd:
             shell("systemctl --no-ask-password reload-or-restart {}.service".format(name))
         else:
             shell('/etc/rc.d/{} restart'.format(name))
 
-    def real_restart(self, name):
-        if self.use_systemd:
+    def real_restart(self, name, stype='system'):
+        if stype == 'supervisor':
+            shell("supervisorctl restart {}".format(name))
+        elif self.use_systemd:
             shell("systemctl --no-ask-password restart {}.service".format(name))
         else:
             shell('/etc/rc.d/{} restart'.format(name))
 
-    def enable(self, name):
-        if self.use_systemd:
+    def enable(self, name, stype='system'):
+        if stype == 'supervisor':
+            if os.path.exists(os.path.join('/etc/supervisor.d', name+'.ini.disabled')):
+                os.rename(os.path.join('/etc/supervisor.d', name+'.ini.disabled'),
+                    os.path.join('/etc/supervisor.d', name+'.ini'))
+            shell("supervisorctl reload")
+            shell("supervisorctl start {}".format(name))
+        elif self.use_systemd:
             shell("systemctl --no-ask-password enable {}.service".format(name))
-        else:
-            pass
 
-    def disable(self, name):
-        if self.use_systemd:
+    def disable(self, name, stype='system'):
+        if stype == 'supervisor':
+            shell("supervisorctl stop {}".format(name))
+            shell("supervisorctl remove {}".format(name))
+            os.rename(os.path.join('/etc/supervisor.d', name+'.ini'),
+                os.path.join('/etc/supervisor.d', name+'.ini.disabled'))
+        elif self.use_systemd:
             shell("systemctl --no-ask-password disable {}.service".format(name))
-        else:
-            pass
+
+    def edit(self, name, opts, stype='supervisor'):
+        if stype == 'supervisor':
+            title = '%s:%s' % (opts['stype'], name)
+            c = ConfigParser.RawConfigParser()
+            c.add_section(title)
+            for x in opts:
+                if x != 'stype':
+                    c.set(title, x, opts[x])
+            c.write(open(os.path.join('/etc/supervisor.d', name+'.ini'), 'w'))
+
+    def delete(self, name, stype='supervisor'):
+        if stype == 'supervisor':
+            shell("supervisorctl stop {}".format(name))
+            shell("supervisorctl remove {}".format(name))
+            try:
+                os.unlink(os.path.join('/etc/supervisor.d', name+'.ini'))
+                os.unlink(os.path.join('/etc/supervisor.d', name+'.ini.disabled'))
+            except:
+                pass

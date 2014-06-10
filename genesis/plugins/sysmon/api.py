@@ -212,25 +212,25 @@ class Services(API):
                 ctl = UI.HContainer()
 
                 try:
-                    st = mgr.get_status(s['binary'])
+                    st = mgr.get_status(s['binary'], s['type'] if s.has_key('type') else 'system')
                 except:
                     st = 'failed'
                     alert = True
                 try:
-                    en = mgr.get_enabled(s['binary'])
+                    en = mgr.get_enabled(s['binary'], s['type'] if s.has_key('type') else 'system')
                 except:
                     en = 'failed'
 
                 if st == 'running':
-                    ctl.append(UI.TipIcon(text='Stop', cls='servicecontrol', iconfont='gen-stop', id='stop/' + s['binary']))
-                    ctl.append(UI.TipIcon(text='Restart', cls='servicecontrol', iconfont='gen-loop-2', id='restart/' + s['binary']))
+                    ctl.append(UI.TipIcon(text='Stop', cls='servicecontrol', iconfont='gen-stop', id='stop/%s/%s'%(s['binary'], s['type'] if s.has_key('type') else 'system')))
+                    ctl.append(UI.TipIcon(text='Restart', cls='servicecontrol', iconfont='gen-loop-2', id='restart/%s/%s'%(s['binary'], s['type'] if s.has_key('type') else 'system')))
                 else:
-                    ctl.append(UI.TipIcon(text='Start', cls='servicecontrol', iconfont='gen-play-2', id='start/' + s['binary']))
+                    ctl.append(UI.TipIcon(text='Start', cls='servicecontrol', iconfont='gen-play-2', id='start/%s/%s'%(s['binary'], s['type'] if s.has_key('type') else 'system')))
                     alert = True
                 if en == 'enabled':
-                    ctl.append(UI.TipIcon(text='Disable', cls='servicecontrol', iconfont='gen-minus-circle', id='disable/' + s['binary']))
+                    ctl.append(UI.TipIcon(text='Disable', cls='servicecontrol', iconfont='gen-minus-circle', id='disable/%s/%s'%(s['binary'], s['type'] if s.has_key('type') else 'system')))
                 else:
-                    ctl.append(UI.TipIcon(text='Enable', cls='servicecontrol', iconfont='gen-plus-circle', id='enable/' + s['binary']))
+                    ctl.append(UI.TipIcon(text='Enable', cls='servicecontrol', iconfont='gen-plus-circle', id='enable/%s/%s'%(s['binary'], s['type'] if s.has_key('type') else 'system')))
                 
                 t = UI.DTR(
                         UI.HContainer(
@@ -329,16 +329,16 @@ class Services(API):
                 FWMonitor(self.app).regen()
             if params[0] == 'restart':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
-                mgr.restart(params[1])
+                mgr.restart(params[1], params[2])
             if params[0] == 'start':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
-                mgr.start(params[1])
+                mgr.start(params[1], params[2])
             if params[0] == 'stop':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
-                mgr.stop(params[1])
+                mgr.stop(params[1], params[2])
             if params[0] == 'enable':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
-                mgr.enable(params[1])
+                mgr.enable(params[1], params[2])
             if params[0] == 'disable':
                 mgr = self.app.get_backend(apis.services.IServiceManager)
-                mgr.disable(params[1])
+                mgr.disable(params[1], params[2])

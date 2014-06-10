@@ -218,12 +218,15 @@ class RadicaleControl(Plugin):
 
     def is_installed(self):
         # Verify the different components of the server setup
+        svc = self.app.get_backend(apis.services.IServiceManager)
         if not os.path.exists('/etc/radicale/config') or not os.path.isdir('/usr/lib/radicale') \
-        or not os.path.exists('/etc/radicale/radicale.wsgi'):
-            return False
-        elif not 'radicale' in [x.name for x in apis.webapps(self.app).get_sites()]:
-            return False
-        return True
+        or not os.path.exists('/etc/radicale/radicale.wsgi') \
+        or not 'radicale' in [x.name for x in apis.webapps(self.app).get_sites()]:
+            return 'no'
+        elif svc.get_status('supervisord') != 'running' or svc.get_status('radicale', 'supervisor') != 'running':
+            return 'off'
+        else:
+            return 'yes'
 
     def setup(self, addr, port):
         # Make sure Radicale is installed and ready
@@ -253,13 +256,18 @@ class RadicaleControl(Plugin):
         wsgi_file += 'application = radicale.Application()\n'
         open('/etc/radicale/radicale.wsgi', 'w').write(wsgi_file)
         os.chmod('/etc/radicale/radicale.wsgi', 0766)
-        s = apis.orders(self.app).get_interface('supervisor')
-        if s:
-            s[0].order('new', 'radicale', 'program', 
-                [('directory', '/etc/radicale'), ('user', 'radicale'), 
-                ('command', 'uwsgi -s /tmp/radicale.sock -C --plugin python2 --wsgi-file radicale.wsgi'),
-                ('stdout_logfile', '/var/log/radicale.log'),
-                ('stderr_logfile', '/var/log/radicale.log')])
+        s = self.app.get_backend(apis.services.IServiceManager)
+        s.edit('radicale',
+            {
+                'stype': 'program',
+                'directory': '/etc/radicale',
+                'user': 'radicale',
+                'command': 'uwsgi -s /tmp/radicale.sock -C --plugin python2 --wsgi-file radicale.wsgi',
+                'stdout_logfile': '/var/log/radicale.log',
+                'stderr_logfile': '/var/log/radicale.log'
+            }
+        )
+        s.enable('radicale', 'supervisor')
         block = [
             nginx.Location('/',
                 nginx.Key('auth_basic', '"Genesis Calendar Server (Radicale)"'),

@@ -173,6 +173,9 @@ class WebappControl(Plugin):
 		w.path = path
 		w.addr = addr
 		w.port = port
+		w.dbengine = None
+		w.dbname = None
+		w.dbuser = None
 		if not block:
 			block = [
 				nginx.Location('/admin/media/',

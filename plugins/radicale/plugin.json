@@ -22,8 +22,9 @@
     "services": [
         {
             "name": "Calendar/Contacts Server",
-            "binary": null,
-            "ports": [["tcp", "5232"]]
+            "type": "supervisor",
+            "binary": "radicale",
+            "ports": []
         }
     ],
     "modules": ["main", "backend"],

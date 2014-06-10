@@ -125,21 +125,20 @@ class Etherpad(Plugin):
             nodectl.install(*mods, install_path=mod_inst_path)
 
         # Make supervisor entry
-        s = apis.orders(self.app).get_interface('supervisor')
-        if s:
-            s[0].order(
-                'new',
-                'etherpad',
-                'program',
-                [
-                    ('directory', path),
-                    ('user', 'etherpad'),
-                    ('command', os.path.join(path, 'bin/run.sh')),
-                    ('autostart', 'true'), ('autorestart', 'true'),
-                    ('stdout_logfile', '/var/log/etherpad.log'),
-                    ('stderr_logfile', '/var/log/etherpad.log')
-                ]
-            )
+        s = self.app.get_backend(apis.services.IServiceManager)
+        s.edit('etherpad',
+            {
+                'stype': 'program',
+                'directory': path,
+                'user': 'etherpad',
+                'command': os.path.join(path, 'bin/run.sh'),
+                'autostart': 'true',
+                'autorestart': 'true',
+                'stdout_logfile': '/var/log/etherpad.log',
+                'stderr_logfile': '/var/log/etherpad.log'
+            }
+        )
+        s.enable('etherpad', 'supervisor')
 
         # Change owner of everything in the etherpad path
         shell('chown -R etherpad ' + path)
@@ -157,9 +156,8 @@ class Etherpad(Plugin):
     def post_remove(self, name):
         users = UsersBackend(self.app)
         users.del_user('etherpad')
-        s = apis.orders(self.app).get_interface('supervisor')
-        if s:
-            s[0].order('del', 'etherpad')
+        s = self.app.get_backend(apis.services.IServiceManager)
+        s.delete('etherpad', 'supervisor')
 
     def ssl_enable(self, path, cfile, kfile):
         name = os.path.basename(path)

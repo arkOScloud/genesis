@@ -56,18 +56,20 @@ class PythonLangAssist(Plugin):
         open(os.path.join(path, 'gunicorn'), 'w').write(gconf)
         st = os.stat(os.path.join(path, 'gunicorn'))
         os.chmod(os.path.join(path, 'gunicorn'), st.st_mode | 0111)
-        s = filter(lambda x: x.id == 'supervisor',
-            self.app.grab_plugins(apis.orders.IListener))
-        if s:
-            s[0].order('new', name, 'program', 
-                [('directory', path), ('user', user), 
-                ('command', os.path.join(path, 'gunicorn')),
-                ('stdout_logfile', os.path.join(path, '%s_logfile.log'%name)),
-                ('stderr_logfile', os.path.join(path, '%s_logfile.log'%name))])
+        s = self.app.get_backend(apis.services.IServiceManager)
+        s.edit(name,
+            {
+                'stype': 'program',
+                'directory': path,
+                'user': user,
+                'command': os.path.join(path, 'gunicorn'),
+                'stdout_logfile': os.path.join(path, '%s_logfile.log'%name),
+                'stderr_logfile': os.path.join(path, '%s_logfile.log'%name)
+            }
+        )
+        s.enable(name, 'supervisor')
 
     def remove_django_site(self, name, path):
-        s = filter(lambda x: x.id == 'supervisor',
-            self.app.grab_plugins(apis.orders.IListener))
-        if s:
-            s[0].order('del', name)
+        s = self.app.get_backend(apis.services.IServiceManager)
+        s.delete(name, 'supervisor')
         shutil.rmtree(path)
