@@ -39,47 +39,68 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
             return ui
         ui = self.app.inflate('radicale:main')
 
-        infotxt = 'Your Calendar/Contacts server is listening at http%s://%s%s'%('s' if self.site.ssl else '', self.site.addr, ':'+self.site.port if self.site.port not in ['80', '443'] else '')
+        url = 'http%s://%s%s'%('s' if self.site.ssl else '', self.site.addr, ':'+self.site.port if self.site.port not in ['80', '443'] else '')
         if is_installed == 'off':
-            infotxt = 'Your Calendar/Contacts server is installed but not running. Please start the radicale and/or supervisord service(s) in Tools > Services.'
-        ui.find('rinfo').append(
-            UI.Label(size='1', bold=True,
-                text=infotxt)
-            )
+            ui.find('rinfo').append(
+                UI.Label(size='1', bold=True,
+                    text='Your Calendar/Contacts server is installed but not running. Please start it via the Status button.')
+                )
+        else:
+            ui.find('rinfo').append(
+                UI.Label(size='1', bold=True,
+                    text='Your Calendar/Contacts server is listening at '),
+                )
+            ui.find('rinfo').append(UI.OutLinkLabel(text=url, url=url))
 
-        t = ui.find('list')
         for u in self._users:
-            t.append(UI.DTR(
-                    UI.Iconfont(iconfont='gen-user'),
-                    UI.Label(text=u),
-                    UI.HContainer(
-                        UI.TipIcon(iconfont='gen-key', id='edit/'+str(self._users.index(u)), text='Change Password'),
-                        UI.TipIcon(iconfont='gen-cancel-circle', id='del/'+str(self._users.index(u)), text='Delete', warning='Are you sure you want to delete calendar user %s?'%u)
+            ui.find('main').append(
+                UI.TblBtn(
+                    UI.TipIcon(
+                        iconfont='gen-cancel-circle', 
+                        id='del/'+str(self._users.index(u)), 
+                        text='Delete', 
+                        warning='Are you sure you want to delete calendar user %s?'%u
                     ),
-                ))
+                    id='edit/'+str(self._users.index(u)),
+                    icon='gen-user',
+                    name=u,
+                    subtext='User'
+                    )
+                )
+        ui.find('main').append(
+            UI.TblBtn(
+                id='add',
+                icon='gen-user-plus',
+                name='Add user'
+                )
+            )
 
         if self._add:
             ui.append('main',
                 UI.DialogBox(
                     UI.FormLine(
                         UI.TextInput(name='acct', id='acct'),
-                        text='Username'
+                        text='Username', feedback="gen-user", iid="acct"
                     ),
-                    UI.FormLine(
-                        UI.EditPassword(id='passwd', value='Click to add password'),
-                        text='Password'
+                    UI.Formline(UI.TextInput(id='passwd', name="passwd", password=True, verify="password", verifywith="passwd"),
+                        text="Password", feedback="gen-lock", iid="passwd"
                     ),
-                    id='dlgAddUser')
+                    UI.Formline(UI.TextInput(id='passwdb', name="passwdb", password=True, verify="password", verifywith="passwd"),
+                        text="Confirm password", feedback="gen-lock", iid="passwdb"
+                    ),
+                    id='dlgAddUser', title="Creating new Calendar/Contacts user")
                 )
 
         if self._edit:
             ui.append('main',
                 UI.DialogBox(
-                    UI.FormLine(
-                        UI.EditPassword(id='chpasswd', value='Click to change password'),
-                        text='Password'
+                    UI.Formline(UI.TextInput(id='chpasswd', name="chpasswd", password=True, verify="password", verifywith="chpasswd"),
+                        text="New password", feedback="gen-lock", iid="chpasswd"
                     ),
-                    id='dlgChpasswd')
+                    UI.Formline(UI.TextInput(id='chpasswdb', name="chpasswdb", password=True, verify="password", verifywith="chpasswd"),
+                        text="Confirm password", feedback="gen-lock", iid="chpasswdb"
+                    ),
+                    id='dlgChpasswd', title="Changing password for user %s" % self._edit)
                 )
 
         return ui
