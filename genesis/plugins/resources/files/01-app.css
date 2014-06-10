@@ -603,3 +603,33 @@ a:link, a:focus, a:active, a:hover {
   float: left;
   width: 80%;
 }
+
+.auth-page {
+  background-color: #3498DB;
+}
+
+.login-icon {
+  margin-top: 10%;
+  margin-bottom: 20px;
+}
+ 
+.login {
+  background-color: #eceff1;
+  width: 350px;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#login-logo {
+  width: 150px;
+}
+
+#auth-error {
+  display: none;
+  color: #FFF;
+}
+
+.login .has-feedback .form-control-feedback {
+  top: 5px;
+}

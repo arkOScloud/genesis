@@ -1,28 +1,29 @@
-<html class="auth-html">
-<head>
+<html>
+<head id="_head">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Genesis</title>
-    <link rel="shortcut icon" href="/dl/core/ui/favicon.png" />
+    <title>arkOS Genesis</title>
     <headstylesheets/>
-    <link rel="stylesheet/less" href="/core/styles.less" />
     <headscripts/>
-    <link href='/core/webfonts.css' rel='stylesheet' type='text/css' />
     <link rel="shortcut icon" href="/dl/core/ui/favicon.png" />
 </head>
 
-<body id="main">
+<body id="main" class="auth-page">
 <div id="whiteout" style="display:none;opacity:0" />
-<div class="auth-page">
+<div id="page">
     <div class="auth-ct">
-      <p id="auth-error"><strong>Error: </strong>Login failed. Check username and password.</p>
-      <div class="login-icon">
-          <img src="/dl/core/ui/auth-logo.png" />
+      <div class="login-icon" style="text-align:center;">
+          <img id="login-logo" src="/dl/core/ui/logo-arkos-white-round.svg" />
+          <p id="auth-error"><strong>Error: </strong>Login failed. Check username and password.</p>
       </div>
       <div class="login">
         <form id="form" method="POST">
-            <p><input type="text" id="username" name="username" class="login-field" placeholder="Enter your username" /><i class="login-field-icon login-field-uicon gen-user"></i></p>
-            <p><input type="password" id="password" name="password" class="login-field" placeholder="Enter your password" /><i class="login-field-icon login-field-picon gen-lock"></i></p>
-            <a class="btn btn-block login-button" id="login" onclick="$('#form').submit();">Login to Genesis</a>
+            <formline feedback="gen-user">
+                <textinput id="username" name="username" placeholder="Enter your username" />
+            </formline>
+            <formline feedback="gen-lock">
+                <textinput id="password" name="password" password="True" placeholder="Enter your password" />
+            </formline>
+            <a class="btn btn-primary btn-block" id="login" onclick="$('#form').submit();"><i class="gen-checkmark"></i> Login</a>
         </form>
       </div>
     </div>
@@ -38,10 +39,10 @@ $('#password').bind('keyup', function(event) {
 $('#form').submit(function (e) {
     e.preventDefault();
     $('#login').addClass('disabled');
-    $('#login').text('Authenticating...');
     $('#auth-error').css('display', 'none');
     $('.auth-page').css('background-color', '#3498DB');
-    Genesis.UI.wipeOut(true); 
+    $('#whiteout').show().fadeTo(200, 0.3);
+    $('body').css('cursor', 'wait !important');
     $.ajax({
         url: '/auth',
         type: 'POST',
@@ -55,10 +56,11 @@ $('#form').submit(function (e) {
             $('#login').click();
         },
         error: function() {
-            Genesis.UI.wipeOut();
+            $('#whiteout').stop().fadeTo(250, 0, function () { $(this).hide(); });
+            $('body').css('cursor', '');
             $('#login').removeClass('disabled');
-            $('#login').text('Login to Genesis');
             $('.auth-page').css('background-color', '#E74C3C');
+            $('.form-group').addClass('has-error');
             $('#auth-error').css('display', 'block');
         }
     });

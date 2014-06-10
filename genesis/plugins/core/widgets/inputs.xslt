@@ -29,6 +29,9 @@
         <xsl:if test="@disabled != ''">
             <xsl:attribute name="disabled">true</xsl:attribute>
         </xsl:if>
+        <xsl:if test="@placeholder != ''">
+            <xsl:attribute name="placeholder"><xsl:value-of select="@placeholder" /></xsl:attribute>
+        </xsl:if>
         <xsl:if test="@verify != ''">
             <xsl:choose>
                 <xsl:when test="@verify = 'password'">
