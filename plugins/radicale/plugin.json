@@ -70,11 +70,6 @@
                 "type": "plugin",
                 "name": "Reverse Proxy",
                 "package": "reverseproxy"
-            },
-            {
-                "type": "plugin",
-                "name": "Supervisor",
-                "package": "supervisor"
             }
         ]
     },

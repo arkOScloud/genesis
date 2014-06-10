@@ -57,11 +57,6 @@
                 "name": "make",
                 "package": "make",
                 "binary": "make"
-            },
-            {
-                "type": "plugin",
-                "name": "Supervisor",
-                "package": "supervisor"
             }
         ]
     },

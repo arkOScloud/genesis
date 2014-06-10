@@ -34,11 +34,6 @@
                 "type": "plugin",
                 "name": "NodeJS",
                 "package": "nodejs"
-            },
-            {
-                "type": "plugin",
-                "name": "Supervisor",
-                "package": "supervisor"
             }
         ]
     },
