@@ -34,6 +34,7 @@
     },
     "generation": 1,
     "website_plugin": "Website",
+    "website_updates": false,
     "download_url": null,
     "database_engines": [],
     "uses_php": false,

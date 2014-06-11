@@ -128,6 +128,7 @@ class WebappControl(Plugin):
 			w.addr = vars.getvalue('addr', 'localhost')
 			w.port = vars.getvalue('port', '80')
 			w.php = True if wa.php is True or php is '1' else False
+			w.version = wa.version.rsplit('-', 1)[0] if wa.website_updates else None
 			w.dbengine = dbinfo['engine'] if dbinfo else None
 			w.dbname = dbinfo['name'] if dbinfo else None
 			w.dbuser = dbinfo['user'] if dbinfo else None
@@ -194,6 +195,44 @@ class WebappControl(Plugin):
 		self.nginx_add(w, block)
 		self.nginx_enable(w)
 
+	def update(self, cat, wa, site):
+		if not wa.dpath:
+			ending = ''
+		elif wa.dpath.endswith('.tar.gz'):
+			ending = '.tar.gz'
+		elif wa.dpath.endswith('.tar.bz2'):
+			ending = '.tar.bz2'
+		elif wa.dpath.endswith('.zip'):
+			ending = '.zip'
+		elif wa.dpath.endswith('.git'):
+			ending = '.git'
+		else:
+			raise InstallError('Only GIT repos, gzip, bzip, and zip packages supported for now')
+
+		cat.statusmsg('Downloading package...')
+		if wa.dpath and ending == '.git':
+			pkg_path = wa.dpath 
+		elif wa.dpath:
+			pkg_path = os.path.join('/tmp', site.name+ending)
+			try:
+				download(wa.dpath, file=pkg_path, crit=True)
+			except Exception, e:
+				raise InstallError('Couldn\'t update - %s' % str(e))
+		cat.statusmsg('Updating site...')
+		try:
+			site.sclass.update(site.path, pkg_path, site.version)
+		except Exception, e:
+			raise InstallError('Couldn\'t update - %s' % str(e))
+		finally:
+			site.version = wa.version.rsplit('-', 1)[0]
+			c = ConfigParser.RawConfigParser()
+			c.read(os.path.join('/etc/nginx/sites-available', '.'+site.name+'.ginf'))
+			c.set('website', 'version', site.version)
+			c.write(open(os.path.join('/etc/nginx/sites-available', '.'+site.name+'.ginf'), 'w'))
+			cat.put_message('success', '%s updated successfully' % site.name)
+		if pkg_path:
+			os.unlink(pkg_path)
+
 	def remove(self, cat, site):
 		if site.sclass != '' and site.stype != 'ReverseProxy':
 			cat.statusmsg('Preparing for removal...')
@@ -241,6 +280,7 @@ class WebappControl(Plugin):
 		c.set('website', 'name', site.name)
 		c.set('website', 'stype', site.stype)
 		c.set('website', 'ssl', '')
+		c.set('website', 'version', site.version if site.version else 'None')
 		c.set('website', 'dbengine', site.dbengine if site.dbengine else '')
 		c.set('website', 'dbname', site.dbname if site.dbname else '')
 		c.set('website', 'dbuser', site.dbuser if site.dbuser else '')

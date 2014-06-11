@@ -39,6 +39,7 @@
     },
     "generation": 1,
     "website_plugin": "Ghost",
+    "website_updates": true,
     "download_url": "https://github.com/TryGhost/Ghost/releases/download/0.4.2/Ghost-0.4.2.zip",
     "database_engines": [],
     "uses_php": false,

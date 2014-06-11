@@ -119,3 +119,17 @@ class Wallabag(Plugin):
 
     def ssl_disable(self, path):
         pass
+
+    def update(self, path, pkg, ver):
+        # General update procedure
+        shell('tar xzf %s -C %s --strip 1' % (pkg, path))
+        for x in os.listdir(os.path.join(path, 'cache')):
+            if os.path.isdir(os.path.join(path, 'cache', x)):
+                shutil.rmtree(os.path.join(path, 'cache', x))
+            else:
+                os.unlink(os.path.join(path, 'cache', x))
+        shutil.rmtree(os.path.join(path, 'install'))
+        shell('chmod -R 755 '+os.path.join(path, 'assets/')+' '
+            +os.path.join(path, 'cache/')+' '
+            +os.path.join(path, 'db/'))
+        shell('chown -R http:http '+path)

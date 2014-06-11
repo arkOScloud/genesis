@@ -11,6 +11,7 @@ import re
 class Webapp(object):
     name = ''
     stype = ''
+    version = ''
     ssl = False
     ssl_able = True
     addr = ''
@@ -87,6 +88,7 @@ class Webapps(apis.API):
                 w.php = True if 'php' in s.filter('Key', 'index')[0].value else False
             except IndexError:
                 pass
+            w.version = g.get('website', 'version', None)
             w.dbengine = g.get('website', 'dbengine', None)
             w.dbname = g.get('website', 'dbname', None)
             w.dbuser = g.get('website', 'dbuser', None)

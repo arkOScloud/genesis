@@ -62,6 +62,7 @@
     },
     "generation": 1,
     "website_plugin": "Etherpad",
+    "website_updates": true,
     "download_url": "https://github.com/ether/etherpad-lite.git",
     "database_engines": ["MariaDB"],
     "uses_php": false,

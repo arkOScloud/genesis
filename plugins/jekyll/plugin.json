@@ -45,6 +45,7 @@
     },
     "generation": 1,
     "website_plugin": "Jekyll",
+    "website_updates": true,
     "download_url": "https://pkg.arkos.io/resources/jekyll-sample.tar.gz",
     "database_engines": [],
     "uses_php": false,

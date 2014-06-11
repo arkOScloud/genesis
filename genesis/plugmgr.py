@@ -264,6 +264,7 @@ class PluginLoader:
                 info.wa_plugin, info.dpath = meta['website_plugin'], meta['download_url']
                 info.dbengines = meta['database_engines'] if meta.has_key('database_engines') else []
                 info.php, info.ssl = meta['uses_php'], meta['uses_ssl']
+                info.website_updates = meta['website_updates'] if meta.has_key('website_updates') else None
             elif info.ptype == 'database':
                 info.db_plugin, info.db_task = meta['database_plugin'], meta['database_task']
                 info.multiuser, info.requires_conn = meta['database_multiuser'], meta['database_requires_connection']

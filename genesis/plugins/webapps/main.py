@@ -82,8 +82,18 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
             else:
                 addr = False
 
+            update = False
+            if s.version and (s.version != 'None' or s.sclass.plugin_info.website_updates) \
+            and s.version != s.sclass.plugin_info.version.rsplit('-', 1)[0]:
+                update = True
+
             ui.find('main').append(
                 UI.TblBtn(
+                    UI.TipIcon(
+                        iconfont='gen-download',
+                        id=('update/') + str(self.sites.index(s)),
+                        text='Update Site'
+                    ) if update else None,
                     UI.TipIcon(
                         iconfont='gen-minus-circle' if s.enabled else 'gen-checkmark-circle',
                         id=('disable/' if s.enabled else 'enable/') + str(self.sites.index(s)),
@@ -223,6 +233,10 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
             self.mgr.nginx_enable(self.sites[int(params[1])])
         elif params[0] == 'disable':
             self.mgr.nginx_disable(self.sites[int(params[1])])
+        elif params[0] == 'update':
+            s = self.sites[int(params[1])]
+            w = next(x for x in self.apptypes if x.name==s.stype)
+            self.mgr.update(self, w, s)
         else: 
             for x in self.apptypes:
                 if x.name.lower() == params[0]:
