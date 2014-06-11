@@ -19,8 +19,8 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
 
     def get_main_ui(self):
         if self._redir:
-            self._redir = False
-            return self.redirapp('transmission', int(self._config.get('rpc-port')))
+            ui = self.app.inflate('transmission:embed')
+            ui.find('frame-frame').set('src', 'http://localhost:'+str(self._config.get('rpc-port')))
         else:
             ui = self.app.inflate('transmission:main')
             ui.find('tabs').set('active', self._tab)
@@ -54,12 +54,14 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
                 )
                 ui.append('all_config', e)
 
-            return ui
+        return ui
 
     @event('button/click')
     def on_click(self, event, params, vars = None):
         if params[0] == 'launch':
-            self._redir=True
+            self._redir = True
+        elif params[0] == 'goback':
+            self._redir = False
 
     @event('dialog/submit')
     @event('form/submit')

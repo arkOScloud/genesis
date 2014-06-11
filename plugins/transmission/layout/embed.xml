@@ -1,0 +1,7 @@
+<xml>
+    <btn id="goback" text="Back" iconfont="gen-exit" design="default pull-right" />
+    <label size="4" text="Transmission" />
+    <div id="frame-container" style="width: 100%;">
+        <iframe id="frame-frame" style="margin:-20px 0 0 0;padding:0;border:0;width:100%;height:500px;" />
+    </div>
+</xml>
