@@ -122,7 +122,7 @@ class CertControl(Plugin):
 
 		try:
 			gid = grp.getgrnam('ssl-cert').gr_gid
-		except ValueError:
+		except KeyError:
 			UsersBackend(self.app).add_group('ssl-cert')
 			gid = grp.getgrnam('ssl-cert').gr_gid
 		os.chown(os.path.join('/etc/ssl/certs/genesis', name + '.crt'), -1, gid)
@@ -182,7 +182,7 @@ class CertControl(Plugin):
 			raise Exception('Error generating self-signed certificate: '+str(e))
 		try:
 			gid = grp.getgrnam('ssl-cert').gr_gid
-		except ValueError:
+		except KeyError:
 			UsersBackend(self.app).add_group('ssl-cert')
 			gid = grp.getgrnam('ssl-cert').gr_gid
 		open('/etc/ssl/certs/genesis/'+name+'.crt', "wt").write(
