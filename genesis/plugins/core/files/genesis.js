@@ -188,11 +188,11 @@ Genesis = (function() {
                     url: '/core/progress',
                     success: function (j) {
                         j = JSON.parse(j);
-                        $('#progress-box').empty();
                         for (var prg in j) {
                             if (j[prg].type === 'statusbox') {
                                 Genesis.UI.setLoaderText(j[prg]);
                             } else {
+                                $('#message-box').empty();
                                 Genesis.Core.addProgress(j[prg]);
                             }
                         }
@@ -206,13 +206,13 @@ Genesis = (function() {
             addProgress: function (desc) {
                 var html;
                 if (desc.can_abort) {
-                    html = '<div class="progress-box"><a class="close" onclick="return Genesis.showWarning(\'';
-                    html += 'Cancel background task for ' + desc.owner + '?\', \'aborttask/' + desc.id + '\');">×</a>';
+                    html = '<div class="alert alert-info alert-dismissable fade in"><a class="close" data-dismiss="alert" onclick="return Genesis.showWarning(\'';
+                    html += 'Cancel background task for ' + desc.owner + '?\', \'aborttask/' + desc.id + '\');">&#215;</a>';
                 } else {
                     html = '<div class="progress-box">';
                 }
-                html += '<p><strong>' + desc.owner + '</strong> ' + desc.status + '</p></div>';
-                $('#progress-box').append(html);
+                html += '<i class="gen-info" style="line-height:1;"></i> <p><strong>' + desc.owner + '</strong> ' + desc.status + '</p></div>';
+                $('#message-box').append(html);
             },
         },
 
