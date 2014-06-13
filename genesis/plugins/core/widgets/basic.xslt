@@ -320,5 +320,5 @@
 </xsl:template>
 
 <xsl:template match="tipicon">
-    <tooltip placement="above" text="{@text}"><btn id="{@id}" design="tipicon" cls="{@cls}" onclick="{@onclick}" warning="{@warning}" iconfont="{@iconfont}"/></tooltip>
+    <tooltip placement="above" text="{@text}"><btn id="{@id}" design="tipicon" href="#" cls="{@cls}" onclick="{@onclick}" warning="{@warning}" iconfont="{@iconfont}"/></tooltip>
 </xsl:template>

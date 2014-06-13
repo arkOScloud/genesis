@@ -6,7 +6,7 @@ from genesis.utils import *
 from genesis.plugins.databases.utils import *
 
 import re
-import _mysql
+import MySQLdb
 import _mysql_exceptions
 
 
@@ -16,18 +16,18 @@ class MariaDB(Plugin):
 
     def connect(self, store, user='root', passwd='', db=None):
         if db:
-            self.db = _mysql.connect('localhost', user, passwd, db)
+            self.db = MySQLdb.connect('localhost', user, passwd, db)
             store[self.plugin_info.name] = self.db
         else:
             try:
-                self.db = _mysql.connect('localhost', user, passwd)
+                self.db = MySQLdb.connect('localhost', user, passwd)
             except _mysql_exceptions.OperationalError:
                 raise DBAuthFail(self.plugin_info.name)
             store[self.plugin_info.name] = self.db
 
     def checkpwstat(self):
         try:
-            _mysql.connect('localhost', 'root', '')
+            MySQLdb.connect('localhost', 'root', '')
             return False
         except:
             return True
@@ -117,24 +117,30 @@ class MariaDB(Plugin):
         else:
             raise Exception('Unknown input or database connection failure')
 
-    def execute(self, dbname, command, conn=None, strf=True):
+    def execute(self, dbname, cmd, conn=None, strf=True):
         if not self.db and conn:
             self.db = conn
-        cmds = command.split(';')
         if self.db:
             self.db.query('USE %s' % dbname)
-            parse = []
-            for x in cmds:
-                if x.split():
-                    self.db.query('%s' % x)
-                    r = self.db.store_result()
-                    if r:
-                        out = r.fetch_row(0)
-                        for line in out:
-                            parse.append(line)
+            cur = self.db.cursor()
+            parse, s = [], ""
+            for l in cmd.split('\n'):
+                if not l.split() or re.match('--', l):
+                    continue
+                elif not re.search('[^-;]+;', l):
+                    s = s + l
+                elif re.search('^\s*USE', l):
+                    raise Exception('Cannot switch databases during execution')
+                else:
+                    s = s + l
+                    cur.execute(s)
+                    for x in cur.fetchall():
+                        parse.append(x)
+                    s = ""
             if strf:
-                status = ''
+                status = ""
                 for line in parse:
+                    line = [str(x) for x in line]
                     status += ', '.join(line)+'\n'
                 return status
             else:
@@ -182,3 +188,45 @@ class MariaDB(Plugin):
                     'class': self.__class__
                 })
         return userlist
+
+    def get_size(self, dbname, conn=None):
+        s = self.execute(dbname, "SELECT sum(data_length+index_length)/1024/1024 FROM information_schema.TABLES WHERE table_schema LIKE '%s';" % dbname, conn)
+        return "{0:.2f} MB".format(round(float(s),2))
+
+    def dump(self, dbname, conn=None):
+        if not self.db and conn:
+            self.db = conn
+        self.db.query("USE %s" % dbname)
+        cur = self.db.cursor()
+        tables, data = [], ""
+        cur.execute("SHOW TABLES")
+        for table in cur.fetchall():
+            tables.append(table[0])
+        for table in tables:
+            data += "DROP TABLE IF EXISTS `"+str(table)+"`;"
+            cur.execute("SHOW CREATE TABLE `"+str(table)+"`;")
+            data += "\n"+str(cur.fetchone()[1])+";\n\n"
+            cur.execute("SELECT * FROM `"+str(table)+"`;")
+            rows = cur.fetchall()
+            if rows:
+                data += "INSERT INTO `"+str(table)+"` VALUES ("
+                s = True
+            for row in rows:
+                f = True
+                if not s:
+                    data += '), ('
+                for field in row:
+                    if not f:
+                        data += ', '
+                    if type(field) in [int, long]:
+                        data += str(field)
+                    elif type(field) == str:
+                        data += '"'+str(self.db.escape_string(field))+'"'
+                    else:
+                        data += '"'+str(field)+'"'
+                    f = False
+                s = False
+            if rows:
+                data += ");\n"
+            data += "\n\n"
+        return data

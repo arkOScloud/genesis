@@ -59,4 +59,15 @@
         </formline>
     </dialogbox>
 
+    <dialogbox id="dlgInfo" title="Database info" hidecancel="True" miscbtn="Delete" miscbtnid="drop" miscbtnstyle="danger" miscbtnwarn="Are you sure you wish to remove this database? This may prevent any applications using it from functioning properly.">
+        <formline text="Name" horizontal="True">
+            <label name="idbname" id="idbname" />
+        </formline>
+        <formline text="Type" horizontal="True">
+            <label name="idbtype" id="idbtype" />
+        </formline>
+        <formline text="Size" horizontal="True">
+            <label name="idbsize" id="idbsize" />
+        </formline>
+    </dialogbox>
 </xml>

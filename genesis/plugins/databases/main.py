@@ -5,7 +5,7 @@ from genesis import apis
 from utils import *
 
 
-class DatabasesPlugin(apis.services.ServiceControlPlugin):
+class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
     text = 'Databases'
     iconfont = 'gen-database'
     folder = 'tools'
@@ -40,8 +40,8 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
         self._add = None
         self._useradd = None
         self._chmod = None
+        self._info = None
         self._exec = None
-        self._execmsg = ''
         self._import = None
         self._input = None
         self._output = None
@@ -91,20 +91,18 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
                 UI.TblBtn(
                     UI.TipIcon(
                         iconfont='gen-target',
-                        id='exec/' + str(self.dbs.index(d)),
+                        id='exec/'+str(self.dbs.index(d)),
                         text='Execute'
                     ),
                     UI.TipIcon(
-                        iconfont='gen-cancel-circle',
-                        id='drop/' + str(self.dbs.index(d)),
-                        text='Delete',
-                        warning='Are you sure you wish to delete database %s? This may prevent any applications using it from functioning properly.'%d['name']
+                        iconfont='gen-download',
+                        onclick='window.open("/db/s/%s/%s", "_blank");'%(d['type'], d['name']),
+                        text='Download SQL Dump'
                     ),
-                    id=d['name'],
+                    id='info/'+str(self.dbs.index(d)),
                     icon='gen-database',
                     name=d['name'],
-                    subtext=d['type'],
-                    action='none'
+                    subtext=d['type']
                     )
                 )
         ui.find('dblist').append(
@@ -178,11 +176,22 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
         else:
             ui.remove('dlgAdd')
 
+        if self._info:
+            ui.find('dlgInfo').set('miscbtnid', 'drop/' + str(self.dbs.index(d)))
+            ui.find('idbname').set('text', self._info['name'])
+            ui.find('idbtype').set('text', self._info['type'])
+            cls = self.dbops.get_interface(self._info['type'])
+            if cls.plugin_info.requires_conn:
+                ui.find('idbsize').set('text', cls.get_size(self._info['name'], self.app.session['dbconns'][self._info['type']]))
+            else:
+                ui.find('idbsize').set('text', cls.get_size(self._info['name']))
+        else:
+            ui.remove('dlgInfo')
+
         if self._exec is not None:
             edlg = self.app.inflate('databases:execute')
-            if self._execmsg:
-                self.put_message('err', self._execmsg)
-                self._execmsg = ''
+            edlg.find('dlgExec').set('title', 'Execute on database %s' % self._exec['name'])
+            edlg.find('dlgExec').set('miscbtnid', 'uplsql/' + str(self.dbs.index(self._exec)))
             if self._input is not None:
                 elem = edlg.find('input')
                 elem.set('value', self._input)
@@ -206,7 +215,24 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
         else:
             ui.remove('dlgChmod')
 
+        if self._import:
+            ui.append('main', UI.UploadBox(text="Uploading SQL to %s" % self._import['name'], id="dlgImport"))
+
         return ui
+
+    @url('^/db/s/.*$')
+    def download(self, req, start_response):
+        params = req['PATH_INFO'].split('/')[3:]
+        iface = apis.databases(self.app).get_interface(params[0])
+        if iface.plugin_info.requires_conn:
+            d = iface.dump(params[1], self.app.session['dbconns'][params[0]])
+        else:
+            d = iface.dump(params[1])
+        start_response('200 OK', [
+            ('Content-length', str(len(d.encode('utf-8')))),
+            ('Content-Disposition', 'attachment; filename=%s'%params[1]+'.sql')
+        ])
+        return d
 
     @event('button/click')
     def on_click(self, event, params, vars = None):
@@ -219,6 +245,9 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
         if params[0] == 'adduser':
             self._useradd = len(self.users)
             self._tab = 1
+        if params[0] == 'info':
+            self._info = self.dbs[int(params[1])]
+            self._tab = 0
         if params[0] == 'exec':
             self._exec = self.dbs[int(params[1])]
             self._input = None
@@ -227,8 +256,9 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
         if params[0] == 'chmod':
             self._chmod = self.users[int(params[1])]
             self._tab = 1
-        if params[0] == 'import':
-            self._import = True
+        if params[0] == 'uplsql':
+            self._import = self._exec
+            self._exec = None
             self._tab = 0
         if params[0] == 'drop':
             self._tab = 0
@@ -243,6 +273,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
                 self.put_message('err', 'Database drop failed: ' + str(e))
                 self.app.log.error('Database drop failed: ' + str(e))
             else:
+                self._info = None
                 self.put_message('success', 'Database successfully dropped')
         if params[0] == 'deluser':
             self._tab = 1
@@ -294,9 +325,20 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin):
                 try:
                     self._output = iface.execute(self._exec['name'], self._input)
                 except Exception, e:
-                    self._execmsg = str(e[1])
+                    self.put_message('err', str(e))
             else:
                 self._exec = None
+        elif params[0] == 'dlgInfo':
+            self._info = None
+        elif params[0] == 'dlgImport':
+            if vars.getvalue('action', '') == 'OK' and vars.has_key('file'):
+                iface = self.dbops.get_interface(self._import['type'])
+                try:
+                    self._output = iface.execute(self._import['name'], vars['file'].value)
+                    self.put_message('success', 'SQL import completed successfully')
+                except Exception, e:
+                    self.put_message('err', str(e))
+            self._import = None
         elif params[0] == 'dlgAddUser':
             if vars.getvalue('action', '') == 'OK':
                 username = vars.getvalue('username')

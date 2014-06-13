@@ -179,16 +179,16 @@
 
 <xsl:template match="uploadbox">
 <div>
-    <div id="{@id}" class="modal fade">
+    <div id="{@id}" class="modal fade" role="dialog" aria-labelledby="{@id}-title" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
                 <div class="modal-header">
-                    <h3><xsl:value-of select="@text" /></h3>
+                    <h4 class="modal-title" id="{@id}-title"><xsl:value-of select="@text" /></h4>
                 </div>
                 <div class="modal-body">
                     <xsl:if test="@location != ''">
-                        <formline text="Uploading to">
+                        <formline text="Uploading to" horizontal="True">
                             <label text="{@location}" />
                         </formline> 
                     </xsl:if>
