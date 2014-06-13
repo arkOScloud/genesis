@@ -63,6 +63,7 @@
                 <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
                 <xsl:if test="@title != ''">
                     <div class="modal-header">
+                        <button type="button" class="close" onclick="return Genesis.submit('{@id}', 'Cancel', 'false');" aria-hidden="true">&#215;</button>
                         <h4 class="modal-title"><xsl:value-of select="@title" /></h4>
                     </div>
                 </xsl:if>
@@ -141,6 +142,7 @@
             <div class="modal-content">
                 <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
                 <div class="modal-header">
+                    <button type="button" class="close" onclick="return Genesis.submit('{@id}', 'Cancel', 'false');" aria-hidden="true">&#215;</button>
                     <h4 class="modal-title" id="{@id}-title"><xsl:value-of select="@text" /></h4>
                 </div>
                 <div class="modal-body">
@@ -184,6 +186,7 @@
             <div class="modal-content">
                 <input id="{@id}-url" type="hidden" name="__url" value="/handle/dialog/submit/{@id}"/>
                 <div class="modal-header">
+                    <button type="button" class="close" onclick="return Genesis.submit('{@id}', 'Cancel', 'false');" aria-hidden="true">&#215;</button>
                     <h4 class="modal-title" id="{@id}-title"><xsl:value-of select="@text" /></h4>
                 </div>
                 <div class="modal-body">
