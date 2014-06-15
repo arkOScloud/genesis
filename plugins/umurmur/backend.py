@@ -4,6 +4,7 @@ from genesis.api import *
 from genesis.com import *
 from genesis import apis
 from genesis.plugins.core.api import ISSLPlugin
+from genesis.plugins.users.backend import UsersBackend
 
 arkos_welcome = "Welcome to uMurmur on arkOS!"
 
@@ -59,6 +60,8 @@ class UMurmurSSLPlugin(Plugin):
     cert_type = 'cert-key'
 
     def enable_ssl(self, cert, key):
+        ub = UsersBackend(self.app)
+        ub.add_to_group('umurmur', 'ssl-cert')
         config = UMurmurConfig(self.app)
         config.load()
         config.config.certificate = cert
