@@ -1,0 +1,5 @@
+<xml>
+	<dialogbox id="dlgHelp" iconfont="gen-support" hidecancel="True" title="Help">
+		<div id="help-container" />
+	</dialogbox>
+</xml>

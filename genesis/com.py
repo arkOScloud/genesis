@@ -323,6 +323,7 @@ class Plugin (object):
             self.plugin_id = cls.__name__.lower()
             from genesis.plugmgr import PluginLoader
             pl, mod = PluginLoader.list_plugins(), cls.__module__.split('.')[0]
+            self.pid = pl[mod].id if pl.has_key(mod) else cls.__module__.split('.')[2]
             self.plugin_info = pl[mod] if pl.has_key(mod) else None
             # Allow PluginManager implementation to update Plugin
             plugin_manager.plugin_activated(self)

@@ -29,6 +29,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
 
     def on_session_start(self):
         self._cat_selected = 'firstrun' if self.is_firstrun() else 'homeplugin'
+        self._help_visible = False
         self._about_visible = False
         self._module_config = None
 
@@ -47,6 +48,9 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
 
         if self._about_visible:
             templ.append('main-content', self.get_ui_about())
+
+        if self._help_visible:
+            templ.append('main-content', self.get_ui_help())
 
         templ.append('main-content', self.selected_category.get_ui())
 
@@ -87,6 +91,15 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
     def get_ui_about(self):
         ui = self.app.inflate('core:about')
         ui.find('ver').set('text', version())
+        return ui
+
+    def get_ui_help(self):
+        ui = self.app.inflate('core:help')
+        ui.find('dlgHelp').set('title', 'Help: %s' % self.selected_category.text)
+        try:
+            ui.find('help-container').append(self.app.inflate('%s:help'%self.selected_category.pid))
+        except:
+            ui.find('help-container').append(UI.Label(size=1, text='No help found for this plugin'))
         return ui
 
     @url('^/error$')
@@ -235,6 +248,8 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
             for p in self.app.grab_plugins(IProgressBoxProvider):
                 if p.plugin_id == params[1] and p.has_progress():
                     p.abort()
+        elif params[0] == 'help':
+            self._help_visible = True
         if params[0] == 'gen_reload':
             self.app.restart()
         if params[0] == 'gen_shutdown':
@@ -246,6 +261,8 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
     def handle_dlg(self, event, params, vars=None):
         if params[0] == 'dlgAbout':
             self._about_visible = False
+        if params[0] == 'dlgHelp':
+            self._help_visible = False
 
     @url('^/handle/.+')
     def handle_generic(self, req, start_response):

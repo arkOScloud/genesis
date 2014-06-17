@@ -64,7 +64,7 @@
                 <xsl:if test="@title != ''">
                     <div class="modal-header">
                         <button type="button" class="close" onclick="return Genesis.submit('{@id}', 'Cancel', 'false');" aria-hidden="true">&#215;</button>
-                        <h4 class="modal-title"><xsl:value-of select="@title" /></h4>
+                        <h4 class="modal-title"><xsl:if test="@iconfont != ''"><i class="{@iconfont}"></i>&#160;</xsl:if><xsl:value-of select="@title" /></h4>
                     </div>
                 </xsl:if>
                 <div class="modal-body">

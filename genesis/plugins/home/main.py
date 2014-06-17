@@ -28,7 +28,7 @@ class HomePlugin(api.CategoryPlugin):
     def on_init(self):
         pass
 
-    def get_ui(self):   
+    def get_ui(self):
         ui = self.app.inflate('home:home')
         cats = self.app.grab_plugins(api.ICategoryProvider)
         webs = self.app.grab_plugins(apis.webapps.IWebapp)

@@ -27,6 +27,10 @@
             <span id="topplaceholder-top"/>
             <span id="topplaceholder-bottom"/>
             <div class="pull-right">
+                <a class="ui-el-top-category" href="#" onclick="return Genesis.query('/handle/button/click/help');" id="help-btn">
+                    <i class="gen-support"></i>
+                    &#160;Help
+                </a>
                 <popover id="tools-pop" placement="bottom" class="ui-el-top-category" iconfont="gen-tools">Tools</popover>
                 <div class="popover bottom">
                   <div id="tools-pop-content" class="popover-inner">
