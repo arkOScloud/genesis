@@ -5,4 +5,30 @@
     </div>
 
     <pad id="main" />
+
+    <dialogbox id="dlgInfo">
+        <dt id="clist" width="100%">
+            <dtr header="True">
+                <dth width="1" />
+                <dth>
+                    <label text="Name" />
+                </dth>
+                <dth>
+                    <label text="Type" />
+                </dth>
+                <dth>
+                    <label text="URL" />
+                </dth>
+                <dth width="1" />
+            </dtr>
+        </dt>
+        <label size="3" text="Add new" />
+        <formline text="Name">
+        	<textinput name="newname" />
+        </formline>
+        <formline text="Type">
+        	<radio text="Calendar" value="cal" name="newtype" />
+        	<radio text="Address Book" value="book" name="newtype" />
+        </formline>
+    </dialogbox>
 </xml>

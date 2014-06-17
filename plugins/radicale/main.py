@@ -1,3 +1,4 @@
+import os
 import re
 
 from genesis.ui import *
@@ -56,12 +57,17 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
             ui.find('main').append(
                 UI.TblBtn(
                     UI.TipIcon(
+                        iconfont='gen-key', 
+                        id='edit/'+str(self._users.index(u)), 
+                        text='Change Password'
+                    ),
+                    UI.TipIcon(
                         iconfont='gen-cancel-circle', 
                         id='del/'+str(self._users.index(u)), 
                         text='Delete', 
                         warning='Are you sure you want to delete calendar user %s?'%u
                     ),
-                    id='edit/'+str(self._users.index(u)),
+                    id='info/'+str(self._users.index(u)),
                     icon='gen-user',
                     name=u,
                     subtext='User'
@@ -103,6 +109,41 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
                     id='dlgChpasswd', title="Changing password for user %s" % self._edit)
                 )
 
+        if self._info:
+            ui.find('dlgInfo').set('title', "Calendars and Address Books for user %s" % self._info)
+            for x in self._rc.list_cal(self._info):
+                cal = os.path.splitext(os.path.basename(x))[0]
+                ui.append('clist',
+                    UI.DTR(
+                        UI.IconFont(iconfont='gen-calendar'),
+                        UI.Label(size="1", text=cal),
+                        UI.Label(size="1", text="Calendar"),
+                        UI.Label(size="1", text='%s/%s/%s'%(url,self._info,cal+'.ics')),
+                        UI.TipIcon(iconfont="gen-close", 
+                            text="Delete", 
+                            id="delitem/%s/cal/%s"%(self._info,cal),
+                            warning="Are you sure you want to delete calendar %s?"%cal
+                            )
+                        )
+                    )
+            for x in self._rc.list_book(self._info):
+                book = os.path.splitext(os.path.basename(x))[0]
+                ui.append('clist',
+                    UI.DTR(
+                        UI.IconFont(iconfont='gen-users'),
+                        UI.Label(size="1", text=book),
+                        UI.Label(size="1", text="Address Book"),
+                        UI.Label(size="1", text='%s/%s/%s'%(url,self._info,book+'.vcf')),
+                        UI.TipIcon(iconfont="gen-close", 
+                            text="Delete", 
+                            id="delitem/%s/book/%s"%(self._info,book),
+                            warning="Are you sure you want to delete calendar %s?"%book
+                            )
+                        )
+                    )
+        else:
+            ui.remove('dlgInfo')
+
         return ui
 
     @event('button/click')
@@ -111,6 +152,8 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
             self._add = True
         if params[0] == 'edit':
             self._edit = self._users[int(params[1])]
+        if params[0] == 'info':
+            self._info = self._users[int(params[1])]
         if params[0] == 'del':
             try:
                 u = self._users[int(params[1])]
@@ -119,6 +162,14 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
             except Exception, e:
                 self.app.log.error('Calendar user could not be deleted. Error: %s' % str(e))
                 self.put_message('err', 'User could not be deleted')
+        if params[0] == 'delitem':
+            if params[2] == 'cal' and params[1] in self._users \
+            and params[3] in [os.path.splitext(os.path.basename(x))[0] for x in self._rc.list_cal(params[1])]:
+                self._rc.del_cal(params[1], params[3])
+            elif params[2] == 'book' and params[1] in self._users \
+            and params[3] in [os.path.splitext(os.path.basename(x))[0] for x in self._rc.list_book(params[1])]:
+                self._rc.del_book(params[1], params[3])
+            self.put_message('success', 'Item removed successfully')
 
     @event('dialog/submit')
     @event('form/submit')
@@ -163,6 +214,20 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
                         self.app.log.error('Calendar user %s could not be added. Error: %s' % (acct,str(e)))
                         self.put_message('err', 'User could not be added')
             self._add = None
+        elif params[0] == 'dlgInfo':
+            if vars.getvalue('action', 'OK'):
+                name = vars.getvalue('newname', '')
+                itype = vars.getvalue('newtype', 'Calendar')
+                if name and itype == 'cal':
+                    self._rc.add_cal(self._info, name)
+                    self.put_message('success', 'Calendar created successfully')
+                elif name and itype == 'book':
+                    self._rc.add_book(self._info, name)
+                    self.put_message('success', 'Address Book created successfully')
+                else:
+                    self._info = None
+            else:
+                self._info = None
         if params[0] == 'dlgChpasswd':
             passwd = vars.getvalue('chpasswd', '')
             if vars.getvalue('action', '') == 'OK':

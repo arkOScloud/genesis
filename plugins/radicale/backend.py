@@ -1,6 +1,9 @@
 import ConfigParser
+import glob
+import grp
 import nginx
 import os
+import pwd
 import stat
 
 from genesis.api import *
@@ -136,7 +139,7 @@ class RadicaleControl(Plugin):
         '[rights]\n'
         '# Rights management method\n'
         '# Value: None | owner_only | owner_write | from_file\n'
-        'type = None\n'
+        'type = owner_only\n'
         '\n'
         '# File for rights management from_file\n'
         'file = ~/.config/radicale/rights\n'
@@ -184,6 +187,15 @@ class RadicaleControl(Plugin):
             f.write(x+'\n')
         f.write('%s:%s'%(user, hashpw(passwd, 'ssha')))
         f.close()
+        try:
+            os.makedirs('/home/radicale/.config/radicale/collections/%s' % user)
+            os.chown('/home/radicale/.config/radicale/collections',
+                pwd.getpwnam('radicale').pw_uid, grp.getgrnam('radicale').gr_gid)
+        except os.error:
+            pass
+        open(os.path.join('/home/radicale/.config/radicale/collections', user, 'contacts.vcf'), 'w')
+        os.chown(os.path.join('/home/radicale/.config/radicale/collections', user, 'contacts.vcf'),
+            pwd.getpwnam('radicale').pw_uid, grp.getgrnam('radicale').gr_gid)
 
     def edit_user(self, user, passwd):
         ic = []
@@ -207,6 +219,40 @@ class RadicaleControl(Plugin):
         for x in ic:
             f.write(x+'\n')
         f.close()
+
+    def add_cal(self, user, name):
+        try:
+            os.makedirs('/home/radicale/.config/radicale/collections/%s' % user)
+            os.chown('/home/radicale/.config/radicale/collections',
+                pwd.getpwnam('radicale').pw_uid, grp.getgrnam('radicale').gr_gid)
+        except os.error:
+            pass
+        open(os.path.join('/home/radicale/.config/radicale/collections', user, name+'.ics'), 'w')
+        os.chown(os.path.join('/home/radicale/.config/radicale/collections', user, name+'.ics'),
+            pwd.getpwnam('radicale').pw_uid, grp.getgrnam('radicale').gr_gid)
+
+    def del_cal(self, user, name):
+        os.unlink(os.path.join('/home/radicale/.config/radicale/collections', user, name+'.ics'))
+
+    def list_cal(self, user):
+        return glob.glob(os.path.join('/home/radicale/.config/radicale/collections', user, '*.ics'))
+
+    def add_book(self, user, name):
+        try:
+            os.makedirs('/home/radicale/.config/radicale/collections/%s' % user)
+            os.chown('/home/radicale/.config/radicale/collections',
+                pwd.getpwnam('radicale').pw_uid, grp.getgrnam('radicale').gr_gid)
+        except os.error:
+            pass
+        open(os.path.join('/home/radicale/.config/radicale/collections', user, name+'.vcf'), 'w')
+        os.chown(os.path.join('/home/radicale/.config/radicale/collections', user, name+'.vcf'),
+            pwd.getpwnam('radicale').pw_uid, grp.getgrnam('radicale').gr_gid)
+
+    def del_book(self, user, name):
+        os.unlink(os.path.join('/home/radicale/.config/radicale/collections', user, name+'.vcf'))
+
+    def list_book(self, user):
+        return glob.glob(os.path.join('/home/radicale/.config/radicale/collections', user, '*.vcf'))
 
     def list_users(self):
         u = []

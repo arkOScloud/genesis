@@ -83,13 +83,15 @@
 </xsl:template>
 
 <xsl:template match="radio">
-    <div class="ui-el-radio">
-        <input type="radio" value="{@value}" name="{@name}" id="{@id}" onkeypress="return noenter()">
-            <xsl:if test="@checked = 'True'">
-                <xsl:attribute name="checked"/>
-            </xsl:if>
-        </input>
-        <xsl:value-of select="@text" />
+    <div class="radio">
+        <hlabel>
+            <input type="radio" value="{@value}" name="{@name}" id="{@id}">
+                <xsl:if test="@checked = 'True'">
+                    <xsl:attribute name="checked"/>
+                </xsl:if>
+            </input>
+            <xsl:value-of select="@text" />
+        </hlabel>
     </div>
 </xsl:template>
 
