@@ -5,6 +5,8 @@ from genesis.ui import *
 from genesis.api import *
 from genesis import apis
 from genesis.plugins.network.backend import IHostnameManager
+from genesis.plugins.webapps.backend import WebappControl
+from genesis.plugins.webapps.api import Webapp
 
 import backend
 
@@ -80,6 +82,13 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
                 name='Add user'
                 )
             )
+        ui.find('main').append(
+            UI.TblBtn(
+                id='editsrv',
+                icon='gen-tools',
+                name='Edit server settings'
+                )
+            )
 
         if self._add:
             ui.append('main',
@@ -107,6 +116,18 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
                         text="Confirm password", feedback="gen-lock", iid="chpasswdb"
                     ),
                     id='dlgChpasswd', title="Changing password for user %s" % self._edit)
+                )
+
+        if self._editsrv:
+            ui.append('main',
+                UI.DialogBox(
+                    UI.Formline(UI.TextInput(id='hostname', name="hostname", value=self.site.addr),
+                        text="Hostname", feedback="gen-earth", iid="hostname"
+                    ),
+                    UI.Formline(UI.TextInput(id='hostport', name="hostport", value=self.site.port),
+                        text="Port", feedback="gen-earth", iid="hostport"
+                    ),
+                    id='dlgEditSrv', title="Change server settings")
                 )
 
         if self._info:
@@ -152,6 +173,8 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
             self._add = True
         if params[0] == 'edit':
             self._edit = self._users[int(params[1])]
+        if params[0] == 'editsrv':
+            self._editsrv = True
         if params[0] == 'info':
             self._info = self._users[int(params[1])]
         if params[0] == 'del':
@@ -215,7 +238,7 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
                         self.put_message('err', 'User could not be added')
             self._add = None
         elif params[0] == 'dlgInfo':
-            if vars.getvalue('action', 'OK'):
+            if vars.getvalue('action', '') == 'OK':
                 name = vars.getvalue('newname', '')
                 itype = vars.getvalue('newtype', 'Calendar')
                 if name and itype == 'cal':
@@ -228,6 +251,39 @@ class RadicalePlugin(apis.services.ServiceControlPlugin):
                     self._info = None
             else:
                 self._info = None
+        elif params[0] == 'dlgEditSrv':
+            if vars.getvalue('action', '') == 'OK':
+                hostname = vars.getvalue('hostname', '')
+                hostport = vars.getvalue('hostport', '')
+                vaddr = True
+                for site in self._wa.get_sites():
+                    if hostname == site.addr and hostport == site.port:
+                        vaddr = False
+                if hostname == '':
+                    self.put_message('err', 'Must choose an address')
+                elif hostport == '':
+                    self.put_message('err', 'Must choose a port (default 80)')
+                elif hostport == self.app.gconfig.get('genesis', 'bind_port', ''):
+                    self.put_message('err', 'Can\'t use the same port number as Genesis')
+                elif not vaddr:
+                    self.put_message('err', 'Site must have either a different domain/subdomain or a different port')
+                elif self.site.ssl and hostport == '80':
+                    self.put_message('err', 'Cannot set an HTTPS site to port 80')
+                elif not self.site.ssl and hostport == '443':
+                    self.put_message('err', 'Cannot set an HTTP-only site to port 443')
+                else:
+                    w = Webapp()
+                    w.name = self.site.name
+                    w.stype = self.site.stype
+                    w.path = self.site.path
+                    w.addr = hostname
+                    w.port = hostport
+                    w.ssl = self.site.ssl
+                    w.php = False
+                    WebappControl(self.app).nginx_edit(self.site, w)
+                    apis.networkcontrol(self.app).change_webapp(self.site, w)
+                    self.put_message('success', 'Site edited successfully')
+            self._editsrv = None
         if params[0] == 'dlgChpasswd':
             passwd = vars.getvalue('chpasswd', '')
             if vars.getvalue('action', '') == 'OK':
