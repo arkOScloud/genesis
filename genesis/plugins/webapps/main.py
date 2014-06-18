@@ -83,7 +83,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                 addr = False
 
             update = False
-            if s.version and (s.version != 'None' or s.sclass.plugin_info.website_updates) \
+            if s.version and (s.version != 'None' or (hasattr(s.sclass, 'plugin_info') and s.sclass.plugin_info.website_updates)) \
             and s.version != s.sclass.plugin_info.version.rsplit('-', 1)[0]:
                 update = True
 
@@ -160,7 +160,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
             if len(self._setup.dbengines) > 1:
                 ui.append('app-config', UI.Formline(
                     UI.SelectInput(
-                        *list(UI.SelectOption(text=x, value=x) for x in self._setup.dbengines), 
+                        *list(UI.SelectOption(text=x if x else 'None', value=x if x else 'None') for x in self._setup.dbengines), 
                         name="dbtype", id="dbtype"), 
                     text="Database Type", 
                     help="This application supports multiple types of databases. Please choose the one you would like to use.")
@@ -312,6 +312,9 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                     self.put_message('err', 'Site must have either a different domain/subdomain or a different port')
                 elif not vname:
                     self.put_message('err', 'A site with this name already exists')
+                if vars.getvalue('dbtype', '') in ['', 'None']:
+                    self.addsite(self._setup, vars, {}, True)
+                    self._setup = None
                 elif hasattr(self._setup, 'dbengines') and self._setup.dbengines:
                     if vars.getvalue('dbtype', ''):
                         self._setup.selected_dbengine = vars.getvalue('dbtype', '')

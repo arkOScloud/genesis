@@ -24,22 +24,9 @@ class Website(Plugin):
         ]
 
     def pre_install(self, name, vars):
-        if vars.getvalue('ws-dbsel', 'None') == 'None':
-            if vars.getvalue('ws-dbname', '') != '':
-                raise Exception('Must choose a database type if you want to create one')
-            elif vars.getvalue('ws-dbpass', '') != '':
-                raise Exception('Must choose a database type if you want to create one')
-        if vars.getvalue('ws-dbsel', 'None') != 'None':
-            if vars.getvalue('ws-dbname', '') == '':
-                raise Exception('Must choose a database name if you want to create one')
-            elif vars.getvalue('ws-dbpass', '') == '':
-                raise Exception('Must choose a database password if you want to create one')
-            elif ' ' in vars.getvalue('ws-dbname') or '-' in vars.getvalue('ws-dbname'):
-                raise Exception('Database name must not contain spaces or dashes')
-            elif vars.getvalue('ws-dbname') > 16 and vars.getvalue('ws-dbsel') == 'MariaDB':
-                raise Exception('Database name must be shorter than 16 characters')
+        pass
 
-    def post_install(self, name, path, vars):
+    def post_install(self, name, path, vars, dbinfo={}):
         # Write a basic index file showing that we are here
         if vars.getvalue('php', '0') == '1':
             php = True
@@ -53,25 +40,11 @@ class Website(Plugin):
         else:
             php = False
             
-        # Create a database if the user wants one
         if php:
             phpctl = apis.langassist(self.app).get_interface('PHP')
-        if vars.getvalue('ws-dbsel', 'None') != 'None':
-            dbtype = vars.getvalue('ws-dbsel', '')
-            dbname = vars.getvalue('ws-dbname', '')
-            passwd = vars.getvalue('ws-dbpass', '')
-            dbase = apis.databases(self.app).get_interface(dbtype)
-            if hasattr(dbase, 'connect'):
-                conn = apis.databases(self.app).get_dbconn(dbtype)
-                dbase.add(dbname, conn)
-                dbase.usermod(dbname, 'add', passwd, conn)
-                dbase.chperm(dbname, dbname, 'grant', conn)
-            else:
-                dbase.add(dbname)
-                dbase.usermod(dbname, 'add', passwd)
-                dbase.chperm(dbname, dbname, 'grant')
-            if php:
-                phpctl.enable_mod('mysql')
+            phpctl.enable_mod('xcache')
+        if php and dbinfo and dbinfo['engine'] == 'MariaDB':
+            phpctl.enable_mod('mysql')
 
         f = open(os.path.join(path, 'index.'+('php' if php is True else 'html')), 'w')
         f.write(
@@ -88,11 +61,7 @@ class Website(Plugin):
         # Give access to httpd
         shell('chown -R http:http '+path)
 
-        # Enable xcache if PHP is set
-        if php:
-            phpctl.enable_mod('xcache')
-
-    def pre_remove(self, name, path):
+    def pre_remove(self, site):
         pass
 
     def post_remove(self, name):
@@ -104,8 +73,5 @@ class Website(Plugin):
     def ssl_disable(self, path):
         pass
 
-    def show_opts_add(self, ui):
-        type_sel = [UI.SelectOption(text='None', value='None')]
-        for x in sorted(apis.databases(self.app).get_dbtypes()):
-            type_sel.append(UI.SelectOption(text=x[0], value=x[0]))
-        ui.appendAll('ws-dbsel', *type_sel)
+    def update(self, path, pkg, ver):
+        pass

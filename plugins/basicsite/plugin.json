@@ -36,7 +36,7 @@
     "website_plugin": "Website",
     "website_updates": false,
     "download_url": null,
-    "database_engines": [],
+    "database_engines": [null, "MariaDB", "SQLite3"],
     "uses_php": false,
     "uses_ssl": true
 }

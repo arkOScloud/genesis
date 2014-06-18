@@ -2,16 +2,6 @@
     <formline text="PHP" help="If your site uses PHP, please check this box. FastCGI options will automatically be added to the nginx serverblock." checkbox="True">
         <checkbox name="php" id="php" checked="False" />
     </formline>
-    <formline text="Database Type" help="If you need a database for your site, select the type here. If not, leave at None.">
-        <selectinput name="ws-dbsel" id="ws-dbsel">
-        </selectinput>
-    </formline>
-    <formline text="Database Name" help="Enter your database name if you chose a type above. A user with full rights on this database will be created of the same name.">
-        <textinput name="ws-dbname" id="ws-dbname" />
-    </formline>
-    <formline text="Database User Password" help="Only if you need a database.">
-        <textinput name="ws-dbpass" id="ws-dbpass" password="True" />
-    </formline>
     <formline text="Serverblock" help="'listen', 'servername', 'root' and 'index' are already prepared for you. Just put in any applicable 'location' blocks or others you may require.">
         <textinputarea name="addtoblock" id="addtoblock" value="" />
     </formline>

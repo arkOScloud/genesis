@@ -74,7 +74,8 @@ class Webapps(apis.API):
             try:
                 s = None
                 c = nginx.loadf(w.path)
-                w.stype = g.get('website', 'stype')
+                stype = g.get('website', 'stype')
+                w.stype = stype if stype in [x.plugin_info.wa_plugin for x in self.get_apptypes()] else 'Unknown'
                 # Get the right serverblock - SSL if it's here
                 for x in c.servers:
                     if 'ssl' in x.filter('Key', 'listen')[0].value:
