@@ -1,5 +1,5 @@
 <xml>
-    <label size="5" text="Mailboxes" />
+    <label size="3" text="Mailboxes" />
     <pad>
         <dt id="ulist" width="100%">
             <dtr header="True">
@@ -18,7 +18,7 @@
         </dt>
     </pad>
 
-    <label size="5" text="Aliases" />
+    <label size="3" text="Aliases" />
     <pad>
         <dt id="alist" width="100%">
             <dtr header="True">

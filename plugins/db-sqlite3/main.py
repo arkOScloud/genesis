@@ -33,24 +33,23 @@ class SQLite3(Plugin):
     def chperm(self, dbname, user, action, conn=None):
         pass
 
-    def execute(self, dbname, command, conn=None):
-        try:
-            cmds = command.split(';')
-            conn = sqlite3.connect('/var/lib/sqlite3/%s.db' % dbname)
-            c = conn.cursor()
-            parse = []
-            for x in cmds:
-                if x.split():
-                    c.execute('%s' % x)
-                    out = c.fetchall()
-                    for line in out:
-                        parse.append(line[0])
+    def execute(self, dbname, command, conn=None, strf=False):
+        cmds = command.split(';')
+        conn = sqlite3.connect('/var/lib/sqlite3/%s.db' % dbname)
+        c = conn.cursor()
+        out = []
+        for x in cmds:
+            if x.split():
+                c.execute('%s' % x)
+                out += c.fetchall()
+        conn.commit()
+        if not strf:
+            return out
+        else:
             status = ''
-            for line in parse:
+            for line in out:
                 status += line + '\n'
             return status
-        except Exception, e:
-            raise Exception('', e)
 
     def get_dbs(self):
         self.chkpath()

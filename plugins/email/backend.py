@@ -1,10 +1,8 @@
 import os
 import re
-import hashlib
-import random
 import shutil
 import stat
-import _mysql_exceptions
+import sqlite3
 
 from passlib.hash import ldap_md5_crypt
 
@@ -263,75 +261,55 @@ class MailConfig(Plugin):
 
 class MailControl(Plugin):
     def is_setup(self):
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
-        if 'vmail' not in [x['name'] for x in dbase.get_dbs(conn)] \
-        or 'vmail' not in [x['name'] for x in dbase.get_users(conn)]:
-            return False
-        else:
+        try:
+            self.list_domains()
             return True
+        except sqlite3.OperationalError:
+            return False
 
     def initial_setup(self):
         # Grab frameworks for use later
         config = MailConfig(self.app)
         users = UsersBackend(self.app)
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         config.load()
 
-        # Create a MySQL database for storing mailbox, alias and
+        # Create a SQLite3 database for storing mailbox, alias and
         # domain information
-        if 'vmail' in [x['name'] for x in dbase.get_dbs(conn)]:
-            dbase.remove('vmail', conn)
-        if 'vmail' in [x['name'] for x in dbase.get_users(conn)]:
-            dbase.usermod('vmail', 'del', '', conn)
-        dbase.add('vmail', conn)
-        passwd = hashlib.sha1(str(random.random())).hexdigest()[0:16]
-        dbase.usermod('vmail', 'add', passwd, conn)
-        dbase.chperm('vmail', 'vmail', 'grant', conn)
-        sql = (
-            'CREATE TABLE alias ( '
-            'address varchar(255) NOT NULL default \'\', '
-            'goto text NOT NULL, '
-            'domain varchar(255) NOT NULL default \'\', '
-            'created datetime NOT NULL default \'0000-00-00 00:00:00\', '
-            'active tinyint(1) NOT NULL default \'1\', '
-            'PRIMARY KEY  (address), '
-            'KEY address (address) '
-            ') COMMENT=\'Virtual Aliases\'; '
-            'CREATE TABLE domain ( '
-            'domain varchar(255) NOT NULL default \'\', '
+        if 'vmail' in [x['name'] for x in dbase.get_dbs()]:
+            dbase.remove('vmail')
+        dbase.add('vmail')
+        sql = ('CREATE TABLE "alias" ('
+            'address varchar(255) NOT NULL default "", '
+            'goto text NOT NULL, domain varchar(255) NOT NULL default "", '
+            'created datetime NOT NULL default "0000-00-00 00:00:00", '
+            'active tinyint(1) NOT NULL default "1", '
+            'PRIMARY KEY (address)); '
+            'CREATE TABLE "domain" ( '
+            'domain varchar(255) NOT NULL default "", '
             'transport varchar(255) default NULL, '
-            'backupmx tinyint(1) NOT NULL default \'0\', '
-            'created datetime NOT NULL default \'0000-00-00 00:00:00\', '
-            'active tinyint(1) NOT NULL default \'1\', '
-            'PRIMARY KEY  (domain), '
-            'KEY domain (domain) '
-            ') COMMENT=\'Virtual Domains\'; '
-            'CREATE TABLE alias_domain ( '
-            'alias_domain varchar(255) NOT NULL default \'\', '
-            'target_domain varchar(255) NOT NULL default \'\', '
-            'created datetime NOT NULL default \'0000-00-00 00:00:00\', '
-            'active tinyint(1) NOT NULL default \'1\', '
-            'PRIMARY KEY (alias_domain), '
-            'KEY active (active), '
-            'KEY target_domain (target_domain) '
-            ') COMMENT=\'Domain Aliases\'; '
-            'CREATE TABLE mailbox ( '
-            'username varchar(255) NOT NULL default \'\', '
-            'password varchar(255) NOT NULL default \'\', '
-            'name varchar(255) NOT NULL default \'\', '
-            'maildir varchar(255) NOT NULL default \'\', '
-            'quota bigint(20) NOT NULL default \'0\', '
-            'local_part varchar(255) NOT NULL default \'\', '
-            'domain varchar(255) NOT NULL default \'\', '
-            'created datetime NOT NULL default \'0000-00-00 00:00:00\', '\
-            'active tinyint(1) NOT NULL default \'1\', '
-            'PRIMARY KEY  (username), '
-            'KEY username (username) '
-            ') COMMENT=\'Virtual Mailboxes\';'
-        )
-        dbase.execute('vmail', sql, conn, False)
+            'backupmx tinyint(1) NOT NULL default "0", '
+            'created datetime NOT NULL default "0000-00-00 00:00:00", '
+            'active tinyint(1) NOT NULL default "1", '
+            'PRIMARY KEY (domain)); '
+            'CREATE TABLE "alias_domain" ( '
+            'alias_domain varchar(255) NOT NULL default "", '
+            'target_domain varchar(255) NOT NULL default "", '
+            'created datetime NOT NULL default "0000-00-00 00:00:00", '
+            'active tinyint(1) NOT NULL default "1", '
+            'PRIMARY KEY (alias_domain)); '
+            'CREATE TABLE "mailbox" ( '
+            'username varchar(255) NOT NULL default "", '
+            'password varchar(255) NOT NULL default "", '
+            'name varchar(255) NOT NULL default "", '
+            'maildir varchar(255) NOT NULL default "", '
+            'quota bigint(20) NOT NULL default "0", '
+            'local_part varchar(255) NOT NULL default "", '
+            'domain varchar(255) NOT NULL default "", '
+            'created datetime NOT NULL default "0000-00-00 00:00:00", '
+            'active tinyint(1) NOT NULL default "1", '
+            'PRIMARY KEY (username));')
+        dbase.execute('vmail', sql)
 
         # Add system user and group for handling mail
         users.add_sys_user('vmail')
@@ -362,9 +340,8 @@ class MailControl(Plugin):
         }
 
         # Tell Dovecot how to read our SQL
-        config.dovecot_dovecotsql['driver'] = 'mysql'
-        config.dovecot_dovecotsql['connect'] = \
-            'host=localhost dbname=vmail user=vmail password=%s'%passwd
+        config.dovecot_dovecotsql['driver'] = 'sqlite'
+        config.dovecot_dovecotsql['connect'] = '/var/lib/sqlite3/vmail.db'
         config.dovecot_dovecotsql['default_pass_scheme'] = 'MD5-CRYPT'
         config.dovecot_dovecotsql['password_query'] = (
             'SELECT username as user, password, \'/var/vmail/%d/%n\''
@@ -422,52 +399,37 @@ class MailControl(Plugin):
                 os.chmod(os.path.join(r, x), st.st_mode&~stat.S_IROTH&~stat.S_IWOTH&~stat.S_IXOTH)
 
         # Tell Postfix (MTA) how to get mailbox, alias and domain info
-        # from our MySQL database
-        f = open('/etc/postfix/mysql_virtual_alias_domainaliases_maps.cf', 'w')
-        f.write('user = vmail\n'
-            'password = '+passwd+'\n'
-            'hosts = 127.0.0.1\n'
-            'dbname = vmail\n'
+        # from our SQLite3 database
+        f = open('/etc/postfix/sqlite_virtual_alias_domainaliases_maps.cf', 'w')
+        f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'query = SELECT goto FROM alias,alias_domain\n'
             '  WHERE alias_domain.alias_domain = \'%d\'\n'
             '  AND alias.address=concat(\'%u\', \'@\', alias_domain.target_domain)\n'
             '  AND alias.active = 1\n')
         f.close()
-        f = open('/etc/postfix/mysql_virtual_alias_maps.cf', 'w')
-        f.write('user = vmail\n'
-            'password = '+passwd+'\n'
-            'hosts = 127.0.0.1\n'
-            'dbname = vmail\n'
+        f = open('/etc/postfix/sqlite_virtual_alias_maps.cf', 'w')
+        f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'table = alias\n'
             'select_field = goto\n'
             'where_field = address\n'
             'additional_conditions = and active = \'1\'\n')
         f.close()
-        f = open('/etc/postfix/mysql_virtual_domains_maps.cf', 'w')
-        f.write('user = vmail\n'
-            'password = '+passwd+'\n'
-            'hosts = 127.0.0.1\n'
-            'dbname = vmail\n'
+        f = open('/etc/postfix/sqlite_virtual_domains_maps.cf', 'w')
+        f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'table = domain\n'
             'select_field = domain\n'
             'where_field = domain\n'
             'additional_conditions = and backupmx = \'0\' and active = \'1\'\n')
         f.close()
-        f = open('/etc/postfix/mysql_virtual_mailbox_domainaliases_maps.cf', 'w')
-        f.write('user = vmail\n'
-            'password = '+passwd+'\n'
-            'hosts = 127.0.0.1\n'
-            'dbname = vmail\n'
+        f = open('/etc/postfix/sqlite_virtual_mailbox_domainaliases_maps.cf', 'w')
+        f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'query = SELECT maildir FROM mailbox, alias_domain\n'
             '  WHERE alias_domain.alias_domain = \'%d\'\n'
             '  AND mailbox.username=concat(\'%u\', \'@\', alias_domain.target_domain )\n'
             '  AND mailbox.active = 1\n')
         f.close()
-        f = open('/etc/postfix/mysql_virtual_mailbox_maps.cf', 'w')
-        f.write('user = vmail\n'
-            'password = '+passwd+'\n'
-            'hosts = 127.0.0.1\n'
-            'dbname = vmail\n'
+        f = open('/etc/postfix/sqlite_virtual_mailbox_maps.cf', 'w')
+        f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'table = mailbox\n'
             'select_field = CONCAT(domain, \'/\', local_part)\n'
             'where_field = username\n'
@@ -532,11 +494,11 @@ class MailControl(Plugin):
             'inet_interfaces': 'all',
             'mynetworks_style': 'host',
             'virtual_mailbox_base': '/var/vmail',
-            'virtual_mailbox_maps': 'mysql:/etc/postfix/mysql_virtual_mailbox_maps.cf, mysql:/etc/postfix/mysql_virtual_mailbox_domainaliases_maps.cf',
+            'virtual_mailbox_maps': 'sqlite:/etc/postfix/sqlite_virtual_mailbox_maps.cf, sqlite:/etc/postfix/sqlite_virtual_mailbox_domainaliases_maps.cf',
             'virtual_uid_maps': 'static:'+str(uid),
             'virtual_gid_maps': 'static:'+str(gid),
-            'virtual_alias_maps': 'mysql:/etc/postfix/mysql_virtual_alias_maps.cf, mysql:/etc/postfix/mysql_virtual_alias_domainaliases_maps.cf',
-            'virtual_mailbox_domains': 'mysql:/etc/postfix/mysql_virtual_domains_maps.cf',
+            'virtual_alias_maps': 'sqlite:/etc/postfix/sqlite_virtual_alias_maps.cf, sqlite:/etc/postfix/sqlite_virtual_alias_domainaliases_maps.cf',
+            'virtual_mailbox_domains': 'sqlite:/etc/postfix/sqlite_virtual_domains_maps.cf',
             'virtual_transport': 'dovecot',
             'dovecot_destination_recipient_limit': '1',
             'header_checks': 'regexp:/etc/postfix/header_checks',
@@ -578,28 +540,15 @@ class MailControl(Plugin):
         cfg.save()
 
     def list_domains(self):
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
-        try:
-            d = dbase.execute('vmail', 
-                'SELECT domain FROM domain;', conn, False)
-        except _mysql_exceptions.OperationalError, e:
-            if e[0] == 1049:
-                return []
-        except Exception, e:
-            raise
-        for x in d:
-            if x == ('ALL',):
-                d.remove(x)
+        dbase = apis.databases(self.app).get_interface('SQLite3')
+        d = dbase.execute('vmail', 'SELECT domain FROM domain;')
         return [x[0] for x in d]
 
     def list_mailboxes(self, domain):
         r = []
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         d = dbase.execute('vmail', 
-            'SELECT local_part,name,quota FROM mailbox WHERE domain = \"%s\"'%domain, 
-            conn, False)
+            'SELECT local_part,name,quota FROM mailbox WHERE domain = "%s"'%domain)
         for x in d:
             r.append({'username': x[0], 'name': x[1], 'quota': x[2],
                 'domain': domain})
@@ -607,71 +556,65 @@ class MailControl(Plugin):
 
     def list_aliases(self, domain):
         r = []
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         d = dbase.execute('vmail', 
-            'SELECT address,goto FROM alias WHERE domain = \"%s\";'%domain, 
-            conn, False)
+            'SELECT address,goto FROM alias WHERE domain = "%s";'%domain)
         for x in d:
             r.append({'address': x[0], 'forward': x[1], 'domain': domain})
         return r
 
     def add_mailbox(self, name, dom, passwd, fullname, quota=False):
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         pwhash = ldap_md5_crypt.encrypt(passwd).split('{CRYPT}')[1]
         dbase.execute('vmail',
-            'INSERT INTO `mailbox` VALUES (\"'+name+'@'+dom+'\", '+\
-            '\"'+pwhash+'\", \"'+fullname+'\", \"'+name+'@'+dom+'/\", '+\
-            (quota if quota else '0')+', \"'+name+'\", \"'+dom+'\", '+\
-            'NOW(), 1)', conn, False)
+            'INSERT INTO mailbox VALUES ("%s@%s", "%s", "%s", "%s@%s", %s, "%s", "%s", datetime(), 1)' \
+            %(name,dom,pwhash,fullname,name,dom,(quota if quota else '0'),name,dom))
 
     def del_mailbox(self, name, dom):
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         dbase.execute('vmail',
-            'DELETE FROM `mailbox` WHERE local_part = \"%s\" AND domain = \"%s\"'%(name,dom), conn, False)
+            'DELETE FROM mailbox WHERE local_part = "%s" AND domain = "%s"' \
+            %(name,dom))
 
     def add_alias(self, name, dom, forward):
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         dbase.execute('vmail',
-            'INSERT INTO `alias` VALUES (\"'+name+'@'+dom+'\", \"'+forward+'\", '+\
-            '\"'+dom+'\", NOW(), 1)', conn, False)
+            'INSERT INTO alias VALUES ("%s@%s", "%s", "%s", datetime(), 1)' \
+            %(name,dom,forward,dom))
 
     def del_alias(self, addr, forward):
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         dbase.execute('vmail',
-            'DELETE FROM `alias` WHERE address = \"%s\" AND goto = \"%s\"'%(addr,forward), conn, False)
+            'DELETE FROM alias WHERE address = "%s" AND goto = "%s"' \
+            %(addr,forward))
 
     def add_domain(self, name):
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         dbase.execute('vmail',
-            'INSERT INTO `domain` VALUES (\"'+name+'\", \"virtual\", '
-            +'0, NOW(), 1)', conn, False)
+            'INSERT INTO domain VALUES ("%s", "virtual", 0, datetime(), 1)' \
+            % name)
 
     def del_domain(self, name):
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         dbase.execute('vmail',
-            'DELETE FROM `domain` WHERE domain = \"%s\"'%name, conn, False)
+            'DELETE FROM domain WHERE domain = "%s"'%name)
 
     def edit(self, name, dom, quota, passwd):
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
+        dbase = apis.databases(self.app).get_interface('SQLite3')
         if passwd:
             pwhash = ldap_md5_crypt.encrypt(passwd).split('{CRYPT}')[1]
         if passwd and quota:
             dbase.execute('vmail',
-                'UPDATE mailbox SET quota = %s, password = \"%s\" WHERE local_part = \"%s\" AND domain = \"%s\"'%(quota,pwhash,name,dom), conn, False)
+                'UPDATE mailbox SET quota = %s, password = "%s" WHERE local_part = "%s" AND domain = "%s"' \
+                %(quota,pwhash,name,dom))
         elif passwd:
             dbase.execute('vmail',
-                'UPDATE mailbox SET password = \"%s\" WHERE local_part = \"%s\" AND domain = \"%s\"'%(pwhash,name,dom), conn, False)
+                'UPDATE mailbox SET password = "%s" WHERE local_part = "%s\" AND domain = "%s"' \
+                %(pwhash,name,dom))
         elif quota:
             dbase.execute('vmail',
-                'UPDATE mailbox SET quota = %s WHERE local_part = \"%s\" AND domain = \"%s\"'%(quota,name,dom), conn, False)
+                'UPDATE mailbox SET quota = %s WHERE local_part = "%s" AND domain = "%s"' \
+                %(quota,name,dom))
 
 
 class MailSSLPlugin(Plugin):

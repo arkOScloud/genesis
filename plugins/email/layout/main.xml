@@ -11,7 +11,7 @@
             <tabheader text="Settings" id="1"/>
 
             <tabbody id="0">
-                <label size="5" text="Mailserver Domains" />
+                <label size="3" text="Mailserver Domains" />
                 <pad>
                     <dt id="list" width="100%">
                         <dtr header="True">
@@ -26,7 +26,7 @@
             </tabbody>
 
             <tabbody id="1">
-                <label size="5" text="Mailserver Settings" />
+                <label size="3" text="Mailserver Settings" />
                 <pad>
                 <formline>
                         <btn id="setup" text="Reinitialize" iconfont="gen-loop-2" warning="This will wipe all mailserver account data from your system and start over from scratch. Are you sure you want to do this?" />

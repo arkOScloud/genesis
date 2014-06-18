@@ -1,4 +1,5 @@
 import re
+import sqlite3
 
 from genesis.ui import *
 from genesis.api import *
@@ -13,7 +14,6 @@ class MailPlugin(apis.services.ServiceControlPlugin):
     folder = 'servers'
 
     def on_session_start(self):
-        self._skip = False
         self._edit = None
         self._addbox = None
         self._addalias = None
@@ -27,38 +27,18 @@ class MailPlugin(apis.services.ServiceControlPlugin):
     def on_init(self):
         try:
             self._domains = self._mc.list_domains()
-        except DBConnFail:
+        except sqlite3.OperationalError:
             self._domains = []
 
     def get_main_ui(self):
         ui = self.app.inflate('email:main')
-        connstat = apis.databases(self.app).get_dbconn('MariaDB')
 
-        if not apis.databases(self.app).get_interface('MariaDB').checkpwstat():
-            self.put_message('err', 'MariaDB does not have a root password set. '
-                'Please add this via the Databases screen.')
-            return ui
-        elif not connstat and not self._skip:
-            ui.append('main', UI.Authorization(
-                app='Mailserver',
-                reason='Unlocking mail accounts database',
-                label='Please enter your MariaDB root password')
-            )
-            return ui
-        elif not connstat and self._skip:
-            self.put_message('err', 'You refused to authenticate to MariaDB. '
-                'You will not be able to perform operations with this database type. '
-                'Go to Databases and click Settings > Reauthenticate to retry.')
-            self._domains, self._aliases, self._boxes = [], [], []
-        elif connstat and self._skip:
-            self._skip = False
-        else:
-            is_setup = self._mc.is_setup()
-            if self.app.get_config(self._mc).reinitialize \
-            or not is_setup:
-                if not is_setup:
-                    self.put_message('err', 'Your mailserver does not appear to be properly configured. Please rerun this setup.')
-                return UI.Btn(iconfont="gen-cog", text="Setup Mailserver", id="setup")
+        is_setup = self._mc.is_setup()
+        if self.app.get_config(self._mc).reinitialize \
+        or not is_setup:
+            if not is_setup:
+                self.put_message('err', 'Your mailserver does not appear to be properly configured. Please rerun this setup.')
+            return UI.Btn(iconfont="gen-cog", text="Setup Mailserver", id="setup")
 
         t = ui.find('list')
         for x in self._domains:
@@ -82,12 +62,16 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                             text='Account Name', help="The \'name\' in name@example.com"
                         ),
                         UI.FormLine(
-                            UI.Select(*doms if doms else 'None', id='dom', name='dom'),
+                            UI.SelectInput(*doms if doms else 'None', id='dom', name='dom'),
                             text='Domain'
                         ),
-                        UI.FormLine(
-                            UI.EditPassword(id='passwd', value='Click to add password'),
-                            text='Password'
+                        UI.Formline(
+                            UI.TextInput(id='passwd', name="passwd", password=True, verify="password", verifywith="passwd"),
+                            text="Password", feedback="gen-lock", iid="passwd"
+                        ),
+                        UI.Formline(
+                            UI.TextInput(id='passwdb', name="passwdb", password=True, verify="password", verifywith="passwd"),
+                            text="Confirm password", feedback="gen-lock", iid="passwdb"
                         ),
                         UI.FormLine(
                             UI.TextInput(name='fullname', id='fullname'),
@@ -97,7 +81,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                             UI.TextInput(name='quota', id='quota'),
                             text='Quota (in MB)', help='Enter 0 for unlimited'
                         ),
-                        id='dlgAddBox')
+                        id='dlgAddBox', title="Adding new mailbox")
                     )
             else:
                 self.put_message('err', 'You must add a domain first!')
@@ -113,14 +97,14 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                             text='Account Name', help="The \'name\' in name@example.com"
                         ),
                         UI.FormLine(
-                            UI.Select(*doms if doms else 'None', id='dom', name='dom'),
+                            UI.SelectInput(*doms if doms else 'None', id='dom', name='dom'),
                             text='Domain'
                         ),
                         UI.FormLine(
                             UI.TextInput(name='forward', id='forward'),
                             text='Points to', help="A full email address to forward messages to"
                         ),
-                        id='dlgAddAlias')
+                        id='dlgAddAlias', title="Adding alias")
                     )
             else:
                 self.put_message('err', 'You must add a domain first!')
@@ -134,18 +118,18 @@ class MailPlugin(apis.services.ServiceControlPlugin):
             ui.append('main',
                 UI.DialogBox(
                     UI.FormLine(
-                        UI.Label(text=self._edit['username']+'@'+self._edit['domain']),
-                        text="Editing mailbox for"
-                    ),
-                    UI.FormLine(
                         UI.TextInput(name='quota', id='quota', value=self._edit['quota']),
                         text='Quota (in MB)', help="Enter 0 for unlimited"
                     ),
-                    UI.FormLine(
-                        UI.EditPassword(id='chpasswd', value='Click to change password'),
-                        text='Password'
+                    UI.Formline(
+                        UI.TextInput(id='chpasswd', name="chpasswd", password=True, verify="password", verifywith="chpasswd"),
+                        text="New password", feedback="gen-lock", iid="chpasswd"
                     ),
-                    id='dlgEdit')
+                    UI.Formline(
+                        UI.TextInput(id='chpasswdb', name="chpasswdb", password=True, verify="password", verifywith="chpasswd"),
+                        text="Confirm new password", feedback="gen-lock", iid="chpasswdb"
+                    ),
+                    id='dlgEdit', title="Editing mailbox for %s"%self._edit['username']+'@'+self._edit['domain'])
                 )
 
         if self._list:
@@ -158,7 +142,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                     UI.Iconfont(iconfont='gen-user'),
                     UI.Label(text=x['username']),
                     UI.Label(text=x['name']),
-                    UI.Label(text=x['quota']+' MB' if x['quota'] != '0' else 'Unlimited'),
+                    UI.Label(text=('%s MB'%x['quota']) if x['quota'] != 0 else 'Unlimited'),
                     UI.HContainer(
                         UI.TipIcon(iconfont='gen-key', id='edit/'+str(self._boxes.index(x)), text='Edit Mailbox'),
                         UI.TipIcon(iconfont='gen-cancel-circle', id='delbox/'+str(self._boxes.index(x)), text='Delete Mailbox',
@@ -179,7 +163,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                     ),
                 ))
             ui.append('main',
-                UI.DialogBox(dui, id='dlgList')
+                UI.DialogBox(dui, id='dlgList', hidecancel=True)
             )
 
         return ui
@@ -193,10 +177,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
         elif params[0] == 'addalias':
             self._addalias = True
         elif params[0] == 'adddom':
-            if self._skip:
-                self.put_message('err', 'You must authenticate with MariaDB in the Databases pane before you can add a domain.')
-            else:
-                self._adddom = True
+            self._adddom = True
         elif params[0] == 'list':
             self._list = self._domains[int(params[1])]
         elif params[0] == 'edit':
@@ -308,15 +289,3 @@ class MailPlugin(apis.services.ServiceControlPlugin):
                         self.app.log.error('Mailbox %s@%s could not be edited. Error: %s' % (self._edit['username'],self._edit['domain'],str(e)))
                         self.put_message('err', 'Mailbox could not be edited')
             self._edit = None
-        if params[0] == 'dlgAuthorize':
-            if vars.getvalue('action', '') == 'OK':
-                login = vars.getvalue('auth-string', '')
-                try:
-                    apis.databases(self.app).get_interface('MariaDB').connect(
-                        store=self.app.session['dbconns'],
-                        passwd=login)
-                    self._skip = False
-                except DBAuthFail, e:
-                    self.put_message('err', str(e))
-            else:
-                self._skip = True
