@@ -139,7 +139,7 @@ class CertControl(Plugin):
 
 		# If system time is way off, raise an error
 		try:
-			st = SystemTime().get_offset()
+			st = SystemTime.get_offset()
 			if st < -3600 or st > 3600:
 				raise SystemTimeError(st)
 		except:
@@ -172,7 +172,7 @@ class CertControl(Plugin):
 				crt.get_subject().CN = vars.getvalue('certcn')
 			if vars.getvalue('certemail', ''):
 				crt.get_subject().emailAddress = vars.getvalue('certemail')
-			crt.set_serial_number(int(SystemTime().get_serial_time()))
+			crt.set_serial_number(int(SystemTime.get_serial_time()))
 			crt.gmtime_adj_notBefore(0)
 			crt.gmtime_adj_notAfter(2*365*24*60*60)
 			crt.set_issuer(ca_cert.get_subject())
@@ -211,7 +211,7 @@ class CertControl(Plugin):
 
 		ca = OpenSSL.crypto.X509()
 		ca.set_version(3)
-		ca.set_serial_number(int(SystemTime().get_serial_time()))
+		ca.set_serial_number(int(SystemTime.get_serial_time()))
 		ca.get_subject().CN = hostname
 		ca.gmtime_adj_notBefore(0)
 		ca.gmtime_adj_notAfter(5*365*24*60*60)

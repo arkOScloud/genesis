@@ -69,7 +69,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
         if not self.cas:
             lst.append(UI.Btn(text="Generate New", klid="cagen"))
         for s in self.cas:
-            exp = SystemTime().convert(s['expiry'], '%Y%m%d%H%M%SZ', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
+            exp = SystemTime.convert(s['expiry'], '%Y%m%d%H%M%SZ', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
             lst.append(UI.FormLine(
                 UI.HContainer(
                     UI.Label(text='Expires '+exp),
@@ -115,7 +115,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             ui.find('certname').set('text', self._cinfo['name'])
             ui.find('domain').set('text', self._cinfo['domain'])
             ui.find('ikeytype').set('text', self._cinfo['keylength']+'-bit '+self._cinfo['keytype'])
-            exp = SystemTime().convert(self._cinfo['expiry'], '%Y%m%d%H%M%SZ', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
+            exp = SystemTime.convert(self._cinfo['expiry'], '%Y%m%d%H%M%SZ', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
             ui.find('expires').set('text', exp)
             ui.find('sha1').set('text', self._cinfo['sha1'])
             ui.find('md5').set('text', self._cinfo['md5'])

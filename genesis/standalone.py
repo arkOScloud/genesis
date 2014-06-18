@@ -131,14 +131,13 @@ def run_server(log_level=logging.INFO, config_file=''):
     log.info('Verifying system time...')
     os = 0
     try:
-        st = genesis.utils.SystemTime()
-        os = st.get_offset()
+        os = genesis.utils.SystemTime.get_offset()
     except Exception, e:
         log.error('System time could not be retrieved. Error: %s' % str(e))
     if os < -3600 or os > 3600:
         log.info('System time was off by %s secs - updating' % str(os))
         try:
-            st.set_datetime()
+            genesis.utils.SystemTime.set_datetime()
         except Exception, e:
             log.error('System time could not be set. Error: %s' % str(e))
 

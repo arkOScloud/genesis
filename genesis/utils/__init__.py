@@ -1,4 +1,5 @@
 from utils import *
+from SystemTime import *
 from error import *
 from PrioList import PrioList
 from misc import *
@@ -34,4 +35,6 @@ __all__ = [
     'KThread',
 
     'PrioList',
+
+    'SystemTime',
 ]

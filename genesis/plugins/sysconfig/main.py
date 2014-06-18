@@ -18,17 +18,16 @@ class SysConfigPlugin(CategoryPlugin):
     def on_init(self):
         self._mgr = self.app.get_backend(apis.services.IServiceManager)
         self._be = backend.Config(self.app)
-        self._st = SystemTime()
         self.hostname = self._be.gethostname()
 
     def get_ui(self):
         ui = self.app.inflate('sysconfig:main')
-        systime = self._st.get_datetime('%s, %s' \
+        systime = SystemTime.get_datetime('%s, %s' \
             % (self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'), 
                 self.app.gconfig.get('genesis', 'tformat', '%H:%M')))
         offset = 0
         try:
-            offset = self._st.get_offset()
+            offset = SystemTime.get_offset()
         except Exception, e:
             self.app.log.error('Could not get Internet time. Please check your connection. Error: %s' % str(e))
             self.put_message('err', 'Could not get Internet time. Please check your connection.')
@@ -97,7 +96,7 @@ class SysConfigPlugin(CategoryPlugin):
                 self._mgr.disable(params[1])
         if params[0] == 'settime':
             try:
-                self._st.set_datetime()
+                SystemTime.set_datetime()
                 self.put_message('success', 'System time updated successfully')
             except Exception, e:
                 self.app.log.error('Could not set time. Please check your connection. Error: %s' % str(e))
