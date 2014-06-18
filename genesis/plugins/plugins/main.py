@@ -1,10 +1,7 @@
 from genesis.api import *
 from genesis.ui import *
 from genesis import apis
-from genesis.plugmgr import ImSorryDave, PluginLoader, RepositoryManager
-
-import json
-import urllib2
+from genesis.plugmgr import PluginLoader, RepositoryManager
 
 
 class PluginManager(CategoryPlugin, URLHandler):
@@ -15,6 +12,7 @@ class PluginManager(CategoryPlugin, URLHandler):
     def on_session_start(self):
         self._mgr = RepositoryManager(self.app.log, self.app.config)
         self._nc = apis.networkcontrol(self.app)
+        self._wa = apis.webapps(self.app)
         self._info = None
         self._metoo = []
 
@@ -94,12 +92,10 @@ class PluginManager(CategoryPlugin, URLHandler):
             info = [x for x in self._mgr.available if x.id==self._info][0]
             if info.assets:
                 try:
-                    req = urllib2.Request('https://'+self.app.gconfig.get('genesis', 'update_server'))
-                    req.add_header('Content-type', 'application/json')
-                    resp = urllib2.urlopen(req, json.dumps({'get': 'assets', 'id': info.id}))
-                    resp = json.loads(resp.read())
-                    ui.find('app-logo').append(UI.Image(file="data:image/png;base64,%s" % resp['logo'], cls='app-logo'))
-                    for x in resp['screenshots']:
+                    data = send_json('https://%s/' % self.app.gconfig.get('genesis', 'update_server'), 
+                        {'get': 'assets', 'id': info.id})
+                    ui.find('app-logo').append(UI.Image(file="data:image/png;base64,%s" % data['logo'], cls='app-logo'))
+                    for x in data['screenshots']:
                         ui.find('app-screens').append(UI.Image(file="data:image/jpeg;base64,%s" % x, cls="img-responsive img-thumbnail app-screenshot", lightbox=self._info))
                 except:
                     pass

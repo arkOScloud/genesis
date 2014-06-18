@@ -1,5 +1,6 @@
 import time
 import subprocess
+import json
 import ntplib
 import platform
 import os
@@ -193,6 +194,30 @@ def download(url, file=None, crit=False):
         else:
             return data
     except Exception, e:
+        if crit:
+            raise
+
+def send_json(url, data, returns='json', headers=[], crit=False):
+    try:
+        req = urllib2.Request(url)
+        req.add_header('Content-type', 'application/json')
+        for x in headers:
+            req.add_header(x[0], x[1])
+        resp = urllib2.urlopen(req, json.dumps(data))
+        if returns == 'json':
+            return json.loads(resp.read())
+        else:
+            return resp.read()
+    except urllib2.HTTPError, e:
+        self.log.error('JSON POST to %s failed - HTTP Error %s' % (url, str(e.code)))
+        if crit:
+            raise
+    except urllib2.URLError, e:
+        self.log.error('JSON POST to %s failed - Server not found or URL malformed. Please check your Internet settings.' % url)
+        if crit:
+            raise
+    except Exception, e:
+        self.log.error('JSON POST to %s failed - %s' % (url, str(e)))
         if crit:
             raise
 

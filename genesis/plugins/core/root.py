@@ -1,14 +1,13 @@
 import gevent
 import platform
 import json
-import urllib2
 
 from genesis.ui import UI
 from genesis.com import *
 from genesis import version
 from genesis.api import ICategoryProvider, EventProcessor, SessionPlugin, event, URLHandler, url, get_environment_vars
 from genesis.ui import BasicTemplate
-from genesis.utils import ConfigurationError, shell
+from genesis.utils import send_json, ConfigurationError, shell
 from api import IProgressBoxProvider
 
 
@@ -107,10 +106,9 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         url = self.app.config.get('genesis', 'update_server', 'grm.arkos.io')
         try:
             rpt = json.loads(req['wsgi.input'].read())
-            req = urllib2.Request('https://%s' % url)
-            req.add_header('Content-type', 'application/json')
-            resp = urllib2.urlopen(req, json.dumps({'put': 'crashreport', 'report': rpt['report'], 'comments': rpt['comments']}))
-            if json.loads(resp.read())['status'] == 200:
+            data = send_json('https://%s/' % url, 
+                {'put': 'crashreport', 'report': rpt['report'], 'comments': rpt['comments']}, crit=True)
+            if data['status'] == 200:
                 self.app.log.info('An automatic error report was filed to %s' % url)
                 return json.dumps({"status": 200})
             else:

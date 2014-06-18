@@ -21,11 +21,10 @@ import sys
 import tarfile
 import traceback
 import weakref
-import urllib2
 
 from genesis.api import *
 from genesis.com import *
-from genesis.utils import detect_platform, shell, shell_cs, shell_status
+from genesis.utils import send_json, detect_platform, shell, shell_cs, shell_status
 import genesis
 
 RETRY_LIMIT = 10
@@ -585,16 +584,14 @@ class RepositoryManager:
         if not os.path.exists('/var/lib/genesis'):
             os.mkdir('/var/lib/genesis')
         try:
-            req = urllib2.Request('https://%s/' % self.server)
-            req.add_header('Content-type', 'application/json')
-            data = urllib2.urlopen(req, json.dumps({'get': 'list', 'distro': PluginLoader.platform})).read()
+            data = send_json('https://%s/' % self.server, 
+                {'get': 'list', 'distro': PluginLoader.platform}, 
+                returns='raw', crit=True)
             open('/var/lib/genesis/plugins.list', 'w').write(data)
-        except urllib2.HTTPError, e:
-            self.log.error('Application list retrieval failed with HTTP Error %s' % str(e.code))
-        except urllib2.URLError, e:
-            self.log.error('Application list retrieval failed - Server not found or URL malformed. Please check your Internet settings.')
         except IOError, e:
             self.log.error('Failed to write application list to disk.')
+        except:
+            self.log.error('Application list retrieval failed.')
         else:
             self.update_installed()
             self.update_available()
@@ -660,25 +657,16 @@ class RepositoryManager:
 
         if cat:
             cat.statusmsg('Downloading plugin package...')
-        try:
-            req = urllib2.Request('https://%s/' % self.server)
-            req.add_header('Content-type', 'application/json')
-            data = urllib2.urlopen(req, json.dumps({'get': 'plugin', 'id': id}))
-            if data.info()['Content-type'].startswith('application/json'):
-                j = json.loads(data.read())
-                self.log.error('Plugin retrieval failed - %s' % str(j['info']))
-                raise Exception('Plugin retrieval failed - %s' % str(j['info']))
-            else:
-                open('%s/plugin.tar.gz'%dir, 'w').write(data.read())
-        except urllib2.HTTPError, e:
-            self.log.error('Plugin retrieval failed with HTTP Error %s' % str(e.code))
-            raise Exception('Plugin retrieval failed with HTTP Error %s' % str(e.code))
-        except urllib2.URLError, e:
-            self.log.error('Plugin retrieval failed - Server not found or URL malformed. Please check your Internet settings.')
-            raise Exception('Plugin retrieval failed - Server not found or URL malformed. Please check your Internet settings.')
+        data = send_json('https://%s/' % self.server, 
+            {'get': 'plugin', 'id': id}, crit=True)
+        if data['status'] == 200:
+            open('%s/plugin.tar.gz'%dir, 'wb').write(base64.b64decode(data['info']))
         else:
-            #self.remove(id)
-            self.install_tar(load=load, cat=cat)
+            self.log.error('Plugin retrieval failed - %s' % str(data['info']))
+            raise Exception('Plugin retrieval failed - %s' % str(data['info']))
+
+        #self.remove(id)
+        self.install_tar(load=load, cat=cat)
 
     def install_stream(self, stream):
         """
