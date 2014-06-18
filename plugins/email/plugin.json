@@ -29,11 +29,6 @@
             "name": "Mail Delivery",
             "binary": "dovecot",
             "ports": [["tcp", "143"]]
-        },
-        {
-            "name": "MariaDB",
-            "binary": "mysqld",
-            "ports": []
         }
     ],
     "modules": ["main", "backend", "config"],
@@ -53,15 +48,9 @@
                 "binary": "dovecot"
             },
             {
-                "type": "app",
-                "name": "MariaDB",
-                "package": "mariadb",
-                "binary": "mysqld"
-            },
-            {
                 "type": "plugin",
-                "name": "MariaDB",
-                "package": "db-mariadb"
+                "name": "SQLite3",
+                "package": "db-sqlite3"
             }
         ]
     },
