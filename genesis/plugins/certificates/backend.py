@@ -40,8 +40,8 @@ class CertControl(Plugin):
 					assigns[ssl].append({'type': 'plugin', 'name': x.text, 'id': x.pid})
 				elif ssl:
 					assigns[ssl] = [{'type': 'plugin', 'name': x.text, 'id': x.pid}]
-		if self.app.gconfig.set('genesis', 'ssl', '0') == '1':
-			ssl = os.path.splitext(os.path.basename(self.app.gconfig.set('genesis', 'cert_file', '')))[0]
+		if self.app.gconfig.get('genesis', 'ssl', '0') == '1':
+			ssl = os.path.splitext(os.path.basename(self.app.gconfig.get('genesis', 'cert_file', '')))[0]
 			if ssl and assigns.has_key(ssl):
 				assigns[ssl].append({'type': 'genesis'})
 			elif ssl:
@@ -172,6 +172,7 @@ class CertControl(Plugin):
 				crt.get_subject().CN = vars.getvalue('certcn')
 			if vars.getvalue('certemail', ''):
 				crt.get_subject().emailAddress = vars.getvalue('certemail')
+			crt.get_subject().O = 'arkOS Servers'
 			crt.set_serial_number(int(SystemTime.get_serial_time()))
 			crt.gmtime_adj_notBefore(0)
 			crt.gmtime_adj_notAfter(2*365*24*60*60)
@@ -212,19 +213,17 @@ class CertControl(Plugin):
 		ca = OpenSSL.crypto.X509()
 		ca.set_version(3)
 		ca.set_serial_number(int(SystemTime.get_serial_time()))
+		ca.get_subject().O = 'arkOS Servers'
 		ca.get_subject().CN = hostname
 		ca.gmtime_adj_notBefore(0)
 		ca.gmtime_adj_notAfter(5*365*24*60*60)
 		ca.set_issuer(ca.get_subject())
 		ca.set_pubkey(key)
 		ca.add_extensions([
-		  OpenSSL.crypto.X509Extension("basicConstraints", True,
-		                               "CA:TRUE, pathlen:0"),
-		  OpenSSL.crypto.X509Extension("keyUsage", True,
-		                               "keyCertSign, cRLSign"),
-		  OpenSSL.crypto.X509Extension("subjectKeyIdentifier", False, "hash",
-		                               subject=ca),
-		  ])
+			OpenSSL.crypto.X509Extension("basicConstraints", True, "CA:TRUE, pathlen:0"),
+			OpenSSL.crypto.X509Extension("keyUsage", True, "keyCertSign, cRLSign"),
+			OpenSSL.crypto.X509Extension("subjectKeyIdentifier", False, "hash", subject=ca),
+		])
 		ca.sign(key, 'sha1')
 		open('/etc/ssl/certs/genesis/ca/'+hostname+'.pem', "wt").write(
 			OpenSSL.crypto.dump_certificate(
@@ -262,7 +261,7 @@ class CertControl(Plugin):
 					'/etc/ssl/private/genesis/'+name+'.key')
 
 	def unassign(self, assign):
-		if assign[0] == 'genesis':
+		if assign == 'genesis':
 			self.app.gconfig.set('genesis', 'cert_file', '')
 			self.app.gconfig.set('genesis', 'cert_key', '')
 			self.app.gconfig.set('genesis', 'ssl', '0')

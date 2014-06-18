@@ -67,7 +67,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
 
         lst = ui.find('certauth')
         if not self.cas:
-            lst.append(UI.Btn(text="Generate New", klid="cagen"))
+            lst.append(UI.Btn(text="Generate New", id="cagen"))
         for s in self.cas:
             exp = SystemTime.convert(s['expiry'], '%Y%m%d%H%M%SZ', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
             lst.append(UI.FormLine(
@@ -87,23 +87,28 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             alist, wlist, plist = [], [], []
             for cert in self.certs:
                 for i in cert['assign']:
-                    if i != '':
-                        alist.append(i)
-            if not 'Genesis SSL' in alist:
+                    alist.append(i)
+            if not {'type': 'genesis'} in alist:
                 ui.find('certassign').append(
-                    UI.Checkbox(text='Genesis SSL', name='genesis', value='genesis', checked=False),
+                    UI.FormLine(
+                        UI.Checkbox(text='Genesis SSL', name='genesis', value='genesis', checked=False),
+                    checkbox=True)
                 )
             for x in self._wal:
-                if not (x.name+' ('+x.stype+')') in alist:
+                if not {'type': 'website', 'name': x.name} in alist:
                     ui.find('certassign').append(
-                        UI.Checkbox(text=x.name, name='wassign[]', value=x.name, checked=False),
+                        UI.FormLine(
+                            UI.Checkbox(text=x.name, name='wassign[]', value=x.name, checked=False),
+                        checkbox=True)
                     )
                     wlist.append(x)
             self._wal = wlist
             for x in self._pal:
-                if not x.text in alist:
+                if not {'type': 'plugin', 'name': x.text} in alist:
                     ui.find('certassign').append(
-                        UI.Checkbox(text=x.text, name='passign[]', value=x.text, checked=False),
+                        UI.FormLine(
+                            UI.Checkbox(text=x.text, name='passign[]', value=x.text, checked=False),
+                        checkbox=True)
                     )
                     plist.append(x)
             self._pal = plist
@@ -298,7 +303,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                     for i in range(0, len(self._wal)):
                         try:
                             if vars.getvalue('wassign[]')[i] == '1':
-                                lst.append(('webapp', self._wal[i]))
+                                lst.append(('website', self._wal[i]))
                         except TypeError:
                             pass
                     for i in range(0, len(self._pal)):
