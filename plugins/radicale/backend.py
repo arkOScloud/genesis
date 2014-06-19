@@ -189,7 +189,7 @@ class RadicaleControl(Plugin):
         f.close()
         try:
             os.makedirs('/home/radicale/.config/radicale/collections/%s' % user)
-            os.chown('/home/radicale/.config/radicale/collections',
+            os.chown('/home/radicale/.config/radicale/collections/%s' % user,
                 pwd.getpwnam('radicale').pw_uid, grp.getgrnam('radicale').gr_gid)
         except os.error:
             pass
