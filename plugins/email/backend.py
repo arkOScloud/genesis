@@ -308,7 +308,12 @@ class MailControl(Plugin):
             'domain varchar(255) NOT NULL default "", '
             'created datetime NOT NULL default "0000-00-00 00:00:00", '
             'active tinyint(1) NOT NULL default "1", '
-            'PRIMARY KEY (username));')
+            'PRIMARY KEY (username));'
+            'CREATE INDEX address ON alias (address);'
+            'CREATE INDEX active ON alias_domain (active);'
+            'CREATE INDEX target_domain ON alias_domain (target_domain);'
+            'CREATE INDEX username ON mailbox (username);'
+        )
         dbase.execute('vmail', sql)
 
         # Add system user and group for handling mail
@@ -404,7 +409,7 @@ class MailControl(Plugin):
         f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'query = SELECT goto FROM alias,alias_domain\n'
             '  WHERE alias_domain.alias_domain = \'%d\'\n'
-            '  AND alias.address=concat(\'%u\', \'@\', alias_domain.target_domain)\n'
+            '  AND alias.address = \'%u\' || \'@\' || alias_domain.target_domain\n'
             '  AND alias.active = 1\n')
         f.close()
         f = open('/etc/postfix/sqlite_virtual_alias_maps.cf', 'w')
@@ -425,13 +430,13 @@ class MailControl(Plugin):
         f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'query = SELECT maildir FROM mailbox, alias_domain\n'
             '  WHERE alias_domain.alias_domain = \'%d\'\n'
-            '  AND mailbox.username=concat(\'%u\', \'@\', alias_domain.target_domain )\n'
+            '  AND mailbox.username = \'%u\' || \'@\' || alias_domain.target_domain )\n'
             '  AND mailbox.active = 1\n')
         f.close()
         f = open('/etc/postfix/sqlite_virtual_mailbox_maps.cf', 'w')
         f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'table = mailbox\n'
-            'select_field = CONCAT(domain, \'/\', local_part)\n'
+            'select_field = domain || \'/\' || local_part)\n'
             'where_field = username\n'
             'additional_conditions = and active = \'1\'\n')
         f.close()
