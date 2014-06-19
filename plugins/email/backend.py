@@ -356,7 +356,7 @@ class MailControl(Plugin):
         config.dovecot_dovecotsql['user_query'] = (
             'SELECT \'/var/vmail/%d/%n\' as home, '
             '\'maildir:/var/vmail/%d/%n\' as mail, '+str(uid)+' AS uid, '+str(gid)+' AS gid, '
-            'concat(\'dirsize:storage=\', quota) AS quota FROM mailbox '
+            '\'dirsize:storage=\'|| quota AS quota FROM mailbox '
             'WHERE username = \'%u\' AND active = \'1\'')
         config.dovecot_auth['disable_plaintext_auth'] = 'yes'
         config.dovecot_auth['auth_mechanisms'] = 'plain login'
