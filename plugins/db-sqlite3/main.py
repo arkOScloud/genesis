@@ -67,7 +67,7 @@ class SQLite3(Plugin):
             os.makedirs('/var/lib/sqlite3')
 
     def get_size(self, dbname, conn=None):
-        return "{0:.2f} MB".format(round(float(os.path.getsize(os.path.join('/var/lib/sqlite3', dbname+'.db')))/1048576,2))
+        return str_fsize(os.path.getsize(os.path.join('/var/lib/sqlite3', dbname+'.db')))
 
     def dump(self, dbname, conn=None):
         self.chkpath()

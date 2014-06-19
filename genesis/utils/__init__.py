@@ -17,6 +17,7 @@ __all__ = [
     'shell_bg',
     'shell_status',
     'shell_cs',
+    'shell_csin',
     'hashpw',
     'str_fsize',
     'wsgi_serve_file',

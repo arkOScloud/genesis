@@ -1,4 +1,5 @@
 <xml>
+    <label size="4" text="Your Filesystems" />
     <toolbar>
         <btn id="adisk" text="Create virtual disk" iconfont="gen-storage" />
         <btn id="aedisk" text="Create encrypted disk" iconfont="gen-lock" />
@@ -46,6 +47,9 @@
                         <dth>
                             <label text="Size" />
                         </dth>
+                        <dth>
+                            <label text="Mountpoint" />
+                        </dth>
                         <dth width="1" />
                     </dtr>
                 </dt>
@@ -74,32 +78,42 @@
             </tabbody>
 
             <tabbody id="3">
+                <simpleform id="frmFSSettings">
+                    <formline text="Default cipher">
+                        <selectinput name="dcipher" id="dcipher" />
+                    </formline>
+                    <formline text="Default keysize">
+                        <textinput name="dkeysize" id="dkeysize" />
+                    </formline>
+                    <formline text="Default hash">
+                        <selectinput name="dhash" id="dhash" />
+                    </formline>
+                    <formline>
+                        <btn onclick="form" form="frmFSSettings" design="primary" action="OK" text="Save" />
+                    </formline>
+                </simpleform>
             </tabbody>
         </tabcontrol>
     </pad>
 
     <dialogbox id="dlgEdit">
-        <formline text="Source" id="sources" iid="source" />
-        <formline iid="src">
-            <textinput id="src" name="src" design="xlarge" />
+        <formline text="Source" id="sources" />
+        <formline>
+            <textinput id="src" name="src" />
         </formline>
         <formline text="Mount point" iid="mp">
-            <textinput id="mp" name="mp" design="xlarge" />
+            <textinput id="mp" name="mp" />
         </formline>
         <formline text="Filesystem" iid="mp">
             <textinput id="fs" name="fs" />
         </formline>
         <formline text="Options" iid="opts">
-            <textinput id="opts" name="opts" design="xlarge" />
+            <textinput id="opts" name="opts" />
         </formline>
-        <formline text="Read-only" iid="ro">
-            <checkbox id="ro" name="ro" />
-        </formline>
-        <formline text="Bind" iid="bind">
-            <checkbox id="bind" name="bind" />
-        </formline>
-        <formline text="Loop" iid="loop">
-            <checkbox id="loop" name="loop" />
+        <formline>
+            <checkbox id="ro" name="ro" text="Read Only"/>
+            <checkbox id="bind" name="bind" text="Bind" />
+            <checkbox id="loop" name="loop" text="Loop" />
         </formline>
         <formline text="Dump order" iid="dump_p">
             <textinput id="dump_p" name="dump_p" />

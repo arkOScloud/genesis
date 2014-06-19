@@ -362,4 +362,4 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                 cfg.keytype = vars.getvalue('keytype', 'RSA')
                 cfg.ciphers = vars.getvalue('ciphers', '')
                 cfg.save()
-                self.put_message('success', 'Settings saved successfully')     
+                self.put_message('success', 'Settings saved successfully')

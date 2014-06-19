@@ -252,6 +252,14 @@ def shell_stdin(c, input):
             stdin=subprocess.PIPE)
     return p.communicate(input)
 
+def shell_csin(c, input, stderr=False, env={}):
+    p = subprocess.Popen('LC_ALL=C '+c, shell=True,
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            env=env if env else None)
+    data = p.communicate(input)
+    return (p.returncode, ((data[0]+data[1]) if stderr else data))
 
 def hashpw(passw, scheme = 'sha512_crypt'):
     """

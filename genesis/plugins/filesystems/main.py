@@ -24,6 +24,7 @@ class FSPlugin(CategoryPlugin):
         self._editing = -1
         self._tab = 0
         self._fsc = backend.FSControl(self.app)
+        self._cfg = self.app.get_config(backend.FSControl(self.app))
         self._add = None
         self._addenc = None
         self._auth = None
@@ -81,6 +82,7 @@ class FSPlugin(CategoryPlugin):
                 UI.Label(text=x.name, bold=False if x.parent else True),
                 UI.Label(text=fstype),
                 UI.Label(text=str_fsize(x.size)),
+                UI.LinkLabel(text=x.mount, id='open/%s'%self.enc_file(x.mount)) if x.mount else UI.Label(text='Not Mounted'),
                 UI.HContainer(
                     UI.TipIcon(iconfont='gen-arrow-down-3' if x.mount else 'gen-arrow-up-3', 
                         text='Unmount' if x.mount else 'Mount', 
@@ -105,6 +107,12 @@ class FSPlugin(CategoryPlugin):
                     ),
                 ))
 
+        for x in self._cfg.cipher_opts:
+            ui.find('dcipher').append(UI.SelectOption(text=x, value=x, id=x, selected=x==self._cfg.cipher))
+        for x in self._cfg.dhash_opts:
+            ui.find('dhash').append(UI.SelectOption(text=x, value=x, id=x, selected=x==self._cfg.dhash))
+        ui.find('dkeysize').set('value', self._cfg.keysize)
+
         if self._editing != -1:
             try:
                 e = self.fstab[self._editing]
@@ -124,26 +132,30 @@ class FSPlugin(CategoryPlugin):
             ui.append('main', UI.DialogBox(
                 UI.FormLine(
                     UI.TextInput(name='addname', id='addname'),
-                    text='Virtual disk name'
+                    text='Virtual disk name', feedback="gen-storage", iid="addname"
                 ),
                 UI.FormLine(
                     UI.TextInput(name='addsize', id='addsize'),
-                    text='Disk size (in MB)'
+                    text='Disk size (in MB)', feedback="gen-storage", iid="addsize"
                 ),
-                UI.FormLine(
-                    UI.EditPassword(id='passwd', value='Click to add password'),
-                    text='Password'
+                UI.Formline(UI.TextInput(id='passwd', name="passwd", password=True, verify="password", verifywith="passwd"),
+                    text="Password", feedback="gen-lock", iid="passwd"
                 ) if self._add == 'enc' else None,
-                id='dlgAdd'
+                UI.Formline(UI.TextInput(id='passwdb', name="passwdb", password=True, verify="password", verifywith="passwd"),
+                    text="Confirm password", feedback="gen-lock", iid="passwdb"
+                ) if self._add == 'enc' else None,
+                id='dlgAdd', title="Adding %s disk" % ('encrypted' if self._add == 'enc' else 'virtual'), iconfont="gen-storage"
             ))
 
         if self._enc:
             ui.append('main', UI.DialogBox(
-                UI.FormLine(
-                    UI.EditPassword(id='encpasswd', value='Click to add password'),
-                    text='Password'
+                UI.Formline(UI.TextInput(id='encpasswd', name="encpasswd", password=True, verify="password", verifywith="encpasswd"),
+                    text="Password", feedback="gen-lock", iid="encpasswd"
                 ),
-                id='dlgEnc'
+                UI.Formline(UI.TextInput(id='encpasswdb', name="encpasswdb", password=True, verify="password", verifywith="encpasswd"),
+                    text="Confirm password", feedback="gen-lock", iid="encpasswdb"
+                ),
+                id='dlgEnc', title="Encrypting virtual disk %s" % self._enc.name, iconfont="gen-lock"
             ))
 
         if self._auth:
@@ -156,7 +168,7 @@ class FSPlugin(CategoryPlugin):
         return ui
 
     def get_ui_sources_list(self, e):
-        lst = UI.Select(name='disk')
+        lst = UI.SelectInput(name='disk')
         cst = True
         for p in backend.list_partitions():
             s = p
@@ -275,6 +287,7 @@ class FSPlugin(CategoryPlugin):
             if s is not None:
                 self._redirect = s
 
+    @event('form/submit')
     @event('dialog/submit')
     def on_submit(self, event, params, vars=None):
         if params[0] == 'dlgAdd':
@@ -296,7 +309,9 @@ class FSPlugin(CategoryPlugin):
                     self.put_message('err', 'Passwords must match')
                 elif self._add == 'enc':
                     x = self._fsc.add_vdisk(name, size)
-                    self._fsc.encrypt_vdisk(x, passwd, mount=True)
+                    self._fsc.encrypt_vdisk(x, passwd, 
+                        opts={'cipher': self._cfg.cipher, 'keysize': self._cfg.keysize, 'hash': self._cfg.dhash}, 
+                        mount=True)
                 else:
                     self._fsc.add_vdisk(name, size, mount=True)
             self._add = None
@@ -347,8 +362,18 @@ class FSPlugin(CategoryPlugin):
                 else:
                     try:
                         self._fsc.umount(self._enc)
-                        self._fsc.encrypt_vdisk(self._enc, passwd, mount=True)
+                        self._fsc.encrypt_vdisk(self._enc, passwd, 
+                            opts={'cipher': self._cfg.cipher, 'keysize': self._cfg.keysize, 'hash': self._cfg.dhash},
+                            mount=True)
                         self.put_message('success', 'Virtual disk encrypted and mounted successfully')
                     except Exception, e:
                         self.put_message('err', str(e))
             self._enc = None
+        if params[0] == 'frmFSSettings':
+            self._tab = 2
+            if vars.getvalue('action', '') == 'OK':
+                self._cfg.cipher = vars.getvalue('dcipher', 'aes-xts-plain64')
+                self._cfg.keysize = vars.getvalue('dkeysize', '256')
+                self._cfg.hash = vars.getvalue('dhash', 'sha1')
+                self._cfg.save()
+                self.put_message('success', 'Settings saved successfully')

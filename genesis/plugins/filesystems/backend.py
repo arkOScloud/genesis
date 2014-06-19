@@ -139,14 +139,14 @@ class FSControl(Plugin):
         dev = losetup.find_unused_loop_device()
         dev.mount(os.path.join('/vdisk', fs.name+'.crypt'))
         fs.img = os.path.join('/vdisk', fs.name+'.crypt')
-        s = shell_cs('echo "%s" | cryptsetup %s luksFormat %s'%(passwd,opts,dev.device), stderr=True)
+        s = shell_csin('cryptsetup %s luksFormat %s'%(opts,dev.device), passwd, stderr=True)
         if s[0] != 0:
             if move:
                 dev.unmount()
                 os.rename(os.path.join('/vdisk', fs.name+'.crypt'), os.path.join('/vdisk', fs.name+'.img'))
             raise Exception('Failed to encrypt %s: %s'%(fs.name, s[1]))
         fs.fstype = 'crypt'
-        s = shell_cs('echo "%s" | cryptsetup luksOpen %s %s'%(passwd,dev.device,fs.name), stderr=True)
+        s = shell_csin('cryptsetup luksOpen %s %s'%(dev.device,fs.name), passwd, stderr=True)
         if s[0] != 0:
             dev.unmount()
             raise Exception('Failed to decrypt %s: %s'%(fs.name, s[1]))
@@ -165,7 +165,7 @@ class FSControl(Plugin):
             dev = losetup.find_unused_loop_device()
             dev.mount(fs.img)
             if fs.fstype == 'crypt':
-                s = shell_cs('echo "%s" | cryptsetup luksOpen %s %s'%(passwd,dev.device,fs.name), stderr=True)
+                s = shell_csin('cryptsetup luksOpen %s %s'%(dev.device,fs.name), passwd, stderr=True)
                 if s[0] != 0:
                     dev.unmount()
                     raise Exception('Failed to decrypt %s: %s'%(fs.name, s[1]))
@@ -210,7 +210,7 @@ class FSControl(Plugin):
                     raise Exception('Failed to unmount %s: %s'%(fs.name, s[1]))
                 dev.unmount()
         else:
-            s = shell_cs('umount %s'%fs.name, stderr=True)
+            s = shell_cs('umount %s'%fs.dev, stderr=True)
             if s[0] != 0:
                 raise Exception('Failed to unmount %s: %s'%(fs.name, s[1]))
         apis.poicontrol(self.app).drop_by_path(fs.mount)
