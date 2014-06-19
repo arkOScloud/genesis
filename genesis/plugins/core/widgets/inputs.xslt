@@ -152,7 +152,17 @@
                 window.open('<xsl:value-of select="@outlink"/>', '_blank')
             </xsl:when>
             <xsl:otherwise>
-                Genesis.query('/handle/button/click/<xsl:value-of select="@id"/>')
+                <xsl:choose>
+                    <xsl:when test="@warning != ''">
+                        return Genesis.showWarning('<xsl:value-of select="@warning"/>',
+                            '<xsl:value-of select="@id"/>',
+                            <xsl:choose><xsl:when test="@cls != ''">, 
+                            '<xsl:value-of select="@cls"/>'</xsl:when><xsl:otherwise>undefined</xsl:otherwise></xsl:choose>);
+                    </xsl:when>
+                    <xsl:otherwise>
+                        Genesis.query('/handle/button/click/<xsl:value-of select="@id"/>')
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>

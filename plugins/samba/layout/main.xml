@@ -8,33 +8,14 @@
         <tabcontrol id="tabs" active="0">
             <tabheader text="Share" id="0"/>
             <tabheader text="Users" id="1"/>
-            <tabheader text="General" id="2"/>
+            <tabheader text="Settings" id="2"/>
 
             <tabbody id="0">
-                <dt id="shares" width="100%">
-                    <dtr header="True">
-                        <dth width="1" />
-                        <dth>
-                            <label text="Name" />
-                        </dth>
-                        <dth>
-                            <label text="Path" />
-                        </dth>
-                        <dth width="1" />
-                    </dtr>
-                </dt>
+                <pad id="slist" />
             </tabbody>
             
             <tabbody id="1">
-                <dt id="users" width="100%">
-                    <dtr header="True">
-                        <dth width="1" />
-                        <dth>
-                            <label text="Name" />
-                        </dth>
-                        <dth width="1" />
-                    </dtr>
-                </dt>
+                <pad id="ulist" />
             </tabbody>
             
             <tabbody id="2">

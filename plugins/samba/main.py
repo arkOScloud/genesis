@@ -30,19 +30,13 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
 
         # Shares
         for h in self._cfg.get_shares():
-            r = UI.DTR(
-                UI.IconFont(iconfont='gen-folder'),
-                UI.Label(text=h),
-                UI.Label(text=self._cfg.shares[h]['path']),
-                UI.HContainer(
-                    UI.TipIcon(iconfont='gen-pencil-2',
-                        text='Edit', id='editshare/' + h),
-                    UI.TipIcon(
-                        iconfont='gen-close',
-                        text='Delete', id='delshare/' + h, warning='Are you sure you want to delete the %s share?'%h)
-                ),
+            ui.append('slist', UI.TblBtn(
+                id='editshare/'+h,
+                icon='gen-folder',
+                name=h,
+                subtext=self._cfg.shares[h]['path']
+                )
             )
-            ui.append('shares', r)
 
         if not self._editing_share is None:
             if self._editing_share == '':
@@ -54,18 +48,12 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
 
         # Users
         for h in sorted(self._cfg.users.keys()):
-            r = UI.DTR(
-                UI.IconFont(iconfont='gen-user'),
-                UI.Label(text=h),
-                UI.HContainer(
-                    #UI.TipIcon(iconfont='gen-pencil-2',
-                    #    text='Edit', id='edituser/' + h),
-                    UI.TipIcon(
-                        iconfont='gen-close',
-                        text='Delete', id='deluser/' + h, warning='Are you sure you want to delete %s from the Samba users list?'%h)
-                ),
-            )
-            ui.append('users', r)
+            ui.append('ulist', UI.TblBtn(
+                id="deluser/"+h,
+                icon="gen-user",
+                name=h,
+                warning="Are you sure you want to delete %s from the Samba users list?"%h
+            ))
 
         #if not self._editing_user is None:
         #    if self._editing_user == '':
@@ -92,14 +80,16 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
                 ui.append('main',
                     UI.DialogBox(
                         UI.FormLine(
-                            UI.Select(*users, name='acct', id='acct'),
+                            UI.SelectInput(*users, name='acct', id='acct'),
                             text='Username'
                         ),
-                        UI.FormLine(
-                            UI.EditPassword(id='passwd', value='Click to add password'),
-                            text='Password'
+                        UI.Formline(UI.TextInput(id='passwd', name="passwd", password=True, verify="password", verifywith="passwd"),
+                            text="Password", feedback="gen-lock", iid="passwd"
                         ),
-                        id='dlgAddUser')
+                        UI.Formline(UI.TextInput(id='passwdb', name="passwdb", password=True, verify="password", verifywith="passwd"),
+                            text="Confirm password", feedback="gen-lock", iid="passwdb"
+                        ),
+                        id='dlgAddUser', title="Adding user")
                     )
             else:
                 self.put_message('err', 'No non-root Unix users found')
@@ -123,30 +113,37 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
                     UI.TextInput(name='path', value=s['path']),
                     text='Path', help='The path to the folder on the disk you want to share'
                 ),
-                UI.Formline(
-                    *[UI.Checkbox(text=x, name='validusers[]', value=x, checked=True if x in s['valid users'] else False) \
+                UI.Formline(*[UI.Formline(
+                    UI.Checkbox(text=x, name='validusers[]', value=x, checked=True if x in s['valid users'] else False), checkbox=True) \
                         for x in sorted(self._cfg.users.keys())],
                     text='Valid users', help='A list of Samba users that will be able to connect to this share'
                 ) if self._cfg.users.keys() else None,
                 UI.Formline(
-                    UI.Checkbox(text='Yes', name='browseable', checked=s['browseable']=='yes'),
-                    text='Browseable?', help='This share will show up in Windows Explorer/My Computer'
+                    UI.Checkbox(text='Browseable', name='browseable', checked=s['browseable']=='yes'),
+                    help='This share will show up in Windows Explorer/My Computer',
+                    checkbox=True
                 ),
                 UI.Formline(
-                    UI.Checkbox(text='Yes', name='read only', checked=s['read only']=='yes'),
-                    text='Read only?', help='Prevent anyone from editing or deleting files in this share'
+                    UI.Checkbox(text='Read Only', name='read only', checked=s['read only']=='yes'),
+                    help='Prevent anyone from editing or deleting files in this share',
+                    checkbox=True
                 ),
                 UI.Formline(
-                    UI.Checkbox(text='Yes', name='guest ok', checked=s['guest ok']=='yes'),
-                    text='Guest access?', help='Allow anyone (not just valid users) to connect to this share'
+                    UI.Checkbox(text='Guest Access', name='guest ok', checked=s['guest ok']=='yes'),
+                    help='Allow anyone (not just valid users) to connect to this share',
+                    checkbox=True
                 ),
                 UI.Formline(
-                    UI.Checkbox(text='Yes', name='only guest', checked=s['only guest']=='yes'),
-                    text='Force guest?', help='Only allow guests to connect (ignores the \'valid users\' field)'
+                    UI.Checkbox(text='Force Guest', name='only guest', checked=s['only guest']=='yes'),
+                    help='Only allow guests to connect (ignores the \'valid users\' field)',
+                    checkbox=True
                 )
             ),
             id='dlgEditShare',
-            title='Edit share'
+            title='%s share%s' % (('Adding', '') if not self._editing_share else ('Editing', ' '+self._editing_share)),
+            miscbtn="Delete" if self._editing_share else None, miscbtnid="delshare/"+self._editing_share if self._editing_share else None, 
+            miscbtnstyle="danger" if self._editing_share else None,
+            miscbtnwarn=("Are you sure you want to delete share %s?" % self._editing_share) if self._editing_share else None
         )
         return dlg
 
@@ -184,7 +181,7 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
                 UI.TextInput(name='interfaces', value=self._cfg.general['interfaces']),
                 text='Listen on interfaces', help='Space-separated list. Can be interfaces (eth0), IP addresses or IP/mask pairs'
             ),
-            id='frmGeneral'
+            id='frmGeneral', hidecancel=True
         )
         return dlg
 
@@ -200,6 +197,7 @@ class SambaPlugin(apis.services.ServiceControlPlugin):
                 del self._cfg.shares[params[1]]
             self._cfg.save()
             self._tab = 0
+            self._editing_share = None
         if params[0] == 'newshare':
             self._editing_share = ''
             self._tab = 0
