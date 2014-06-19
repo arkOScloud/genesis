@@ -5,36 +5,10 @@
     </toolbar>
 
     <label size="4" text="User Accounts" />
-    <pad id="main">
-        <dt id="list" width="100%">
-            <dtr header="True">
-                <dth width="1" />
-                <dth>
-                    <label text="Username" />
-                </dth>
-                <dth>
-                    <label text="Domain" />
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
-    </pad>
+    <pad id="main" />
     <br />
     <label size="4" text="Domains" />
-    <pad>
-        <dt id="dlist" width="100%">
-            <dtr header="True">
-                <dth width="1" />
-                <dth>
-                    <label text="Domain" />
-                </dth>
-                <dth>
-                    <label text="Status" />
-                </dth>
-                <dth width="1" />
-            </dtr>
-        </dt>
-    </pad>
+    <pad id="dlist" />
     <br />
     <label size="3" text="Global Options" />
     <simpleform id="frmOptions">

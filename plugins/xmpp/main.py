@@ -25,34 +25,28 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
     def get_main_ui(self):
         ui = self.app.inflate('xmpp:main')
 
-        t = ui.find('list')
         for u in self._users:
-            t.append(UI.DTR(
-                    UI.Iconfont(iconfont='gen-user'),
-                    UI.Label(text=u[0]),
-                    UI.Label(text=u[1]),
-                    UI.HContainer(
-                        UI.TipIcon(iconfont='gen-key', id='edit/'+str(self._users.index(u)), text='Change Password'),
-                        UI.TipIcon(iconfont='gen-cancel-circle', id='del/'+str(self._users.index(u)), text='Delete', warning='Are you sure you want to delete XMPP account %s@%s?'%(u[0], u[1]))
-                    ),
-                ))
+            ui.append('main', UI.TblBtn(
+                id='edit/'+str(self._users.index(u)),
+                icon="gen-user",
+                name=u[0],
+                subtext=u[1]
+            ))
 
-        t = ui.find('dlist')
         for x in self._domains:
             if not self._config.config['_VirtualHost_'+x].has_key('enabled'):
                 self._config.config['_VirtualHost_'+x]['enabled'] = False
-            t.append(UI.DTR(
-                    UI.Iconfont(iconfont='gen-code'),
-                    UI.Label(text=x),
-                    UI.Label(text='Enabled' if self._config.config['_VirtualHost_'+x]['enabled'] else 'Disabled'),
-                    UI.HContainer(
-                        #UI.TipIcon(iconfont='gen-pencil', id='editdom/'+str(self._domains.index(x)), text='Edit Domain'),
-                        UI.TipIcon(iconfont='gen-%s'%('link' if not self._config.config['_VirtualHost_'+x]['enabled'] else 'link-2'), 
-                            id='togdom/'+str(self._domains.index(x)), text=('Disable' if self._config.config['_VirtualHost_'+x]['enabled'] else 'Enable')),
-                        UI.TipIcon(iconfont='gen-cancel-circle', id='deldom/'+str(self._domains.index(x)), text='Delete Domain',
-                            warning='Are you sure you want to delete XMPP domain %s?'%x),
-                    ),
-                ))
+            ui.append('dlist', UI.TblBtn(
+                UI.HContainer(
+                    #UI.TipIcon(iconfont='gen-pencil', id='editdom/'+str(self._domains.index(x)), text='Edit Domain'),
+                    UI.TipIcon(iconfont='gen-cancel-circle', id='deldom/'+str(self._domains.index(x)), text='Delete Domain',
+                        warning='Are you sure you want to delete XMPP domain %s?'%x),
+                ),
+                id='togdom/'+str(self._domains.index(x)),
+                icon="gen-code",
+                name=x,
+                subtext='Enabled' if self._config.config['_VirtualHost_'+x]['enabled'] else 'Disabled'
+            ))
 
         ui.find('allow_registration').set('checked', True if self._config.config['allow_registration'] else False)
         ui.find('c2s_require_encryption').set('checked', True if self._config.config['c2s_require_encryption'] else False)
@@ -92,7 +86,9 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                     UI.Formline(UI.TextInput(id='chpasswdb', name="chpasswdb", password=True, verify="password", verifywith="chpasswd"),
                         text="Confirm password", feedback="gen-lock", iid="chpasswdb"
                     ),
-                    id='dlgChpasswd', title="Changing password for %s" % self._chpasswd[0])
+                    id='dlgChpasswd', title="Changing password for %s" % self._chpasswd[0],
+                    miscbtn="Delete", miscbtnid='del/'+str(self._users.index(u)), miscbtnstyle="danger",
+                    miscbtnwarn='Are you sure you want to delete XMPP account %s@%s?'%(u[0], u[1]))
                 )
 
         return ui
@@ -118,6 +114,7 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
             except Exception, e:
                 self.app.log.error('XMPP user could not be deleted. Error: %s' % str(e))
                 self.put_message('err', 'User could not be deleted')
+            self._chpasswd = None
         elif params[0] == 'deldom':
             candel = True
             for x in self._users:
