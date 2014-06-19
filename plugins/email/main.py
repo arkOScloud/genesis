@@ -38,7 +38,7 @@ class MailPlugin(apis.services.ServiceControlPlugin):
         or not is_setup:
             if not is_setup:
                 self.put_message('err', 'Your mailserver does not appear to be properly configured. Please rerun this setup.')
-            return UI.Btn(iconfont="gen-cog", text="Setup Mailserver", id="setup")
+            return self.app.inflate('email:nosetup')
 
         t = ui.find('list')
         for x in self._domains:

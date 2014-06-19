@@ -1,0 +1,10 @@
+<xml>
+    <div id="main">
+        <div class="text-center">
+            <label size="5" text="Mailserver" />
+            <h1 class="gen-envelop" style="font-size:20em;line-height:1em;"></h1>
+            <label size="lead" text="To setup your arkOS mailserver, click the Setup button below." />
+            <btn id="setup" text="Setup" iconfont="gen-cog"/>
+        </div>
+    </div>
+</xml>
