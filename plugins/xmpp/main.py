@@ -67,14 +67,16 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
                         text='Username'
                     ),
                     UI.FormLine(
-                        UI.Select(*doms if doms else 'None', id='dom', name='dom'),
+                        UI.SelectInput(*doms if doms else 'None', id='dom', name='dom'),
                         text='Domain'
                     ),
-                    UI.FormLine(
-                        UI.EditPassword(id='passwd', value='Click to add password'),
-                        text='Password'
+                    UI.Formline(UI.TextInput(id='passwd', name="passwd", password=True, verify="password", verifywith="passwd"),
+                        text="Password", feedback="gen-lock", iid="passwd"
                     ),
-                    id='dlgAddUser')
+                    UI.Formline(UI.TextInput(id='passwdb', name="passwdb", password=True, verify="password", verifywith="passwd"),
+                        text="Confirm password", feedback="gen-lock", iid="passwdb"
+                    ),
+                    id='dlgAddUser', title="Adding user")
                 )
 
         if self._adddom:
@@ -84,11 +86,13 @@ class XMPPPlugin(apis.services.ServiceControlPlugin):
         if self._chpasswd:
             ui.append('main',
                 UI.DialogBox(
-                    UI.FormLine(
-                        UI.EditPassword(id='chpasswd', value='Click to change password'),
-                        text='Password'
+                    UI.Formline(UI.TextInput(id='chpasswd', name="chpasswd", password=True, verify="password", verifywith="chpasswd"),
+                        text="Password", feedback="gen-lock", iid="chpasswd"
                     ),
-                    id='dlgChpasswd')
+                    UI.Formline(UI.TextInput(id='chpasswdb', name="chpasswdb", password=True, verify="password", verifywith="chpasswd"),
+                        text="Confirm password", feedback="gen-lock", iid="chpasswdb"
+                    ),
+                    id='dlgChpasswd', title="Changing password for %s" % self._chpasswd[0])
                 )
 
         return ui

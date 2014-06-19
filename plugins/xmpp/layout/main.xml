@@ -4,7 +4,7 @@
         <btn id="adddom" text="Add domain" iconfont="gen-plus-circle" />
     </toolbar>
 
-    <label size="5" text="User Accounts" />
+    <label size="4" text="User Accounts" />
     <pad id="main">
         <dt id="list" width="100%">
             <dtr header="True">
@@ -19,8 +19,8 @@
             </dtr>
         </dt>
     </pad>
-
-    <label size="5" text="Domains" />
+    <br />
+    <label size="4" text="Domains" />
     <pad>
         <dt id="dlist" width="100%">
             <dtr header="True">
@@ -35,18 +35,17 @@
             </dtr>
         </dt>
     </pad>
-
-    <label size="5" text="Global Options" />
     <br />
+    <label size="3" text="Global Options" />
     <simpleform id="frmOptions">
-        <formline text="Allow registration" help="Enable creation of new accounts via connected XMPP clients">
-            <checkbox name="allow_registration" id="allow_registration" text="Yes"/>
+        <formline help="Enable creation of new accounts via connected XMPP clients" checkbox="True">
+            <checkbox name="allow_registration" id="allow_registration"  text="Allow registration" />
         </formline>
-        <formline text="Force encryption (client-to-server)" help="Clients must use SSL to connect to your server. Do not set this if a certificate is not assigned" id="c2senc">
-            <checkbox name="c2s_require_encryption" id="c2s_require_encryption" text="Yes"/>
+        <formline help="Clients must use SSL to connect to your server. Do not set this if a certificate is not assigned" id="c2senc" checkbox="True">
+            <checkbox name="c2s_require_encryption" id="c2s_require_encryption" text="Force encryption (client-to-server)" />
         </formline>
-        <formline text="Secure auth (server-to-server)" help="Force servers to authenticate SSL certificates. Cannot use with self-generated certificates" id="s2sauth">
-            <checkbox name="s2s_secure_auth" id="s2s_secure_auth" text="Yes"/>
+        <formline help="Force servers to authenticate SSL certificates. Cannot use with self-generated certificates" id="s2sauth" checkbox="True">
+            <checkbox name="s2s_secure_auth" id="s2s_secure_auth" text="Secure auth (server-to-server)" />
         </formline>
         <formline>
             <btn onclick="form" form="frmOptions" design="primary" action="OK" text="Save" />

@@ -321,8 +321,9 @@ class XMPPUserControl:
         if not os.path.exists('/var/lib/prosody'):
             os.mkdir('/var/lib/prosody')
         for x in os.listdir('/var/lib/prosody'):
-            for y in os.listdir(os.path.join('/var/lib/prosody', x, 'accounts')):
-                users.append((y.split('.dat')[0], urllib.unquote(x)))
+            if os.path.isdir(os.path.join('/var/lib/prosody', x)):
+                for y in os.listdir(os.path.join('/var/lib/prosody', x, 'accounts')):
+                    users.append((y.split('.dat')[0], urllib.unquote(x)))
         return sorted(users, key=lambda x: x[0])
 
     def list_domains(self):
