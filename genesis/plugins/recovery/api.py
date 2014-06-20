@@ -1,5 +1,6 @@
 import os
 import glob
+import tarfile
 import tempfile
 import shutil
 import time
@@ -7,7 +8,6 @@ import tempfile
 
 from genesis.com import *
 from genesis.api import *
-from genesis.utils import shell, shell_status
 
 
 class BackupRevision:
@@ -70,26 +70,34 @@ class Manager(Plugin):
             for f in provider.list_files():
                 for x in glob.glob(f):
                     xdir = os.path.join(dir, os.path.split(x)[0][1:])
-                    shell('mkdir -p \'%s\'' % xdir)
-                    shell('cp -r \'%s\' \'%s\'' % (x, xdir))
+                    try:
+                        os.makedirs(xdir)
+                    except:
+                        pass
+                    if os.path.isdir(x):
+                        shutil.copytree(x, xdir)
+                    else:
+                        shutil.copy(x, xdir)
 
             metafile = open(dir + '/genesis-backup', 'w')
             metafile.write(provider.id)
             metafile.close()
 
-            if shell_status('cd %s; tar czf backup.tar.gz *'%dir) != 0:
-                raise Exception()
+            t = tarfile.open(os.path.join(dir, 'backup.tar.gz'), 'w:gz')
+            for x in os.listdir(dir):
+                t.add(os.path.join(dir, x), x)
+            t.close()
             
             name = 0
             try:
-                name = int(os.listdir(self.dir+'/'+provider.id)[0].split('.')[0])
+                name = int(os.listdir(os.path.join(self.dir, provider.id))[0].split('.')[0])
             except:
                 pass
             
-            while os.path.exists('%s/%s/%i.tar.gz'%(self.dir,provider.id,name)):
+            while os.path.exists(os.path.join(self.dir, provider.id, str(name)+'.tar.gz')):
                 name += 1
             
-            shutil.move('%s/backup.tar.gz'%dir, '%s/%s/%s.tar.gz'%(self.dir,provider.id,name))
+            shutil.move(os.path.join(dir, 'backup.tar.gz'), os.path.join(self.dir, provider.id, str(name)+'.tar.gz'))
         except:
             raise
         finally:
@@ -101,9 +109,10 @@ class Manager(Plugin):
         for f in provider.list_files():
             for x in glob.glob(f):
                 os.unlink(x)
-        if shell_status('cd %s; tar xf backup.tar.gz -C / --exclude genesis-backup'%dir) != 0:
-            raise Exception()
-        os.unlink('%s/backup.tar.gz'%dir)
+        t = tarfile.open(os.path.join(dir, 'backup.tar.gz'))
+        t.extractall('/')
+        t.close()
+        os.unlink('/genesis-backup')
         shutil.rmtree(dir)
 
     def upload(self, file):
@@ -114,7 +123,9 @@ class Manager(Plugin):
         temparch = os.path.join(tempdir, 'backup.tar.gz')
         open(temparch, 'wb').write(file.value)
 
-        shell('tar xzf ' + temparch + ' -C ' + tempdir)
+        t = tarfile.open(temparch)
+        t.extractall(tempdir)
+        t.close()
         bfile = open(os.path.join(tempdir, 'genesis-backup'), 'r')
         name = bfile.readline()
         bfile.close()
@@ -129,19 +140,21 @@ class Manager(Plugin):
             thinglist.append(thing[0])
         newver = int(max(thinglist)) + 1 if thinglist else 0
 
-        shell('cp %s %s' % (temparch, os.path.join(dir, name, str(newver) + '.tar.gz')))
-        shell('rm -r ' + tempdir)
+        shutil.copy(temparch, os.path.join(dir, name, str(newver)+'.tar.gz'))
+        shutil.rmtree(tempdir)
 
     def get_backups(self):
         dir = tempfile.mkdtemp()
         temparch = os.path.join(dir, 'backup-all.tar.gz')
-        shell('tar czf ' + temparch + ' -C /var/backups/ genesis')
+        t = tarfile.open(temparch)
+        t.add('/var/backups/genesis', 'genesis')
+        t.close()
         size = os.path.getsize(temparch)
 
         f = open(temparch, 'rb')
         arch = f.read()
         f.close()
-        shell('rm -r ' + dir)
+        shutil.rmtree(dir)
         return (size, arch)
 
 class RecoveryHook (ConfMgrHook):

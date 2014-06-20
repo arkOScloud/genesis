@@ -2,25 +2,33 @@
     <toolbar>
         <btn id="btnBackup" iconfont="gen-folder-download" />
         <btn id="backupall" iconfont="gen-folder-download" text="Backup everything" />
-        <btn id="upload" iconfont="gen-upload" text="Upload Backup" design="default pull-right" />
-        <btn id="downloadall" iconfont="gen-download" text="Download All" design="default pull-right" onclick="window.open('/recovery/all', '_blank')" />
+        <div class="pull-right">
+            <btn id="upload" iconfont="gen-upload" text="Upload Backup" design="default" />
+            <btn id="downloadall" iconfont="gen-download" text="Download All" design="default" onclick="window.open('/recovery/all', '_blank')" />
+        </div>
     </toolbar>
     <pad id="main">
-        <hcontainer>
-            <list id="provs" width="200" height="400" />
-            <scrollcontainer width="550" height="400">
-                <dt id="backs" width="100%" noborder="True">
-                    <dtr header="True">
-                        <dth>
-                            <label text="Revision" />
-                        </dth>
-                        <dth>
-                            <label text="Date" />
-                        </dth>
-                        <dth width="1" />
-                    </dtr>
-                </dt>
-            </scrollcontainer>
-        </hcontainer>
+        <table class="layout" style="width:100%;height:auto;">
+            <tr>
+                <td>
+                    <list id="provs" width="200" height="400" />
+                </td>
+                <td style="width:100%">
+                    <scrollcontainer width="100%" height="400">
+                        <dt id="backs" width="100%" noborder="True">
+                            <dtr header="True">
+                                <dth>
+                                    <label text="Revision" />
+                                </dth>
+                                <dth>
+                                    <label text="Date" />
+                                </dth>
+                                <dth width="1" />
+                            </dtr>
+                        </dt>
+                    </scrollcontainer>
+                </td>
+            </tr>
+        </table>
     </pad>
 </xml>

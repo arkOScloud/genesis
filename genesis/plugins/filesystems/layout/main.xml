@@ -110,9 +110,13 @@
         <formline text="Options" iid="opts">
             <textinput id="opts" name="opts" />
         </formline>
-        <formline>
+        <formline checkbox="True">
             <checkbox id="ro" name="ro" text="Read Only"/>
+        </formline>
+        <formline checkbox="True">
             <checkbox id="bind" name="bind" text="Bind" />
+        </formline>
+        <formline checkbox="True">
             <checkbox id="loop" name="loop" text="Loop" />
         </formline>
         <formline text="Dump order" iid="dump_p">

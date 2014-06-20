@@ -30,6 +30,7 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
             provs.append(
                     UI.ListItem(
                         UI.Label(text=p.name),
+                        iconfont='gen-history',
                         id=p.id,
                         active=p.id==self._current
                     )
@@ -115,11 +116,11 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
     def on_click(self, event, params, vars=None):
         if params[0] == 'backup':
             p = self.manager.find_provider(params[1])
-            try:
-                self.manager.backup(p)
-                self.put_message('success', 'Stored backup for %s.' % p.name)
-            except:
-                self.put_message('err', 'Failed to backup %s.' % p.name)
+            #try:
+            self.manager.backup(p)
+            #    self.put_message('success', 'Stored backup for %s.' % p.name)
+            #except:
+            #    self.put_message('err', 'Failed to backup %s.' % p.name)
         if params[0] == 'backupall':
             errs = self.manager.backup_all()
             if errs != []:

@@ -1,22 +1,21 @@
 <xml>
-    <label size="5" text="System Settings" />
-    <br />
-        <simpleform id="frmGeneral">
-            <formline text="Hostname" help="Set the hostname for your system.">
-                <textinput name="hostname" id="hostname"/>
-            </formline>
-            <formline text="Timezone">
-                <select id="zoneselect" name="zoneselect" />
-            </formline>
-            <formline>
-                <btn onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
-            </formline>
-        </simpleform>
+    <label size="3" text="System Settings" />
+    <simpleform id="frmGeneral">
+        <formline text="Hostname" help="Set the hostname for your system.">
+            <textinput name="hostname" id="hostname"/>
+        </formline>
+        <formline text="Timezone">
+            <selectinput id="zoneselect" name="zoneselect" />
+        </formline>
+        <formline>
+            <btn onclick="form" form="frmGeneral" design="primary" action="OK" text="Save" />
+        </formline>
+    </simpleform>
 
     <pad id="main">
     </pad>
-
-    <label size="5" text="System Time" />
+    <br />
+    <label size="3" text="System Time" />
     <pad id="time">
         <formline text="Current system time">
             <label id="systime" />
@@ -28,8 +27,8 @@
             <btn id="settime" iconfont="gen-clock" text="Update time" />
         </formline>
     </pad>
-
-    <label size="5" text="arkOS Tools" />
+    <br />
+    <label size="3" text="arkOS Tools" />
     <pad id="tools">
         <formline text="Logrunner" help="Manages logs in memory to reduce SD card wear." id="fllogrunner">
             <label id="logrunner" text="" />
