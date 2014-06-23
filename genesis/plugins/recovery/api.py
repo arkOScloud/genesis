@@ -109,7 +109,7 @@ class Manager(Plugin):
         for f in provider.list_files():
             for x in glob.glob(f):
                 os.unlink(x)
-        t = tarfile.open(os.path.join(dir, 'backup.tar.gz'))
+        t = tarfile.open(os.path.join(dir, 'backup.tar.gz'), 'r:gz')
         t.extractall('/')
         t.close()
         os.unlink('/genesis-backup')
@@ -123,7 +123,7 @@ class Manager(Plugin):
         temparch = os.path.join(tempdir, 'backup.tar.gz')
         open(temparch, 'wb').write(file.value)
 
-        t = tarfile.open(temparch)
+        t = tarfile.open(temparch, 'r:gz')
         t.extractall(tempdir)
         t.close()
         bfile = open(os.path.join(tempdir, 'genesis-backup'), 'r')
@@ -146,7 +146,7 @@ class Manager(Plugin):
     def get_backups(self):
         dir = tempfile.mkdtemp()
         temparch = os.path.join(dir, 'backup-all.tar.gz')
-        t = tarfile.open(temparch)
+        t = tarfile.open(temparch, 'w:gz')
         t.add('/var/backups/genesis', 'genesis')
         t.close()
         size = os.path.getsize(temparch)
