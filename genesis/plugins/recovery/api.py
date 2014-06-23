@@ -55,8 +55,8 @@ class Manager(Plugin):
         for x in self.app.grab_plugins(IConfigurable):
             try:
                 self.backup(x)
-            except:
-                errs.append(x.name)
+            except Exception, e:
+                errs.append((x.name, str(e)))
         return errs
         
     def backup(self, provider):

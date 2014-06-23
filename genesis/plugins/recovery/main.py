@@ -124,7 +124,9 @@ class RecoveryPlugin(CategoryPlugin, URLHandler):
         if params[0] == 'backupall':
             errs = self.manager.backup_all()
             if errs != []:
-                self.put_message('err', 'Backup failed for %s.' % ', '.join(errs))
+                for x in errs:
+                    self.app.log.error('Backup failed for %s: %s' % (x[0], x[1]))
+                self.put_message('err', 'Backup failed for %s.' % ', '.join([x[0] for x in errs]))
             else:
                 self.put_message('success', 'Stored full backup')
         if params[0] == 'restore':
