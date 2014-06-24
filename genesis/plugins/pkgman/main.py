@@ -69,26 +69,26 @@ class PackageManagerPlugin(CategoryPlugin):
 
         if self._confirm_apply:
             res = UI.DT(UI.DTR(
-                    UI.DTH(width=20),
-                    UI.DTH(UI.Label(text='Package')),
-                    header=True
-                  ), width='100%', noborder=True)
+                UI.DTH(width=20),
+                UI.DTH(UI.Label(text="Action")),
+                UI.DTH(UI.Label(text='Package')),
+                header=True
+              ), width='100%', noborder=True)
 
             if self._confirm_apply:
                 r = self.mgr.get_expected_result(self._status)
                 for x in r:
-                    i = 'gen-'
-                    i += 'arrow-up-2' if r[x] == 'install' else 'minus-circle'
                     t = UI.DTR(
-                            UI.IconFont(iconfont=i),
-                            UI.Label(text=x)
-                        )
+                        UI.IconFont(iconfont='gen-arrow-up-2' if r[x] == 'install' else 'gen-minus-circle'),
+                        UI.Label(text='Install' if r[x] == 'install' else 'Remove'),
+                        UI.Label(text=x)
+                    )
                     res.append(t)
 
             dlg = UI.DialogBox(
-                    UI.ScrollContainer(res, width=300, height=300),
-                    id='dlgApply'
-                  )
+                UI.ScrollContainer(res, width="100%", height=300),
+                    id='dlgApply', title="Confirm actions"
+                )
             pnl.append(dlg)
 
         if self._info is not None:
@@ -101,17 +101,17 @@ class PackageManagerPlugin(CategoryPlugin):
             if p.name == 'genesis':
                 continue
             r = UI.DTR(
-                    UI.IconFont(iconfont=stat),
-                    UI.Label(text=p.name),
-                    UI.Label(text=p.version),
-                    UI.Label(text=p.description),
-                        UI.HContainer(
-                            UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p.name),
-                            UI.TipIcon(iconfont='gen-minus', text='Deselect', id='cancel/'+p.name)
-                                if p.name in self._status.pending else
-                            UI.TipIcon(iconfont='gen-checkmark-circle', text='Select', id='upgrade/'+p.name),
-                            spacing=0
-                        ),
+                UI.IconFont(iconfont=stat),
+                UI.Label(text=p.name),
+                UI.Label(text=p.version),
+                UI.Label(text=p.description),
+                    UI.HContainer(
+                        UI.TipIcon(iconfont='gen-info', text='Info', id='info/'+p.name),
+                        UI.TipIcon(iconfont='gen-minus', text='Deselect', id='cancel/'+p.name)
+                            if p.name in self._status.pending else
+                        UI.TipIcon(iconfont='gen-checkmark-circle', text='Select', id='upgrade/'+p.name),
+                        spacing=0
+                    ),
                 )
             tbl_pkgs.append(r)
 
