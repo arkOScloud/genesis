@@ -14,7 +14,7 @@
         </xsl:when>
         <xsl:otherwise>
             <span class="ui-el-label-{x:attr(@size, '1')} {x:iif(@fade, 'text-muted', '')} {@class}" style="{x:iif(@bold, 'font-weight: bold;', '')} {x:iif(@monospace, 'font-family: monospace;', '')} {x:iif(@lbreak, 'max-width: 500px;', '')}">
-                <xsl:value-of select="@text" />
+                <xsl:if test="@iconfont"><i class="{@iconfont}"></i>&#160;</xsl:if><xsl:value-of select="@text" />
             </span>
         </xsl:otherwise>
     </xsl:choose>

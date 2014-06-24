@@ -8,7 +8,7 @@
         <div class="col-md-9">
             <label size="3" text="General Settings" />
                 <simpleform id="frmGeneral">
-                    <formline text="Host">
+                    <formline text="Host" help="By default, Genesis binds to 0.0.0.0. Only set this if you absolutely have to and you know what you are doing. Restricted access to Genesis should be managed via the Security pane.">
                         <textinput name="bind_host" id="bind_host"/>
                     </formline>
                     <formline text="Port">

@@ -297,7 +297,7 @@ class ModuleConfig(Plugin):
                     lbl = self.labels[k]
                 if type(val) is str and hasattr(self, k+'_opts'):
                     t.append(UI.Formline(
-                        UI.Select(*[UI.SelectOption(text=x, value=x, selected=x==val) for x in getattr(self, k+'_opts')], 
+                        UI.SelectInput(*[UI.SelectOption(text=x, value=x, selected=x==val) for x in getattr(self, k+'_opts')], 
                             id=k, name=k),
                         text=lbl
                     ))

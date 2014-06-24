@@ -2,11 +2,10 @@
     <tabcontrol id="stabs" active="0">
         <tabheader text="Firewall" id="s0"/>
         <tabheader text="Defense" id="s1"/>
-        <tabheader text="Tables (Advanced)" id="s2"/>
-        <tabheader text="Settings" id="s3"/>
+        <tabheader text="Settings" id="s2"/>
 
         <tabbody id="s0">
-            <label size="5" text="Your Apps" />
+            <label size="4" text="Your Apps" />
             <pad>
                 <dt id="applist" width="100%">
                     <dtr header="True">
@@ -24,8 +23,8 @@
                     </dtr>
                 </dt>
             </pad>
-
-            <label size="5" text="arkOS Utilities" />
+            <br />
+            <label size="4" text="arkOS Utilities" />
             <pad>
                 <dt id="arkoslist" width="100%">
                     <dtr header="True">
@@ -45,7 +44,7 @@
             </pad>
         </tabbody>
         <tabbody id="s1">
-            <label size="5" text="Your Apps" />
+            <label size="4" text="Your Apps" />
             <pad>
                 <dt id="f2blist" width="100%">
                     <dtr header="True">
@@ -62,27 +61,16 @@
             </pad>
         </tabbody>
         <tabbody id="s2">
-            <toolbar>
-                <hcontainer>
-                    <btn text="Apply" id="apply" iconfont="gen-checkmark-circle" />
-                    <btn text="Load current" id="loadruntime" warning="Dispose saved configuration and load current iptables status" iconfont="gen-enter" />
-                    <btn text="Autostart" id="autostart" iconfont="gen-link" />
-                </hcontainer>
-            </toolbar>
-
-            <pad id="advroot">
-            </pad>
-        </tabbody>
-        <tabbody id="s3">
-            <toolbar>
-                <btn text="Reinitialize" id="reinit" iconfont="gen-loop-2" warning="Are you sure you want to reinitialize your input table? This will clear any custom rules you may have entered into it." />
-            </toolbar>
-            <label size="5" text="Firewall Settings" />
-            <pad>
+            <label size="3" text="Firewall Settings" />
+            <formline>
                 <label size="1" id="ranges" />
-            </pad>
-
-            <label size="5" text="Defense Settings" />
+            </formline>
+            <formline>
+                <btn text="Reinitialize" id="reinit" iconfont="gen-loop-2" warning="Are you sure you want to reinitialize your input table? This will clear any custom rules you may have entered into it." />
+            </formline>
+            
+            <br />
+            <label size="3" text="Defense Settings" />
             <pad>
                 <label size='2' text="Note that the below values are default. If the individual plugin's settings override these, they will not apply for that plugin." />
                 <simpleform id="frmDefense">
