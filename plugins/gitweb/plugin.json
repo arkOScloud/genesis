@@ -1,0 +1,70 @@
+{
+    "name": "Gitweb",
+    "type": "webapp",
+    "icon": "fa fa-git",
+    "description": {
+        "short": "Browse git repositories using a web browser",
+        "long": "Gitweb is a Git web interface. It is written in Perl and can be used as a CGI script, or as a mod_perl legacy script (run by ModPerl::Registry handler). It allows browsing a git repository (or a set of git repositories) using a web browser. Using gitweb you can browse directory trees at arbitrary revisions, view contents of files (blobs), see log or shortlog of a given branch, examine commits, commit messages and changes made by a given commit. Gitweb can generate feeds in RSS or Atom format. You can get any given version of a file; if not disabled you can download a snapshot of a given version of a project (project tree at given revision). You can search (if it is not disabled) for commits by an author, added to repository by a comitter, commit with commit message (commit description) which includes some text."
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["Development"]
+        },
+        {
+            "primary": "Development",
+            "secondary": []
+        }
+    ],
+    "version": "2.0.0-1",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "Git",
+    "app_homepage": "https://git.wiki.kernel.org/index.php/Gitweb",
+    "logo": true,
+    "screenshots": [],
+    "services": [
+        {
+            "name": "FastCGI Wrapper",
+            "binary": "fcgiwrap",
+            "ports": []
+        }
+    ],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            },
+            {
+                "type": "app",
+                "name": "Git",
+                "package": "git",
+                "binary": "git"
+            },
+            {
+                "type": "app",
+                "name": "fcgiwrap",
+                "package": "fcgiwrap",
+                "binary": "fcgiwrap"
+            },
+            {
+                "type": "app",
+                "name": "spawn-fcgi",
+                "package": "spawn-fcgi",
+                "binary": "spawn-fcgi"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "Gitweb",
+    "website_updates": false,
+    "download_url": null,
+    "database_engines": [],
+    "uses_php": false,
+    "uses_ssl": true
+}

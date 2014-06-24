@@ -1,0 +1,5 @@
+<xml>
+    <formline text="Project Root" help="Path of the directory that your Git repositories reside in.">
+        <textinput name="gw-proot" id="gw-proot" />
+    </formline>
+</xml>

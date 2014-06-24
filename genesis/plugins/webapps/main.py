@@ -312,7 +312,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                     self.put_message('err', 'Site must have either a different domain/subdomain or a different port')
                 elif not vname:
                     self.put_message('err', 'A site with this name already exists')
-                elif vars.has_key('dbtype') and vars.getvalue('dbtype', '') in ['', 'None']:
+                elif (not hasattr(self._setup, 'dbengines') or not self._setup.dbengines) \
+                or (vars.has_key('dbtype') and vars.getvalue('dbtype', '') in ['', 'None']):
                     self.addsite(self._setup, vars, {}, True)
                     self._setup = None
                 elif hasattr(self._setup, 'dbengines') and self._setup.dbengines:
