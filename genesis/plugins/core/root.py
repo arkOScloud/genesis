@@ -204,26 +204,19 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
         start_response('301 Moved Permanently', [('Location', '/')])
         return ''
 
-    @url('^/embapp/.+')
+    @url('^/redir/.+')
     def goto_embed(self, req, start_response):
         path = req['PATH_INFO'].split('/')
         host = req['HTTP_HOST']
         bhost = req['HTTP_HOST'].split(':')[0]
         ssl = False
 
-        try:
-            if path[3] == 'ssl':
-                ssl = True
-        except IndexError:
-            pass
+        if len(path) >= 4 and path[3] == 'ssl':
+            ssl = True
 
-        content = self.app.inflate('core:embapp')
-        content.insertText('ea-port', ':' + path[2])
-        content.find('ea-link').set('href', req['wsgi.url_scheme']+'://'+host)
-        content.append('ea-frame-container', UI.IFrame(id='ea-frame', 
-            src=('https://' if ssl else 'http://')+bhost+':'+path[2]))
-        self._cat_selected = 'dashboard'
-        return content.render()
+        start_response('301 Moved Permanently', [('Location', 
+            ('https://' if ssl else 'http://')+bhost+':'+path[2])])
+        return ''
 
     @event('category/click')
     def handle_category(self, event, params, **kw):

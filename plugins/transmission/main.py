@@ -25,6 +25,9 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             ui = self.app.inflate('transmission:main')
             ui.find('tabs').set('active', self._tab)
 
+            if self.app.gconfig.get('genesis', 'ssl') == '1':
+                ui.find('launch').set('onclick', 'window.open("/redir/'+str(self._config.get('rpc-port'))+'", "_blank")')
+
             basic = UI.FormBox(
                 UI.FormLine(
                     UI.TextInput(name='download-dir', value=self._config.get('download-dir')),
