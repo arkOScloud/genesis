@@ -50,10 +50,10 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
             ui.append('tab0', basic)
 
             for k,v in sorted(self._config.items()):
-                e = UI.DTR(
-                    UI.IconFont(iconfont='gen-folder'),
-                    UI.Label(text=k),
-                    UI.Label(text=v),
+                e = UI.Formline(
+                    UI.SelectInput(UI.SelectOption(text='True', value='True', selected=v=='True'), UI.SelectOption(text='False', value='False', selected=v=='False'), name=k) \
+                    if type(v) == bool else UI.TextInput(name=k, value=v),
+                    text=k
                 )
                 ui.append('all_config', e)
 
@@ -81,3 +81,9 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
                 self._config.save()
             elif vars.getvalue('action', '') == 'Cancel':
                 self._config.load()
+        elif params[0] == 'frmAdvanced':
+            if vars.getvalue('action', '') == 'OK':
+                for x in vars.keys():
+                    if x != 'action':
+                        self._config.set(x, vars.getvalue(x, self._config.get(x)))
+                self._config.save()
