@@ -8,7 +8,7 @@ pkgdesc="Easy, modular server management app"
 arch=('any')
 url="https://arkos.io/genesis"
 license=('GPLv3')
-depends=('python2' 'python2-lxml' 'python2-passlib' 'python2-pyopenssl' 'python2-feedparser' 'python2-gevent' 'python2-iptables' 'python2-ntplib' 'python2-nginx')
+depends=('python2' 'python2-lxml' 'python2-passlib' 'python2-pyopenssl' 'python2-feedparser' 'python2-gevent' 'python2-iptables' 'python2-ntplib' 'python2-nginx>=0.1.3')
 makedepends=('python2' 'python2-distribute' 'python2-passlib')
 optdepends=('python2-psutil: Task Manager plugin')
 optdepends=('python2-pillow: Terminal plugin')
