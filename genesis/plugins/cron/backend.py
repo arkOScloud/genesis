@@ -82,17 +82,6 @@ def fix_crontab(user='root'):
             fixed_lines.append(line)
     write_crontab(fixed_lines, user)
     return 0
-
-def get_all_users():
-    user_list = []
-    for s in open('/etc/passwd', 'r').read().split('\n'):
-        try:
-            s = s.split(':')
-            u = s[0]
-            user_list.append(u)
-        except:
-            pass
-    return sorted(user_list)
     
     
 class CronConfig (Plugin):

@@ -46,6 +46,26 @@ class UsersBackend(Plugin):
         sf = lambda x: -1 if x.uid==0 else (x.uid+1000 if x.uid<1000 else x.uid-1000)
         return sorted(r, key=sf)
 
+    def get_users(self):
+        r = []
+        for s in open('/etc/passwd', 'r').read().split('\n'):
+                try:
+                    s = s.split(':')
+                    if int(s[2]) >= 1000 or int(s[2]) == 0:
+                        u = User()
+                        u.login = s[0]
+                        u.uid = int(s[2])
+                        u.gid = int(s[3])
+                        u.info = s[4]
+                        u.home = s[5]
+                        u.shell = s[6]
+                        r.append(u)
+                except:
+                    pass
+
+        sf = lambda x: -1 if x.uid==0 else (x.uid+1000 if x.uid<1000 else x.uid-1000)
+        return sorted(r, key=sf)
+
     def get_all_groups(self):
         r = []
         for s in open('/etc/group', 'r').read().split('\n'):

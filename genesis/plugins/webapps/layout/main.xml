@@ -5,7 +5,7 @@
     <dialogbox id="dlgAdd" size="large">
         <pad>
             <table class="layout" style="width:100%;height:auto;">
-                 <tr>
+                <tr>
                     <td>
                         <list id="provs" width="200" height="500" />
                     </td>
@@ -27,7 +27,7 @@
                             </formline>
                         </scrollcontainer>
                     </td>  
-                 </tr>
+                </tr>
             </table>
         </pad>
     </dialogbox>

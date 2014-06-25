@@ -304,7 +304,7 @@ class ModuleConfig(Plugin):
                 elif type(val) is bool:
                     t.append(UI.Formline(
                         UI.CheckBox(name=k, checked=val),
-                        text=lbl
+                        text=lbl, checkbox=True
                     ))
                 elif type(val) is str:
                     t.append(UI.Formline(
