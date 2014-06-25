@@ -20,13 +20,13 @@ class TransmissionPlugin(apis.services.ServiceControlPlugin):
     def get_main_ui(self):
         if self._redir:
             ui = self.app.inflate('transmission:embed')
-            ui.find('frame-frame').set('src', 'http://localhost:'+str(self._config.get('rpc-port')))
+            ui.find('frame-frame').set('src', 'http://'+self.app.environ['HTTP_HOST'].split(':')[0]+':'+str(self._config.get('rpc-port')))
         else:
             ui = self.app.inflate('transmission:main')
             ui.find('tabs').set('active', self._tab)
 
             if self.app.gconfig.get('genesis', 'ssl') == '1':
-                ui.find('launch').set('onclick', 'window.open("/redir/'+str(self._config.get('rpc-port'))+'", "_blank")')
+                ui.find('launch').set('onclick', 'window.open("http://'+self.app.environ['HTTP_HOST'].split(':')[0]+':'+str(self._config.get('rpc-port'))+'", "_blank")')
 
             basic = UI.FormBox(
                 UI.FormLine(
