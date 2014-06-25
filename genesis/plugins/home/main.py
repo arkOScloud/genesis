@@ -7,7 +7,7 @@ from genesis.plugins.core.updater import UpdateCheck
 class HomePlugin(api.CategoryPlugin):
     text = 'My Applications'
     iconfont = 'fa fa-home'
-    folder = 'top'
+    folder = None
 
     folders = {
         'cluster': 'CLUSTER',

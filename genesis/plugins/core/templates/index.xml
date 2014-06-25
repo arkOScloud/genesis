@@ -24,6 +24,7 @@
     </div>
     <div id="ui-lower-bar">
         <div class="container">
+            <a id="homeplugin" class="ui-el-top-category selected" onclick="return Genesis.selectCategory('homeplugin');" href="#"><i class="fa fa-home"></i> My Applications</a>
             <span id="topplaceholder-top"/>
             <span id="topplaceholder-bottom"/>
             <div class="pull-right">

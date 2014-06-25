@@ -7,7 +7,7 @@ from genesis.plugmgr import PluginLoader, RepositoryManager
 class PluginManager(CategoryPlugin, URLHandler):
     text = 'App Store'
     iconfont = 'gen-box-add'
-    folder = 'bottom'
+    folder = 'top'
 
     def on_session_start(self):
         self._mgr = RepositoryManager(self.app.log, self.app.config)
