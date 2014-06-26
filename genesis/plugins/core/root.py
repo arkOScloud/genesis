@@ -195,13 +195,13 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
     @url('^/session_reset$')
     def process_reset(self, req, start_response):
         self.app.session.clear()
-        start_response('301 Moved Permanently', [('Location', '/')])
+        start_response('302 Found', [('Location', '/')])
         return ''
 
     @url('^/logout$')
     def process_logout(self, req, start_response):
         self.app.auth.deauth()
-        start_response('301 Moved Permanently', [('Location', '/')])
+        start_response('302 Found', [('Location', '/')])
         return ''
 
     @url('^/redir/.+')
