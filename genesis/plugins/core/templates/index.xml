@@ -82,7 +82,7 @@
         <div class="container">
             <div id="version" class="pull-left" />
             <div id="links" class="pull-right">
-                <a href="http://bbs.arkos.io/" id="feedback-link" target="_blank"><i class="gen-users"></i> Community</a>
+                <a href="https://bbs.arkos.io/" id="feedback-link" target="_blank"><i class="gen-users"></i> Support</a>
                 <a href="https://www.gnu.org/licenses/gpl.html" target="_blank"><i class="gen-certificate"></i> License</a>
             </div>
         </div>
