@@ -17,10 +17,19 @@
 
 <pad id="main">
 
-    <hcontainer spacing="15">
-        <div id="cleft" class="dashboard" />
-        <div id="cright" class="dashboard" />
-    </hcontainer>
+    <table style="table-layout: fixed;">
+        <tr>
+            <td style="vertical-align:top;padding-right:15px;">
+                <div id="cleft" class="dashboard" />
+            </td>
+            <td style="vertical-align:top;padding-right:15px;">
+                <div id="cmiddle" class="dashboard" />
+            </td>
+            <td style="vertical-align:top;padding-right:15px;">
+                <div id="cright" class="dashboard" />
+            </td>
+        </tr>
+    </table>
 
     <div id="trash" class="ui-dashboard-trash dashboard" style="opacity:0">
         Drop here to remove widget

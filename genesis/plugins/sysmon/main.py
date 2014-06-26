@@ -45,6 +45,7 @@ class SysMon(CategoryPlugin):
         self._failed = []
 
         self.fill('l', self._mgr.list_left(), ui, 'cleft')
+        self.fill('c', self._mgr.list_center(), ui, 'cmiddle')
         self.fill('r', self._mgr.list_right(), ui, 'cright')
 
         if self._failed != []:
@@ -87,10 +88,12 @@ class SysMon(CategoryPlugin):
     @event('sysmon/save')
     def on_save(self, event, params, vars):
         l = params[0]
-        r = params[1]
+        c = params[1]
+        r = params[2]
         l = [int(x) for x in l.split(',') if x]
+        c = [int(x) for x in c.split(',') if x]
         r = [int(x) for x in r.split(',') if x]
-        self._mgr.reorder(l,r)
+        self._mgr.reorder(l,c,r)
 
     @event('button/click')
     @event('linklabel/click')

@@ -60,6 +60,7 @@ class Dashboard (API):
 
         def refresh(self):
             self._left = []
+            self._center = []
             self._right = []
             self._widgets = {}
 
@@ -69,13 +70,19 @@ class Dashboard (API):
             except:
                 pass
 
-            for x in (self._left + self._right):
+            try:
+                self._center = [int(x) for x in self.app.config.get('dashboard', 'center').split(',')]
+            except:
+                pass
+
+            for x in (self._left + self._center + self._right):
                 self._widgets[x] = (
                     self.app.config.get('dashboard', '%i-class'%x),
                     eval(b64decode(self.app.config.get('dashboard', '%i-cfg'%x)))
                 )
 
         def list_left(self): return self._left
+        def list_center(self): return self._center
         def list_right(self): return self._right
 
         def add_widget(self, id, cfg):
@@ -88,14 +95,17 @@ class Dashboard (API):
             self._left.append(idx)
             self.save_cfg()
 
-        def reorder(self, nl, nr):
+        def reorder(self, nl, nc, nr):
             self._left = nl
+            self._center = nc
             self._right = nr
             self.save_cfg()
 
         def remove_widget(self, id):
             if id in self._right:
                 self._right.remove(id)
+            elif id in self._center:
+                self._center.remove(id)
             else:
                 self._left.remove(id)
             del self._widgets[id]
@@ -105,6 +115,7 @@ class Dashboard (API):
 
         def save_cfg(self):
             self.app.config.set('dashboard', 'left', ','.join(str(x) for x in self._left))
+            self.app.config.set('dashboard', 'center', ','.join(str(x) for x in self._center))
             self.app.config.set('dashboard', 'right', ','.join(str(x) for x in self._right))
             for x in self._widgets:
                 self.app.config.set('dashboard', '%i-class'%x, self._widgets[x][0])

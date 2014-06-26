@@ -10,15 +10,19 @@ $(document).on('sortstop', '.dashboard', function () {
 
 function dashboardSave() {
     var l = '';
+    var c = '';
     var r = '';
 
     $('#cleft > *').each(function(i,e) {
         l += $(e).attr('id') + ',';
     });
+    $('#cmiddle > *').each(function(i,e) {
+        c += $(e).attr('id') + ',';
+    });
     $('#cright > *').each(function(i,e) {
         r += $(e).attr('id') + ',';
     });
 
-    Genesis.query('/handle/sysmon/save/'+l+'/'+r);
+    Genesis.query('/handle/sysmon/save/'+l+'/'+c+'/'+r);
     return false;
 }
