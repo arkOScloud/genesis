@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-import re
 import os
+import psutil
+import time
 
 from genesis import apis
 from genesis.utils import shell, detect_architecture
@@ -13,7 +14,7 @@ class LinuxSysStat(Plugin):
     platform = ['debian', 'arch', 'arkos', 'centos', 'fedora', 'gentoo', 'mandriva']
 
     def get_load(self):
-        return open('/proc/loadavg', 'r').read().split()[0:3]
+        return os.getloadavg()
 
     def get_temp(self):
         if self.app.board == 'Raspberry Pi':
@@ -24,17 +25,13 @@ class LinuxSysStat(Plugin):
         return ''
 
     def get_ram(self):
-        s = shell('free -b | grep Mem').split()[1:]
-        t = int(s[0])
-        u = int(s[1])
-        b = int(s[4])
-        c = int(s[5])
-        u -= c + b;
-        return (u, t)
+        s = psutil.virtual_memory()
+        a = int(s.used) - (int(s.cached) + int(s.buffers))
+        return (a, int(s.total))
 
     def get_swap(self):
-        s = shell('free -b | grep Swap').split()[1:]
-        return (int(s[1]), int(s[0]))
+        s = psutil.swap_memory()
+        return (int(s.used), int(s.total))
 
     def get_uptime(self):
         minute = 60
@@ -43,21 +40,14 @@ class LinuxSysStat(Plugin):
 
         d = h = m = 0
 
-        try:
-            s = int(open('/proc/uptime').read().split('.')[0])
+        s = int(time.time()) - int(psutil.boot_time())
 
-            d = s / day
-            s -= d * day
-            h = s / hour
-            s -= h * hour
-            m = s / minute
-            s -= m * minute
-        except IOError:
-            # Try use 'uptime' command
-            up = os.popen('uptime').read()
-            if up:
-                uptime = re.search('up\s+(.*?),\s+[0-9]+ user',up).group(1)
-                return uptime
+        d = s / day
+        s -= d * day
+        h = s / hour
+        s -= h * hour
+        m = s / minute
+        s -= m * minute
 
         uptime = ""
         if d > 1:
