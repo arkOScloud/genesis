@@ -159,10 +159,12 @@ def download(url, file=None, crit=False):
         if crit:
             raise
 
-def send_json(url, data, returns='json', headers=[], crit=False):
+def send_json(url, data, method='POST', returns='json', headers=[], crit=False):
     try:
         req = urllib2.Request(url)
         req.add_header('Content-type', 'application/json')
+        if method != 'POST':
+            req.get_method = lambda: method
         for x in headers:
             req.add_header(x[0], x[1])
         resp = urllib2.urlopen(req, json.dumps(data))
@@ -171,15 +173,15 @@ def send_json(url, data, returns='json', headers=[], crit=False):
         else:
             return resp.read()
     except urllib2.HTTPError, e:
-        self.log.error('JSON POST to %s failed - HTTP Error %s' % (url, str(e.code)))
+        self.log.error('JSON %s to %s failed - HTTP Error %s' % (method, url, str(e.code)))
         if crit:
             raise
     except urllib2.URLError, e:
-        self.log.error('JSON POST to %s failed - Server not found or URL malformed. Please check your Internet settings.' % url)
+        self.log.error('JSON %s to %s failed - Server not found or URL malformed. Please check your Internet settings.' % (method, url))
         if crit:
             raise
     except Exception, e:
-        self.log.error('JSON POST to %s failed - %s' % (url, str(e)))
+        self.log.error('JSON %s to %s failed - %s' % (method, url, str(e)))
         if crit:
             raise
 
