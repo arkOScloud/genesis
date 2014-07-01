@@ -22,8 +22,8 @@
     "services": [
         {
             "name": "File Sync",
-            "binary": "syncthing",
-            "ports": []
+            "binary": "syncthing@syncthing",
+            "ports": [["tcp", "22000"], ["udp", "21025"]]
         }
     ],
     "modules": ["main", "backend"],

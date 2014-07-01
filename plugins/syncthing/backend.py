@@ -1,12 +1,15 @@
 from genesis.api import *
+from genesis import apis
 from genesis.com import *
 from genesis.utils import *
+from genesis.plugins.users.backend import UsersBackend
 
 import base64
 import hashlib
 import lxml.etree as ET
 import OpenSSL
 import os
+import pwd
 import shutil
 
 
@@ -18,36 +21,44 @@ class SyncthingConfig(Plugin):
 
     def load(self):
         self.mgr = self.app.get_backend(apis.services.IServiceManager)
-        self.config_tree = ET.fromstring(ConfManager.get().load('syncthing', self.configFile))
-        self.config = self.config_tree.getroot()
+        data = ConfManager.get().load('syncthing', self.configFile)
+        parser = ET.XMLParser(remove_blank_text=True)
+        self.config = ET.fromstring(data, parser) if data else None
         self.myid = self.getmyid()
 
     def save(self, reload=True):
         wasrunning = False
         if reload and self.mgr.get_status('syncthing@syncthing') == 'running':
             wasrunning = True
-            self.mgr.stop(self.serviceName)
-        ConfManager.get().save('syncthing', self.configFile, ET.tostring(self.configtree))
+        ConfManager.get().save('syncthing', self.configFile, ET.tostring(self.config, pretty_print=True))
         ConfManager.get().commit('syncthing')
         if wasrunning and reload:
-            self.mgr.start(self.serviceName)
+            self.mgr.restart('syncthing@syncthing')
 
     def __init__(self):
         self.configDir = '/home/syncthing/.config/syncthing'
         self.configFile = os.path.join(self.configDir, 'config.xml')
         if not os.path.exists(self.configFile):
             if not os.path.exists(self.configDir):
+                UsersBackend(self.app).add_sys_with_home('syncthing')
                 os.makedirs(self.configDir)
-            open(self.configFile, 'w').write()
-        self.config_tree = None
+                uid = pwd.getpwnam('syncthing').pw_uid
+                for r, d, f in os.walk('/home/syncthing'):
+                    for x in d:
+                        os.chown(os.path.join(r, x), uid, -1)
+                    for x in f:
+                        os.chown(os.path.join(r, x), uid, -1)
+            self.app.get_backend(apis.services.IServiceManager).restart('syncthing@syncthing')
         self.config = None
 
     def list_files(self):
         return [self.configFile]
 
     def getmyid(self):
+        if not os.path.exists(os.path.join(self.configDir, 'cert.pem')):
+            return None
         c = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
-            open(os.path.join(self.configDir, 'cert.pem'), 'r'))
+            open(os.path.join(self.configDir, 'cert.pem'), 'r').read())
         s = hashlib.sha256()
         s.update(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_ASN1, c))
         b = base64.b32encode(s.digest()).rstrip('=')
@@ -55,12 +66,14 @@ class SyncthingConfig(Plugin):
 
 
 class SyncthingControl(Plugin):
-    cfg = self.app.get_config(SyncthingConfig)
+    def __init__(self):
+        super(Plugin, self).__init__()
+        self.cfg = SyncthingConfig(self.app)
 
     def add_repo(self, name, dir, ro, perms, vers, nids=[]):
         e = ET.Element('repository', {"id": name, "directory": dir,
             "ro": "true" if ro else "false", 
-            "ignorePermissions": "true" if perms else "false"})
+            "ignorePerms": "true" if perms else "false"})
         for x in nids:
             nid = self.cfg.config.find("./node[@name='%s']" % x)
             e.append(ET.Element('node', {"id": nid.attrib['id']}))
@@ -72,12 +85,20 @@ class SyncthingControl(Plugin):
         e.append(ET.Element('syncorder'))
         self.cfg.config.find('.').append(e)
         self.cfg.save()
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        uid = pwd.getpwnam('syncthing').pw_uid
+        for r, d, f in os.walk(dir):
+            for x in d:
+                os.chown(os.path.join(r, x), uid, -1)
+            for x in f:
+                os.chown(os.path.join(r, x), uid, -1)
 
     def edit_repo(self, name, dir, ro, perms, vers, nids=[]):
         e = self.cfg.config.find("./repository[@id='%s']" % name)
         e.set('directory', dir)
         e.set('ro', "true" if ro else "false")
-        e.set('ignorePermissions', "true" if perms else "false")
+        e.set('ignorePerms', "true" if perms else "false")
         for x in nids:
             nid = self.cfg.config.find("./node[@name='%s']" % x)
             e.append(ET.Element('node', {"id": nid.attrib['id']}))
@@ -102,26 +123,28 @@ class SyncthingControl(Plugin):
 
     def get_repos(self):
         r = []
-        for x in self.cfg.config.findall("./repository"):
-            r.append({"id": x.attrib["id"], "directory": x.attrib["directory"],
-                "ro": x.attrib["ro"], "ignorePermissions": x.attrib["ignorePermissions"],
-                "nodes": [y.attrib["id"] for y in x.findall("node")],
-                "versioning": x.find("versioning/param").attrib["val"] if x.find("versioning/param") else False
-                })
+        try:
+            for x in self.cfg.config.findall("./repository"):
+                r.append({"id": x.attrib["id"], "directory": x.attrib["directory"],
+                    "ro": x.attrib["ro"]=="true", "ignorePerms": x.attrib["ignorePerms"]=="true",
+                    "nodes": [y.attrib["id"] for y in x.findall("node")],
+                    "versioning": x.find("versioning/param").attrib["val"] if x.find("versioning/param") else False
+                    })
+        except AttributeError:
+            pass
         return r
 
     def add_node(self, name, id, addr):
-        e = ET.Element('node', {"id": id, "name": name})
+        e = ET.Element('node', {"id": id.replace("-", ""), "name": name})
         a = ET.Element('address')
         a.text = addr
-        e.append(e)
+        e.append(a)
         self.cfg.config.find('.').append(e)
         self.cfg.save()
 
-    def edit_node(self, name, newname, addr):
+    def edit_node(self, name, newname):
         e = self.cfg.config.find("./node[@name='%s']" % name)
         e.set("name", newname)
-        e.find("address").text = addr
         self.cfg.save()
 
     def del_node(self, name):
@@ -130,8 +153,11 @@ class SyncthingControl(Plugin):
 
     def get_nodes(self):
         r = []
-        for x in self.cfg.config.findall("./node"):
-            r.append({"id": x.attrib["id"], "name": x.attrib["name"],
-                "address": x.find("address").text, 
-                "myid": x.attrib["id"]==self.cfg.myid})
+        try:
+            for x in self.cfg.config.findall("./node"):
+                r.append({"id": x.attrib["id"], "name": x.attrib["name"],
+                    "address": x.find("address").text, 
+                    "myid": x.attrib["id"]==self.cfg.myid})
+        except AttributeError:
+            pass
         return r
