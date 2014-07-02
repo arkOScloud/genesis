@@ -24,6 +24,8 @@ def start():
 def sitedata():
 	print "STEP 1: Migrating your site metadata and certificates..."
 	for x in os.listdir('/etc/nginx/sites-available'):
+		if x.startswith('.'):
+			continue
 		f = nginx.loadf(os.path.join('/etc/nginx/sites-available', x))
 		rtype = re.compile('GENESIS ((?:[a-z][a-z]+))', flags=re.IGNORECASE)
 		stype = re.match(rtype, f.filter('Comment')[0].comment).group(1)
@@ -92,13 +94,13 @@ def updreposvr():
 	c = ConfigParser.RawConfigParser()
 	c.read("/etc/genesis/genesis.conf")
 	c.set("genesis", "update_server", "grm.arkos.io")
-	c.write(open("/etc/genesis/genesis.conf"), "w")
+	c.write(open("/etc/genesis/genesis.conf", "w"))
 
 
 if __name__ == '__main__':
-    start()
-    sitedata()
-    pluginssl()
-    newplugins()
-    updreposvr()
-    print "Finished migration!"
+	start()
+	sitedata()
+	pluginssl()
+	newplugins()
+	updreposvr()
+	print "Finished migration!"

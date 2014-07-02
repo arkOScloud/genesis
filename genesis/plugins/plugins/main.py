@@ -2,6 +2,7 @@ from genesis.api import *
 from genesis.ui import *
 from genesis import apis
 from genesis.plugmgr import PluginLoader, RepositoryManager
+from genesis.utils import *
 
 
 class PluginManager(CategoryPlugin, URLHandler):

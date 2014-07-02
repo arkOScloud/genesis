@@ -13,6 +13,7 @@ __all__ = [
     'PluginInfo',
 ]
 
+import base64
 import os
 import imp
 import json

@@ -12,6 +12,7 @@ __all__ = [
     'detect_platform',
     'detect_distro',
     'download',
+    'send_json',
     'shell',
     'shell_stdin',
     'shell_bg',

@@ -12,7 +12,7 @@
 <div id="page">
     <div class="auth-ct">
       <div class="login-icon" style="text-align:center;">
-          <img id="login-logo" src="/dl/core/ui/logo-arkos-white-round.svg" />
+          <img id="login-logo" src="/dl/core/ui/logo-arkos-white-round.png" />
           <p id="auth-error"><strong>Error: </strong>Login failed. Check username and password.</p>
       </div>
       <div class="login">
