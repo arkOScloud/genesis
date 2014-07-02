@@ -63,6 +63,7 @@ def pluginssl():
 				c = ConfigParser.RawConfigParser()
 				c.read("/etc/genesis/genesis.conf")
 				c.add_section("ssl_%s" % ("email" if y == "Mailserver" else "xmpp"))
+				c.set("ssl_%s" % ("email" if y == "Mailserver" else "xmpp"), "cert", cfg.get("cert", "name"))
 				c.write(open("/etc/genesis/genesis.conf"), "w")
 
 def newplugins():

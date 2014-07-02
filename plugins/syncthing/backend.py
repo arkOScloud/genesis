@@ -48,7 +48,7 @@ class SyncthingConfig(Plugin):
                         os.chown(os.path.join(r, x), uid, -1)
                     for x in f:
                         os.chown(os.path.join(r, x), uid, -1)
-            self.app.get_backend(apis.services.IServiceManager).restart('syncthing@syncthing')
+            self.app.get_backend(apis.services.IServiceManager).real_restart('syncthing@syncthing')
         self.config = None
 
     def list_files(self):

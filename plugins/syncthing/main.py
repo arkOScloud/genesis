@@ -7,7 +7,7 @@ import backend
 
 
 class SyncthingPlugin(apis.services.ServiceControlPlugin):
-    text = 'File Shares BETA'
+    text = 'File Sync BETA'
     iconfont = 'gen-loop-2'
     folder = 'servers'
     
