@@ -44,12 +44,12 @@ def sitedata():
 		dbengine = ""
 		if stype in ["Wallabag", "WordPress", "ownCloud"]:
 			dbengine = "MariaDB"
-		elif x+".db" in os.listdir('/var/lib/sqlite3'):
+		elif os.path.exists('/var/lib/sqlite3') and x+".db" in os.listdir('/var/lib/sqlite3'):
 			dbengine = "SQLite3"
 		c.set("website", "ssl", ssl)
 		c.set("website", "version", version)
 		c.set("website", "dbengine", dbengine)
-		c.set("website", "dbname", x)
+		c.set("website", "dbname", x if dbengine else "")
 		c.set("website", "dbuser", x if dbengine == "MariaDB" else "")
 		c.write(open(os.path.join('/etc/nginx/sites-available', '.'+x+'.ginf'), 'w'))
 
@@ -71,10 +71,13 @@ def newplugins():
 	for x in glob.glob("/var/lib/genesis/plugins/*"):
 		name = os.path.split(x)[-1]
 		shutil.rmtree(x)
+		if name in ["notepad", "supervisor", "terminal", "shell", 
+			"taskmgr", "advusers", "cron", "pkgman"]:
+			continue
 		req = urllib2.Request("https://grm.arkos.io/")
 		req.add_header("Content-type", "application/json")
 		resp = urllib2.urlopen(req, json.dumps({"get": "plugin", "id": name}))
-		resp = json.loads(resp)
+		resp = json.loads(resp.read())
 		if resp["status"] == 200:
 			open('/var/lib/genesis/plugins/plugin.tar.gz', 'wb').write(base64.b64decode(resp["info"]))
 			t = tarfile.open('/var/lib/genesis/plugins/plugin.tar.gz', 'r:gz')
@@ -84,10 +87,18 @@ def newplugins():
 		else:
 			print "ERROR - Couldn't fetch %s: %s. You'll have to download and install manually it from within the app" % (name, resp["info"])
 
+def updreposvr():
+	print "STEP 4: Updating repository server address"
+	c = ConfigParser.RawConfigParser()
+	c.read("/etc/genesis/genesis.conf")
+	c.set("genesis", "update_server", "grm.arkos.io")
+	c.write(open("/etc/genesis/genesis.conf"), "w")
+
 
 if __name__ == '__main__':
     start()
     sitedata()
     pluginssl()
     newplugins()
+    updreposvr()
     print "Finished migration!"
