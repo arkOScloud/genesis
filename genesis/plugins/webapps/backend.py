@@ -242,6 +242,8 @@ class WebappControl(Plugin):
 			shutil.rmtree(site.path.split('/_site')[0])
 		elif site.path.endswith('htdocs'):
 			shutil.rmtree(site.path.split('/htdocs')[0])
+		elif os.path.islink(site.path):
+			os.unlink(site.path)
 		else:
 			shutil.rmtree(site.path)
 		if hasattr(site, 'dbengine') and site.dbengine:

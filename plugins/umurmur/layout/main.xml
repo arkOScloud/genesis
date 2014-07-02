@@ -1,9 +1,7 @@
 <xml>
     <toolbar>
-        <hcontainer>
-            <button id="dlg_add_channel" text="Add channel" iconfont="gen-plus-circle" />
-            <button id="dlg_add_channel_link" text="Add channel link" iconfont="gen-plus-circle" />
-        </hcontainer>
+        <btn id="dlg_add_channel" text="Add channel" iconfont="gen-plus-circle" />
+        <btn id="dlg_add_channel_link" text="Add channel link" iconfont="gen-plus-circle" />
     </toolbar>
     <pad id="main">
         <tabcontrol id="tabs" active="tab0" >

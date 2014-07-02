@@ -174,10 +174,10 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 UI.FormLine(
                     UI.CheckBox(
                         name="chan_silent",
-                        text="Yes",
+                        text="Silent",
                         checked=False,
                     ),
-                    text="Silent",
+                    checkbox=True
                     #TODO: help="" (checkout silent mode before... )
                 ),
                 id="dialog_add_channel"
@@ -201,6 +201,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                         UI.SelectOption(text=c, value=c)
                         for c in channel_names,
                     ), name="chan_dest"),
+                    width="100%"
                 ),
                 id="dialog_add_channel_link"
             )

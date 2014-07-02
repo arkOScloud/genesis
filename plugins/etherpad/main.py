@@ -35,19 +35,8 @@ class Etherpad(Plugin):
             name, name, eth_pass, conn
         )
 
-    def post_install(self, name, path, vars):
-        users = UsersBackend(self.app)
-        users.add_user('etherpad')
-
-        # Request a database and user to interact with it
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
-        dbname = name
-        session_key = hashlib.sha1(str(random.random())).hexdigest()
-        dbpass = session_key[0:8]
-        dbase.add(dbname, conn)
-        dbase.usermod(dbname, 'add', dbpass, conn)
-        dbase.chperm(dbname, dbname, 'grant', conn)
+    def post_install(self, name, path, vars, dbinfo={}):
+        UsersBackend(self.app).add_user('etherpad')
 
         # Create/Edit the config file
         cfg = {
@@ -55,13 +44,13 @@ class Etherpad(Plugin):
             "favicon": "favicon.ico",
             "ip": "127.0.0.1",
             "port": "2369",
-            "sessionKey": session_key,
+            "sessionKey": hashlib.sha1(str(random.random())).hexdigest(),
             "dbType": "mysql",
             "dbSettings": {
-                "user": dbname,
+                "user": dbinfo['user'],
                 "host": "localhost",
-                "password": dbpass,
-                "database": dbname
+                "password": dbinfo['passwd'],
+                "database": dbinfo['name']
             },
             "defaultPadText": (
                 "Welcome to Etherpad on arkOS!\n\nThis pad text is "
@@ -144,20 +133,12 @@ class Etherpad(Plugin):
         shell('chown -R etherpad ' + path)
         #TODO: user auth with nginx??
 
-    def pre_remove(self, name, path):
-        with open(os.path.join(path, 'settings.json')) as f:
-            cfg = json.load(f)
-            dbname = cfg["dbSettings"]["user"]
-        dbase = apis.databases(self.app).get_interface('MariaDB')
-        conn = apis.databases(self.app).get_dbconn('MariaDB')
-        dbase.remove(dbname, conn)
-        dbase.usermod(dbname, 'del', '', conn)
+    def pre_remove(self, site):
+        pass
 
-    def post_remove(self, name):
-        users = UsersBackend(self.app)
-        users.del_user('etherpad')
-        s = self.app.get_backend(apis.services.IServiceManager)
-        s.delete('etherpad', 'supervisor')
+    def post_remove(self, site):
+        UsersBackend(self.app).del_user('etherpad')
+        self.app.get_backend(apis.services.IServiceManager).delete('etherpad', 'supervisor')
 
     def ssl_enable(self, path, cfile, kfile):
         name = os.path.basename(path)
