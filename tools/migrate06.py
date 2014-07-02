@@ -1,10 +1,15 @@
 #!/usr/bin/env python2
 
+import base64
 import ConfigParser
 import glob
+import json
 import nginx
 import os
 import re
+import shutil
+import tarfile
+import urllib2
 
 def start():
 	print "====================================="
@@ -60,9 +65,28 @@ def pluginssl():
 				c.add_section("ssl_%s" % ("email" if y == "Mailserver" else "xmpp"))
 				c.write(open("/etc/genesis/genesis.conf"), "w")
 
+def newplugins():
+	print "STEP 3: Removing old plugins and downloading latest versions..."
+	for x in glob.glob("/var/lib/genesis/plugins/*"):
+		name = os.path.split(x)[-1]
+		shutil.rmtree(x)
+		req = urllib2.Request("https://grm.arkos.io/")
+		req.add_header("Content-type", "application/json")
+		resp = urllib2.urlopen(req, json.dumps({"get": "plugin", "id": name}))
+		resp = json.loads(resp)
+		if resp["status"] == 200:
+			open('/var/lib/genesis/plugins/plugin.tar.gz', 'wb').write(base64.b64decode(resp["info"]))
+			t = tarfile.open('/var/lib/genesis/plugins/plugin.tar.gz', 'r:gz')
+			t.extractall('/var/lib/genesis/plugins')
+			t.close()
+			os.unlink('/var/lib/genesis/plugins/plugin.tar.gz')
+		else:
+			print "ERROR - Couldn't fetch %s: %s. You'll have to download and install manually it from within the app" % (name, resp["info"])
+
 
 if __name__ == '__main__':
     start()
     sitedata()
     pluginssl()
+    newplugins()
     print "Finished migration!"
