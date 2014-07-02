@@ -122,6 +122,8 @@ class ArchServiceManager(Plugin):
             if os.path.exists(os.path.join('/etc/supervisor.d', name+'.ini.disabled')):
                 os.rename(os.path.join('/etc/supervisor.d', name+'.ini.disabled'),
                     os.path.join('/etc/supervisor.d', name+'.ini'))
+            if not self.get_status("supervisord") == "running":
+                self.start("supervisord")
             shell("supervisorctl reload")
             shell("supervisorctl start {}".format(name))
         elif self.use_systemd:
@@ -136,7 +138,7 @@ class ArchServiceManager(Plugin):
         elif self.use_systemd:
             shell("systemctl --no-ask-password disable {}.service".format(name))
 
-    def edit(self, name, opts, stype='supervisor'):
+    def edit(self, name, opts, start=True, stype='supervisor'):
         if stype == 'supervisor':
             title = '%s:%s' % (opts['stype'], name)
             c = ConfigParser.RawConfigParser()

@@ -21,13 +21,18 @@ class SyncthingConfig(Plugin):
 
     def load(self):
         self.mgr = self.app.get_backend(apis.services.IServiceManager)
-        data = ConfManager.get().load('syncthing', self.configFile)
-        parser = ET.XMLParser(remove_blank_text=True)
-        self.config = ET.fromstring(data, parser) if data else None
-        self.myid = self.getmyid()
+        self.ready = os.path.exists(self.configFile)
+        if self.ready:
+            data = ConfManager.get().load('syncthing', self.configFile)
+            parser = ET.XMLParser(remove_blank_text=True)
+            self.config = ET.fromstring(data, parser) if data else None
+            self.myid = self.getmyid()
+        else:
+            self.config = None
+            self.myid = ""
 
     def save(self, reload=True):
-        wasrunning = False
+        wasrunning = False        
         if reload and self.mgr.get_status('syncthing@syncthing') == 'running':
             wasrunning = True
         ConfManager.get().save('syncthing', self.configFile, ET.tostring(self.config, pretty_print=True))

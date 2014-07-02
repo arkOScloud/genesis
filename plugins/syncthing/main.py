@@ -14,40 +14,47 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
     def on_session_start(self):
         self._cfg = backend.SyncthingConfig(self.app)
         self._mgr = backend.SyncthingControl(self.app)
-        self._cfg.load()
 
     def on_init(self):
+        self._cfg.load()
         self.repos = self._mgr.get_repos()
         self.nodes = self._mgr.get_nodes()
 
     def get_main_ui(self):
         ui = self.app.inflate('syncthing:main')
-        
-        for x in self.repos:
-            ui.append('repos', UI.TblBtn(
-                id='erepo/'+str(self.repos.index(x)),
-                icon="gen-folder",
-                name=x["id"],
-                subtext="Repository"
-                ))
-        ui.append('repos', UI.TblBtn(
-            id="arepo",
-            icon="gen-plus-circle",
-            name="Add New Repository"
-            ))
 
-        for x in self.nodes:
-            ui.append('nodes', UI.TblBtn(
-                id='enode/'+str(self.nodes.index(x)),
-                icon="gen-code",
-                name=x["name"],
-                subtext="%sNode" % ("Primary " if x["myid"] else "")
+        if not self._cfg.ready:
+            self.put_message("info", "Syncthing is setting itself up in the background. Please make sure it is running via the Status button, and come back in a few minutes...")
+            ui.remove("nid")
+            ui.remove("settings")
+            ui.remove("repos")
+            ui.remove("nodes")
+        else:
+            for x in self.repos:
+                ui.append('repos', UI.TblBtn(
+                    id='erepo/'+str(self.repos.index(x)),
+                    icon="gen-folder",
+                    name=x["id"],
+                    subtext="Repository"
+                    ))
+            ui.append('repos', UI.TblBtn(
+                id="arepo",
+                icon="gen-plus-circle",
+                name="Add New Repository"
                 ))
-        ui.append('nodes', UI.TblBtn(
-            id="anode",
-            icon="gen-plus-circle",
-            name="Add New Node"
-            ))
+
+            for x in self.nodes:
+                ui.append('nodes', UI.TblBtn(
+                    id='enode/'+str(self.nodes.index(x)),
+                    icon="gen-code",
+                    name=x["name"],
+                    subtext="%sNode" % ("Primary " if x["myid"] else "")
+                    ))
+            ui.append('nodes', UI.TblBtn(
+                id="anode",
+                icon="gen-plus-circle",
+                name="Add New Node"
+                ))
 
         if self._editrepo:
             for x in self.nodes:
