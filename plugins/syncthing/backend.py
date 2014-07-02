@@ -91,9 +91,9 @@ class SyncthingControl(Plugin):
         e.append(ET.Element('syncorder'))
         self.cfg.config.find('.').append(e)
         self.cfg.save()
+        if dir.startswith('~'):
+            dir = os.path.join(os.path.expanduser("~syncthing"), dir.lstrip("~/"))
         if not os.path.exists(dir):
-            if dir.startswith('~'):
-                dir = os.path.join(os.path.expanduser("~syncthing"), dir.lstrip("~/"))
             os.makedirs(dir)
         uid = pwd.getpwnam('syncthing').pw_uid
         for r, d, f in os.walk(dir):
@@ -107,9 +107,11 @@ class SyncthingControl(Plugin):
         e.set('directory', dir)
         e.set('ro', "true" if ro else "false")
         e.set('ignorePerms', "true" if perms else "false")
+        for x in e.findall("./node"):
+            e.remove(x)
         for x in nids:
             nid = self.cfg.config.find("./node[@name='%s']" % x)
-            e.append(ET.Element('node', {"id": nid.attrib['id']}))
+            e.append(ET.Element('node', {"id": nid.attrib['id'], "name": x}))
         v = e.find("versioning")
         if vers and v.find("param"):
             v.find("param").set("val", vers)

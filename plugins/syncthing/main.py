@@ -51,14 +51,13 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
 
         if self._editrepo:
             for x in self.nodes:
-                if not x["myid"]:
-                    ui.append("rnodesph", 
-                        UI.FormLine(
-                            UI.Checkbox(name="rnodes[]", value=x["name"], text=x["name"], 
-                                selected=(x["id"] in self._editrepo["nodes"]) if self._editrepo != "new" else False),
-                            checkbox="True"
-                        )
+                ui.append("rnodesph", 
+                    UI.FormLine(
+                        UI.Checkbox(name="rnodes[]", value=x["name"], text=x["name"], 
+                            checked=(x["id"] in self._editrepo["nodes"]) if self._editrepo != "new" else False),
+                        checkbox="True"
                     )
+                )
             if self._editrepo != "new":
                 dlg = ui.find("dlgEditRepo")
                 dlg.set("title", "Edit Repository")
@@ -133,6 +132,10 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
             self._editrepo = self.repos[int(params[1])]
         elif params[0] == 'enode':
             self._editnode = self.nodes[int(params[1])]
+        elif params[0] == 'drepo':
+            self._mgr.del_repo(self.repos[int(params[1])]["id"])
+            self.put_message("success", "Repository deleted successfully")
+            self._editrepo = False
         elif params[0] == 'dnode':
             self._mgr.del_node(self.nodes[int(params[1])]["name"])
             self.put_message("success", "Node connection deleted successfully")
