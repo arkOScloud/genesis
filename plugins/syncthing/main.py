@@ -95,6 +95,24 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
         else:
             ui.remove("dlgEditNode")
 
+        if self._settings:
+            ui.find("spla").set("value", self._cfg.getopt("listenAddress"))
+            ui.find("sorl").set("value", self._cfg.getopt("maxSendKbps"))
+            ui.find("srsi").set("value", self._cfg.getopt("rescanIntervalS"))
+            ui.find("srci").set("value", self._cfg.getopt("reconnectionIntervalS"))
+            ui.find("smor").set("value", self._cfg.getopt("parallelRequests"))
+            ui.find("sfcr").set("value", self._cfg.getopt("maxChangeKbps"))
+            ui.find("sldp").set("value", self._cfg.getopt("localAnnouncePort"))
+            ui.find("sgla").set("value", self._cfg.config.find("./gui/address").text)
+            ui.find("sgau").set("value", self._cfg.config.find("./gui/user").text if self._cfg.config.find("./gui/user") else "")
+            ui.find("sldi").set("checked", self._cfg.getopt("localAnnounceEnabled")=="true")
+            ui.find("sgdi").set("checked", self._cfg.getopt("globalAnnounceEnabled")=="true")
+            ui.find("ssbw").set("checked", self._cfg.getopt("startBrowser")=="true")
+            ui.find("supp").set("checked", self._cfg.getopt("upnpEnabled")=="true")
+            ui.find("saur").set("checked", self._cfg.getopt("urAccepted")=="1")
+        else:
+            ui.remove("dlgSettings")
+
         if self._nodeid:
             nid = '-'.join([self._cfg.myid[i:i+6] for i in range(0, len(self._cfg.myid), 6)])
             ui.find("nodeidph").set("text", nid)
@@ -119,12 +137,31 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
             self._mgr.del_node(self.nodes[int(params[1])]["name"])
             self.put_message("success", "Node connection deleted successfully")
             self._editnode = False
+        elif params[0] == 'settings':
+            self._settings = True
 
     @event('dialog/submit')
     @event('form/submit')
     def on_submit(self, event, params, vars=None):
         if params[0] == 'dlgNodeID':
             self._nodeid = False
+        elif params[0] == 'dlgSettings':
+            if vars.getvalue('action', '') == 'OK':
+                self._cfg.setopt("listenAddress", vars.getvalue("spla", ""))
+                self._cfg.setopt("maxSendKbps", vars.getvalue("sorl", ""))
+                self._cfg.setopt("rescanIntervalS", vars.getvalue("srsi", ""))
+                self._cfg.setopt("reconnectionIntervalS", vars.getvalue("srci", ""))
+                self._cfg.setopt("parallelRequests", vars.getvalue("smor", ""))
+                self._cfg.setopt("maxChangeKbps", vars.getvalue("sfcr", ""))
+                self._cfg.setopt("localAnnouncePort", vars.getvalue("sldp", ""))
+                self._cfg.setopt("localAnnounceEnabled", "true" if vars.getvalue("sldi", "0") == "1" else "false")
+                self._cfg.setopt("globalAnnounceEnabled", "true" if vars.getvalue("sgdi", "0") == "1" else "false")
+                self._cfg.setopt("startBrowser", "true" if vars.getvalue("ssbw", "0") == "1" else "false")
+                self._cfg.setopt("upnpEnabled", "true" if vars.getvalue("supp", "0") == "1" else "false")
+                self._cfg.setopt("urAccepted", "1" if vars.getvalue("saur", "0") == "1" else "-1")
+                self._cfg.save()
+                self.put_message("success", "Settings saved successfully")
+            self._settings = False
         elif params[0] == 'dlgEditNode':
             if vars.getvalue('action', '') == 'OK':
                 if self._editnode == "new":

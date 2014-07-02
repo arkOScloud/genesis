@@ -54,6 +54,12 @@ class SyncthingConfig(Plugin):
     def list_files(self):
         return [self.configFile]
 
+    def getopt(self, opt):
+        return self.config.find("./options/%s" % opt).text
+
+    def setopt(self, opt, value):
+        self.config.find("./options/%s" % opt).text = value
+
     def getmyid(self):
         if not os.path.exists(os.path.join(self.configDir, 'cert.pem')):
             return None
@@ -86,6 +92,8 @@ class SyncthingControl(Plugin):
         self.cfg.config.find('.').append(e)
         self.cfg.save()
         if not os.path.exists(dir):
+            if dir.startswith('~'):
+                dir = os.path.join(os.path.expanduser("~syncthing"), dir.lstrip("~/"))
             os.makedirs(dir)
         uid = pwd.getpwnam('syncthing').pw_uid
         for r, d, f in os.walk(dir):

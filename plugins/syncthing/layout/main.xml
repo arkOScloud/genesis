@@ -51,4 +51,52 @@
 			<textinput name="naddr" id="naddr" value="dynamic" />
 		</formline>
 	</dialogbox>
+
+	<dialogbox id="dlgSettings" title="Settings">
+		<formline text="Sync Protocol Listen Addresses">
+			<textinput name="spla" id="spla" />
+		</formline>
+		<formline text="Outgoing Rate Limits (KiB/s)">
+			<textinput name="sorl" id="sorl" />
+		</formline>
+		<formline text="Rescan Interval (s)">
+			<textinput name="srsi" id="srsi" />
+		</formline>
+		<formline text="Reconnect Interval (s)">
+			<textinput name="srci" id="srci" />
+		</formline>
+		<formline text="Max Outstanding Requests">
+			<textinput name="smor" id="smor" />
+		</formline>
+		<formline text="Max File Change Rate (KiB/s)">
+			<textinput name="sfcr" id="sfcr" />
+		</formline>
+		<formline text="Local Discovery Port">
+			<textinput name="sldp" id="sldp" />
+		</formline>
+		<formline text="GUI Listen Addresses">
+			<textinput name="sgla" id="sgla" />
+		</formline>
+		<formline text="GUI Authentication User">
+			<textinput name="sgau" id="sgau" />
+		</formline>
+		<formline text="GUI Authentication Password">
+			<textinput name="sgap" id="sgap" password="True" />
+		</formline>
+		<formline checkbox="True">
+			<checkbox name="sldi" id="sldi" text="Local Discovery" />
+		</formline>
+		<formline checkbox="True">
+			<checkbox name="sgdi" id="sgdi" text="Global Discovery" />
+		</formline>
+		<formline checkbox="True">
+			<checkbox name="ssbw" id="ssbw" text="Start Browser" />
+		</formline>
+		<formline checkbox="True">
+			<checkbox name="supp" id="supp" text="Enable UPnP" />
+		</formline>
+		<formline checkbox="True">
+			<checkbox name="saur" id="saur" text="Anonymous Usage Reporting" />
+		</formline>
+	</dialogbox>
 </xml>
