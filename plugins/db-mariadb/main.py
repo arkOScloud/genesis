@@ -191,7 +191,7 @@ class MariaDB(Plugin):
 
     def get_size(self, dbname, conn=None):
         s = self.execute(dbname, "SELECT sum(data_length+index_length) FROM information_schema.TABLES WHERE table_schema LIKE '%s';" % dbname, conn)
-        return str_fsize(int(s))
+        return str_fsize(int(s) if s else 0)
 
     def dump(self, dbname, conn=None):
         if not self.db and conn:

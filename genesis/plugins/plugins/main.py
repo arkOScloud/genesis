@@ -155,7 +155,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                 self.put_message('err', str(e))
                 self.app.log.error(str(e))
             else:
-                self.put_message('success', 'Plugin list updated')
+                self.put_message('success', 'Application list updated')
         elif params[0] == 'remove':
             metoo = self._mgr.check_conflict(params[1], 'remove')
             if metoo:
@@ -168,7 +168,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                 except Exception, e:
                     self.put_message('err', str(e))
                 finally:
-                    self.put_message('success', 'Plugin removed successfully.')
+                    self.put_message('success', 'Application removed successfully.')
         elif params[0] == 'info':
             self._info = params[1]
 
@@ -186,7 +186,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                     except Exception, e:
                         self.put_message('err', str(e))
                     finally:
-                        self.put_message('success', 'Plugin installed successfully!')
+                        self.put_message('success', 'Application installed successfully!')
             self._info = None
         elif params[0] == 'dlgMeToo':
             success = False
@@ -203,7 +203,7 @@ class PluginManager(CategoryPlugin, URLHandler):
                 success = False
                 self.put_message('err', str(e))
             if success:
-                self.put_message('success', 'Plugins %s successfully.' % success)
+                self.put_message('success', 'Applications %s successfully.' % success)
             self._metoo = []
 
     def install(self, id):

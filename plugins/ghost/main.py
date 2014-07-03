@@ -27,7 +27,7 @@ class Ghost(Plugin):
     def pre_install(self, name, vars):
         pass
 
-    def post_install(self, name, path, vars):
+    def post_install(self, name, path, vars, dbinfo={}):
         nodectl = apis.langassist(self.app).get_interface('NodeJS')
         users = UsersBackend(self.app)
 
@@ -101,10 +101,10 @@ class Ghost(Plugin):
         # can make adjustments and save plugins when need be.
         shell('chown -R ghost ' + path)
 
-    def pre_remove(self, name, path):
+    def pre_remove(self, site):
         pass
 
-    def post_remove(self, name):
+    def post_remove(self, site):
         users = UsersBackend(self.app)
         users.del_user('ghost')
         s = self.app.get_backend(apis.services.IServiceManager)

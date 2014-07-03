@@ -17,6 +17,11 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 55px;
 }
+
+#main-content {
+  margin-bottom: 15px;
+}
+
 .footer {
   position: absolute;
   bottom: 0;

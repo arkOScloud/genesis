@@ -34,7 +34,10 @@ class NetworkControl(apis.API):
     def change_webapp(self, oldsite, newsite):
         servers = ServerManager(self.app)
         rm = RuleManager(self.app)
-        s = servers.get(oldsite.name)[0]
+        if servers.get(oldsite.name):
+            s = servers.get(oldsite.name)[0]
+        else:
+            return
         r = rm.get(s)
         rm.remove(s)
         servers.update(oldsite.name, newsite.name, 

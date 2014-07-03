@@ -12,7 +12,7 @@
             "secondary": ["Personal Cloud", "Writing"]
         }
     ],
-    "version": "1.4.0-1",
+    "version": "1.4.0-2",
     "author": "Heiner",
     "homepage": "https://github.com/heinzK1X",
     "app_author": "The Etherpad Foundation",
@@ -46,6 +46,12 @@
                 "name": "MariaDB",
                 "package": "mariadb",
                 "binary": "mysqld"
+            },
+            {
+                "type": "app",
+                "name": "Git",
+                "package": "git",
+                "binary": "git"
             },
             {
                 "type": "plugin",

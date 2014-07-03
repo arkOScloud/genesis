@@ -198,6 +198,7 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self._opts['resize'] = vars.getvalue('resize', '0') if self.app.board == 'Raspberry Pi' else '0'
                 self._opts['gpumem'] = vars.getvalue('gpumem', '0') if self.app.board == 'Raspberry Pi' else '0'
                 self._opts['ssh_as_root'] = vars.getvalue('ssh_as_root', '0')
+                self._opts['macaddr'] = vars.getvalue('macaddr', '')
 
                 if not self._opts['hostname']:
                     self._veriferr.append('Hostname must not be empty')
@@ -249,9 +250,9 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self.nb.sethostname(self._opts['hostname'])
 
                 # set MAC address
-                if macaddr != '' and self.app.board == 'Cubieboard2':
+                if self.app.board == 'Cubieboard2' and self._opts['macaddr'] != '':
                     open('/boot/uEnv.txt', 'w').write('extraargs=mac_addr=%s\n'%macaddr)
-                elif macaddr != '' and self.app.board == 'Cubietruck':
+                elif self.app.board == 'Cubietruck' and self._opts['macaddr'] != '':
                     open('/etc/modprobe.d/gmac.conf', 'w').write('options sunxi_gmac mac_str="%s"\n'%macaddr)
 
                 # allow SSH as root
