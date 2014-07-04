@@ -23,7 +23,7 @@
             <br />
             <br />
             <buttongroup>
-                <btn onclick="Genesis.submitBugReport('#report-data');return false;" text="Submit crash report" iconfont="gen-bug" />
+                <btn id="reportbtn" onclick="Genesis.submitBugReport('#report-data');return false;" text="Submit crash report" iconfont="gen-bug" />
                 <btn onclick="$('#trace').fadeIn();$(this).hide();return false;" text="View stacktrace" iconfont="gen-search" />
                 <btn onclick="$('#report').fadeIn();$(this).hide();return false;" text="Show full crash report" iconfont="gen-search" />
             </buttongroup>

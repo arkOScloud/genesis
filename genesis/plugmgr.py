@@ -591,8 +591,8 @@ class RepositoryManager:
             open('/var/lib/genesis/plugins.list', 'w').write(data)
         except IOError, e:
             self.log.error('Failed to write application list to disk.')
-        except:
-            self.log.error('Application list retrieval failed.')
+        except Exception, e:
+            self.log.error('Application list retrieval failed: %s' % str(e))
         else:
             self.update_installed()
             self.update_available()

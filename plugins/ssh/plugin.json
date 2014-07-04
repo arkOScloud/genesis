@@ -12,7 +12,7 @@
             "secondary": ["Advanced", "Command line (CLI)", "Remote Management"]
         }
     ],
-    "version": "0.3",
+    "version": "0.4",
     "author": "arkOS",
     "homepage": "https://arkos.io",
     "app_author": "OpenSSH",

@@ -39,7 +39,7 @@ class ServicesPlugin(CategoryPlugin):
         ui = self.app.inflate('sysmon:services')
         ts = ui.find('list')
 
-        lst = sorted(self.svc_mgr.list_all(), key=lambda x: x.status)
+        lst = sorted(self.svc_mgr.list_all(), key=lambda x: x.name)
         for svc in lst:
             row = self.get_row(svc)
             ts.append(row)
@@ -54,7 +54,7 @@ class ServicesPlugin(CategoryPlugin):
             for s in self.groupmgr.groups[g]:
                 try:
                     svc = filter(lambda x:x.name==s, lst)[0]
-                    if svc.status == 'running':
+                    if svc.status:
                         show_stop = True
                     else:
                         show_run = True
@@ -144,19 +144,19 @@ class ServicesPlugin(CategoryPlugin):
 
     def get_row(self, svc):
         ctl = UI.HContainer()
-        if svc.status == 'running':
+        if svc.status:
             ctl.append(UI.TipIcon(text='Stop', iconfont='gen-stop', id='stop/%s/%s'%(svc.name, svc.stype)))
             ctl.append(UI.TipIcon(text='Restart', iconfont='gen-loop-2', id='restart/%s/%s'%(svc.name, svc.stype)))
         else:
             ctl.append(UI.TipIcon(text='Start', iconfont='gen-play-2', id='start/%s/%s'%(svc.name, svc.stype)))
-        if svc.enabled == 'enabled':
+        if svc.enabled:
             ctl.append(UI.TipIcon(text='Disable', iconfont='gen-minus-circle', id='disable/%s/%s'%(svc.name, svc.stype)))
         else:
             ctl.append(UI.TipIcon(text='Enable', iconfont='gen-plus-circle', id='enable/%s/%s'%(svc.name, svc.stype)))
         if svc.stype == 'supervisor':
             ctl.append(UI.TipIcon(text='Delete', iconfont='gen-cancel-circle', id='delete/%s/%s'%(svc.name, svc.stype)))
 
-        fn = 'gen-' + ('play-2' if svc.status == 'running' else 'stop')
+        fn = 'gen-' + ('play-2' if svc.status else 'stop')
         row = UI.DTR(
                 UI.IconFont(iconfont=fn),
                 UI.Label(text=svc.name),

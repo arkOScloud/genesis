@@ -124,4 +124,4 @@ class GenesisConfig (Plugin):
     id = 'genesis'
 
     def list_files(self):
-        return ['/etc/genesis/*']
+        return ['/etc/genesis/genesis.conf']

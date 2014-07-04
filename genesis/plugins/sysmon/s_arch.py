@@ -16,19 +16,27 @@ class ArchServiceManager(Plugin):
         self.use_systemd = os.path.realpath("/proc/1/exe").endswith("/systemd")
 
     def list_all(self):
-        services = []
-        enlist = []
+        services = {}
 
         if self.use_systemd:
+            for x in glob.iglob('/usr/lib/systemd/system/*.service'):
+                service = re.sub('\.service$', '', x.rsplit('/')[5])
+                services[service] = {"running": None, "enabled": False}
             for x in glob.iglob('/etc/systemd/system/*.wants/*.service'):
-                enlist.append(x.rsplit('/')[5])
+                service = re.sub('\.service$', '', x.rsplit('/')[5])
+                try:
+                    services[service]["enabled"] = True
+                except:
+                    pass
             for unit in shell("systemctl --no-ask-password --full -t service --all").splitlines():
                 data = unit.split()
                 if data == [] or not data[0].endswith('.service'):
                     continue
-                status = 'stopped' if 'inactive' in data[2] else 'running'
-                enabled = 'enabled' if data[0] in enlist else 'disabled'
-                services.append((re.sub('\.service$', '', data[0]), status, enabled))
+                service = re.sub('\.service$', '', data[0])
+                try:
+                    services[service]["running"] = data[2]=="active"
+                except:
+                    pass
         else:
             services = os.listdir('/etc/rc.d')
 
@@ -36,9 +44,9 @@ class ArchServiceManager(Plugin):
         for s in services:
             svc = apis.services.Service()
             svc.stype = 'system'
-            svc.name = s[0]
-            svc._status = s[1]
-            svc._enabled = s[2]
+            svc.name = s
+            svc._status = services[s]["running"]
+            svc._enabled = services[s]["enabled"]
             svc.mgr = self
             r.append(svc)
 

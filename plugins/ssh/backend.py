@@ -91,9 +91,9 @@ class PKeysConfig(Plugin):
         filelist = []
         for user in self.app.gconfig.options('users'):
             if user == 'root':
-                filelist.extend('/root/.ssh/authorized_keys')
+                filelist.append('/root/.ssh/authorized_keys')
             else:
-                filelist.extend(os.path.join('/home', user, '.ssh', 'authorized_keys'))
+                filelist.append(os.path.join('/home', user, '.ssh', 'authorized_keys'))
         return filelist
 
     def read(self):

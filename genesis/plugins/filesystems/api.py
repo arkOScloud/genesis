@@ -53,8 +53,9 @@ class POIControl(apis.API):
             if x.mount and not (x.mount == '/' or x.mount.startswith('/boot')):
                 self.add(x.name, 'vdisk', x.mount, 'filesystems', 'gen-storage', False)
         for x in ws:
-            self.add(x.name, 'website', x.path, 'webapps',
-                x.sclass.plugin_info.icon if x.sclass and \
-                hasattr(x.sclass.plugin_info, 'iconfont') else 'gen-earth',
-                False
-            )
+            if x.stype != 'ReverseProxy':
+                self.add(x.name, 'website', x.path, 'webapps',
+                    x.sclass.plugin_info.icon if x.sclass and \
+                    hasattr(x.sclass.plugin_info, 'iconfont') else 'gen-earth',
+                    False
+                )

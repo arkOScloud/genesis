@@ -289,6 +289,7 @@ Genesis = (function() {
                 success: function (d) {
                     if (d.status == 200) {
                         Genesis.addAlert('success', 'Your error report was submitted successfully. Thank you!', 'gen-checkmark');
+                        $('#reportbtn').addClass('disabled');
                     } else {
                         Genesis.addAlert('danger', 'Your error report was not submitted properly. Please open an issue manually.', 'gen-close');
                     };

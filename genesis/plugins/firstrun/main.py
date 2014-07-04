@@ -29,7 +29,7 @@ class FirstRun(CategoryPlugin, URLHandler):
         ui.append('content', step)
 
         if self.app.platform == 'arkos':
-            ui.find('welcomemsg').insertText('Welcome to arkOS')
+            ui.find('welcomemsg').text = 'Welcome to arkOS'
 
         for x in self._veriferr:
             ui.append('veriferr', UI.SystemMessage(cls="danger", iconfont="gen-close", text=x))
