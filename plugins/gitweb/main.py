@@ -27,6 +27,8 @@ class Gitweb(Plugin):
 
     def pre_install(self, name, vars):
         # Write a standard Gitweb config file
+        if not os.path.exists('/etc/conf.d'):
+            os.makedirs('/etc/conf.d')
         f = open('/etc/conf.d/gitweb.conf', 'w')
         oc = ['our $git_temp = "/tmp";\n',
             'our $projectroot = "'+vars.getvalue('gw-proot', '')+'";\n',
