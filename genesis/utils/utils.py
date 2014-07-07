@@ -173,17 +173,14 @@ def send_json(url, data, method='POST', returns='json', headers=[], crit=False):
         else:
             return resp.read()
     except urllib2.HTTPError, e:
-        self.log.error('JSON %s to %s failed - HTTP Error %s' % (method, url, str(e.code)))
         if crit:
-            raise
+            raise Exception('JSON %s to %s failed - HTTP Error %s' % (method, url, str(e.code)))
     except urllib2.URLError, e:
-        self.log.error('JSON %s to %s failed - Server not found or URL malformed. Please check your Internet settings.' % (method, url))
         if crit:
-            raise
+            raise Exception('JSON %s to %s failed - Server not found or URL malformed. Please check your Internet settings.' % (method, url))
     except Exception, e:
-        self.log.error('JSON %s to %s failed - %s' % (method, url, str(e)))
         if crit:
-            raise
+            raise Exception('JSON %s to %s failed - %s' % (method, url, str(e)))
 
 def shell(c, stderr=False, env={}):
     """

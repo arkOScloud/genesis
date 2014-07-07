@@ -14,14 +14,13 @@ class POI(object):
 
 
 class POIControl(apis.API):
-    pois = []
-
     def __init__(self, app):
         self.app = app
-        self.pois = []
-        self.generate_pois()
+        if not self.app.session.has_key("pois"):
+            self.app.session["pois"] = []
+            self.generate_pois()
 
-    def add(self, name, ptype, path, created_by='', icon='folder', remove=True):
+    def add(self, name, ptype, path, created_by='', icon='gen-folder', remove=True):
         i = POI()
         i.name = name
         i.ptype = ptype
@@ -29,21 +28,21 @@ class POIControl(apis.API):
         i.icon = icon
         i.created_by = created_by
         i.remove = remove
-        self.pois.append(i)
+        self.app.session["pois"].append(i)
 
     def drop(self, poi):
-        self.pois.remove(poi)
+        self.app.session["pois"].remove(poi)
 
     def drop_by_path(self, path):
-        for x in self.pois:
+        for x in self.app.session["pois"]:
             if x.path == path:
                 self.drop(x)
 
     def get_pois(self):
-        return self.pois
+        return self.app.session["pois"]
 
     def generate_pois(self):
-        self.pois = []
+        self.app.session["pois"] = []
         fs = FSControl(self.app).get_filesystems()
         ws = apis.webapps(self.app).get_sites()
         for x in fs[0]:

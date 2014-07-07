@@ -14,9 +14,19 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
     def on_session_start(self):
         self._cfg = backend.SyncthingConfig(self.app)
         self._mgr = backend.SyncthingControl(self.app)
+        self._cfg.load()
+        # Generate points of interest
+        fs = apis.poicontrol(self.app)
+        exc = []
+        r = self._mgr.get_repos()
+        for x in r:
+            if x["directory"] in [y.path for y in fs.get_pois()]:
+                exc.append(x["directory"])
+        for x in r:
+            if not x["directory"] in exc:
+                fs.add(x["id"], 'fsync', x["directory"], 'fsync', 'gen-folder', False)
 
     def on_init(self):
-        self._cfg.load()
         self.repos = self._mgr.get_repos()
         self.nodes = self._mgr.get_nodes()
 
