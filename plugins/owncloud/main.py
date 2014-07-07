@@ -69,9 +69,7 @@ class ownCloud(Plugin):
         # Set ownership as necessary
         if not os.path.exists(os.path.join(path, 'data')):
             os.makedirs(os.path.join(path, 'data'))
-        shell('chown -R http:http '+os.path.join(path, 'apps'))
-        shell('chown -R http:http '+os.path.join(path, 'data'))
-        shell('chown -R http:http '+os.path.join(path, 'config'))
+        shell('chown -R http:http '+path)
 
         # If there is a custom path for the data directory, do the magic
         if vars.getvalue('oc-ddir', '') != '':
@@ -129,14 +127,14 @@ class ownCloud(Plugin):
             f = open(os.path.join(site.path, 'config', 'config.php'), 'r')
             for line in f.readlines():
                 if 'datadirectory' in line:
-                    data = line.split('"')[1::2]
+                    data = line.split("'")[1::2]
                     datadir = data[1]
             f.close()
         elif os.path.exists(os.path.join(site.path, 'config', 'autoconfig.php')):
             f = open(os.path.join(site.path, 'config', 'autoconfig.php'), 'r')
             for line in f.readlines():
                 if 'directory' in line:
-                    data = line.split('"')[1::2]
+                    data = line.split("'")[1::2]
                     datadir = data[1]
             f.close()
         if datadir:

@@ -16,7 +16,7 @@
             "secondary": ["Documents", "Music", "Photos", "Calendar", "Contacts"]
         }
     ],
-    "version": "6.0.3-1",
+    "version": "6.0.4-1",
     "author": "arkOS",
     "homepage": "http://arkos.io",
     "app_author": "ownCloud",
@@ -96,7 +96,7 @@
     "generation": 1,
     "website_plugin": "ownCloud",
     "website_updates": false,
-    "download_url": "https://download.owncloud.org/community/owncloud-6.0.3.tar.bz2",
+    "download_url": "https://download.owncloud.org/community/owncloud-6.0.4.tar.bz2",
     "database_engines": ["MariaDB"],
     "uses_php": true,
     "uses_ssl": true
