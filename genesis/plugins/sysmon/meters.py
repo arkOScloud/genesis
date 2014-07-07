@@ -50,7 +50,7 @@ class DiskUsageMeter(LinearMeter):
         if self.variant == 'total':
             self.text = 'total'
         else:
-            self.text = '%s (%s)' % (self.variant, next(x.mountpoint for x in psutil.disk_partitions() if x.device == self.variant))
+            self.text = '%s' % self.variant
 
     def get_variants(self):
         return [x.device for x in psutil.disk_partitions()] + ['total']

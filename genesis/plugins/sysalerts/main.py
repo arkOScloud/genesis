@@ -3,6 +3,8 @@ from genesis.ui import *
 from backend import Backend
 import trans
 
+import base64
+
 
 class SysAlertsPlugin(CategoryPlugin):
     text = 'Alerts'
@@ -74,17 +76,24 @@ class SysAlertsPlugin(CategoryPlugin):
                     UI.DTD(
                         UI.TipIcon(
                             iconfont="gen-pencil-2",
-                            id='config/%s/%s'%(m.plugin_id,v.variant),
+                            id='config/%s/%s'%(m.plugin_id,self.enc_file(v.variant)),
                             text='Configure',
                         ),
                         UI.TipIcon(
                             iconfont="gen-cancel-circle",
-                            id='disable/%s/%s'%(m.plugin_id,v.variant),
+                            id='disable/%s/%s'%(m.plugin_id,self.enc_file(v.variant)),
                             text='Disable',
                         ) if self.backend.has_cfg(m.plugin_id,v.variant) else None,
                     ),
                 ))
         return ui
+
+    def enc_file(self, path):
+        path = path.replace('//','/')
+        return base64.b64encode(path, altchars='+-').replace('=', '*')
+
+    def dec_file(self, b64):
+        return base64.b64decode(b64.replace('*', '='), altchars='+-')
 
     @event('button/click')
     def on_click(self, event, params, vars=None):
@@ -93,9 +102,9 @@ class SysAlertsPlugin(CategoryPlugin):
         if params[0] == 'btnSettings':
             self._settings = True
         if params[0] == 'config':
-            self._configuring = self.backend.get_meter(*params[1:])
+            self._configuring = self.backend.get_meter(params[1], self.dec_file(params[2]))
         if params[0] == 'disable':
-            self.backend.del_cfg(*params[1:])
+            self.backend.del_cfg(params[1], self.dec_file(params[2]))
             self.mon.refresh()
 
     @event('dialog/submit')
