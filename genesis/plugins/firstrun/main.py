@@ -292,10 +292,10 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self.app.gconfig.set('users', self._opts['username'], hashpw(self._opts['userpasswd']))
                 self.app.gconfig.save()
 
-                # set SD card resize (RPi only)
+                # set SD card resize
                 if self._opts.has_key('resize') and self._opts['resize'] != '0':
                     self.statusmsg('Programming SD filesystem resize...')
-                    self.resize()
+                    self.resize(1 if self.app.board in ["Cubietruck", "Cubieboard2"] else 2)
                     self.put_message('success', 'Your settings have been '
                         'successfully applied. You must restart your arkOS '
                         'server for them to take effect. To do this, choose '
