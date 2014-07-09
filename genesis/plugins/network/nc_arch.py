@@ -8,7 +8,7 @@ import os
 
 class ArchNetworkConfig(LinuxIp):
     implements(INetworkConfig)
-    platform = ['Arch', 'arkos', 'Antergos', 'Manjaro', 'Bluestar', 'Archbang']
+    platform = ['Arch', 'arkos']
     
     interfaces = None
     
@@ -39,7 +39,7 @@ class ArchNetworkConfig(LinuxIp):
 
 class ArchConnConfig(LinuxIp):
     implements(IConnConfig)
-    platform = ['Arch', 'arkos', 'Antergos', 'Manjaro', 'Bluestar', 'Archbang']
+    platform = ['Arch', 'arkos']
     connections = None
     
     def __init__(self):
