@@ -11,7 +11,7 @@
                         <tr><td>Step 1<br />User/Password</td><td>Step 2<br />Administrator</td><td>Step 3<br />Settings</td><td>Step 4<br />Applications</td><td><strong>Step 5</strong><br />Review</td></tr>
                     </table>
                 </div>
-                <label size="3" text="Here is a list of operations that are about to be carried out on your arkOS server. Please carefully review them for accuracy before clicking Setup. This may take a few minutes to complete, depending on the speed of your system and Internet connection. " />
+                <label size="3" text="Here's what we're about to do. Please carefully check below to make sure everything is right and then click Setup. This may take a few minutes to finish, depending on how fast your hardware and internet connection are." />
                 <spacer height="20" />
             </div>
             <div id="veriferr" />
