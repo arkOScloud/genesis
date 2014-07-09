@@ -11,7 +11,7 @@
                         <tr><td>Step 1<br />User/Password</td><td>Step 2<br />Administrator</td><td>Step 3<br />Settings</td><td><strong>Step 4</strong><br />Applications</td><td>Step 5<br />Review</td></tr>
                     </table>
                 </div>
-                <label size="3" text="Select the applications you'd like to install. You'll always have the opportunity to add or remove applications later as you wish. Remember that you need an active and functional Internet connection in order to install applications." />
+                <label size="3" text="Select the apps you'd like to install. You can always add or remove any of them later, whenever you want. You'll need a working internet connection." />
                 <spacer height="20" />
                 <btn text="Select All" href="#" size="lg" onclick="Genesis.selectAllApps()" />
                 <btn text="Clear" href="#" size="lg" onclick="Genesis.clearAppSelection()" />
