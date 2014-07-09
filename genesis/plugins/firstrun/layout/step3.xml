@@ -11,14 +11,14 @@
                         <tr><td>Step 1<br />User/Password</td><td><strong>Step 2</strong><br />Administrator</td><td>Step 3<br />Settings</td><td>Step 4<br />Applications</td><td>Step 5<br />Review</td></tr>
                     </table>
                 </div>
-                <label size="3" text="Please set a password for the Administrator (root) Unix account. You will generally not need to use this account. This should be a secure yet memorable password." />
+                <label size="3" text="Please type a new password below to create an Administrator (root) account. You shouldn't need this often. It should be a hard to guess, yet memorable password." />
                 <spacer height="20" />
             </div>
             <div id="veriferr" />
-            <formline text="New admin password:" help="Your password must be at least six characters." feedback="gen-lock" iid="rootpasswd">
+            <formline text="New administrator password:" help="Your password needs to be at least six characters." feedback="gen-lock" iid="rootpasswd">
                 <textinput name="rootpasswd" id="rootpasswd" password="True" verify="password" verifywith="rootpasswd" />
             </formline>
-            <formline text="Please confirm your new admin password:" feedback="gen-lock" iid="rootpasswdb">
+            <formline text="Please type your new administrator password again:" feedback="gen-lock" iid="rootpasswdb">
                 <textinput name="rootpasswdb" id="rootpasswdb" password="True" verify="password" verifywith="rootpasswd" />
             </formline>
         </wizardform>
