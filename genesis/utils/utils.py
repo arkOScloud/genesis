@@ -107,6 +107,10 @@ def detect_platform(mapping=True):
     platform_mapping = {
         'ubuntu': 'debian',
         'linuxmint': 'debian',
+        'manjaro': 'arch',
+        'antergos': 'arch',
+        'bluestar': 'arch',
+        'archbang': 'arch'
     }
 
     if platform.system() != 'Linux':
@@ -128,9 +132,8 @@ def detect_platform(mapping=True):
     res = dist.strip().lower()
     if res in base_mapping:
         res = base_mapping[res]
-    if mapping:
-        if res in platform_mapping:
-            res = platform_mapping[res]
+    if mapping and res in platform_mapping:
+        res = platform_mapping[res]
     return res
 
 def detect_distro():
