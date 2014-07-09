@@ -50,7 +50,6 @@ class FirstRun(CategoryPlugin, URLHandler):
                 ui.find('resize').set('checked', 'True' if self._opts.has_key('resize') and self._opts['resize'] == '1' else 'False')
                 ui.find('gpumem').set('checked', 'True' if self._opts.has_key('gpumem') and self._opts['gpumem'] == '1' else 'False')
             else:
-                ui.remove('sdc')
                 ui.remove('rpi-ogm')
             if self.app.board in ['Unknown', 'General']:
                 ui.remove('sdc')

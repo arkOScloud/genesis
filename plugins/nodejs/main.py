@@ -24,8 +24,8 @@ class NodeJS(Plugin):
             self.app.log.error('Failed to remove %s via npm; log output follows:\n%s'%(' '.join(x for x in mods),s[1]))
             raise Exception('Failed to remove %s via npm, check logs for info'%' '.join(x for x in mods))
 
-    def install_from_package(self, path, stat='production'):
-        s = shell_cs('cd %s; npm install %s' % (path, '--'+stat if stat else ''), stderr=True, env={'HOME': '/root'})
+    def install_from_package(self, path, stat='production', opts={}):
+        s = shell_cs('cd %s; npm install %s%s' % (path, '--'+stat if stat else '', ' --'+' --'.join(x+'='+opts[x] for x in opts) if opts else ''), stderr=True, env={'HOME': '/root'})
         if s[0] != 0:
             self.app.log.error('Failed to install %s via npm; log output follows:\n%s'%(path,s[1]))
             raise Exception('Failed to install %s via npm, check logs for info'%path)

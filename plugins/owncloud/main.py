@@ -134,7 +134,7 @@ class ownCloud(Plugin):
             f = open(os.path.join(site.path, 'config', 'autoconfig.php'), 'r')
             for line in f.readlines():
                 if 'directory' in line:
-                    data = line.split("'")[1::2]
+                    data = line.split('"')[1::2]
                     datadir = data[1]
             f.close()
         if datadir:
