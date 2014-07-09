@@ -11,17 +11,17 @@
                         <tr><td><strong>Step 1</strong><br />User/Password</td><td>Step 2<br />Administrator</td><td>Step 3<br />Settings</td><td>Step 4<br />Applications</td><td>Step 5<br />Review</td></tr>
                     </table>
                 </div>
-                <label size="3" text="Please choose a username and password. This will be the username and password you use to connect to Genesis, and the Unix account for SSH and other purposes." />
+                <label size="3" text="Please type a new username and password below, to log in and access your services." />
                 <spacer height="20" />
             </div>
             <div id="veriferr" />
-            <formline text="New username:" help="Your username must not contain capital letters, dots, colons, or spaces; or end with a hyphen." feedback="gen-user" iid="login">
+            <formline text="New username:" help="Your username shouldn't have any capital letters, dots, colons, or spaces; or end with a hyphen." feedback="gen-user" iid="login">
                 <textinput name="login" id="login" verify="username" />
             </formline>
-            <formline text="New password:" help="Your password must be at least six characters." feedback="gen-lock" iid="passwd">
+            <formline text="New password:" help="Your password needs to be at least six characters long." feedback="gen-lock" iid="passwd">
                 <textinput name="passwd" id="passwd" password="True" verify="password" verifywith="passwd" />
             </formline>
-            <formline text="Please confirm your new password:" feedback="gen-lock" iid="passwdb">
+            <formline text="Please type your new password again:" feedback="gen-lock" iid="passwdb">
                 <textinput name="passwdb" id="passwdb" password="True" verify="password" verifywith="passwd" />
             </formline>
         </wizardform>

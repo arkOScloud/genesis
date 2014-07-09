@@ -5,7 +5,7 @@
     <div class="container">
         <div class="text-center" style="max-width:800px;margin-left:auto;margin-right:auto;">
             <h1 class="gen-thumbs-up text-success" style="font-size:20em;line-height:1em;"></h1>
-            <p>Your system has been setup successfully. In 5 seconds, you will be forwarded to the main interface. Enjoy your new arkOS server!</p>
+            <p>Your setup was successful! In 5 seconds, we'll take you to your main home screen. Enjoy your new arkOS server!</p>
         </div>
     </div>
     <completerefresh wait="5" />
