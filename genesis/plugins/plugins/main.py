@@ -189,21 +189,22 @@ class PluginManager(CategoryPlugin, URLHandler):
                         self.put_message('success', 'Application installed successfully!')
             self._info = None
         elif params[0] == 'dlgMeToo':
-            success = False
-            try:
-                for x in self._metoo:
-                    if x[0] == 'Install':
-                        self.install(x[1].id)
-                        success = 'installed'
-                    elif x[0] == 'Remove':
-                        self._mgr.remove(x[1].id, self)
-                        self._nc.remove(x[1].id)
-                        success = 'removed'
-            except Exception, e:
+            if vars.getvalue('action', '') == 'OK':
                 success = False
-                self.put_message('err', str(e))
-            if success:
-                self.put_message('success', 'Applications %s successfully.' % success)
+                try:
+                    for x in self._metoo:
+                        if x[0] == 'Install':
+                            self.install(x[1].id)
+                            success = 'installed'
+                        elif x[0] == 'Remove':
+                            self._mgr.remove(x[1].id, self)
+                            self._nc.remove(x[1].id)
+                            success = 'removed'
+                except Exception, e:
+                    success = False
+                    self.put_message('err', str(e))
+                if success:
+                    self.put_message('success', 'Applications %s successfully.' % success)
             self._metoo = []
 
     def install(self, id):

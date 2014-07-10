@@ -78,7 +78,7 @@
     </dialogbox>
 
     <dialogbox id="dlgMeToo" oktext="Accept">
-        <label size="1" text="The application you selected require some additional things to be done in order to function properly. These actions will also be performed; click OK to accept this." />
+        <label size="1" text="The application you selected requires some additional things to be done in order to function properly. These actions will also be performed; click OK to accept this." />
         <scrollcontainer height="300">
             <dt id="prereqs" width="100%" noborder="True" />
         </scrollcontainer>

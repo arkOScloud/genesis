@@ -28,7 +28,10 @@ def sitedata():
 			continue
 		f = nginx.loadf(os.path.join('/etc/nginx/sites-available', x))
 		rtype = re.compile('GENESIS ((?:[a-z][a-z]+))', flags=re.IGNORECASE)
-		stype = re.match(rtype, f.filter('Comment')[0].comment).group(1)
+		stype = re.match(rtype, f.filter('Comment')[0].comment)
+		if not stype:
+			continue
+		stype = stype.group(1)
 		c = ConfigParser.RawConfigParser()
 		c.add_section("website")
 		c.set("website", "name", x)
