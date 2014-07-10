@@ -58,6 +58,8 @@ class ownCloud(Plugin):
             raise Exception('Must choose an ownCloud username')
         elif vars.getvalue('oc-logpasswd', '') == '':
             raise Exception('Must choose an ownCloud password')
+        elif '"' in vars.getvalue('oc-logpasswd', '') or "'" in vars.getvalue('oc-logpasswd', ''):
+            raise Exception('Your ownCloud password must not include quotes')
 
     def post_install(self, name, path, vars, dbinfo={}):
         phpctl = apis.langassist(self.app).get_interface('PHP')

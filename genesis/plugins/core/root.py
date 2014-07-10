@@ -79,7 +79,7 @@ class RootDispatcher(URLHandler, SessionPlugin, EventProcessor, Plugin):
     def do_init(self):
         # end firstrun wizard
         if self._cat_selected == 'firstrun' and not self.is_firstrun():
-            self._cat_selected = 'dashboard'
+            self._cat_selected = 'homeplugin'
 
         cat = None
         for c in self.app.grab_plugins(ICategoryProvider):
