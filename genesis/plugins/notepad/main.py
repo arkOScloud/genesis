@@ -87,8 +87,12 @@ class NotepadPlugin(CategoryPlugin):
                 self._tab = 0
                 del self._roots[idx]
                 del self._data[idx]
+        user = self.app.auth.user if self.app.auth.user != 'anonymous' else 'root'
         if params[0] == 'frmEdit' and vars.getvalue('action', None) == 'new':
             filename = vars.getvalue('path', '')
+            if filename and filename.startswith('~'):
+                filename = filename.replace("~", "~%s" % user)
+                filename = os.path.expanduser(filename)
             if os.path.exists(filename):
                 self.put_message('err', 'That file already exists!')
             elif not os.access(os.path.dirname(filename), os.W_OK):
@@ -102,6 +106,9 @@ class NotepadPlugin(CategoryPlugin):
                     self.put_message('err', 'File creation failed: %s' % str(e))
         elif params[0] == 'frmEdit' and vars.getvalue('action', None) == 'open':
             filename = vars.getvalue('path', '')
+            if filename and filename.startswith('~'):
+                filename = filename.replace("~", "~%s" % user)
+                filename = os.path.expanduser(filename)
             if not os.path.exists(filename):
                 self.put_message('err', 'That file does not exist!')
             else:
@@ -109,6 +116,9 @@ class NotepadPlugin(CategoryPlugin):
         elif params[0] == 'dlgNew':
             if vars.getvalue('action', '') == 'OK' and vars.getvalue('value', ''):
                 filename = vars.getvalue('value', '')
+                if filename and filename.startswith('~'):
+                    filename = filename.replace("~", "~%s" % user)
+                    filename = os.path.expanduser(filename)
                 if os.path.exists(filename):
                     self.put_message('err', 'That file already exists!')
                 elif not os.access(os.path.dirname(filename), os.W_OK):
@@ -124,6 +134,9 @@ class NotepadPlugin(CategoryPlugin):
         elif params[0] == 'dlgOpen':
             if vars.getvalue('action', '') == 'OK' and vars.getvalue('value', ''):
                 filename = vars.getvalue('value', '')
+                if filename and filename.startswith('~'):
+                    filename = filename.replace("~", "~%s" % user)
+                    filename = os.path.expanduser(filename)
                 if not os.path.exists(filename):
                     self.put_message('err', 'That file does not exist!')
                 else:
