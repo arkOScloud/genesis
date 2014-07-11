@@ -27,7 +27,7 @@ class LinuxSysStat(Plugin):
     def get_ram(self):
         s = psutil.virtual_memory()
         a = int(s.used) - (int(s.cached) + int(s.buffers))
-        return (a, int(s.total))
+        return (a, int(s.total), int(s.percent))
 
     def get_swap(self):
         s = psutil.swap_memory()

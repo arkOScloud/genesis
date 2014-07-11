@@ -28,8 +28,20 @@ class RAMMeter (LinearMeter):
     category = 'System'
     transform = 'fsize_percent'
 
+    def get_min(self):
+        return 0
+
+    def get_max(self):
+        ram = self.app.get_backend(apis.sysstat.ISysStat).get_ram()
+        return ram[1]
+
     def get_value(self):
-        return psutil.virtual_memory().percent
+        ram = self.app.get_backend(apis.sysstat.ISysStat).get_ram()
+        return ram[0]
+
+    def get_percent(self):
+        ram = self.app.get_backend(apis.sysstat.ISysStat).get_ram()
+        return ram[2]
 
 
 class SwapMeter (LinearMeter):
@@ -37,8 +49,20 @@ class SwapMeter (LinearMeter):
     category = 'System'
     transform = 'fsize_percent'
 
+    def get_min(self):
+        return 0
+
+    def get_max(self):
+        swap = self.app.get_backend(apis.sysstat.ISysStat).get_swap()
+        return swap[1]
+
     def get_value(self):
-        return psutil.swap_memory().percent
+        swap = self.app.get_backend(apis.sysstat.ISysStat).get_swap()
+        return swap[0]
+
+    def get_percent(self):
+        swap = self.app.get_backend(apis.sysstat.ISysStat).get_swap()
+        return swap[2]
 
 
 class DiskUsageMeter(LinearMeter):

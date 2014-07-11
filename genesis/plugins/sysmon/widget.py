@@ -40,7 +40,7 @@ class RamWidget(Plugin):
     style = 'normal'
 
     def get_ui(self, cfg, id=None):
-        return UI.ProgressBar(value=RAMMeter(self.app).get_value(), 
+        return UI.ProgressBar(value=RAMMeter(self.app).get_percent(), 
             min=0, max=100)
 
     def handle(self, event, params, cfg, vars=None):

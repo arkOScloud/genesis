@@ -1,6 +1,6 @@
 <xml>
     <dialogbox id="dlgSettings" hidecancel="True">
-        <scrollcontainer height="400" width="400">
+        <scrollcontainer height="400" width="100%">
         <dt id="list" width="100%">
             <dtr header="True" noborder="True">
                 <dth>
