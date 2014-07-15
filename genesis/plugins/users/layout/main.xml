@@ -68,24 +68,27 @@
         </tabbody>
     </tabcontrol>
 
-    <dialogbox id="dlgEditUser" hidecancel="True">
+    <dialogbox id="dlgEditUser" hidecancel="True" miscbtn="Delete User" miscbtnid="deluser" miscbtnstyle="danger" miscbtnwarn="Are you sure you want to delete this user?">
         <formline text="Login">
-            <editfield id="login" />
+            <textinput id="login" />
         </formline>
-        <formline text="Password">
-            <editpassword id="passwd" value="Click to change" />
+        <formline text="New password" help="Your password needs to be at least six characters long. Leave empty if you don't wish to change or set a password.">
+            <textinput name="passwd" id="passwd" password="True" verify="password" verifywith="passwd" />
+        </formline>
+        <formline text="Confirm new password">
+            <textinput name="passwdb" id="passwdb" password="True" verify="password" verifywith="passwd" />
         </formline>
         <formline text="UID">
-            <editable id="euid" />
+            <textinput id="euid" />
         </formline>
         <formline text="GID">
-            <editable id="egid" />
+            <textinput id="egid" />
         </formline>
         <formline text="Home">
             <label id="home" />
         </formline>
         <formline text="Shell">
-            <editable id="eshell" />
+            <textinput id="eshell" />
         </formline>
         <formline text="Groups">
             <label id="lblugroups" />
@@ -93,20 +96,17 @@
             <btn text="Add" id="chaddtogroup" />
             <btn text="Remove" id="chdelfromgroup" />
         </formline>
-        <formline>
-            <btn id="deluser" design="danger" text="Delete user" />
-        </formline>
     </dialogbox>
 
     <dialogbox id="dlgEditGroup">
         <formline text="Name">
-            <editable id="ename" />
+            <textinput id="ename" />
         </formline>
         <formline text="GID">
-            <editable id="eggid" />
+            <textinput id="eggid" />
         </formline>
         <formline text="Name">
-            <editable id="ename" />
+            <textinput id="ename" />
         </formline>
         <formline>
             <btn id="delgroup" design="danger" text="Delete group" />

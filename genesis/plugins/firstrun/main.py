@@ -139,7 +139,7 @@ class FirstRun(CategoryPlugin, URLHandler):
             except:
                 pass
         ComponentManager.get().rescan()
-        ConfManager.get().rescan();
+        ConfManager.get().rescan()
 
     def checkdeps(self, l, a, y):
         for i in a[y.id].deps:
@@ -242,7 +242,8 @@ class FirstRun(CategoryPlugin, URLHandler):
         if params[0] == 'frmConfirm':
             if vars.getvalue('action', 'OK') == 'OK':
                 # install apps
-                self.install(self._opts['toinst'])
+                if self._opts['toinst']:
+                    self.install(self._opts['toinst'])
 
                 # set hostname
                 self.statusmsg('Setting hostname...')
