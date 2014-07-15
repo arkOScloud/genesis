@@ -430,13 +430,13 @@ class MailControl(Plugin):
         f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'query = SELECT maildir FROM mailbox, alias_domain\n'
             '  WHERE alias_domain.alias_domain = \'%d\'\n'
-            '  AND mailbox.username = \'%u\' || \'@\' || alias_domain.target_domain )\n'
+            '  AND mailbox.username = \'%u\' || \'@\' || alias_domain.target_domain\n'
             '  AND mailbox.active = 1\n')
         f.close()
         f = open('/etc/postfix/sqlite_virtual_mailbox_maps.cf', 'w')
         f.write('dbpath = /var/lib/sqlite3/vmail.db\n'
             'table = mailbox\n'
-            'select_field = domain || \'/\' || local_part)\n'
+            'select_field = domain || \'/\' || local_part\n'
             'where_field = username\n'
             'additional_conditions = and active = \'1\'\n')
         f.close()
