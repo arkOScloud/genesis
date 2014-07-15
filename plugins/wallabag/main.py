@@ -59,22 +59,22 @@ class Wallabag(Plugin):
         oc = []
         for l in ic:
             if 'define (\'SALT\'' in l:
-                l = 'define (\'SALT\', \''+secret_key+'\');\n'
+                l = '@define (\'SALT\', \''+secret_key+'\');\n'
                 oc.append(l)
             elif 'define (\'STORAGE\'' in l:
-                l = 'define (\'STORAGE\', \''+dbengine+'\');\n'
+                l = '@define (\'STORAGE\', \''+dbengine+'\');\n'
                 oc.append(l)
             elif 'define (\'STORAGE_SQLITE\'' in l and dbengine == 'sqlite':
-                l = 'define (\'STORAGE_SQLITE\', \'/var/lib/sqlite3/'+dbinfo['name']+'.db\');\n'
+                l = '@define (\'STORAGE_SQLITE\', \'/var/lib/sqlite3/'+dbinfo['name']+'.db\');\n'
                 oc.append(l)
             elif 'define (\'STORAGE_DB\'' in l and dbengine == 'mysql':
-                l = 'define (\'STORAGE_DB\', \''+dbinfo['name']+'\');\n'
+                l = '@define (\'STORAGE_DB\', \''+dbinfo['name']+'\');\n'
                 oc.append(l)
             elif 'define (\'STORAGE_USER\'' in l and dbengine == 'mysql':
-                l = 'define (\'STORAGE_USER\', \''+dbinfo['user']+'\');\n'
+                l = '@define (\'STORAGE_USER\', \''+dbinfo['user']+'\');\n'
                 oc.append(l)
             elif 'define (\'STORAGE_PASSWORD\'' in l and dbengine == 'mysql':
-                l = 'define (\'STORAGE_PASSWORD\', \''+dbinfo['passwd']+'\');\n'
+                l = '@define (\'STORAGE_PASSWORD\', \''+dbinfo['passwd']+'\');\n'
                 oc.append(l)
             else:
                 oc.append(l)
@@ -82,7 +82,8 @@ class Wallabag(Plugin):
         f.close()
 
         # Make sure that the correct PHP settings are enabled
-        phpctl.enable_mod('mysql', 'pdo_mysql' if dbengine == 'mysql' else 'pdo_sqlite', 
+        phpctl.enable_mod('mysql' if dbengine == 'mysql' else 'sqlite3', 
+            'pdo_mysql' if dbengine == 'mysql' else 'pdo_sqlite', 
             'zip', 'tidy', 'xcache', 'openssl')
 
         # Set up Composer and install the proper modules
@@ -101,7 +102,7 @@ class Wallabag(Plugin):
             shell('chmod 755 /var/lib/sqlite3/%s.db' % dbinfo['name'])
         shutil.rmtree(os.path.join(path, 'install'))
 
-        # Finally, make sure that permissions are set so that Poche
+        # Finally, make sure that permissions are set so that Wallabag
         # can make adjustments and save plugins when need be.
         shell('chmod -R 755 '+os.path.join(path, 'assets/')+' '
             +os.path.join(path, 'cache/')+' '
