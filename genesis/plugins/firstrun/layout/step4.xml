@@ -21,16 +21,16 @@
             <formline text="Choose your timezone:">
                 <selectinput id="zoneselect" name="zoneselect" />
             </formline>
-            <formline checkbox="true" id="sdc" text="Let arkOS to use your whole SD card?" help="If you installed arkOS with the Installer, and you have an SD card larger than 2GB, then select this option. This expands arkOS so it can use the entire SD card. You'll need to restart the system, before the changes kick in.">
+            <formline checkbox="true" id="sdc" text="Let arkOS use your whole SD card?" help="If you installed arkOS with the Installer, and you have an SD card larger than 2GB, then select this option. This expands arkOS so it can use the entire SD card. You'll need to restart the system, before the changes take effect.">
                 <checkbox name='resize' id="resize" checked='False' />
             </formline>
-            <formline checkbox="true" id="rpi-ogm" text="Let arkOS use some of your graphics memory for other things?" help="Because you won't be using your Raspberry Pi with a monitor or keyboard, you can use some of that memory to make arkOS run better elsewhere. (Sets GPU memory to the minimum 16mb)">
+            <formline checkbox="true" id="rpi-ogm" text="Let arkOS use some of your graphics memory for other things?" help="Because you won't be using your Raspberry Pi with a monitor or keyboard, you can use some of that memory to make arkOS run better elsewhere. (Sets GPU memory to the minimum 16MB)">
                 <checkbox name='gpumem' id="gpumem" checked='True' />
             </formline>
-            <formline id="cbb-mac" text="Set MAC Address?" help="Your Cubieboard/Cubietruck needs a MAC address to keep a constant connection (via DHCP). We've picked one for you, but you can choose your own! You'll need to restart the system before it takes effect though.(Sometimes your IP address will update one last time)">
+            <formline id="cbb-mac" text="Set MAC Address?" help="Your Cubieboard/Cubietruck needs a MAC address to keep a constant connection (via DHCP). We've picked one for you, but you can choose your own! You'll need to restart the system before it takes effect though.">
                 <textinput name="macaddr" id="macaddr" value="" />
             </formline>
-            <formline checkbox="true" text="Should the Administrator be able to access your server remotesly through SSH?" help="Advanced: If you want to SSH into your arkOS server as the administrator, check this box. If not, leave it unchecked, and you can use SSH with your normal user you just set up. Note that turning this on is a security risk!">
+            <formline checkbox="true" text="Should the Administrator be able to access your server remotely through SSH?" help="Advanced: If you want to SSH into your arkOS server as the administrator, check this box. If not, leave it unchecked, and you can use SSH with your normal user you just set up. Note that turning this on is a security risk!">
                 <checkbox name='ssh_as_root' id="ssh_as_root" checked='False' /> 
             </formline>
         </wizardform>
