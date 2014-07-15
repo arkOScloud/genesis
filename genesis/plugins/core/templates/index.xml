@@ -100,6 +100,9 @@
     <script>
         Genesis.init();
     </script>
+    <noscript>
+        You have disabled JavaScript in your browser, or are using a browser plugin that blocks JavaScript programs from executing. Please enable JavaScript, or disable this browser plugin, to continue.
+    </noscript>
 </div>
 
 </body>
