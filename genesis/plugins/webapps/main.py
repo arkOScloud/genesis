@@ -69,6 +69,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
         self._add = None
         self._edit = None
         self._setup = None
+        self._settings = None
         self._dbauth = ('','','')
 
     def get_main_ui(self):
@@ -203,6 +204,16 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                     label='Please enter your %s root password'%self._dbauth[1])
                 )
 
+        if self._settings:
+            size = re.search("client_max_body_size\s*([^\s]+)[mM];", open('/etc/nginx/nginx.conf', 'r').read())
+            size = size.group(1) if size else "1"
+            ui.append('main',
+                UI.DialogBox(
+                    UI.Formline(UI.TextInput(id="uplsize", name="uplsize", value=size), 
+                        text="Max file upload size (MB)"),
+                    id="dlgSettings")
+                )
+
         return ui
 
     @event('button/click')
@@ -237,6 +248,8 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
             s = self.sites[int(params[1])]
             w = next(x for x in self.apptypes if x.name==s.stype)
             self.mgr.update(self, w, s)
+        elif params[0] == 'settings':
+            self._settings = True
         else: 
             for x in self.apptypes:
                 if x.name.lower() == params[0]:
@@ -245,6 +258,27 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
     @event('dialog/submit')
     def on_submit(self, event, params, vars = None):
+        if params[0] == 'dlgSettings':
+            if vars.getvalue('action', '') == 'OK':
+                size = vars.getvalue('uplsize', '10')
+                f = open('/etc/nginx/nginx.conf', 'r')
+                data = f.readlines()
+                f.close()
+                if 'client_max_body_size' in ''.join(data):
+                    for x in enumerate(data):
+                        if "client_max_body_size" in x[1]:
+                            data[x[0]] = "\tclient_max_body_size %sM;\n" % size
+                else:
+                    for x in enumerate(data):
+                        if 'http {' in x[1]:
+                            data.insert(x[0]+1, '\tclient_max_body_size %sM;\n' % size)
+                phpctl = apis.langassist(self.app).get_interface('PHP')
+                if phpctl:
+                    phpctl.upload_size(size)
+                open('/etc/nginx/nginx.conf', 'w').writelines(data)
+                self.mgr.nginx_reload()
+                self.put_message("success", "Settings saved successfully")
+            self._settings = None
         if params[0] == 'dlgAdd':
             if vars.getvalue('action', '') == 'OK':
                 self._setup = self._current

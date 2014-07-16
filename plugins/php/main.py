@@ -70,3 +70,16 @@ class PHP(Plugin):
                     oc.append(l)
             f.writelines(oc)
             f.close()
+
+    def upload_size(self, size):
+        ic = open('/etc/php/php.ini', 'r').readlines()
+        f = open('/etc/php/php.ini', 'w')
+        oc = []
+        for l in ic:
+            if 'upload_max_filesize = ' in l:
+                l = 'upload_max_filesize = %sM' % size
+            elif 'post_max_size = ' in l:
+                l = 'post_max_size = %sM' % size
+            oc.append(l)
+        f.writelines(oc)
+        f.close()

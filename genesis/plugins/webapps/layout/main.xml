@@ -1,4 +1,7 @@
 <xml>
+    <div class="pull-right" style="margin-right: 10px;">
+        <btn text="Settings" id="settings" iconfont="gen-cog" />
+    </div>
     <label size="4" text="Your Websites" />
     <pad id="main" />
 
@@ -58,5 +61,4 @@
             <textinput name="cfgport" id="cfgport" value="80" />
         </formline>
     </dialogbox>
-
 </xml>
