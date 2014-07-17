@@ -1,4 +1,5 @@
 import os
+import random
 import re
 
 from genesis.api import *
@@ -93,6 +94,7 @@ class FirstRun(CategoryPlugin, URLHandler):
             ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Set Hostname')), UI.DTD(UI.Label(text=self._opts['hostname']))))
             ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Set Timezone')), UI.DTD(UI.Label(text=self._opts['zone']))))
             ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Allow SSH as Root')), UI.DTD(UI.Label(text='Yes' if self._opts.has_key('ssh_as_root') and self._opts['ssh_as_root'] != '0' else 'No'))))
+            ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Set MAC Address')), UI.DTD(UI.Label(text=self._opts['macaddr']))) if self._opts.has_key('macaddr') and self._opts['macaddr'] != '' else None)
             ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Expand to Fit SD Card')), UI.DTD(UI.Label(text='Yes'))) if self._opts.has_key('resize') and self._opts['resize'] != '0' else None)
             ui.append('todo', UI.DTR(UI.DTD(UI.IconFont(iconfont='gen-checkmark text-success')), UI.DTD(UI.Label(text='Adjust GPU Memory')), UI.DTD(UI.Label(text='Yes'))) if self._opts.has_key('gpumem') and self._opts['gpumem'] != '0' else None)
             for x in self._opts['toinst']+self._opts['metoo']:
@@ -107,7 +109,7 @@ class FirstRun(CategoryPlugin, URLHandler):
                     'back and adjust your choices.')),
                 UI.ScrollContainer(
                     UI.DT(id='prereqs', width='100%', noborder='True'), 
-                    width=300, height=300
+                    width="100%", height=300
                 ),
                 id='dlgMeToo'
             ))
@@ -251,9 +253,9 @@ class FirstRun(CategoryPlugin, URLHandler):
 
                 # set MAC address
                 if self.app.board == 'Cubieboard2' and self._opts['macaddr'] != '':
-                    open('/boot/uEnv.txt', 'w').write('extraargs=mac_addr=%s\n'%macaddr)
+                    open('/boot/uEnv.txt', 'w').write('extraargs=mac_addr=%s\n'%self._opts['macaddr'])
                 elif self.app.board == 'Cubietruck' and self._opts['macaddr'] != '':
-                    open('/etc/modprobe.d/gmac.conf', 'w').write('options sunxi_gmac mac_str="%s"\n'%macaddr)
+                    open('/etc/modprobe.d/gmac.conf', 'w').write('options sunxi_gmac mac_str="%s"\n'%self._opts['macaddr'])
 
                 # allow SSH as root
                 self.statusmsg('Setting SSH options...')

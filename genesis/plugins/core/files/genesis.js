@@ -221,7 +221,7 @@ Genesis = (function() {
             $('.ui-el-top-category').removeClass('selected');
             $('#'+id).addClass('selected');
             Genesis.query('/handle/category/click/' + id);
-            $('html').scrollTop(0);
+            $(window).scrollTop(0);
             return false;
         },
 
@@ -238,7 +238,7 @@ Genesis = (function() {
             $('#warning-text').html(text);
             $('html').append('<div id="shadeback" style="display:none;opacity:0"></div>');
             $('#shadeback').stop().fadeTo(250, 0.8, function () { $(this).show(); });
-            $('html').scrollTop(0);
+            $(window).scrollTop(0);
             $('#warningbox').center().fadeTo(250, 1, function () { $(this).show(); });
             return false;
         },
@@ -312,7 +312,7 @@ Genesis = (function() {
             showLoader: function (visible) {
                 if (visible) {
                     $('#whiteout').show().fadeTo(200, 0.3);
-                    $('html').scrollTop(0);
+                    $(window).scrollTop(0);
                     $('#pbox').show().center();
                     $('body').css('cursor', 'wait !important');
                     isProcessing = true;

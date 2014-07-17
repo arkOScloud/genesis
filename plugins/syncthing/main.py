@@ -39,6 +39,7 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
             ui.remove("settings")
             ui.remove("repos")
             ui.remove("nodes")
+            self._cfg.load()
         else:
             for x in self.repos:
                 ui.append('repos', UI.TblBtn(
