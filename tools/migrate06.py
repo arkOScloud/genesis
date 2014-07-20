@@ -72,7 +72,7 @@ def pluginssl():
 				c.read("/etc/genesis/genesis.conf")
 				c.add_section("ssl_%s" % ("email" if y == "Mailserver" else "xmpp"))
 				c.set("ssl_%s" % ("email" if y == "Mailserver" else "xmpp"), "cert", cfg.get("cert", "name"))
-				c.write(open("/etc/genesis/genesis.conf"), "w")
+				c.write(open("/etc/genesis/genesis.conf", "w"))
 
 def newplugins():
 	print "STEP 3: Removing old plugins and downloading latest versions..."
