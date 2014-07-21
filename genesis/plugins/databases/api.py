@@ -77,12 +77,13 @@ class Databases(apis.API):
             return []
 
     def get_info(self, name):
-        return filter(lambda x: x.__class__.__name__ == name,
-            self.app.grab_plugins(apis.databases.IDatabase))[0].plugin_info
+        return self.get_interface(name).plugin_info
 
     def get_interface(self, name):
-        return filter(lambda x: x.__class__.__name__ == name,
-            self.app.grab_plugins(apis.databases.IDatabase))[0]
+        for x in self.app.grab_plugins(apis.databases.IDatabase):
+            if x.__class__.__name__ == name:
+                return x
+        return None
 
     def get_users(self):
         try:
