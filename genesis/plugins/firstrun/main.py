@@ -126,6 +126,8 @@ class FirstRun(CategoryPlugin, URLHandler):
             shell_stdin('fdisk /dev/mmcblk0', 'd\nn\np\n1\n\n\nw\n')
         else:
             shell_stdin('fdisk /dev/mmcblk0', 'd\n2\nn\np\n2\n\n\nw\n')
+        if not os.path.exists('/etc/cron.d'):
+            os.mkdir('/etc/cron.d')
         f = open('/etc/cron.d/resize', 'w')
         f.write('@reboot root resize2fs /dev/mmcblk0p%s\n'%part)
         f.write('@reboot root rm /etc/cron.d/resize\n')
