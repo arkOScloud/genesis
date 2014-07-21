@@ -80,7 +80,7 @@ class SecurityPlugin(apis.services.ServiceControlPlugin):
         if present == False:
             self.put_message('err', 'There may be a problem with your '
                 'firewall. Please reload the table by clicking "Reinitialize" '
-                'under the Settings tab below.')
+                'under the Settings tab above.')
 
         self._ranges = []
         for x in self.net_config.interfaces:
