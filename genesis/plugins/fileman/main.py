@@ -352,7 +352,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
     def on_btn_click(self, event, params, vars=None):
         if params[0] == 'hidden':
             self._showhidden = not self._showhidden
-            if self.app.auth.user:
+            if self.app.auth.user and self.app.auth.user != 'anonymous':
                 self._config.showhidden = self._showhidden
                 self._config.save()
         if params[0] == 'breadcrumb':
