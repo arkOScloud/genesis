@@ -27,11 +27,12 @@ class PartialError(Exception):
 		return 'Installation successful, but %s' % self.cause
 
 class ReloadError(Exception):
-	def __init__(self, cause):
+	def __init__(self, cause, action="Install"):
+		self.action = action
 		self.cause = cause
 
 	def __str__(self):
-		return 'Installation successful, but %s restart failed. Check your configs' % self.cause
+		return '%s successful, but %s restart failed. Check your configs' % (self.action, self.cause)
 
 
 class WebappControl(Plugin):
@@ -349,7 +350,7 @@ class WebappControl(Plugin):
 	def nginx_reload(self):
 		status = shell_cs('systemctl restart nginx')
 		if status[0] >= 1:
-			raise Exception('nginx failed to reload.')
+			raise ReloadError('nginx failed to reload.', "Edit")
 
 	def php_enable(self):
 		shell('sed -i "s/.*include \/etc\/nginx\/php.conf.*/\tinclude \/etc\/nginx\/php.conf;/" /etc/nginx/nginx.conf')

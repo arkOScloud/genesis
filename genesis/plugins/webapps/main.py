@@ -9,7 +9,7 @@ from genesis.plugins.network.backend import IHostnameManager
 
 import re
 
-from backend import WebappControl
+from backend import WebappControl, ReloadError
 from api import Webapp
 
 
@@ -317,9 +317,13 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                     w.port = port
                     w.ssl = self._edit.ssl
                     w.php = self._edit.php
-                    self.mgr.nginx_edit(self._edit, w)
-                    self.ncops.change_webapp(self._edit, w)
-                    self.put_message('success', 'Site edited successfully')
+                    try:
+                        self.mgr.nginx_edit(self._edit, w)
+                    except ReloadError, e:
+                        self.put_message("warn", str(e))
+                    else:
+                        self.ncops.change_webapp(self._edit, w)
+                        self.put_message('success', 'Site edited successfully')
             self._edit = None
         if params[0] == 'dlgSetup':
             if vars.getvalue('action', '') == 'OK':
