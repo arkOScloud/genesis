@@ -173,7 +173,7 @@ class UsersPlugin(CategoryPlugin):
                     self.app.gconfig.save()
                     self.backend.add_user(v)
                     self._selected_user = v
-                    self.put_message("User added. Don't forget to add a password if you want to be able to login with this user!")
+                    self.put_message("success", "User added. Don't forget to add a password if you want to be able to login with this user!")
                 elif self._editing == 'addgrp':
                     self.reload_data()
                     for u in self.groups:
