@@ -24,10 +24,10 @@ class SSControl(Plugin):
         # Configure SSH
         if not os.path.exists('/home/sparkleshare/.ssh'):
             os.makedirs('/home/sparkleshare/.ssh')
-            os.chmod('/home/sparkleshare/.ssh', 700)
+            os.chmod('/home/sparkleshare/.ssh', 0700)
         if not os.path.exists('/home/sparkleshare/.ssh/authorized_keys'):
             open('/home/sparkleshare/.ssh/authorized_keys', 'w').write('')
-            os.chmod('/home/sparkleshare/.ssh/authorized_keys', 600)
+            os.chmod('/home/sparkleshare/.ssh/authorized_keys', 0600)
         f = open('/etc/ssh/sshd_config', 'r').read()
         if not '# SparkleShare' in f:
             f += '\n'
@@ -69,10 +69,10 @@ class SSControl(Plugin):
         for r, d, f in os.walk(os.path.join('/home/sparkleshare', name)):
             for x in d:
                 os.chown(os.path.join(r, x), uid, gid)
-                os.chmod(os.path.join(r, x), 770)
+                os.chmod(os.path.join(r, x), 0770)
             for x in f:
                 os.chown(os.path.join(r, x), uid, gid)
-                os.chmod(os.path.join(r, x), 770)
+                os.chmod(os.path.join(r, x), 0770)
 
         return ('ssh://sparkleshare@%s'%self.app.get_backend(IHostnameManager).gethostname().lower(),
             os.path.join('/home/sparkleshare', name))
