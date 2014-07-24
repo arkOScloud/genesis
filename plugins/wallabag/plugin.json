@@ -12,7 +12,7 @@
             "secondary": ["News Readers (RSS)"]
         }
     ],
-    "version": "1.7.1-1",
+    "version": "1.7.2-1",
     "author": "arkOS",
     "homepage": "https://arkos.io",
     "app_author": "Nicholas Lœuillet",
@@ -92,7 +92,7 @@
     "generation": 1,
     "website_plugin": "Wallabag",
     "website_updates": true,
-    "download_url": "https://github.com/wallabag/wallabag/archive/1.7.1.tar.gz",
+    "download_url": "https://github.com/wallabag/wallabag/archive/1.7.2.tar.gz",
     "database_engines": ["MariaDB", "SQLite3"],
     "uses_php": true,
     "uses_ssl": true
