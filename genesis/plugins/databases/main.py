@@ -171,7 +171,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
         if not type_sel_multiuser:
             ubutton = False
 
-        if self._add is not None and type_sel_all:
+        if self._add and type_sel_all:
             ui.appendAll('type', *type_sel_all)
         else:
             ui.remove('dlgAdd')
@@ -188,7 +188,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
         else:
             ui.remove('dlgInfo')
 
-        if self._exec is not None:
+        if self._exec:
             edlg = self.app.inflate('databases:execute')
             edlg.find('dlgExec').set('title', 'Execute on database %s' % self._exec['name'])
             edlg.find('dlgExec').set('miscbtnid', 'uplsql/' + str(self.dbs.index(self._exec)))
@@ -200,12 +200,12 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
                 elem.set('value', self._output)
             ui.append('main', edlg)
 
-        if self._useradd is not None:
+        if self._useradd:
             ui.appendAll('usertype', *type_sel_multiuser)
         else:
             ui.remove('dlgAddUser')
 
-        if self._chmod is not None:
+        if self._chmod:
             iface = self.dbops.get_interface(self._chmod['type'])
             plist = iface.chperm('', self._chmod['name'], 'check')
             dblist = [UI.SelectOption(text=x['name'], value=x['name'])

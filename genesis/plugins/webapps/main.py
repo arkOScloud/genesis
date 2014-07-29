@@ -374,7 +374,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                         else:
                             if vars.getvalue('dbname') and vars.getvalue('dbpass'):
                                 try:
-                                    self.dbops.get_interface('MariaDB').validate(
+                                    self.dbops.get_interface(dbengine).validate(
                                         vars.getvalue('dbname'), vars.getvalue('dbname'), 
                                         vars.getvalue('dbpass'), self.dbops.get_dbconn(dbengine))
                                 except Exception, e:
@@ -417,7 +417,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                     elif dbauth[0] == 'add':
                         if dbauth[3].getvalue('dbname') and dbauth[3].getvalue('dbpass'):
                             try:
-                                self.dbops.get_interface('MariaDB').validate(
+                                self.dbops.get_interface(dbauth[1]).validate(
                                     dbauth[3].getvalue('dbname'), dbauth[3].getvalue('dbname'), 
                                     dbauth[3].getvalue('dbpass'), self.dbops.get_dbconn(dbauth[1]))
                             except Exception, e:
