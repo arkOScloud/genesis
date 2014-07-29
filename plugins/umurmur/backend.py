@@ -27,7 +27,9 @@ class UMurmurConfig(Plugin):
             self.config = pylibconfig2.Config(cfg_str)
         except pylibconfig2.PyLibConfigErrors as e:
             self.app.log.error(e)
-        self.config.welcometext = arkos_welcome
+        if not self.config.lookup('arkos_init'):
+            self.config.arkos_init = True
+            self.config.welcometext = arkos_welcome
 
     def save(self):
         running = self.is_service_running()
