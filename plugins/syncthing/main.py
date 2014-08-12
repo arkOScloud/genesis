@@ -105,7 +105,7 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                     dlg.set("miscbtnid", "dnode/%s" % self.nodes.index(self._editnode))
                     dlg.set("miscbtnstyle", "danger")
                     dlg.set("miscbtnwarn", "Are you sure you want to delete your connection to %s?" % self._editnode["name"])
-                ui.find("nnidph").set("text", '-'.join([self._editnode["id"][i:i+6] for i in range(0, len(self._editnode["id"]), 6)]))
+                ui.find("nnidph").set("text", '-'.join([self._editnode["id"][i:i+6] for i in range(0, len(self._editnode["id"]), 6)]) if not '-' in self._editnode["id"] else self._editnode["id"])
                 ui.find("nname").set("value", self._editnode["name"])
                 ui.find("naddr").set("value", self._editnode["address"])
                 ui.find("naddr").set("disabled", True)
