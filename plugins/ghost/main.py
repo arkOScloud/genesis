@@ -42,7 +42,7 @@ class Ghost(Plugin):
         d = d.replace('bcryptjs', 'bcrypt')
         open(os.path.join(path, 'core/server/models/user.js'), 'w').write(d)
 
-        nodectl.install_from_package(path, 'production', {'sqlite': '/usr/bin'})
+        nodectl.install_from_package(path, 'production', {'sqlite': '/usr/bin', 'python': '/usr/bin/python2'})
         users.add_user('ghost')
 
         s = self.app.get_backend(apis.services.IServiceManager)
