@@ -26,7 +26,7 @@ class XMPPConfig(Plugin):
         if self.mgr.get_status('prosody') == 'running':
             wasrunning = True
             self.mgr.stop('prosody')
-        ConfManager.get().save('xmpp', self.configFile, s)
+        ConfManager.get().save('xmpp', '/etc/prosody/prosody.cfg.lua', s)
         ConfManager.get().commit('xmpp')
         if wasrunning:
             self.mgr.start('prosody')
@@ -41,12 +41,10 @@ class XMPPConfig(Plugin):
         return self.config.items()
 
     def __init__(self):
-        #self.configFile = self.app.get_config(self).cfg_file
-        self.configFile = '/etc/prosody/prosody.cfg.lua'
         self.config = {}
 
     def list_files(self):
-        return [self.configFile]
+        return ['/etc/prosody/prosody.cfg.lua']
 
     def domains(self):
         d = []
@@ -163,7 +161,7 @@ class XMPPConfig(Plugin):
             '-- for the server. Note that you must create the accounts separately\n'
             '-- (see http://prosody.im/doc/creating_accounts for info)\n'
             '-- Example: admins = { "user1@example.com", "user2@example.net" }\n'
-            'admins = { }\n'
+            'admins = { '+', '.join(['"'+x+'"' for x in data["admins"]])+' }\n'
             '\n'
             '-- Enable use of libevent for better performance under high load\n'
             '-- For more information see: http://prosody.im/doc/libevent\n'
@@ -229,11 +227,10 @@ class XMPPConfig(Plugin):
             '\n'
             '-- These are the SSL/TLS-related settings. If you don\'t want\n'
             '-- to use SSL/TLS, you may comment or remove this\n'
-            'ssl = {\n'
-            '\tkey = "/etc/prosody/certs/localhost.key";\n'
-            '\tcertificate = "/etc/prosody/certs/localhost.crt";\n'
-            '}\n'
-            '\n'
+            +(('ssl = {\n'
+            +''.join(['\t'+x+' = "'+data["ssl"][x]+'";\n' for x in data["ssl"]])
+            +'}\n') if data.has_key("ssl") and data["ssl"] else "")
+            +'\n'
             '-- Force clients to use encrypted connections? This option will\n'
             '-- prevent clients from authenticating unless they are using encryption.\n'
             '\n'
@@ -353,13 +350,13 @@ class XMPPSSLPlugin(Plugin):
     cert_type = 'cert-key'
 
     def enable_ssl(self, cert, key):
-        config = XMPPConfig(self.app)
+        config = ConfManager.get().get_configurable("xmpp")
         config.load()
         config.config['ssl'] = {'certificate': cert, 'key': key}
         config.save()
 
     def disable_ssl(self):
-        config = XMPPConfig(self.app)
+        config = ConfManager.get().get_configurable("xmpp")
         config.load()
         config.config['ssl'] = {}
         config.save()
