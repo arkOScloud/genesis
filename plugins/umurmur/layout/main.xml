@@ -31,6 +31,7 @@
                                 <label text="Silent" />
                             </dth>
                             <dth width="1" />
+                            <dth width="1" />
                         </dtr>
                     </dt>
                     <label size="3" text="Channel Links" />
