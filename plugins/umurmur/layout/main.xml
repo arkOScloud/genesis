@@ -25,6 +25,9 @@
                                 <label text="Description" />
                             </dth>
                             <dth width="1">
+                                <label text="Password" />
+                            </dth>
+                            <dth width="1">
                                 <label text="Silent" />
                             </dth>
                             <dth width="1" />

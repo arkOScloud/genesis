@@ -78,9 +78,6 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         )
         ui.append("container_settings", content)
 
-        # Tab 1: Channels
-        # TODO password for channels
-
         # channels
         channels = dict((c.name, c) for c in cfg.channels)
         channel_names = sorted(channels.keys())
@@ -105,6 +102,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             row = UI.DTR(
                 UI.Label(text=". . "*depth + (" %s" % chan.name)),
                 UI.Label(text=chan.description),
+                UI.Label(text=("Yes" if chan.get("password") else "No")),
                 UI.Label(text=("Yes" if chan.get("silent") else "No")),
                 delete_button
             )
@@ -152,14 +150,22 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                         name="chan_name",
                         value=""
                     ),
-                    text="Channel name"
+                    text="Name"
                 ),
                 UI.FormLine(
                     UI.TextInput(
                         name="chan_descr",
                         value=""
                     ),
-                    text="Channel description"
+                    text="Description"
+                ),
+                UI.FormLine(
+                    UI.TextInput(
+                        name="chan_pass",
+                        value="",
+                        password=True
+                    ),
+                    text="Password"
                 ),
                 UI.FormLine(
                     UI.SelectInput(*list(
@@ -306,11 +312,14 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 return
 
             new_chan = backend.pylibconfig2.ConfGroup()
-            setattr(new_chan, "name", chan_name)
-            setattr(new_chan, "description", vars.getvalue('chan_descr'))
-            setattr(new_chan, "parent", vars.getvalue('chan_parent'))
+            new_chan.name = chan_name
+            new_chan.description = vars.getvalue('chan_descr')
+            new_chan.parent = vars.getvalue('chan_parent')
             if int(vars.getvalue('chan_silent')):
-                setattr(new_chan, "silent", True),
+                new_chan.silent = True
+            chan_pass = vars.getvalue('chan_pass')
+            if chan_pass:
+                new_chan.password = chan_pass
             cfg.channels.append(new_chan)
             self._config.save()
             self._tab = 1
