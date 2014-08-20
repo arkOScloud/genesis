@@ -135,19 +135,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         )
         ui.append("container_default_channel", content)
 
-        # Tab 2: Info
-        # TODO: remove info tab
-        for k, v in sorted(cfg.items()):
-            if k in ("password", "channel_links", "channels"):
-                continue
-            e = UI.DTR(
-                UI.IconFont(iconfont='gen-folder'),
-                UI.Label(text=k),
-                UI.Label(text=v),
-            )
-            ui.append('all_config', e)
-
-        # dialogs
+        # Dialogs
         if self._open_dialog == 'dlg_add_channel':
             content = UI.SimpleForm(
                 UI.FormLine(

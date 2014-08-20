@@ -7,7 +7,6 @@
         <tabcontrol id="tabs" active="tab0" >
             <tabheader text="Server" id="tab0" />
             <tabheader text="Channels" id="tab1" />
-            <tabheader text="Info" id="tab2"/>
 
             <tabbody id="tab0">
                 <label size="5" text="General Mumble Server Settings" />
@@ -55,20 +54,6 @@
                     <pad><container id="container_delete_channel" /></pad>
                     <pad><container id="container_delete_channel_link" /></pad>
                 </pad>
-            </tabbody>
-            <tabbody id="tab2">
-                <dt id="all_config" width="100%">
-                    <dtr header="True">
-                        <dth width="1" />
-                        <dth>
-                            <label text="Key" />
-                        </dth>
-                        <dth>
-                            <label text="Value" />
-                        </dth>
-                        <dth width="1" />
-                    </dtr>
-                </dt>
             </tabbody>
         </tabcontrol>
         <container id="dialog_container" />
