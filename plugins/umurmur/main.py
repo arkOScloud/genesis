@@ -52,6 +52,15 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             ),
             UI.FormLine(
                 UI.TextInput(
+                    name="admin_password",
+                    value=cfg.get("admin_password", ""),
+                    password=True
+                ),
+                text="Admin password",
+                help="More info: https://code.google.com/p/umurmur/wiki/Admin",
+            ),
+            UI.FormLine(
+                UI.TextInput(
                     name="max_bandwidth",
                     value=cfg.get("max_bandwidth", 48000),
                 ),
@@ -244,6 +253,10 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 cfg.set(
                     "password",
                     vars.getvalue("password", "")
+                )
+                cfg.set(
+                    "admin_password",
+                    vars.getvalue("admin_password", "")
                 )
                 try:
                     cfg.set(
