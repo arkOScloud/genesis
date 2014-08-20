@@ -206,6 +206,14 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             content = UI.SimpleForm(
                 UI.FormLine(
                     UI.TextInput(
+                        name="chan_name",
+                        value=chan.name,
+                        disabled=True,
+                    ),
+                    text="Name"
+                ),
+                UI.FormLine(
+                    UI.TextInput(
                         name="chan_descr",
                         value=chan.description
                     ),
