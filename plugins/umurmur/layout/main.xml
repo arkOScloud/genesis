@@ -5,17 +5,15 @@
     </toolbar>
     <pad id="main">
         <tabcontrol id="tabs" active="tab0" >
-            <tabheader text="Server" id="tab0" />
+            <tabheader text="General" id="tab0" />
             <tabheader text="Channels" id="tab1" />
 
             <tabbody id="tab0">
-                <label size="5" text="General Mumble Server Settings" />
                 <pad>
                     <container id="container_settings" />
                 </pad>
             </tabbody>
             <tabbody id="tab1">
-                <label size="5" text="Mumble Server Channels" />
                 <pad>
                     <label size="3" text="Channels" />
                     <dt id="table_channels" width="100%">
@@ -48,11 +46,9 @@
                         </dtr>
                     </dt>
                 </pad>
-                <label size="5" text="Channel Settings" />
+                <label size="3" text="Other" />
                 <pad>
                     <pad><container id="container_default_channel" /></pad>
-                    <pad><container id="container_delete_channel" /></pad>
-                    <pad><container id="container_delete_channel_link" /></pad>
                 </pad>
             </tabbody>
         </tabcontrol>
