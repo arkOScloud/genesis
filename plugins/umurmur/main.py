@@ -23,11 +23,11 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         ui.find('tabs').set('active', 'tab' + str(self._tab))
         cfg = self._config.config
 
-        if not hasattr(cfg, "channels"):
+        if not hasattr(cfg, "channels") and 'Root' in cfg.channels:
             ui.remove('dlg_add_chan')
             ui.remove('dlg_add_chan_lnk')
             ui.append("container_settings", UI.Label(
-                text="uMurmur settings file damaged. "
+                text="uMurmur settings file unavailable or damaged."
                      "Please reinstall uMurmur",
                 size=3)
             )
