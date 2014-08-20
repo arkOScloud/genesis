@@ -147,3 +147,12 @@ class Ghost(Plugin):
             config_file.close()
         s = self.app.get_backend(apis.services.IServiceManager)
         s.restart('ghost', 'supervisor')
+
+    def update(self, path, pkg, ver):
+        # General update procedure
+        nodectl = apis.langassist(self.app).get_interface('NodeJS')
+        s = self.app.get_backend(apis.services.IServiceManager)
+        out = shell('unzip -o -d %s %s' % (path, pkg), stderr=True)
+        shell('chown -R ghost '+path)
+        nodectl.install_from_package(path, 'production', {'sqlite': '/usr/bin', 'python': '/usr/bin/python2'})
+        s.restart('ghost', 'supervisor')
