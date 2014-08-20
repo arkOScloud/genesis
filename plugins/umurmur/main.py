@@ -83,7 +83,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 channels[c] for c in channel_names
                 if channels[c].parent == chan.name
             )
-            if not children:
+            if (not children) and chan.name != 'Root':
                 channel_leaves.append(chan.name)
                 delete_button = UI.TipIcon(  # only leaves can be deleted
                     iconfont='gen-cancel-circle',
