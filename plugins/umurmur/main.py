@@ -16,6 +16,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
     def on_session_start(self):
         self._tab = 0
         self._open_dialog = None
+        self._open_dialog_info = None
         self.update_services()
 
     def get_main_ui(self):
@@ -23,11 +24,11 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         ui.find('tabs').set('active', 'tab' + str(self._tab))
         cfg = self._config.config
 
-        if not hasattr(cfg, "channels"):
+        if not hasattr(cfg, "channels") and 'Root' in cfg.channels:
             ui.remove('dlg_add_chan')
             ui.remove('dlg_add_chan_lnk')
             ui.append("container_settings", UI.Label(
-                text="uMurmur settings file damaged. "
+                text="uMurmur settings file unavailable or damaged."
                      "Please reinstall uMurmur",
                 size=3)
             )
@@ -52,6 +53,15 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
             ),
             UI.FormLine(
                 UI.TextInput(
+                    name="admin_password",
+                    value=cfg.get("admin_password", ""),
+                    password=True
+                ),
+                text="Admin password",
+                help="More info: https://code.google.com/p/umurmur/wiki/Admin",
+            ),
+            UI.FormLine(
+                UI.TextInput(
                     name="max_bandwidth",
                     value=cfg.get("max_bandwidth", 48000),
                 ),
@@ -69,9 +79,6 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         )
         ui.append("container_settings", content)
 
-        # Tab 1: Channels
-        # TODO password for channels
-
         # channels
         channels = dict((c.name, c) for c in cfg.channels)
         channel_names = sorted(channels.keys())
@@ -83,21 +90,30 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 channels[c] for c in channel_names
                 if channels[c].parent == chan.name
             )
-            if not children:
-                channel_leaves.append(chan.name)
-                delete_button = UI.TipIcon(  # only leaves can be deleted
-                    iconfont='gen-cancel-circle',
-                    text='Delete',
-                    warning='Delete channel "%s"' % chan.name,
-                    id='deleteChan/%s' % chan.name
+            edit_button = UI.Label(text="-")
+            delete_button = UI.Label(text="-")
+            if chan.name != 'Root':
+                edit_button = UI.TipIcon(
+                    iconfont='gen-pencil-2',
+                    text='Edit',
+                    id='dlg_editChan/%s' % chan.name,
                 )
-            else:
-                delete_button = UI.Label(text="-")
+                if not children:
+                    channel_leaves.append(chan.name)
+                    delete_button = UI.TipIcon(  # only leaves can be deleted
+                        iconfont='gen-cancel-circle',
+                        text='Delete',
+                        warning='Delete channel "%s"' % chan.name,
+                        id='deleteChan/%s' % chan.name
+                    )
+
             row = UI.DTR(
                 UI.Label(text=". . "*depth + (" %s" % chan.name)),
                 UI.Label(text=chan.description),
+                UI.Label(text=("Yes" if chan.get("password") else "No")),
                 UI.Label(text=("Yes" if chan.get("silent") else "No")),
-                delete_button
+                edit_button,
+                delete_button,
             )
             ui.append('table_channels', row)
             if children:
@@ -135,19 +151,7 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         )
         ui.append("container_default_channel", content)
 
-        # Tab 2: Info
-        # TODO: remove info tab
-        for k, v in sorted(cfg.items()):
-            if k in ("password", "channel_links", "channels"):
-                continue
-            e = UI.DTR(
-                UI.IconFont(iconfont='gen-folder'),
-                UI.Label(text=k),
-                UI.Label(text=v),
-            )
-            ui.append('all_config', e)
-
-        # dialogs
+        # Dialogs
         if self._open_dialog == 'dlg_add_channel':
             content = UI.SimpleForm(
                 UI.FormLine(
@@ -155,14 +159,22 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                         name="chan_name",
                         value=""
                     ),
-                    text="Channel name"
+                    text="Name"
                 ),
                 UI.FormLine(
                     UI.TextInput(
                         name="chan_descr",
                         value=""
                     ),
-                    text="Channel description"
+                    text="Description"
+                ),
+                UI.FormLine(
+                    UI.TextInput(
+                        name="chan_pass",
+                        value="",
+                        password=True
+                    ),
+                    text="Password"
                 ),
                 UI.FormLine(
                     UI.SelectInput(*list(
@@ -186,6 +198,49 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 content,
                 id="dlg_add_chan",
                 title='Add channel'
+            )
+            ui.append("dialog_container", box)
+
+        if self._open_dialog == 'dlg_editChan':
+            chan = channels[self._open_dialog_info]
+            content = UI.SimpleForm(
+                UI.FormLine(
+                    UI.TextInput(
+                        name="chan_name",
+                        value=chan.name,
+                        disabled=True,
+                    ),
+                    text="Name"
+                ),
+                UI.FormLine(
+                    UI.TextInput(
+                        name="chan_descr",
+                        value=chan.description
+                    ),
+                    text="Description"
+                ),
+                UI.FormLine(
+                    UI.TextInput(
+                        name="chan_pass",
+                        value=chan.get('password', ''),
+                        password=True
+                    ),
+                    text="Password"
+                ),
+                UI.FormLine(
+                    UI.CheckBox(
+                        name="chan_silent",
+                        text="Silent",
+                        checked=bool(chan.get('silent', False)),
+                    ),
+                    checkbox=True
+                ),
+                id="dialog_edit_channel"
+            )
+            box = UI.DialogBox(
+                content,
+                id="dlg_edit_chan",
+                title='Edit channel "%s"' % chan.name
             )
             ui.append("dialog_container", box)
 
@@ -220,6 +275,9 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
         cfg = self._config.config
         if params[0].startswith("dlg_"):
             self._open_dialog = params[0]
+
+        if params[0] == "dlg_editChan":
+            self._open_dialog_info = params[1]
 
         if params[0] == "deleteChan":
             self._tab = 1
@@ -256,6 +314,10 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 cfg.set(
                     "password",
                     vars.getvalue("password", "")
+                )
+                cfg.set(
+                    "admin_password",
+                    vars.getvalue("admin_password", "")
                 )
                 try:
                     cfg.set(
@@ -294,7 +356,6 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
 
         cfg = self._config.config
         if params[0] == 'dlg_add_chan':
-
             chan_name = vars.getvalue('chan_name')
             if not chan_name:
                 self.put_message('warn', 'Channel name cannot be empty.')
@@ -305,13 +366,33 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                 return
 
             new_chan = backend.pylibconfig2.ConfGroup()
-            setattr(new_chan, "name", chan_name)
-            setattr(new_chan, "description", vars.getvalue('chan_descr'))
-            setattr(new_chan, "parent", vars.getvalue('chan_parent'))
+            new_chan.name = chan_name
+            new_chan.description = vars.getvalue('chan_descr')
+            new_chan.parent = vars.getvalue('chan_parent')
             if int(vars.getvalue('chan_silent')):
-                setattr(new_chan, "silent", True),
+                new_chan.silent = True
+            chan_pass = vars.getvalue('chan_pass')
+            if chan_pass:
+                new_chan.password = chan_pass
             cfg.channels.append(new_chan)
             self._config.save()
+            self._tab = 1
+
+        if params[0] == 'dlg_edit_chan':
+            name = self._open_dialog_info
+            chan = next(c for c in cfg.channels if c.name == name)
+            chan.description = vars.getvalue('chan_descr')
+            if int(vars.getvalue('chan_silent')):
+                chan.silent = True
+            elif hasattr(chan, 'silent'):
+                del chan.silent
+            chan_pass = vars.getvalue('chan_pass')
+            if chan_pass:
+                chan.password = chan_pass
+            elif hasattr(chan, 'password'):
+                del chan.password
+            self._config.save()
+            self._open_dialog_info = None
             self._tab = 1
 
         if params[0] == 'dlg_add_chan_lnk':

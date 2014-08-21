@@ -5,18 +5,15 @@
     </toolbar>
     <pad id="main">
         <tabcontrol id="tabs" active="tab0" >
-            <tabheader text="Server" id="tab0" />
+            <tabheader text="General" id="tab0" />
             <tabheader text="Channels" id="tab1" />
-            <tabheader text="Info" id="tab2"/>
 
             <tabbody id="tab0">
-                <label size="5" text="General Mumble Server Settings" />
                 <pad>
                     <container id="container_settings" />
                 </pad>
             </tabbody>
             <tabbody id="tab1">
-                <label size="5" text="Mumble Server Channels" />
                 <pad>
                     <label size="3" text="Channels" />
                     <dt id="table_channels" width="100%">
@@ -28,8 +25,12 @@
                                 <label text="Description" />
                             </dth>
                             <dth width="1">
+                                <label text="Password" />
+                            </dth>
+                            <dth width="1">
                                 <label text="Silent" />
                             </dth>
+                            <dth width="1" />
                             <dth width="1" />
                         </dtr>
                     </dt>
@@ -49,26 +50,10 @@
                         </dtr>
                     </dt>
                 </pad>
-                <label size="5" text="Channel Settings" />
+                <label size="3" text="Other" />
                 <pad>
                     <pad><container id="container_default_channel" /></pad>
-                    <pad><container id="container_delete_channel" /></pad>
-                    <pad><container id="container_delete_channel_link" /></pad>
                 </pad>
-            </tabbody>
-            <tabbody id="tab2">
-                <dt id="all_config" width="100%">
-                    <dtr header="True">
-                        <dth width="1" />
-                        <dth>
-                            <label text="Key" />
-                        </dth>
-                        <dth>
-                            <label text="Value" />
-                        </dth>
-                        <dth width="1" />
-                    </dtr>
-                </dt>
             </tabbody>
         </tabcontrol>
         <container id="dialog_container" />
