@@ -34,10 +34,10 @@
 
     <dialogbox id="dlgSetup">
         <label size="3" text="General Settings" />
-        <formline text="Site Name" help="An internal name to help you identify this site within Genesis. Must not contain spaces or dashes.">
+        <formline text="Site Name" help="A name to help you recognize this app install just in Genesis. Do not use spaces, dashes or special characters.">
             <textinput name="name" id="name" />
         </formline>
-        <formline text="Address" help="This should be the web address you want this app to be visible on. For example, 'www.example.com'. It must be a DNS-resolvable name pointing at this server.">
+        <formline text="Address" help="The web address(es) you want to access this app at, separated by a space. Eg. 'example.com www.example.com'. These need to be registered names, with their nameservers pointing to arkOS' public IP address. The first hostname should already be assigned to this system via Settings > Networking > Hosts.">
             <textinput name="addr" id="addr" value="localhost" />
         </formline>
         <formline text="Port" help="If you don't know what to put here, leave it at default (port 80).">
@@ -48,13 +48,13 @@
     </dialogbox>
 
     <dialogbox id="dlgEdit">
-        <formline text="Site Name" help="An internal name to help you identify this site within Genesis.">
+        <formline text="Site Name" help="A name to help you recognize this app install just in Genesis. Do not use spaces, dashes or special characters.">
             <textinput name="cfgname" id="cfgname" />
         </formline>
-        <formline text="Address" help="This should be the web address you want this app to be visible on. For example, 'www.example.com'. This hostname should already be assigned to this system via Network Settings > Hosts.">
+        <formline text="Address" help="The web address(es) you want to access this app at, separated by a space. Eg. 'example.com www.example.com'. These need to be registered names, with their nameservers pointing to arkOS' public IP address. The first hostname should already be assigned to this system via Settings > Networking > Hosts.">
             <textinput name="cfgaddr" id="cfgaddr" value="localhost" />
         </formline>
-        <formline text="Port" help="If you don't know what to put here, leave it at default (port 80).">
+        <formline text="Port" help="If you don't know what to put here, leave it at it's default ( port 80, or 443 if you've assigned SSL to this app).">
             <textinput name="cfgport" id="cfgport" value="80" />
         </formline>
     </dialogbox>
