@@ -29,10 +29,14 @@ Genesis is developed by:
 
 With a big thanks to those who have made contributions!
 * AJ Bahnken @ajvb
+* Bugsbane @Bugsbane
+* Duncan Overbruck @Duncaen
+* Heiner Tholen @HeinzK1X
 * Jasper van Loenen @javl
 * Miguel Moitinho @mamoit
 * Steven Nelson @StevenNelson
 * Timothy Farrell @explorigin
+* Tom Atkins @knitatoms
 * Will Wilson @wwilson
 
 This project was forked from Ajenti, an excellent server management framework by @Eugeny located here: https://github.com/Eugeny/ajenti.
