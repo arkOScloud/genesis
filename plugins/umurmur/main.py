@@ -174,7 +174,9 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                         value="",
                         password=True
                     ),
-                    text="Password"
+                    text="Password",
+                    help="Passwords must be set as access tokens in the "
+                         "client (checkout the server menu in Mumble).",
                 ),
                 UI.FormLine(
                     UI.SelectInput(*list(
@@ -225,7 +227,9 @@ class UMurmurPlugin(apis.services.ServiceControlPlugin):
                         value=chan.get('password', ''),
                         password=True
                     ),
-                    text="Password"
+                    text="Password",
+                    help="Passwords must be set as access tokens in the "
+                         "client (checkout the server menu in Mumble).",
                 ),
                 UI.FormLine(
                     UI.CheckBox(
