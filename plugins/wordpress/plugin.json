@@ -12,7 +12,7 @@
             "secondary": ["Blogs", "Websites", "CMS"]
         }
     ],
-    "version": "3.8.2-1",
+    "version": "4.0.0-1",
     "author": "arkOS",
     "homepage": "https://arkos.io",
     "app_author": "Automattic",
@@ -80,7 +80,7 @@
     "generation": 1,
     "website_plugin": "WordPress",
     "website_updates": false,
-    "download_url": "https://wordpress.org/wordpress-3.8.2.tar.gz",
+    "download_url": "https://wordpress.org/wordpress-4.0.tar.gz",
     "database_engines": ["MariaDB"],
     "uses_php": true,
     "uses_ssl": true
