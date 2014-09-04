@@ -18,7 +18,7 @@ class Jekyll(Plugin):
 		rubyctl = apis.langassist(self.app).get_interface('Ruby')
 		rubyctl.install_gem('jekyll', 'rdiscount')
 
-	def post_install(self, name, path, vars):
+	def post_install(self, name, path, vars, dbinfo={}):
 		# Make sure the webapps config points to the _site directory and generate it.
 		c = nginx.loadf(os.path.join('/etc/nginx/sites-available', name))
 		for x in c.servers:
@@ -32,10 +32,10 @@ class Jekyll(Plugin):
 		# Return an explicatory message.
 		return 'Jekyll has been setup, with a sample site at '+path+'. Modify these files as you like. To learn how to use Jekyll, visit http://jekyllrb.com/docs/usage. After making changes, click the Configure button next to the site, then "Regenerate Site" to bring your changes live.'
 
-	def pre_remove(self, name, path):
+	def pre_remove(self, site):
 		pass
 
-	def post_remove(self, name):
+	def post_remove(self, site):
 		pass
 
 	def ssl_enable(self, path, cfile, kfile):

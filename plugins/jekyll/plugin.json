@@ -12,7 +12,7 @@
             "secondary": ["Blogs", "Websites", "Static Sites"]
         }
     ],
-    "version": "1.1",
+    "version": "1.2",
     "author": "arkOS",
     "homepage": "http://arkos.io",
     "app_author": "Tom Preson-Werner, Nick Quaranto et al",
