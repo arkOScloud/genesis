@@ -63,11 +63,11 @@ class ArchConnConfig(LinuxIp):
                 c.name = line
 
                 # Read the options from connection configs to variable
-                for x in open(os.path.join('/etc/netctl', line)).readlines():
+                for x in open(os.path.join('/etc/netctl', line), 'r').readlines():
                     if x.startswith('#') or not x.strip():
                         continue
                     parse = x.split('=')
-                    parse[1] = parse[1].translate(None, '\"\'\n')
+                    parse[1] = parse[1].translate(None, '()\"\'\n')
                     data[parse[0]] = parse[1]
 
                 # Send options one-by-one to the configuration
@@ -79,7 +79,7 @@ class ArchConnConfig(LinuxIp):
                     c.gateway = None
                 else:
                     c.addressing = 'static'
-                    c.address = data['Address']
+                    c.address = data['Address'] if data.has_key('Address') else None
                     c.gateway = data['Gateway'] if data.has_key('Gateway') else None
                 c.description = data['Description'] if data.has_key('Description') else None
                 if c.devclass == 'wireless':
