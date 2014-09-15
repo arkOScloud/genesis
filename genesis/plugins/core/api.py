@@ -56,8 +56,10 @@ class LangAssist(apis.API):
         name = ''
 
     def get_interface(self, name):
-        return filter(lambda x: x.name == name,
-            self.app.grab_plugins(apis.langassist.ILangMgr))[0]
+        for x in self.app.grab_plugins(apis.langassist.ILangMgr):
+            if x.name == name:
+                return x
+        return None
 
 
 class Orders(apis.API):
