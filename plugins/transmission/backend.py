@@ -35,7 +35,7 @@ class TransmissionConfig(Plugin):
             self.mgr.start(self.serviceName)
 
     def get(self, key):
-        return self.config[key]
+        return self.config[key] if self.config.has_key(key) else ""
 
     def set(self, key, value):
         self.config[key] = value
