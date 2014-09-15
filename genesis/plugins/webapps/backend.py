@@ -309,13 +309,19 @@ class WebappControl(Plugin):
 				nginx.Key('server_name', site.addr),
 				nginx.Key('return', '301 https://%s$request_uri'%site.addr)
 			))
-		s.filter('Key', 'listen')[0].value = site.port+' ssl' if site.ssl else site.port
-		s.filter('Key', 'server_name')[0].value = site.addr
-		s.filter('Key', 'root')[0].value = site.path
-		s.filter('Key', 'index')[0].value = 'index.php' if site.php else 'index.html'
-		nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', oldsite.name))
 		# If the name was changed, rename the folder and files
 		if site.name != oldsite.name:
+			if site.path.endswith('_site'):
+				site.path = os.path.join('/srv/http/webapps', site.name, '_site')
+			elif site.path.endswith('htdocs'):
+				site.path = os.path.join('/srv/http/webapps', site.name, 'htdocs')
+			else:
+				site.path = os.path.join('/srv/http/webapps', site.name)
+			g = ConfigParser.SafeConfigParser()
+			g.read(os.path.join('/etc/nginx/sites-available', '.'+oldsite.name+'.ginf'))
+			g.set('website', 'name', site.name)
+			g.write(open(os.path.join('/etc/nginx/sites-available', '.'+site.name+'.ginf'), 'w'))
+			os.unlink(os.path.join('/etc/nginx/sites-available', '.'+oldsite.name+'.ginf'))
 			if os.path.exists(os.path.join('/srv/http/webapps', site.name)):
 				shutil.rmtree(os.path.join('/srv/http/webapps', site.name))
 			shutil.move(os.path.join('/srv/http/webapps', oldsite.name), 
@@ -323,7 +329,12 @@ class WebappControl(Plugin):
 			shutil.move(os.path.join('/etc/nginx/sites-available', oldsite.name),
 				os.path.join('/etc/nginx/sites-available', site.name))
 			self.nginx_disable(oldsite, reload=False)
-			self.nginx_enable(site)
+			self.nginx_enable(site, reload=False)
+		s.filter('Key', 'listen')[0].value = site.port+' ssl' if site.ssl else site.port
+		s.filter('Key', 'server_name')[0].value = site.addr
+		s.filter('Key', 'root')[0].value = site.path
+		s.filter('Key', 'index')[0].value = 'index.php' if site.php else 'index.html'
+		nginx.dumpf(c, os.path.join('/etc/nginx/sites-available', oldsite.name))
 		self.nginx_reload()
 
 	def nginx_remove(self, site, reload=True):
