@@ -98,21 +98,12 @@
         </formline>
     </dialogbox>
 
-    <dialogbox id="dlgEditGroup">
+    <dialogbox id="dlgEditGroup" miscbtn="Delete Group" miscbtnid="delgroup" miscbtnstyle="danger" miscbtnwarn="Are you sure you want to delete this group?">
         <formline text="Name">
-            <textinput id="ename" />
+            <textinput name="egname" id="egname" />
         </formline>
         <formline text="GID">
-            <textinput id="eggid" />
-        </formline>
-        <formline text="Name">
-            <textinput id="ename" />
-        </formline>
-        <formline>
-            <btn id="delgroup" design="danger" text="Delete group" />
-        </formline>
-        <formline text="Users">
-            <label id="lblgusers" />
+            <textinput name="eggid" id="eggid" />
         </formline>
     </dialogbox>
 

@@ -117,12 +117,8 @@ class UsersPlugin(CategoryPlugin):
 
         if self._selected_group != '':
             u = self.backend.get_group(self._selected_group, self.groups)
-            g = ', '.join(u.users)
-
-            ui.find('ename').set('value', u.name)
-            ui.find('delgroup').set('warning', 'Delete group %s'%u.name)
+            ui.find('egname').set('value', u.name)
             ui.find('eggid').set('value', str(u.gid))
-            ui.find('lblgusers').set('text', g)
         else:
             ui.remove('dlgEditGroup')
 
@@ -134,7 +130,7 @@ class UsersPlugin(CategoryPlugin):
             self._tab = 0
             self._selected_user = params[1]
         if params[0] == 'gedit':
-            self._tab = 1
+            self._tab = 2
             self._selected_group = params[1]
         if params[0].startswith('ch'):
             self._tab = 0
@@ -143,12 +139,12 @@ class UsersPlugin(CategoryPlugin):
             self._tab = 0
             self._editing = 'adduser'
         if params[0] == 'addgrp':
-            self._tab = 1
+            self._tab = 2
             self._editing = 'addgrp'
         if params[0] == 'deluser':
             self._editing = 'deluser'
         if params[0] == 'delgroup':
-            self._tab = 1
+            self._tab = 2
             self.backend.del_group(self._selected_group)
             self._selected_group = ''
 
@@ -217,6 +213,13 @@ class UsersPlugin(CategoryPlugin):
                     self.app.gconfig.save()
                     self._editing = ''
             self._selected_user = ''
+        if params[0] == 'dlgEditGroup':
+            if vars.getvalue('action', '') == 'OK':
+                self.backend.change_group_param(self._selected_group,
+                    'gname', vars.getvalue('egname', ''))
+                self.backend.change_group_param(self._selected_group,
+                    'ggid', vars.getvalue('eggid', ''))
+            self._selected_group = ''
         if params[0] == 'dlgConfirmDelete':
             self._tab = 0
             answer = vars.getvalue('action', '')
