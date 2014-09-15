@@ -282,6 +282,8 @@ class FirstRun(CategoryPlugin, URLHandler):
                 self.ub.change_user_password('root', self._opts['rootpasswd'])            
                 self.ub.add_user(self._opts['username'])
                 self.ub.change_user_password(self._opts['username'], self._opts['userpasswd'])
+                if not os.path.exists('/etc/sudoers'):
+                    shell('pacman -Sy --noconfirm --needed sudo')
                 sr = open('/etc/sudoers', 'r+').readlines()
                 sr = ["%sudo ALL=(ALL) ALL\n" if "# %sudo" in line else line for line in sr]
                 sw = open('/etc/sudoers', 'w')

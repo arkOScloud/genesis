@@ -12,7 +12,7 @@
             "secondary": ["Blogs", "Websites", "Static Sites"]
         }
     ],
-    "version": "1.2",
+    "version": "1.3",
     "author": "arkOS",
     "homepage": "http://arkos.io",
     "app_author": "Tom Preson-Werner, Nick Quaranto et al",
@@ -35,6 +35,24 @@
                 "name": "ruby",
                 "package": "ruby",
                 "binary": "ruby"
+            },
+            {
+                "type": "app",
+                "name": "make",
+                "package": "make",
+                "binary": "make"
+            },
+            {
+                "type": "app",
+                "name": "gcc",
+                "package": "gcc",
+                "binary": "gcc"
+            },
+            {
+                "type": "app",
+                "name": "nodejs",
+                "package": "nodejs",
+                "binary": "nodejs"
             },
             {
                 "type": "plugin",

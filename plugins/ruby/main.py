@@ -30,7 +30,7 @@ class Ruby(Plugin):
         gemlist = shell('gem list').split('\n')
         for x in gems:
             if not any(x==s for s in gemlist) or force:
-                d = shell_cs('gem install -N --no-user-install %s' % x)
+                d = shell_cs('gem install -N --no-user-install %s' % x, stderr=True)
                 if d[0] != 0:
                     self.app.log.error('Gem install \'%s\' failed: %s'%(x,str(d[1])))
                     raise Exception('Gem install \'%s\' failed. See logs for more info'%x)
