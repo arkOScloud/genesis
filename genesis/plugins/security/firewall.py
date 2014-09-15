@@ -83,11 +83,9 @@ class RuleManager(Plugin):
 
     def remove_by_plugin(self, id):
         # Remove all entries for a particular plugin
-        r = re.compile('fw-((?:[a-z][a-z]+))-((?:[a-z][a-z]+))',
-            re.IGNORECASE)
-        for o in self.app.gconfig.options('security'):
-            m = r.match(o)
-            if m and m.group(1) == id:
+        opts = self.app.gconfig.options('security')
+        for o in opts:
+            if o.split('-')[1] == id and o in self.app.gconfig.options('security'):
                 self.app.gconfig.remove_option('security', o)
         self.app.gconfig.save()
 
