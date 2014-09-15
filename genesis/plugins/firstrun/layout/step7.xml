@@ -8,5 +8,5 @@
             <p>Your setup was successful! In 5 seconds, we'll take you to your main home screen. Enjoy your new arkOS server!</p>
         </div>
     </div>
-    <completerefresh wait="5" />
+    <completerefresh location="/logout" wait="5" />
 </xml>
