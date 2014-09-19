@@ -1,0 +1,11 @@
+<xml>
+    <label size="5" text="Mailpile" />
+    <div class="well">
+    	<div id="rinfo"></div>
+    </div>
+
+    <pad id="main">
+    	<tblbtn id="launch" icon="fa fa-envelope" name="Launch Mailpile" />
+    	<tblbtn id="editsrv" icon="gen-tools" name="Edit server settings" />
+    </pad>
+</xml>

@@ -1,0 +1,16 @@
+<xml>
+    <h1 class="page-header">Mailpile Setup</h1>
+    <pad id="main">
+    	<simpleform id="frmSetup">
+    	    <formline text="Address" help="This should be the web address you want this Mailpile site to be visible on. For example, 'www.example.com'. It must be a DNS-resolvable name pointing at this server.">
+    	        <textinput name="addr" id="addr" />
+    	    </formline>
+    	    <formline text="Port" help="If you don't know what to put here, leave it at default (port 80).">
+    	        <textinput name="port" id="port" value="80" />
+    	    </formline>
+    	    <formline>
+    	        <btn onclick="form" form="frmSetup" design="primary" action="OK" text="Setup" />
+    	    </formline>
+    	</simpleform>
+    </pad>
+</xml>

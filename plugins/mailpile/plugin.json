@@ -1,0 +1,48 @@
+{
+    "name": "Mailpile BETA",
+    "type": "plugin",
+    "icon": "fa fa-envelope",
+    "description": {
+        "short": "A secure way to read, write, and organize piles and piles of email.",
+        "long": "Mailpile is a modern, fast web-mail client with user-friendly encryption and privacy features. It places great emphasis on providing a clean, elegant user interface and pleasant user experience. In particular, Mailpile aims to make it easy and convenient to receive and send PGP encrypted or signed e-mail."
+    },
+    "categories": [
+        {
+            "primary": "Communication",
+            "secondary": ["Email"]
+        }
+    ],
+    "version": "0.1",
+    "author": "arkOS",
+    "homepage": "https://arkos.io",
+    "app_author": "Mailpile",
+    "app_homepage": "https://www.mailpile.is/",
+    "logo": true,
+    "screenshots": ["screen-1.jpg", "screen-2.jpg"],
+    "services": [
+        {
+            "name": "Mailpile",
+            "type": "systemd",
+            "binary": "mailpile",
+            "ports": []
+        }
+    ],
+    "modules": ["main", "backend"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "Mailpile",
+                "package": "mailpile",
+                "binary": "mp"
+            },
+            {
+                "type": "plugin",
+                "name": "Reverse Proxy",
+                "package": "reverseproxy"
+            }
+        ]
+    },
+    "generation": 1
+}
