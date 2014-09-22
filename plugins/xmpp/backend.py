@@ -5,8 +5,9 @@ import urllib
 from genesis.api import *
 from genesis.com import *
 from genesis import apis
-from genesis.plugins.core.api import ISSLPlugin
 from genesis.utils import shell_cs
+from genesis.plugins.core.api import ISSLPlugin
+from genesis.plugins.users.backend import UsersBackend
 
 
 class XMPPConfig(Plugin):
@@ -350,6 +351,7 @@ class XMPPSSLPlugin(Plugin):
     cert_type = 'cert-key'
 
     def enable_ssl(self, cert, key):
+        UsersBackend(self.app).add_to_group("prosody", "ssl-cert")
         config = ConfManager.get().get_configurable("xmpp")
         config.load()
         config.config['ssl'] = {'certificate': cert, 'key': key}
