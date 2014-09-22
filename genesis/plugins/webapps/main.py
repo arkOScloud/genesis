@@ -85,7 +85,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
 
             update = False
             if s.version and (s.version != 'None' or (hasattr(s.sclass, 'plugin_info') and s.sclass.plugin_info.website_updates)) \
-            and s.version != s.sclass.plugin_info.version.rsplit('-', 1)[0]:
+            and (hasattr(s.sclass, 'plugin_info') and s.version != s.sclass.plugin_info.version.rsplit('-', 1)[0]):
                 update = True
 
             ui.find('main').append(
@@ -302,7 +302,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                     self.put_message('err', 'Must choose a port (default 80)')
                 elif port == self.app.gconfig.get('genesis', 'bind_port', ''):
                     self.put_message('err', 'Can\'t use the same port number as Genesis')
-                elif not vaddr:
+                elif not vaddr and (self._edit.addr != addr or self._edit.port != port):
                     self.put_message('err', 'Site must have either a different domain/subdomain or a different port')
                 elif self._edit.ssl and port == '80':
                     self.put_message('err', 'Cannot set an HTTPS site to port 80')

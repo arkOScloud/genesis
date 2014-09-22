@@ -57,7 +57,7 @@
         <formline text="Address" help="The web address(es) you want to access this app at, separated by a space. Eg. 'example.com www.example.com'. These need to be registered names, with their nameservers pointing to arkOS' public IP address. The first hostname should already be assigned to this system via Settings > Networking > Hosts.">
             <textinput name="cfgaddr" id="cfgaddr" value="localhost" />
         </formline>
-        <formline text="Port" help="If you don't know what to put here, leave it at it's default ( port 80, or 443 if you've assigned SSL to this app).">
+        <formline text="Port" help="If you don't know what to put here, leave it at it's default (port 80, or 443 if you've assigned SSL to this app).">
             <textinput name="cfgport" id="cfgport" value="80" />
         </formline>
     </dialogbox>

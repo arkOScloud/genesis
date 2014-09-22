@@ -71,8 +71,11 @@ class ArchConnConfig(LinuxIp):
                     data[parse[0]] = parse[1]
 
                 # Send options one-by-one to the configuration
-                c.devclass = data['Connection']
-                c.interface = data['Interface']
+                try:
+                    c.devclass = data['Connection']
+                    c.interface = data['Interface']
+                except KeyError:
+                    continue
                 if 'dhcp' in data['IP']:
                     c.addressing = 'dhcp'
                     c.address = None

@@ -300,7 +300,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
                 dbtype = vars.getvalue('type', '')
                 if not name or not dbtype:
                     self.put_message('err', 'Name or type not selected')
-                elif self._rootpwds[dbtype] == False:
+                elif self._rootpwds.has_key(dbtype) and self._rootpwds[dbtype] == False:
                     self.put_message('err', 'Please add a root password for this database type via the Settings tab first.')
                 else:
                     cls = self.dbops.get_interface(dbtype)
