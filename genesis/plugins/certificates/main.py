@@ -25,6 +25,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
 
     def on_session_start(self):
         self._cc = CertControl(self.app)
+        self._cfg = self.app.get_config(self._cc)
         self._gen = None
         self._tab = 0
         self._wal = []
@@ -36,10 +37,9 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
         ui = self.app.inflate('certificates:main')
         ui.find('tabs').set('active', self._tab)
 
-        cfg = self.app.get_config(CertControl(self.app))
-        ui.find('kl'+cfg.keylength).set('selected', True)
-        ui.find('kt'+cfg.keytype.lower()).set('selected', True)
-        ui.find('ciphers').set('value', cfg.ciphers)
+        ui.find('kl'+self._cfg.keylength).set('selected', True)
+        ui.find('kt'+self._cfg.keytype.lower()).set('selected', True)
+        ui.find('ciphers').set('value', self._cfg.ciphers)
 
         for s in self.certs:
             ui.find('certlist').append(
@@ -314,7 +314,8 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                             pass
                     self.statusmsg('Generating a certificate and key...')
                     try:
-                        self._cc.gencert(name, vars, self._hostname)
+                        self._cc.gencert(name, vars, self._cfg.keytype,
+                            self._cfg.keylength, self._hostname)
                         self.statusmsg('Assigning new certificate...')
                         self._cc.assign(name, lst)
                         self.put_message('success', 'Certificate successfully generated')
@@ -357,9 +358,8 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
         elif params[0] == 'frmCertSettings':
             self._tab = 1
             if vars.getvalue('action', '') == 'OK':
-                cfg = self.app.get_config(CertControl(self.app))
-                cfg.keylength = vars.getvalue('keylength', '2048')
-                cfg.keytype = vars.getvalue('keytype', 'RSA')
-                cfg.ciphers = vars.getvalue('ciphers', '')
-                cfg.save()
+                self._cfg.keylength = vars.getvalue('keylength', '2048')
+                self._cfg.keytype = vars.getvalue('keytype', 'RSA')
+                self._cfg.ciphers = vars.getvalue('ciphers', '')
+                self._cfg.save()
                 self.put_message('success', 'Settings saved successfully')

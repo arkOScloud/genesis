@@ -130,7 +130,7 @@ class CertControl(Plugin):
 		os.chown(os.path.join('/etc/ssl/private/genesis', name + '.key'), -1, gid)
 		os.chmod(os.path.join('/etc/ssl/private/genesis', name + '.key'), 0660)
 
-	def gencert(self, name, vars, hostname):
+	def gencert(self, name, vars, keytype, keylength, hostname):
 		# Make sure our folders are in place
 		if not os.path.exists('/etc/ssl/certs/genesis'):
 			os.mkdir('/etc/ssl/certs/genesis')
@@ -155,8 +155,8 @@ class CertControl(Plugin):
 
 		# Generate a key, then use it to sign a new cert
 		# We'll use 2048-bit RSA until pyOpenSSL supports ECC
-		keytype = OpenSSL.crypto.TYPE_DSA if self.app.get_config(self).keytype == 'DSA' else OpenSSL.crypto.TYPE_RSA
-		keylength = int(self.app.get_config(self).keylength)
+		keytype = OpenSSL.crypto.TYPE_DSA if keytype == 'DSA' else OpenSSL.crypto.TYPE_RSA
+		keylength = int(keylength)
 		try:
 			key = OpenSSL.crypto.PKey()
 			key.generate_key(keytype, keylength)
