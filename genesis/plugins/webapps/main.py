@@ -205,12 +205,17 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                 )
 
         if self._settings:
-            size = re.search("client_max_body_size\s*([^\s]+)[mM];", open('/etc/nginx/nginx.conf', 'r').read())
+            data = open('/etc/nginx/nginx.conf', 'r').read()
+            size = re.search("client_max_body_size\s*([^\s]+)[mM];", data)
             size = size.group(1) if size else "1"
+            snhash = re.search("server_names_hash_bucket_size\s*([^\s]+);", data)
+            snhash = snhash.group(1) if snhash else "32"
             ui.append('main',
                 UI.DialogBox(
                     UI.Formline(UI.TextInput(id="uplsize", name="uplsize", value=size), 
                         text="Max file upload size (MB)"),
+                    UI.Formline(UI.TextInput(id="snhash", name="snhash", value=snhash), 
+                        text="Server names hash bucket size"),
                     id="dlgSettings")
                 )
 
@@ -261,6 +266,7 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
         if params[0] == 'dlgSettings':
             if vars.getvalue('action', '') == 'OK':
                 size = vars.getvalue('uplsize', '10')
+                snhash = vars.getvalue('snhash', '32')
                 f = open('/etc/nginx/nginx.conf', 'r')
                 data = f.readlines()
                 f.close()
@@ -272,6 +278,14 @@ class WebAppsPlugin(apis.services.ServiceControlPlugin):
                     for x in enumerate(data):
                         if 'http {' in x[1]:
                             data.insert(x[0]+1, '\tclient_max_body_size %sM;\n' % size)
+                if 'server_names_hash_bucket_size' in ''.join(data):
+                    for x in enumerate(data):
+                        if "server_names_hash_bucket_size" in x[1]:
+                            data[x[0]] = "\tserver_names_hash_bucket_size %s;\n" % snhash
+                else:
+                    for x in enumerate(data):
+                        if 'http {' in x[1]:
+                            data.insert(x[0]+1, '\tserver_names_hash_bucket_size %s;\n' % snhash)
                 phpctl = apis.langassist(self.app).get_interface('PHP')
                 if phpctl:
                     phpctl.upload_size(size)
