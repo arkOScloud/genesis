@@ -69,13 +69,13 @@ def detect_architecture():
             k, _, v = x.partition(':')
             cpuinfo[k.strip()] = v.strip()
         # Is this a... Raspberry Pi?
-        if cpuinfo['Hardware'] in ('BCM2708', 'BCM2835'):
+        if cpuinfo.has_key('Hardware') and cpuinfo['Hardware'] in ('BCM2708', 'BCM2835'):
             btype = 'Raspberry Pi'
         # Is this a... BeagleBone Black?
-        elif 'Generic AM33XX' in cpuinfo['Hardware'] and cpuinfo['CPU part'] == '0xc08':
+        elif cpuinfo.has_key('Hardware') and 'Generic AM33XX' in cpuinfo['Hardware'] and cpuinfo['CPU part'] == '0xc08':
             btype = 'BeagleBone Black'
         # Is this a Cubieboard (series)?
-        elif cpuinfo['Hardware'] == 'sun7i' and cpuinfo['CPU part'] == '0xc07':
+        elif cpuinfo.has_key('Hardware') and cpuinfo['Hardware'] == 'sun7i' and cpuinfo['CPU part'] == '0xc07':
             meminfo = {}
             # Since both the Cubieboard2 and Cubietruck have the same processor,
             # we need to check memory size to make a good guess.

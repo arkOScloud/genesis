@@ -5,7 +5,7 @@
             <dtr header="True">
                 <dth width="1" />
                 <dth>
-                    <label text="Address" />
+                    <label text="Account Name" />
                 </dth>
                 <dth>
                     <label text="Full Name" />
@@ -24,7 +24,7 @@
             <dtr header="True">
                 <dth width="1" />
                 <dth>
-                    <label text="Address" />
+                    <label text="Account Name" />
                 </dth>
                 <dth>
                     <label text="Points to" />

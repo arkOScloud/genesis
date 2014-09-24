@@ -235,29 +235,30 @@ class WebappControl(Plugin):
 			os.unlink(pkg_path)
 
 	def remove(self, cat, site):
-		if site.sclass != '' and site.stype != 'ReverseProxy':
+		if site.sclass and site.stype != 'ReverseProxy':
 			cat.statusmsg('Preparing for removal...')
 			site.sclass.pre_remove(site)
 		cat.statusmsg('Removing website...')
-		if site.path.endswith('_site'):
-			shutil.rmtree(site.path.split('/_site')[0])
-		elif site.path.endswith('htdocs'):
-			shutil.rmtree(site.path.split('/htdocs')[0])
-		elif os.path.islink(site.path):
-			os.unlink(site.path)
-		else:
-			shutil.rmtree(site.path)
-		if hasattr(site, 'dbengine') and site.dbengine:
-			try:
-				db = apis.databases(cat.app)
-				dbase = db.get_interface(site.dbengine)
-				conn = db.get_dbconn(site.dbengine)
-				dbase.remove(site.dbname, conn)
-				dbase.usermod(site.dbuser, 'del', '', conn)
-			except Exception, e:
-				cat.put_message('warn', 'Databases could not be removed - maybe they are gone already? Please check manually.')
+		if site.stype != 'ReverseProxy':
+			if site.path.endswith('_site'):
+				shutil.rmtree(site.path.split('/_site')[0])
+			elif site.path.endswith('htdocs'):
+				shutil.rmtree(site.path.split('/htdocs')[0])
+			elif os.path.islink(site.path):
+				os.unlink(site.path)
+			else:
+				shutil.rmtree(site.path)
+			if hasattr(site, 'dbengine') and site.dbengine:
+				try:
+					db = apis.databases(cat.app)
+					dbase = db.get_interface(site.dbengine)
+					conn = db.get_dbconn(site.dbengine)
+					dbase.remove(site.dbname, conn)
+					dbase.usermod(site.dbuser, 'del', '', conn)
+				except Exception, e:
+					cat.put_message('warn', 'Databases could not be removed - maybe they are gone already? Please check manually.')
 		self.nginx_remove(site)
-		if site.sclass != '' and site.stype != 'ReverseProxy':
+		if site.sclass and site.stype != 'ReverseProxy':
 			cat.statusmsg('Cleaning up...')
 			apis.poicontrol(self.app).drop_by_path(site.path)
 			site.sclass.post_remove(site)
