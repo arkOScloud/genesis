@@ -14,9 +14,9 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
     def on_init(self):
         self.dbops = apis.databases(self.app)
         self.dbs = sorted(self.dbops.get_databases(), 
-            key=lambda db: db['name'])
+            key=lambda db: (db['type'], db['name']))
         self.users = sorted(self.dbops.get_users(), 
-            key=lambda db: db['name'])
+            key=lambda db: (db['type'], db['name']))
         self.dbtypes = sorted(self.dbops.get_dbtypes(), 
             key=lambda db: db[0])
         for dbtype in self.dbtypes:
@@ -177,7 +177,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
             ui.remove('dlgAdd')
 
         if self._info:
-            ui.find('dlgInfo').set('miscbtnid', 'drop/' + str(self.dbs.index(d)))
+            ui.find('dlgInfo').set('miscbtnid', 'drop/' + str(self.dbs.index(self._info)))
             ui.find('idbname').set('text', self._info['name'])
             ui.find('idbtype').set('text', self._info['type'])
             cls = self.dbops.get_interface(self._info['type'])
@@ -209,9 +209,9 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
             iface = self.dbops.get_interface(self._chmod['type'])
             plist = iface.chperm('', self._chmod['name'], 'check')
             dblist = [UI.SelectOption(text=x['name'], value=x['name'])
-                    for x in iface.get_dbs()]
+                for x in iface.get_dbs()]
             ui.find('permlist').set('value', plist)
-            ui.appendAll('dblist', *dblist)
+            ui.appendAll('pdblist', *dblist)
         else:
             ui.remove('dlgChmod')
 
@@ -240,10 +240,10 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
             if self.dbtypes == []:
                 self.put_message('err', 'No database engines installed. Check the Applications tab to find some')
             else:
-                self._add = len(self.dbs)
+                self._add = True
             self._tab = 0
         if params[0] == 'adduser':
-            self._useradd = len(self.users)
+            self._useradd = True
             self._tab = 1
         if params[0] == 'info':
             self._info = self.dbs[int(params[1])]
@@ -254,7 +254,11 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
             self._output = None
             self._tab = 0
         if params[0] == 'chmod':
-            self._chmod = self.users[int(params[1])]
+            u = self.users[int(params[1])]
+            if self.dbops.get_interface(u['type']).get_dbs():
+                self._chmod = u
+            else:
+                self.put_message("err", "No applicable databases found for this engine")
             self._tab = 1
         if params[0] == 'uplsql':
             self._import = self._exec
@@ -364,7 +368,7 @@ class DatabasesPlugin(apis.services.ServiceControlPlugin, URLHandler):
         elif params[0] == 'dlgChmod':
             if vars.getvalue('action', '') == 'OK':
                 action = vars.getvalue('chperm', '')
-                dbname = vars.getvalue('dblist', '')
+                dbname = vars.getvalue('pdblist', '')
                 try:
                     iface = self.dbops.get_interface(self._chmod['type'])
                     iface.chperm(dbname, self._chmod['name'], action)

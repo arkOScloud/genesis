@@ -41,8 +41,8 @@
             <div style="clear:both;"/>
         </formline>
         <formline text="On database">
-            <select name="dblist" id="dblist">
-            </select>
+            <selectinput name="pdblist" id="pdblist">
+            </selectinput>
         </formline>
     </dialogbox>
 
