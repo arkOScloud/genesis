@@ -14,6 +14,17 @@ from genesis.plugins.users.backend import UsersBackend
 from genesis.plugins.webapps.backend import WebappControl
 
 
+class Certificate(object):
+    name = ""
+    domain = ""
+    keytype = ""
+    keylength = 0
+    sha1 = ""
+    md5 = ""
+    assign = []
+    expires = ""
+
+
 class CertControl(Plugin):
 	text = "Certificates"
 	iconfont = 'gen-certificate'
@@ -47,21 +58,23 @@ class CertControl(Plugin):
 			elif ssl:
 				assigns[ssl] = [{'type': 'genesis'}]
 		for x in glob.glob('/etc/ssl/certs/genesis/*.crt'):
-			h, m = hashlib.sha1(), hashlib.md5()
 			name = os.path.splitext(os.path.basename(x))[0]
+			cert = Certificate()
+			cert.name = name
+			h, m = hashlib.sha1(), hashlib.md5()
 			c = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, open(x, 'r').read())
 			k = OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, open(os.path.join('/etc/ssl/private/genesis', name+'.key'), 'r').read())
 			h.update(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_ASN1, c))
 			m.update(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_ASN1, c))
 			h, m = h.hexdigest(), m.hexdigest()
-			certs.append({'name': name,
-				'expiry': c.get_notAfter(),
-				'domain': c.get_subject().CN,
-				'keytype': 'RSA' if k.type() == OpenSSL.crypto.TYPE_RSA else ('DSA' if k.type() == OpenSSL.crypto.TYPE_DSA else 'Unknown'),
-				'keylength': str(int(k.bits())),
-				'sha1': ':'.join([h[i:i+2].upper() for i in range(0,len(h), 2)]),
-				'md5': ':'.join([m[i:i+2].upper() for i in range(0,len(m), 2)]),
-				'assign': assigns[name] if assigns.has_key(name) else []})
+			cert.expiry = c.get_notAfter()
+			cert.domain = c.get_subject().CN
+			cert.keytype = "RSA" if k.type() == OpenSSL.crypto.TYPE_RSA else ("DSA" if k.type() == OpenSSL.crypto.TYPE_DSA else "Unknown")
+			cert.keylength = int(k.bits())
+			cert.sha1 = ":".join([h[i:i+2].upper() for i in range(0,len(h), 2)])
+			cert.md5 = ":".join([m[i:i+2].upper() for i in range(0,len(m), 2)])
+			cert.assign = assigns[name] if assigns.has_key(name) else []
+			certs.append(cert)
 		return certs
 
 	def get_cas(self):
@@ -277,7 +290,7 @@ class CertControl(Plugin):
 	def remove(self, cert):
 		# Remove cert, key and control file for associated name
 		wal, pal = self.get_ssl_capable()
-		for y in cert['assign']:
+		for y in cert.assign:
 			for x in wal:
 				if y['type'] == 'website' and y['name'] == x.name:
 					WebappControl(self.app).ssl_disable(x)
@@ -293,10 +306,10 @@ class CertControl(Plugin):
 				self.app.gconfig.set('genesis', 'ssl', '0')
 				self.app.gconfig.save()
 		try:
-			os.unlink('/etc/ssl/certs/genesis/'+cert['name']+'.crt')
+			os.unlink('/etc/ssl/certs/genesis/'+cert.name+'.crt')
 		except:
 			pass
 		try:
-			os.unlink('/etc/ssl/private/genesis/'+cert['name']+'.key')
+			os.unlink('/etc/ssl/private/genesis/'+cert.name+'.key')
 		except:
 			pass

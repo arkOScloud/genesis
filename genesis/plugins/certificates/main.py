@@ -18,7 +18,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
 
     def on_init(self):
         self.certs = sorted(self._cc.get_certs(),
-            key=lambda x: x['name'])
+            key=lambda x: x.name)
         self.cas = sorted(self._cc.get_cas(),
             key=lambda x: x['name'])
         self._hostname = self.app.get_backend(IHostnameManager).gethostname().lower()
@@ -46,8 +46,8 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                 UI.TblBtn(
                     id='info/'+str(self.certs.index(s)),
                     icon='gen-certificate',
-                    name=s['name'],
-                    subtext=s['keylength']+'-bit '+s['keytype']
+                    name=s.name,
+                    subtext="%s-bit %s" % (s.keylength, s.keytype)
                     )
                 )
         ui.find('certlist').append(
@@ -86,7 +86,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             self._wal, self._pal = self._cc.get_ssl_capable()
             alist, wlist, plist = [], [], []
             for cert in self.certs:
-                for i in cert['assign']:
+                for i in cert.assign:
                     alist.append(i)
             if not {'type': 'genesis'} in alist:
                 ui.find('certassign').append(
@@ -117,23 +117,22 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
 
         if self._cinfo:
             self._wal, self._pal = self._cc.get_ssl_capable()
-            ui.find('certname').set('text', self._cinfo['name'])
-            ui.find('domain').set('text', self._cinfo['domain'])
-            ui.find('ikeytype').set('text', self._cinfo['keylength']+'-bit '+self._cinfo['keytype'])
-            exp = SystemTime.convert(self._cinfo['expiry'], '%Y%m%d%H%M%SZ', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
+            ui.find('certname').set('text', self._cinfo.name)
+            ui.find('domain').set('text', self._cinfo.domain)
+            ui.find('ikeytype').set('text', '%s-bit %s' % (self._cinfo.keylength, self._cinfo.keytype))
+            exp = SystemTime.convert(self._cinfo.expiry, '%Y%m%d%H%M%SZ', self.app.gconfig.get('genesis', 'dformat', '%d %b %Y'))
             ui.find('expires').set('text', exp)
-            ui.find('sha1').set('text', self._cinfo['sha1'])
-            ui.find('md5').set('text', self._cinfo['md5'])
-            ui.find('dlgInfo').set('miscbtnid', 'del/' + str(self.certs.index(self._cinfo)))
+            ui.find('sha1').set('text', self._cinfo.sha1)
+            ui.find('md5').set('text', self._cinfo.md5)
 
             alist = []
             for cert in self.certs:
                 if cert != self._cinfo:
-                    for i in cert['assign']:
+                    for i in cert.assign:
                         alist.append(i)
 
             if not 'genesis' in [x['type'] for x in alist]:
-                if 'genesis' in [x['type'] for x in self._cinfo['assign']]:
+                if 'genesis' in [x['type'] for x in self._cinfo.assign]:
                     ic, ict, show = 'gen-checkmark-circle', 'Assigned', 'd'
                 else:
                     ic, ict, show = None, None, 'e'
@@ -144,9 +143,9 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                         UI.Label(text='Genesis'),
                         UI.HContainer(
                             (UI.TipIcon(iconfont='gen-checkmark-circle',
-                                text='Assign', id='ac/'+self._cinfo['name']+'/g') if show == 'e' else None),
+                                text='Assign', id='ac/'+self._cinfo.name+'/g') if show == 'e' else None),
                             (UI.TipIcon(iconfont='gen-close',
-                                text='Unassign', id='uc/'+self._cinfo['name']+'/g',
+                                text='Unassign', id='uc/'+self._cinfo.name+'/g',
                                 warning=('Are you sure you wish to unassign this certificate? '
                                     'SSL on this service will be disabled, and you will need to '
                                     'reload Genesis for changes to take place.')) if show == 'd' else None),
@@ -155,7 +154,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                 )
             for x in self._wal:
                 if not x.name in [y['name'] for y in alist if y['type'] == 'website']:
-                    if x.name in [y['name'] for y in self._cinfo['assign'] if y['type'] == 'website']:
+                    if x.name in [y['name'] for y in self._cinfo.assign if y['type'] == 'website']:
                         ic, ict, show = 'gen-checkmark-circle', 'Assigned', 'd'
                     else:
                         ic, ict, show = None, None, 'e'
@@ -166,9 +165,9 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                             UI.Label(text=x.name),
                             UI.HContainer(
                                 (UI.TipIcon(iconfont='gen-checkmark-circle',
-                                    text='Assign', id='ac/'+self._cinfo['name']+'/w/'+str(self._wal.index(x))) if show == 'e' else None),
+                                    text='Assign', id='ac/'+self._cinfo.name+'/w/'+str(self._wal.index(x))) if show == 'e' else None),
                                 (UI.TipIcon(iconfont='gen-close',
-                                    text='Unassign', id='uc/'+self._cinfo['name']+'/w/'+str(self._wal.index(x)),
+                                    text='Unassign', id='uc/'+self._cinfo.name+'/w/'+str(self._wal.index(x)),
                                     warning=('Are you sure you wish to unassign this certificate? '
                                         'SSL on this service will be disabled.')) if show == 'd' else None),
                             ),
@@ -176,7 +175,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                     )
             for x in self._pal:
                 if not x.pid in [y['id'] for y in alist if y['type'] == 'plugin']:
-                    if x.pid in [y['id'] for y in self._cinfo['assign'] if y['type'] == 'plugin']:
+                    if x.pid in [y['id'] for y in self._cinfo.assign if y['type'] == 'plugin']:
                         ic, ict, show = 'gen-checkmark-circle', 'Assigned', 'd'
                     else:
                         ic, ict, show = None, None, 'e'
@@ -187,9 +186,9 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                             UI.Label(text=x.text),
                             UI.HContainer(
                                 (UI.TipIcon(iconfont='gen-checkmark-circle',
-                                    text='Assign', id='ac/'+self._cinfo['name']+'/p/'+str(self._pal.index(x))) if show == 'e' else None),
+                                    text='Assign', id='ac/'+self._cinfo.name+'/p/'+str(self._pal.index(x))) if show == 'e' else None),
                                 (UI.TipIcon(iconfont='gen-close',
-                                    text='Unassign', id='uc/'+self._cinfo['name']+'/p/'+str(self._pal.index(x)),
+                                    text='Unassign', id='uc/'+self._cinfo.name+'/p/'+str(self._pal.index(x)),
                                     warning=('Are you sure you wish to unassign this certificate? '
                                         'SSL on this service will be disabled.')) if show == 'd' else None),
                             ),
@@ -232,35 +231,35 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             self._gen = True
         elif params[0] == 'del':
             self._tab = 0
+            self._cc.remove(self._cinfo)
             self._cinfo = None
-            self._cc.remove(self.certs[int(params[1])])
             self.put_message('success', 'Certificate successfully deleted')
         elif params[0] == 'ac' and params[2] == 'p':
             self._tab = 0
-            self._cc.assign(self._cinfo['name'], 
+            self._cc.assign(self._cinfo.name, 
                 [('plugin', self._pal[int(params[3])])])
-            self.put_message('success', '%s added to %s plugin' % (self._cinfo['name'], self._pal[int(params[3])].text))
+            self.put_message('success', '%s added to %s plugin' % (self._cinfo.name, self._pal[int(params[3])].text))
             self._cinfo = None
         elif params[0] == 'ac' and params[2] == 'w':
             self._tab = 0
-            self._cc.assign(self._cinfo['name'],
+            self._cc.assign(self._cinfo.name,
                 [('website', self._wal[int(params[3])])])
-            self.put_message('success', '%s added to %s website' % (self._cinfo['name'], self._wal[int(params[3])].name))
+            self.put_message('success', '%s added to %s website' % (self._cinfo.name, self._wal[int(params[3])].name))
             self._cinfo = None
         elif params[0] == 'ac' and params[2] == 'g':
             self._tab = 0
-            self._cc.assign(self._cinfo['name'], [[('genesis')]])
-            self.put_message('success', '%s serving as Genesis certificate. Restart Genesis for changes to take effect' % self._cinfo['name'])
+            self._cc.assign(self._cinfo.name, [[('genesis')]])
+            self.put_message('success', '%s serving as Genesis certificate. Restart Genesis for changes to take effect' % self._cinfo.name)
             self._cinfo = None
         elif params[0] == 'uc' and params[2] == 'p':
             self._tab = 0
             self._cc.unassign(('plugin', self._pal[int(params[3])]))
-            self.put_message('success', '%s removed from %s plugin, and SSL disabled.' % (self._cinfo['name'], self._pal[int(params[3])].text))
+            self.put_message('success', '%s removed from %s plugin, and SSL disabled.' % (self._cinfo.name, self._pal[int(params[3])].text))
             self._cinfo = None
         elif params[0] == 'uc' and params[2] == 'w':
             self._tab = 0
             self._cc.unassign(('website', self._wal[int(params[3])]))
-            self.put_message('success', '%s removed from %s website, and SSL disabled.' % (self._cinfo['name'], self._wal[int(params[3])].name))
+            self.put_message('success', '%s removed from %s website, and SSL disabled.' % (self._cinfo.name, self._wal[int(params[3])].name))
             self._cinfo = None
         elif params[0] == 'uc' and params[2] == 'g':
             self._tab = 0
@@ -292,7 +291,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                     self.put_message('err', 'Certificate name is mandatory')
                 elif re.search('\.|-|`|\\\\|\/|[ ]', name):
                     self.put_message('err', 'Certificate name must not contain spaces, dots, dashes or special characters')
-                elif name in [x['name'] for x in self.certs]:
+                elif name in [x.name for x in self.certs]:
                     self.put_message('err', 'You already have a certificate with that name.')
                 elif len(vars.getvalue('certcountry', '')) != 2:
                     self.put_message('err', 'The country field must be a two-letter abbreviation')
@@ -341,7 +340,7 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
                     self.put_message('err', 'Please select a key file')
                 elif not vars.getvalue('certname', ''):
                     self.put_message('err', 'Must choose a certificate name')
-                elif vars.getvalue('certname', '') in [x['name'] for x in self.certs]:
+                elif vars.getvalue('certname', '') in [x.name for x in self.certs]:
                     self.put_message('err', 'You already have a certificate with that name.')
                 elif re.search('\.|-|`|\\\\|\/|[ ]', vars.getvalue('certname')):
                     self.put_message('err', 'Certificate name must not contain spaces, dots, dashes or special characters')
