@@ -4,7 +4,7 @@ from genesis.utils import hashpw
 from genesis.plugins.recovery.api import *
 from genesis.plugins.core.updater import UpdateCheck
 from genesis import apis
-from genesis.utils import shell_cs
+from genesis.utils import shell
 
 
 class ConfigPlugin(CategoryPlugin):
@@ -113,7 +113,7 @@ class ConfigPlugin(CategoryPlugin):
         if params[0] == 'dlgUpdate':
             if vars.getvalue('action', '') == 'OK':
                 shell('pacman -S --noconfirm genesis')
-                self.put_message('err', 'Update complete. Please reboot your system.')
+                self.put_message('info', 'Update complete. Please reboot your system.')
             self._update = None
 
 
