@@ -13,7 +13,7 @@ makedepends=('python2' 'python2-distribute' 'python2-passlib')
 provides=('genesis')
 conflicts=('genesis-git')
 source=("$pkgname-$pkgver.tar.gz"::"http://pkg.arkos.io/resources/$pkgname-$pkgver.tar.gz")
-md5sums=('eabbd27af165de4b09f6d05274a22100')
+md5sums=('ca45453029a5c305972a9956f379ae46')
 backup=('etc/genesis/genesis.conf' 'etc/genesis/users/admin.conf')
 
 build() {
