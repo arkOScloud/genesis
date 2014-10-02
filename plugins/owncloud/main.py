@@ -28,7 +28,7 @@ class ownCloud(Plugin):
             nginx.Key('log_not_found', 'off'),
             nginx.Key('access_log', 'off')
             ),
-        nginx.Location('~ ^/(data|config|\.ht|db_structure\.xml|README)',
+        nginx.Location('~ ^/(?:\.htaccess|data|config|db_structure\.xml|README)',
             nginx.Key('deny', 'all')
             ),
         nginx.Location('/',
@@ -39,15 +39,15 @@ class ownCloud(Plugin):
             nginx.Key('rewrite', '^(/core/doc/[^\/]+/)$ $1/index.html'),
             nginx.Key('try_files', '$uri $uri/ index.php')
             ),
-        nginx.Location('~ ^(.+?\.php)(/.*)?$',
-            nginx.Key('try_files', '$1 = 404'),
+        nginx.Location('~ \.php(?:$|/)',
+            nginx.Key('fastcgi_split_path_info', '^(.+\.php)(/.+)$'),
             nginx.Key('include', 'fastcgi_params'),
-            nginx.Key('fastcgi_param', 'SCRIPT_FILENAME $document_root$1'),
-            nginx.Key('fastcgi_param', 'PATH_INFO $2'),
+            nginx.Key('fastcgi_param', 'SCRIPT_FILENAME $document_root$fastcgi_script_name'),
+            nginx.Key('fastcgi_param', 'PATH_INFO $fastcgi_path_info'),
             nginx.Key('fastcgi_pass', 'unix:/run/php-fpm/php-fpm.sock'),
             nginx.Key('fastcgi_read_timeout', '900s')
             ),
-        nginx.Location('~* ^.+\.(jpg|jpeg|gif|bmp|ico|png|css|js|swf)$',
+        nginx.Location('~* \.(?:jpg|jpeg|gif|bmp|ico|png|css|js|swf)$',
             nginx.Key('expires', '30d'),
             nginx.Key('access_log', 'off')
             )

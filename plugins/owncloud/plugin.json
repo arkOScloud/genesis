@@ -16,7 +16,7 @@
             "secondary": ["Documents", "Music", "Photos", "Calendar", "Contacts"]
         }
     ],
-    "version": "7.0.2-1",
+    "version": "7.0.2-2",
     "author": "arkOS",
     "homepage": "http://arkos.io",
     "app_author": "ownCloud",
