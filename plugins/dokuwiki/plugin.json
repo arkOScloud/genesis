@@ -53,17 +53,6 @@
                 "name": "PHP GD",
                 "package": "php-gd",
                 "binary": null
-            },
-            {
-                "type": "app",
-                "name": "PCRE",
-                "package": "pcre",
-                "binary": null
-            },
-            {
-                "type": "plugin",
-                "name": "PHP",
-                "package": "php"
             }
         ]
     },

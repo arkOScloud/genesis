@@ -9,9 +9,27 @@ class DokuWiki(Plugin):
     icon = 'gen-book'
 
     addtoblock = [
-        nginx.Location('/(data|conf|bin|inc)/',
+        nginx.Location('/',
+            nginx.Key('index', 'doku.php'),
+            nginx.Key('try_files', '$uri $uri/ @dokuwiki'),
+        ),
+        nginx.Location('~ /(data|conf|bin|inc)/',
             nginx.Key('deny', 'all')
-        )
+        ),
+        nginx.Location(r'~ /\.ht',
+            nginx.Key('deny', 'all')
+        ),
+        nginx.Location('@dokuwiki',
+            nginx.Key('rewrite', '^/_media/(.*) /lib/exe/fetch.php?media=$1 last'),
+            nginx.Key('rewrite', '^/_detail/(.*) /lib/exe/detail.php?media=$1 last'),
+            nginx.Key('rewrite', '^/_export/([^/]+)/(.*) /doku.php?do=export_$1&id=$2 last'),
+            nginx.Key('rewrite', '^/(.*) /doku.php?id=$1 last'),
+        ),
+        nginx.Location(r'~ \.php$',
+            nginx.Key('include', 'fastcgi_params'),
+            nginx.Key('fastcgi_param', 'SCRIPT_FILENAME $document_root$fastcgi_script_name'),
+            nginx.Key('fastcgi_pass', 'unix:/tmp/phpcgi.socket'),
+        ),
     ]
 
     def pre_install(self, name, vars):
