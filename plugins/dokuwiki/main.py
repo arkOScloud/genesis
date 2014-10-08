@@ -28,7 +28,7 @@ class DokuWiki(Plugin):
         nginx.Location(r'~ \.php$',
             nginx.Key('include', 'fastcgi_params'),
             nginx.Key('fastcgi_param', 'SCRIPT_FILENAME $document_root$fastcgi_script_name'),
-            nginx.Key('fastcgi_pass', 'unix:/tmp/phpcgi.socket'),
+            nginx.Key('fastcgi_pass', 'unix:/run/php-fpm/php-fpm.sock'),
         ),
     ]
 

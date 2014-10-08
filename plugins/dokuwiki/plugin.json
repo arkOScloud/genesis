@@ -50,8 +50,14 @@
             },
             {
                 "type": "app",
-                "name": "PHP GD",
+                "name": "PHP GD Image Processing",
                 "package": "php-gd",
+                "binary": null
+            },
+            {
+                "type": "app",
+                "name": "PHP xCache",
+                "package": "php-xcache",
                 "binary": null
             }
         ]
