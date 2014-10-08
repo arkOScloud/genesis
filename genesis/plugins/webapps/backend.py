@@ -45,6 +45,8 @@ class WebappControl(Plugin):
 			ending = ''
 		elif wa.dpath.endswith('.tar.gz'):
 			ending = '.tar.gz'
+		elif wa.dpath.endswith('.tgz'):
+			ending = '.tgz'
 		elif wa.dpath.endswith('.tar.bz2'):
 			ending = '.tar.bz2'
 		elif wa.dpath.endswith('.zip'):
@@ -96,9 +98,9 @@ class WebappControl(Plugin):
 			except Exception, e:
 				raise InstallError('Couldn\'t download - %s' % str(e))
 
-			if ending in ['.tar.gz', '.tar.bz2']:
+			if ending in ['.tar.gz', '.tgz', '.tar.bz2']:
 				extract_cmd = 'tar '
-				extract_cmd += 'xzf' if ending is '.tar.gz' else 'xjf'
+				extract_cmd += 'xzf' if ending in ['.tar.gz', '.tgz'] else 'xjf'
 				extract_cmd += ' /tmp/%s -C %s --strip 1' % (name+ending, target_path)
 			else:
 				extract_cmd = 'unzip -d %s /tmp/%s' % (target_path, name+ending)
@@ -201,6 +203,8 @@ class WebappControl(Plugin):
 			ending = ''
 		elif wa.dpath.endswith('.tar.gz'):
 			ending = '.tar.gz'
+		elif wa.dpath.endswith('.tgz'):
+			ending = '.tgz'
 		elif wa.dpath.endswith('.tar.bz2'):
 			ending = '.tar.bz2'
 		elif wa.dpath.endswith('.zip'):
