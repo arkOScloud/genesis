@@ -12,7 +12,6 @@ class DokuWiki(Plugin):
 
     addtoblock = [
         nginx.Location('/',
-            nginx.Key('index', 'doku.php'),
             nginx.Key('try_files', '$uri $uri/ @dokuwiki'),
         ),
         nginx.Location('~ /(data|conf|bin|inc)/',
@@ -38,9 +37,11 @@ class DokuWiki(Plugin):
         pass
 
     def post_install(self, name, path, vars, dbinfo={}):
+        index_php = os.path.join(path, 'index.php')
+        os.remove(index_php)
+        with open(index_php, "w") as f:
+            f.write(switching_index)  # see below
         shell('chown -R http ' + path)
-        # TODO: put_message('info', 'Please go to
-        # TODO: http://YOURADDRESS/install.php to configure DokuWiki.')
 
     def pre_remove(self, site):
         pass
@@ -75,3 +76,46 @@ class DokuWiki(Plugin):
     def update(self, path, pkg, ver):
         pass
         # TODO update
+
+
+switching_index = """
+<?php
+/**
+ * Forwarder to install.php or doku.php
+ *
+ * In DokuWiki this file originally contains only of
+ * 'header("Location: doku.php");'. For more simplicity, we forward the user to
+ * the install script if a fresh installation is found.
+ *
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author     Heiner Tholen <demo01@heinertholen.com>
+ */
+
+if(!defined('DOKU_INC')) define('DOKU_INC',dirname(__FILE__).'/');
+if(!defined('DOKU_LOCAL')) define('DOKU_LOCAL',DOKU_INC.'conf/');
+
+function check_configs(){
+    $ok = true;
+
+    $config_files = array(
+        'local' => DOKU_LOCAL.'local.php',
+        'users' => DOKU_LOCAL.'users.auth.php',
+        'auth'  => DOKU_LOCAL.'acl.auth.php'
+    );
+
+    // configs shouldn't exist
+    foreach ($config_files as $file) {
+        if (@file_exists($file) && filesize($file)) {
+            $ok      = false;
+        }
+    }
+    return $ok;
+}
+
+
+if (check_configs())
+    header("Location: install.php");
+else
+    header("Location: doku.php");
+
+"""
