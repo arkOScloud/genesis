@@ -31,12 +31,9 @@ class Ghost(Plugin):
         nodectl = apis.langassist(self.app).get_interface('NodeJS')
         users = UsersBackend(self.app)
 
-        if not os.path.exists('/usr/bin/python') and os.path.exists('/usr/bin/python'):
-            os.symlink('/usr/bin/python2', '/usr/bin/python')
-
         d = json.loads(open(os.path.join(path, 'package.json'), 'r').read())
         del d['dependencies']['bcryptjs']
-        d['dependencies']['bcrypt'] = '0.7.8'
+        d['dependencies']['bcrypt'] = '0.8'
         open(os.path.join(path, 'package.json'), 'w').write(json.dumps(d))
         d = open(os.path.join(path, 'core/server/models/user.js'), 'r').read()
         d = d.replace('bcryptjs', 'bcrypt')
