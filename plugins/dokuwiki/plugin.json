@@ -1,0 +1,72 @@
+{
+    "name": "DokuWiki",
+    "type": "webapp",
+    "icon": "gen-book",
+    "description": {
+        "short": "Collaborative Documentation",
+        "long": "DokuWiki is a simple to use and highly versatile Open Source wiki software that doesn't require a database. It is loved by users for its clean and readable syntax."
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["Collaboration", "Writing"]
+        }
+    ],
+    "version": "0.1",
+    "author": "Heiner",
+    "homepage": "https://github.com/heinzK1X",
+    "app_author": "AOE – the open web company",
+    "app_homepage": "https://www.dokuwiki.org/",
+    "logo": true,
+    "screenshots": [],
+    "services": [
+        {
+            "name": "PHP FastCGI",
+            "binary": "php-fpm",
+            "ports": []
+        }
+    ],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            },
+            {
+                "type": "app",
+                "name": "php",
+                "package": "php",
+                "binary": null
+            },
+            {
+                "type": "app",
+                "name": "PHP FastCGI",
+                "package": "php-fpm",
+                "binary": "php-fpm"
+            },
+            {
+                "type": "app",
+                "name": "PHP GD Image Processing",
+                "package": "php-gd",
+                "binary": null
+            },
+            {
+                "type": "app",
+                "name": "PHP xCache",
+                "package": "php-xcache",
+                "binary": null
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "DokuWiki",
+    "website_updates": true,
+    "download_url": "http://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz",
+    "database_engines": [],
+    "uses_php": true,
+    "uses_ssl": true
+}
