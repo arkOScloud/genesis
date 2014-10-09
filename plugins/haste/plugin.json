@@ -1,0 +1,47 @@
+{
+    "name": "Haste",
+    "type": "webapp",
+    "icon": "gen-pencil",
+    "description": {
+        "short": "Open source pastebin",
+        "long": "Haste is an open-source pastebin software written in node.js, which is easily installable in any network. It can be backed by either redis or filesystem, and has a very easy adapter interface for other stores. A publicly available version can be found at hastebin.com"
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["Collaboration", "Writing"]
+        }
+    ],
+    "version": "0.1",
+    "author": "arkOS",
+    "homepage": "http://arkos.io",
+    "app_author": "John Crepezzi",
+    "app_homepage": "http://hastebin.com/",
+    "logo": false,
+    "screenshots": [],
+    "services": [],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            },
+            {
+                "type": "plugin",
+                "name": "NodeJS",
+                "package": "nodejs"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "Haste",
+    "website_updates": false,
+    "download_url": "https://github.com/seejohnrun/haste-server.git",
+    "database_engines": [],
+    "uses_php": false,
+    "uses_ssl": true
+}
