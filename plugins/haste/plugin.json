@@ -12,7 +12,7 @@
             "secondary": ["Collaboration", "Writing"]
         }
     ],
-    "version": "0.1",
+    "version": "0.2",
     "author": "arkOS",
     "homepage": "http://arkos.io",
     "app_author": "John Crepezzi",
@@ -29,6 +29,12 @@
                 "name": "nginx",
                 "package": "nginx",
                 "binary": "nginx"
+            },
+            {
+                "type": "app",
+                "name": "Git",
+                "package": "git",
+                "binary": "git"
             },
             {
                 "type": "plugin",
