@@ -15,30 +15,28 @@ class Lychee(Plugin):
     implements(apis.webapps.IWebapp)
 
     addtoblock = [
-        nginx.Location('= /favicon.ico',
-                       nginx.Key('log_not_found', 'off'),
-                       nginx.Key('access_log', 'off')
-                       ),
-        nginx.Location('= /robots.txt',
-                       nginx.Key('allow', 'all'),
-                       nginx.Key('log_not_found', 'off'),
-                       nginx.Key('access_log', 'off')
-                       ),
-        nginx.Location('/',
-                       nginx.Key('try_files', '$uri $uri/ /index.php?$args')
-                       ),
-        nginx.Location('~ ^/(?:\.htaccess|data|config)',
-                       nginx.Key('deny', 'all')
-                       ),
-        nginx.Location('~ \.php(?:$|/)',
-                       nginx.Key('fastcgi_pass', 'unix:/run/php-fpm/php-fpm.sock'),
-                       nginx.Key('fastcgi_read_timeout', '900s')
-                       ),
-        nginx.Location('~* \.(js|css|png|jpg|jpeg|gif|ico)$',
-                       nginx.Key('expires', 'max'),
-                       nginx.Key('log_not_found', 'off')
-                       )
-    ]
+		nginx.Location('= /favicon.ico',
+			nginx.Key('log_not_found', 'off'),
+			nginx.Key('access_log', 'off')
+			),
+		nginx.Location('= /robots.txt',
+			nginx.Key('allow', 'all'),
+			nginx.Key('log_not_found', 'off'),
+			nginx.Key('access_log', 'off')
+			),
+		nginx.Location('/',
+			nginx.Key('try_files', '$uri $uri/ /index.php?$args')
+			),
+		nginx.Location('~ \.php$',
+			nginx.Key('fastcgi_pass', 'unix:/run/php-fpm/php-fpm.sock'),
+			nginx.Key('fastcgi_index', 'index.php'),
+			nginx.Key('include', 'fastcgi.conf')
+			),
+		nginx.Location('~* \.(js|css|png|jpg|jpeg|gif|ico)$',
+			nginx.Key('expires', 'max'),
+			nginx.Key('log_not_found', 'off')
+			)
+		]
 
     def pre_install(self, name, vars):
         pass
@@ -52,7 +50,7 @@ class Lychee(Plugin):
             '<?php\n'
             '   if(!defined(\'LYCHEE\')) exit(\'Error: Direct access is allowed!\');\n'
             '   $dbHost = \'localhost\';\n'
-            '   $dbuser = \'' + dbinfo['user'] + '\';\n'
+            '   $dbUser = \'' + dbinfo['user'] + '\';\n'
             '   $dbPassword = \'' + dbinfo['passwd'] + '\';\n'
             '   $dbName = \'' + dbinfo['name'] + '\';\n'
             '   $dbTablePrefix = \'\';\n'
@@ -62,6 +60,9 @@ class Lychee(Plugin):
 
         # Make sure that the correct PHP settings are enabled
         phpctl.enable_mod('mysql', 'mysqli', 'gd', 'zip', 'exif', 'json', 'mbstring')
+
+	# Rename lychee index.html to index.php to make it work with our default nginx config
+	shell('mv ' + path + '/index.html ' + path + '/index.php')
 
         # Finally, make sure that permissions are set so that Lychee
         # can make adjustments and save plugins when need be.

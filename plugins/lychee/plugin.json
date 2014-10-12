@@ -18,7 +18,7 @@
     "app_author": "electerious",
     "app_homepage": "http://lychee.electerious.com/",
     "logo": false,
-    "screenshots": [],
+    "screenshots": ["screen-1.png"],
     "services": [
         {
             "name": "MariaDB",
