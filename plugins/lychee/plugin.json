@@ -3,7 +3,7 @@
     "type": "webapp",
     "icon": "fa fa-photo",
     "description": {
-        "short": "Photo-management-system",
+        "short": "Photo management system",
         "long": "Lychee is an easy to use and great looking photo-management-system you can run on your server, to manage and share photos."
     },
     "categories": [
@@ -12,13 +12,13 @@
             "secondary": ["Websites", "CMS"]
         }
     ],
-    "version": "2.6.3",
+    "version": "2.6.3-1",
     "author": "knitatoms",
     "homepage": "https://knitatoms.net",
     "app_author": "electerious",
     "app_homepage": "http://lychee.electerious.com/",
     "logo": false,
-    "screenshots": ["screen-1.png"],
+    "screenshots": ["screen-1.jpg"],
     "services": [
         {
             "name": "MariaDB",
@@ -37,27 +37,9 @@
         "any": [
             {
                 "type": "app",
-                "name": "MariaDB",
-                "package": "mariadb",
-                "binary": "mysqld"
-            },
-            {
-                "type": "app",
                 "name": "nginx",
                 "package": "nginx",
                 "binary": "nginx"
-            },
-            {
-                "type": "app",
-                "name": "php",
-                "package": "php",
-                "binary": null
-            },
-            {
-                "type": "app",
-                "name": "PHP FastCGI",
-                "package": "php-fpm",
-                "binary": "php-fpm"
             },
             {
                 "type": "app",
