@@ -1,0 +1,69 @@
+{
+    "name": "Lychee",
+    "type": "webapp",
+    "icon": "fa fa-photo",
+    "description": {
+        "short": "Photo management system",
+        "long": "Lychee is an easy to use and great looking photo-management-system you can run on your server, to manage and share photos."
+    },
+    "categories": [
+        {
+            "primary": "Websites",
+            "secondary": ["Websites", "CMS"]
+        }
+    ],
+    "version": "2.6.3-1",
+    "author": "knitatoms",
+    "homepage": "https://knitatoms.net",
+    "app_author": "electerious",
+    "app_homepage": "http://lychee.electerious.com/",
+    "logo": false,
+    "screenshots": ["screen-1.jpg"],
+    "services": [
+        {
+            "name": "MariaDB",
+            "binary": "mysqld",
+            "ports": []
+        },
+        {
+            "name": "PHP FastCGI",
+            "binary": "php-fpm",
+            "ports": []
+        }
+    ],
+    "modules": ["main"],
+    "platforms": ["any"],
+    "dependencies": {
+        "any": [
+            {
+                "type": "app",
+                "name": "nginx",
+                "package": "nginx",
+                "binary": "nginx"
+            },
+            {
+                "type": "app",
+                "name": "PHP xCache",
+                "package": "php-xcache",
+                "binary": null
+            },
+            {
+                "type": "plugin",
+                "name": "MariaDB",
+                "package": "db-mariadb"
+            },
+            {
+                "type": "plugin",
+                "name": "PHP",
+                "package": "php"
+            }
+        ]
+    },
+    "generation": 1,
+    "website_plugin": "Lychee",
+    "website_updates": false,
+    "download_url": "https://github.com/electerious/Lychee/archive/v2.6.3.tar.gz",
+    "database_engines": ["MariaDB"],
+    "uses_php": true,
+    "uses_ssl": true
+}
