@@ -90,6 +90,7 @@ class PKeysConfig(Plugin):
     def list_files(self):
         filelist = []
         for user in self.app.gconfig.options('users'):
+            user = user.lower()
             if user == 'root':
                 filelist.append('/root/.ssh/authorized_keys')
             else:
@@ -106,9 +107,10 @@ class PKeysConfig(Plugin):
                 open('/root/.ssh/authorized_keys', 'w').write('')
                 os.chown('/root/.ssh/authorized_keys', 0, 100)
         else:
-            self.currentuser = self.app.auth.user
+            self.currentuser = self.app.auth.user.lower()
 
         for user in self.app.gconfig.options('users'):
+            user = user.lower()
             try:
                 uid = pwd.getpwnam(user).pw_uid
             except KeyError:
@@ -145,7 +147,7 @@ class PKeysConfig(Plugin):
         if self.app.auth.user == 'anonymous':
             self.currentuser = 'root'
         else:
-            self.currentuser = self.app.auth.user
+            self.currentuser = self.app.auth.user.lower()
 
         try:
             pwd.getpwnam(self.currentuser)
