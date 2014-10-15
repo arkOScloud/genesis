@@ -89,10 +89,16 @@ class UsersBackend(Plugin):
                     u.groups.append(g.name)
 
     def get_user(self, name, users):
-        return filter(lambda x:x.login == name, users)[0]
+        for x in users:
+            if x.login == name:
+                return x
+        return None
 
     def get_group(self, name, groups):
-        return filter(lambda x:x.name == name, groups)[0]
+        for x in groups:
+            if x.name == name:
+                return x
+        return None
 
     def add_user(self, v):
         shell(self.cfg.cmd_add.format(v))

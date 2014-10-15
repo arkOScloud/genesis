@@ -61,13 +61,16 @@ class Webapps(apis.API):
         for site in glob.glob('/etc/nginx/sites-available/.*.ginf'):
             g = ConfigParser.SafeConfigParser()
             g.read(site)
+            path = os.path.join('/etc/nginx/sites-available', g.get('website', 'name'))
+            if not os.path.exists(path):
+                continue
             w = Webapp()
             # Set default values and regexs to use
             w.name = g.get('website', 'name')
             w.addr = False
             w.port = '80'
             w.stype = 'Unknown'
-            w.path = os.path.join('/etc/nginx/sites-available', g.get('website', 'name'))
+            w.path = path
             rport = re.compile('(\\d+)\s*(.*)')
 
             # Get actual values

@@ -475,7 +475,10 @@ class FMPlugin(CategoryPlugin, URLHandler):
                         for x in d:
                             os.chmod(os.path.join(r, x), bm)
                         for x in f:
-                            os.chmod(os.path.join(r, x), bm)
+                            try:
+                                os.chmod(os.path.join(r, x), bm)
+                            except OSError:
+                                continue
             self._editing_acl = None
         if params[0] == 'dlgUpload':
             if vars.getvalue('action', '') == 'OK' and vars.has_key('file'):
@@ -497,7 +500,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
                 for x in files:
                     archives = ['.tar.gz', '.tgz', '.gz', '.tar.bz2', '.tbz2', '.bz2', '.zip']
                     if self.app.auth.user != 'anonymous':
-                        uid, gid = pwd.getpwnam(self.app.auth.user).pw_uid, pwd.getpwnam(self.app.auth.user).pw_gid
+                        uid, gid = pwd.getpwnam(self.app.auth.user.lower()).pw_uid, pwd.getpwnam(self.app.auth.user.lower()).pw_gid
                         os.chown(os.path.join(x[0], x[1]), uid, gid)
                     for y in archives:
                         if x[1].endswith(y):
