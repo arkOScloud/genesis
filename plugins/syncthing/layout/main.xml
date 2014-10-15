@@ -1,29 +1,29 @@
 <xml>
 	<div class="pull-right" style="margin-right:5px;">
-		<btn id="nid" text="Node ID" iconfont="gen-embed" />
+		<btn id="nid" text="Device ID" iconfont="gen-embed" />
 		<btn id="settings" text="Settings" iconfont="gen-cog" />
 	</div>
-	<label size="4" text="Your Repositories" />
+	<label size="4" text="Your Folders" />
 	<pad id="repos" />
 	<br />
-	<label size="4" text="Added Nodes" />
+	<label size="4" text="Added Devices" />
 	<pad id="nodes" />
 
-	<dialogbox id="dlgNodeID" title="Node Identification" hidecancel="True">
+	<dialogbox id="dlgNodeID" title="Device Identification" hidecancel="True">
 		<div class="well well-sm text-monospace text-center">
 			<label size="1" id="nodeidph" />
 		</div>
 	</dialogbox>
 
-	<dialogbox id="dlgEditRepo" title="Add Repository">
-		<formline text="Repository ID" help="Short identifier for the repository. Must be the same on all cluster nodes.">
+	<dialogbox id="dlgEditRepo" title="Add Folder">
+		<formline text="Folder ID" help="Short identifier for the folder. Must be the same on all cluster devices.">
 			<textinput name="rid" id="rid" placeholder="documents" />
 		</formline>
-		<formline text="Repository Path" help="Path to the repository on the local computer. Will be created if it does not exist. The tilde character ~ can be used as a shortcut for '/home/syncthing'">
+		<formline text="Folder Path" help="Path to the folder on the local computer. Will be created if it does not exist. The tilde character ~ can be used as a shortcut for '/home/syncthing'">
 			<textinput name="rpath" id="rpath" placeholder="~/Documents" />
 		</formline>
-		<formline help="Files are protected from changes made on other nodes, but changes made on *this* node will be sent to the rest of the cluster." checkbox="True">
-			<checkbox name="rrmast" id="rrmast" text="Repository Master" />
+		<formline help="Files are protected from changes made on other devices, but changes made on *this* device will be sent to the rest of the cluster." checkbox="True">
+			<checkbox name="rrmast" id="rrmast" text="Folder Master" />
 		</formline>
 		<formline help="File permission bits are ignored when looking for changes. Use on FAT filesystems." checkbox="True">
 			<checkbox name="rignp" id="rignp" text="Ignore Permissions" />
@@ -34,17 +34,17 @@
 		<formline text="Keep Versions" help="The number of old versions to keep, per file. (Requires 'File Versioning')">
 			<textinput name="rvnum" id="rvnum" />
 		</formline>
-		<formline id="rnodesph" text="Share With Nodes" help="Select the nodes to share this repository with." />
-		<label size="1" text="When adding a new repository, keep in mind that the Repository ID is used to tie repositories together between nodes. They are case sensitive and must match exactly between all nodes." />
+		<formline id="rnodesph" text="Share With Devices" help="Select the devices to share this folder with." />
+		<label size="1" text="When adding a new folder, keep in mind that the Folder ID is used to tie repositories together between devices. They are case sensitive and must match exactly between all devices." />
 	</dialogbox>
 
-	<dialogbox id="dlgEditNode" title="Add Node">
-		<formline id="nnidfl" text="Node ID" help="The node ID to enter here can be found in the 'Edit > Show ID' dialog on the other node. Spaces and dashes are optional (ignored). When adding a new node, keep in mind that this node must be added on the other side too.">
+	<dialogbox id="dlgEditNode" title="Add Device">
+		<formline id="nnidfl" text="Device ID" help="The device ID to enter here can be found in the 'Edit > Show ID' dialog on the other device. Spaces and dashes are optional (ignored). When adding a new device, keep in mind that this device must be added on the other side too.">
 			<div id="nnid" class="well well-sm text-monospace text-center">
 				<label size="1" id="nnidph" />
 			</div>
 		</formline>
-		<formline text="Node Name" help="Shown instead of Node ID in the cluster status.">
+		<formline text="Device Name" help="Shown instead of Device ID in the cluster status.">
 			<textinput name="nname" id="nname" placeholder="Home Server" />
 		</formline>
 		<formline text="Addresses" help="Enter comma separated ip:port addresses or 'dynamic' to perform automatic discovery of the address.">

@@ -46,12 +46,12 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                     id='erepo/'+str(self.repos.index(x)),
                     icon="gen-folder",
                     name=x["id"],
-                    subtext="Repository"
+                    subtext="Folder"
                     ))
             ui.append('repos', UI.TblBtn(
                 id="arepo",
                 icon="gen-plus-circle",
-                name="Add New Repository"
+                name="Add New Folder"
                 ))
 
             for x in self.nodes:
@@ -59,12 +59,12 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                     id='enode/'+str(self.nodes.index(x)),
                     icon="gen-code",
                     name=x["name"],
-                    subtext="%sNode" % ("Primary " if x["myid"] else "")
+                    subtext="%sDevice" % ("Primary " if x["myid"] else "")
                     ))
             ui.append('nodes', UI.TblBtn(
                 id="anode",
                 icon="gen-plus-circle",
-                name="Add New Node"
+                name="Add New Device"
                 ))
 
         if self._editrepo:
@@ -78,11 +78,11 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                 )
             if self._editrepo != "new":
                 dlg = ui.find("dlgEditRepo")
-                dlg.set("title", "Edit Repository")
+                dlg.set("title", "Edit Folder")
                 dlg.set("miscbtn", "Delete")
                 dlg.set("miscbtnid", "drepo/%s" % self.repos.index(self._editrepo))
                 dlg.set("miscbtnstyle", "danger")
-                dlg.set("miscbtnwarn", "Are you sure you want to delete %s? This will not remove the local folder and data." % self._editrepo["id"])
+                dlg.set("miscbtnwarn", "Are you sure you want to delete %s? This will not remove the local copy of your data." % self._editrepo["id"])
                 ui.find("rid").set("value", self._editrepo["id"])
                 ui.find("rid").set("disabled", True)
                 ui.find("rpath").set("value", self._editrepo["directory"])
@@ -99,7 +99,7 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                 ui.append("nnidfl", UI.TextInput(name="nnid", id="nnid"))
             else:
                 dlg = ui.find("dlgEditNode")
-                dlg.set("title", "Edit Node")
+                dlg.set("title", "Edit Device")
                 if not self._editnode["myid"]:
                     dlg.set("miscbtn", "Delete")
                     dlg.set("miscbtnid", "dnode/%s" % self.nodes.index(self._editnode))
@@ -152,11 +152,11 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
             self._editnode = self.nodes[int(params[1])]
         elif params[0] == 'drepo':
             self._mgr.del_repo(self.repos[int(params[1])]["id"])
-            self.put_message("success", "Repository deleted successfully")
+            self.put_message("success", "Folder deleted successfully")
             self._editrepo = False
         elif params[0] == 'dnode':
             self._mgr.del_node(self.nodes[int(params[1])]["name"])
-            self.put_message("success", "Node connection deleted successfully")
+            self.put_message("success", "Device connection deleted successfully")
             self._editnode = False
         elif params[0] == 'settings':
             self._settings = True
@@ -187,21 +187,21 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
             if vars.getvalue('action', '') == 'OK':
                 if self._editnode == "new":
                     if not vars.getvalue("nnid", ""):
-                        self.put_message("err", "Must enter your corresponding node ID")
+                        self.put_message("err", "Must enter your corresponding device ID")
                     elif not vars.getvalue("nname", ""):
-                        self.put_message("err", "Must choose a repository name")
+                        self.put_message("err", "Must choose a folder name")
                     elif not vars.getvalue("naddr", ""):
                         self.put_message("err", "Must choose addresses/addressing")
                     else:
                         self._mgr.add_node(vars.getvalue("nname", ""),
                             vars.getvalue("nnid", ""), vars.getvalue("naddr", ""))
-                        self.put_message("success", "Node added successfully")
+                        self.put_message("success", "Device added successfully")
                 else:
                     if not vars.getvalue("nname", ""):
-                        self.put_message("err", "Must choose a repository name")
+                        self.put_message("err", "Must choose a folder name")
                     elif vars.getvalue("nname", "") != self._editnode["name"]:
                         self._mgr.edit_node(self._editnode["name"], vars.getvalue("nname", ""))
-                        self.put_message("success", "Node edited successfully")
+                        self.put_message("success", "Device edited successfully")
             self._editnode = False
         elif params[0] == 'dlgEditRepo':
             if vars.getvalue('action', '') == 'OK':
@@ -214,9 +214,9 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                         pass
                 if self._editrepo == "new":
                     if not vars.getvalue("rpath", ""):
-                        self.put_message("err", "Must enter a valid path for this repository")
+                        self.put_message("err", "Must enter a valid path for this folder")
                     elif not vars.getvalue("rid", ""):
-                        self.put_message("err", "Must enter a valid repository name")
+                        self.put_message("err", "Must enter a valid folder name")
                     elif vars.getvalue("rvnum", "") and not vars.getvalue("rvers", ""):
                         self.put_message("err", "Must enter a number of files to keep versioned")
                     else:
@@ -229,7 +229,7 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                             )
                 else:
                     if not vars.getvalue("rpath", ""):
-                        self.put_message("err", "Must enter a valid path for this repository")
+                        self.put_message("err", "Must enter a valid path for this folder")
                     else:
                         self._mgr.edit_repo(self._editrepo["id"], 
                             vars.getvalue("rpath", "~/Sync"),

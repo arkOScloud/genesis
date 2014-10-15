@@ -26,7 +26,12 @@ class SyncthingConfig(Plugin):
             data = ConfManager.get().load('syncthing', self.configFile)
             parser = ET.XMLParser(remove_blank_text=True)
             self.config = ET.fromstring(data, parser) if data else None
-            self.myid = self.getmyid()
+            if int(self.config.find('.').attrib["version"]) >= 5:
+                self.myid = self.getmyid()
+            else:
+                self.ready = False
+                self.config = None
+                self.myid = ""
         else:
             self.config = None
             self.myid = ""
@@ -81,12 +86,12 @@ class SyncthingControl(Plugin):
         self.cfg = SyncthingConfig(self.app)
 
     def add_repo(self, name, dir, ro, perms, vers, nids=[]):
-        e = ET.Element('repository', {"id": name, "directory": dir,
+        e = ET.Element('folder', {"id": name, "path": dir,
             "ro": "true" if ro else "false", 
             "ignorePerms": "true" if perms else "false"})
         for x in nids:
-            nid = self.cfg.config.find("./node[@name='%s']" % x)
-            e.append(ET.Element('node', {"id": nid.attrib['id']}))
+            nid = self.cfg.config.find("./device[@name='%s']" % x)
+            e.append(ET.Element('device', {"id": nid.attrib['id']}))
         v = ET.Element('versioning')
         if vers:
             v.set("type", "simple")
@@ -107,15 +112,15 @@ class SyncthingControl(Plugin):
                 os.chown(os.path.join(r, x), uid, -1)
 
     def edit_repo(self, name, dir, ro, perms, vers, nids=[]):
-        e = self.cfg.config.find("./repository[@id='%s']" % name)
-        e.set('directory', dir)
+        e = self.cfg.config.find("./folder[@id='%s']" % name)
+        e.set('path', dir)
         e.set('ro', "true" if ro else "false")
         e.set('ignorePerms', "true" if perms else "false")
-        for x in e.findall("./node"):
+        for x in e.findall("./device"):
             e.remove(x)
         for x in nids:
-            nid = self.cfg.config.find("./node[@name='%s']" % x)
-            e.append(ET.Element('node', {"id": nid.attrib['id'], "name": x}))
+            nid = self.cfg.config.find("./device[@name='%s']" % x)
+            e.append(ET.Element('device', {"id": nid.attrib['id'], "name": x}))
         v = e.find("versioning")
         if vers and v.find("param"):
             v.find("param").set("val", vers)
@@ -129,8 +134,8 @@ class SyncthingControl(Plugin):
         self.cfg.save()
 
     def del_repo(self, name, rmfol=False):
-        dir = self.cfg.config.find("./repository[@id='%s']" % name).attrib["directory"]
-        self.cfg.config.remove(self.cfg.config.find("./repository[@id='%s']" % name))
+        dir = self.cfg.config.find("./folder[@id='%s']" % name).attrib["path"]
+        self.cfg.config.remove(self.cfg.config.find("./folder[@id='%s']" % name))
         self.cfg.save()
         if rmfol:
             shutil.rmtree(dir)
@@ -138,10 +143,10 @@ class SyncthingControl(Plugin):
     def get_repos(self):
         r = []
         try:
-            for x in self.cfg.config.findall("./repository"):
-                r.append({"id": x.attrib["id"], "directory": x.attrib["directory"],
+            for x in self.cfg.config.findall("./folder"):
+                r.append({"id": x.attrib["id"], "directory": x.attrib["path"],
                     "ro": x.attrib["ro"]=="true", "ignorePerms": x.attrib["ignorePerms"]=="true",
-                    "nodes": [y.attrib["id"] for y in x.findall("node")],
+                    "nodes": [y.attrib["id"] for y in x.findall("device")],
                     "versioning": x.find("versioning/param").attrib["val"] if x.find("versioning/param") else False
                     })
         except AttributeError:
@@ -149,7 +154,7 @@ class SyncthingControl(Plugin):
         return r
 
     def add_node(self, name, id, addr):
-        e = ET.Element('node', {"id": id.replace("-", ""), "name": name})
+        e = ET.Element('device', {"id": id.replace("-", ""), "name": name})
         a = ET.Element('address')
         a.text = addr
         e.append(a)
@@ -157,18 +162,18 @@ class SyncthingControl(Plugin):
         self.cfg.save()
 
     def edit_node(self, name, newname):
-        e = self.cfg.config.find("./node[@name='%s']" % name)
+        e = self.cfg.config.find("./device[@name='%s']" % name)
         e.set("name", newname)
         self.cfg.save()
 
     def del_node(self, name):
-        self.cfg.config.remove(self.cfg.config.find("./node[@name='%s']" % name))
+        self.cfg.config.remove(self.cfg.config.find("./device[@name='%s']" % name))
         self.cfg.save()
 
     def get_nodes(self):
         r = []
         try:
-            for x in self.cfg.config.findall("./node"):
+            for x in self.cfg.config.findall("./device"):
                 r.append({"id": x.attrib["id"], "name": x.attrib["name"],
                     "address": x.find("address").text, 
                     "myid": x.attrib["id"]==self.cfg.myid})
