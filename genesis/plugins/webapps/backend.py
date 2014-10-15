@@ -431,7 +431,7 @@ class WebappControl(Plugin):
 		s.add(
 			nginx.Key('ssl_certificate', cpath),
 			nginx.Key('ssl_certificate_key', kpath),
-			nginx.Key('ssl_protocols', 'SSLv3 TLSv1 TLSv1.1 TLSv1.2'),
+			nginx.Key('ssl_protocols', 'TLSv1 TLSv1.1 TLSv1.2'),
 			nginx.Key('ssl_ciphers', ciphers),
 			nginx.Key('ssl_session_timeout', '5m'),
 			nginx.Key('ssl_prefer_server_ciphers', 'on'),
