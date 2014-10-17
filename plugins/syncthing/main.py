@@ -34,7 +34,7 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
         ui = self.app.inflate('syncthing:main')
 
         if not self._cfg.ready:
-            self.put_message("info", "Syncthing is setting itself up in the background. Please make sure it is running via the Status button, and come back in a few minutes...")
+            self.put_message("info", "Pulse is setting itself up in the background. Please make sure it is running via the Status button, and come back in a few minutes...")
             ui.remove("nid")
             ui.remove("settings")
             ui.remove("repos")
@@ -89,6 +89,7 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                 ui.find("rrmast").set("checked", self._editrepo["ro"])
                 ui.find("rignp").set("checked", self._editrepo["ignorePerms"])
                 ui.find("rvers").set("checked", self._editrepo["versioning"] != False)
+                ui.find("rrsca").set("value", self._editrepo["rescanIntervalS"])
                 ui.find("rvnum").set("value", self._editrepo["versioning"] if self._editrepo["versioning"] else "")
         else:
             ui.remove("dlgEditRepo")
@@ -115,10 +116,10 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
         if self._settings:
             ui.find("spla").set("value", self._cfg.getopt("listenAddress"))
             ui.find("sorl").set("value", self._cfg.getopt("maxSendKbps"))
-            ui.find("srsi").set("value", self._cfg.getopt("rescanIntervalS"))
+            #ui.find("srsi").set("value", self._cfg.getopt("rescanIntervalS"))
             ui.find("srci").set("value", self._cfg.getopt("reconnectionIntervalS"))
-            ui.find("smor").set("value", self._cfg.getopt("parallelRequests"))
-            ui.find("sfcr").set("value", self._cfg.getopt("maxChangeKbps"))
+            #ui.find("smor").set("value", self._cfg.getopt("parallelRequests"))
+            #ui.find("sfcr").set("value", self._cfg.getopt("maxChangeKbps"))
             ui.find("sldp").set("value", self._cfg.getopt("localAnnouncePort"))
             ui.find("sgla").set("value", self._cfg.config.find("./gui/address").text)
             ui.find("sgau").set("value", self._cfg.config.find("./gui/user").text if self._cfg.config.find("./gui/user") else "")
@@ -170,10 +171,10 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
             if vars.getvalue('action', '') == 'OK':
                 self._cfg.setopt("listenAddress", vars.getvalue("spla", ""))
                 self._cfg.setopt("maxSendKbps", vars.getvalue("sorl", ""))
-                self._cfg.setopt("rescanIntervalS", vars.getvalue("srsi", ""))
+                #self._cfg.setopt("rescanIntervalS", vars.getvalue("srsi", ""))
                 self._cfg.setopt("reconnectionIntervalS", vars.getvalue("srci", ""))
-                self._cfg.setopt("parallelRequests", vars.getvalue("smor", ""))
-                self._cfg.setopt("maxChangeKbps", vars.getvalue("sfcr", ""))
+                #self._cfg.setopt("parallelRequests", vars.getvalue("smor", ""))
+                #self._cfg.setopt("maxChangeKbps", vars.getvalue("sfcr", ""))
                 self._cfg.setopt("localAnnouncePort", vars.getvalue("sldp", ""))
                 self._cfg.setopt("localAnnounceEnabled", "true" if vars.getvalue("sldi", "0") == "1" else "false")
                 self._cfg.setopt("globalAnnounceEnabled", "true" if vars.getvalue("sgdi", "0") == "1" else "false")
@@ -225,6 +226,7 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                             vars.getvalue("rrmast", "0")=="1",
                             vars.getvalue("rignp", "0")=="1",
                             vars.getvalue("rvnum", "1") if vars.getvalue("rvers", "0") == "1" else False,
+                            vars.getvalue("rrsca", "60"),
                             nodes
                             )
                 else:
@@ -236,5 +238,6 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
                             vars.getvalue("rrmast", "0")=="1",
                             vars.getvalue("rignp", "0")=="1",
                             vars.getvalue("rvnum", "1") if vars.getvalue("rvers", "0") == "1" else False,
+                            vars.getvalue("rrsca", "60"),
                             nodes)
             self._editrepo = False

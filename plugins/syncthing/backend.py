@@ -15,7 +15,7 @@ import shutil
 
 class SyncthingConfig(Plugin):
     implements(IConfigurable)
-    name = 'Syncthing'
+    name = 'Pulse'
     id = 'syncthing'
     iconfont = 'gen-loop-2'
 
@@ -85,10 +85,11 @@ class SyncthingControl(Plugin):
         super(Plugin, self).__init__()
         self.cfg = SyncthingConfig(self.app)
 
-    def add_repo(self, name, dir, ro, perms, vers, nids=[]):
+    def add_repo(self, name, dir, ro, perms, vers, rsc, nids=[]):
         e = ET.Element('folder', {"id": name, "path": dir,
             "ro": "true" if ro else "false", 
-            "ignorePerms": "true" if perms else "false"})
+            "ignorePerms": "true" if perms else "false",
+            "rescanIntervalS": rsc if rsc else "60"})
         for x in nids:
             nid = self.cfg.config.find("./device[@name='%s']" % x)
             e.append(ET.Element('device', {"id": nid.attrib['id']}))
@@ -111,11 +112,12 @@ class SyncthingControl(Plugin):
             for x in f:
                 os.chown(os.path.join(r, x), uid, -1)
 
-    def edit_repo(self, name, dir, ro, perms, vers, nids=[]):
+    def edit_repo(self, name, dir, ro, perms, vers, rsc, nids=[]):
         e = self.cfg.config.find("./folder[@id='%s']" % name)
         e.set('path', dir)
         e.set('ro', "true" if ro else "false")
         e.set('ignorePerms', "true" if perms else "false")
+        e.set('rescanIntervalS', rsc if rsc else "60")
         for x in e.findall("./device"):
             e.remove(x)
         for x in nids:
@@ -147,7 +149,8 @@ class SyncthingControl(Plugin):
                 r.append({"id": x.attrib["id"], "directory": x.attrib["path"],
                     "ro": x.attrib["ro"]=="true", "ignorePerms": x.attrib["ignorePerms"]=="true",
                     "nodes": [y.attrib["id"] for y in x.findall("device")],
-                    "versioning": x.find("versioning/param").attrib["val"] if x.find("versioning/param") else False
+                    "versioning": x.find("versioning/param").attrib["val"] if x.find("versioning/param") else False,
+                    "rescanIntervalS": x.attrib["rescanIntervalS"] if x.attrib.has_key("rescanIntervalS") else "60"
                     })
         except AttributeError:
             pass

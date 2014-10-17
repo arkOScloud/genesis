@@ -34,6 +34,9 @@
 		<formline text="Keep Versions" help="The number of old versions to keep, per file. (Requires 'File Versioning')">
 			<textinput name="rvnum" id="rvnum" />
 		</formline>
+		<formline text="Rescan Interval" help="The number of seconds to wait between each scan for modification of the local repositories.">
+			<textinput name="rrsca" id="rrsca" />
+		</formline>
 		<formline id="rnodesph" text="Share With Devices" help="Select the devices to share this folder with." />
 		<label size="1" text="When adding a new folder, keep in mind that the Folder ID is used to tie repositories together between devices. They are case sensitive and must match exactly between all devices." />
 	</dialogbox>
@@ -59,18 +62,22 @@
 		<formline text="Outgoing Rate Limits (KiB/s)">
 			<textinput name="sorl" id="sorl" />
 		</formline>
+		<!--
 		<formline text="Rescan Interval (s)">
 			<textinput name="srsi" id="srsi" />
 		</formline>
+		-->
 		<formline text="Reconnect Interval (s)">
 			<textinput name="srci" id="srci" />
 		</formline>
+		<!--
 		<formline text="Max Outstanding Requests">
 			<textinput name="smor" id="smor" />
 		</formline>
 		<formline text="Max File Change Rate (KiB/s)">
 			<textinput name="sfcr" id="sfcr" />
 		</formline>
+		-->
 		<formline text="Local Discovery Port">
 			<textinput name="sldp" id="sldp" />
 		</formline>
