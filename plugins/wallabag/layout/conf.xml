@@ -1,0 +1,8 @@
+<xml>
+	<formline text="Wallabag Username" help="This will be the username of the first user for Wallabag.">
+	    <textinput name="wb-username" id="wb-username" />
+	</formline>
+	<formline text="Wallabag Password">
+	    <textinput name="wb-passwd" id="wb-passwd" password="True" />
+	</formline>
+</xml>

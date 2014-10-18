@@ -44,12 +44,21 @@ class Wallabag(Plugin):
         ]
 
     def pre_install(self, name, vars):
-        pass
+        if vars.getvalue('wb-username', '') == '':
+            raise Exception('Must choose a Wallabag username')
+        elif vars.getvalue('wb-passwd', '') == '':
+            raise Exception('Must choose a Wallabag password')
+        elif '"' in vars.getvalue('wb-passwd', '') or "'" in vars.getvalue('wb-passwd', ''):
+            raise Exception('Your Wallabag password must not include quotes')
 
     def post_install(self, name, path, vars, dbinfo={}):
         phpctl = apis.langassist(self.app).get_interface('PHP')
         secret_key = hashlib.sha1(str(random.random())).hexdigest()
         dbengine = 'mysql' if dbinfo['engine'] == 'MariaDB' else 'sqlite'
+
+        username = vars.getvalue("wb-username", "wallabag")
+        passwd = vars.getvalue("wb-passwd", "wallabag") + username + secret_key
+        passwd = hashlib.sha1(passwd).hexdigest()
 
         # Write a standard Wallabag config file
         shutil.copy(os.path.join(path, 'inc/poche/config.inc.default.php'),
@@ -95,11 +104,28 @@ class Wallabag(Plugin):
             conn = apis.databases(self.app).get_dbconn(dbinfo['engine'])
             dbase.execute(dbinfo['name'], 
                 open(os.path.join(path, 'install/mysql.sql')).read(), conn)
+            dbase.execute(dbinfo['name'],
+                "INSERT INTO users (username, password, name, email) VALUES ('%s', '%s', '%s', '');" % (username, passwd, username),
+                conn, commit=True)
+            lid = int(conn.insert_id())
+            dbase.execute(dbinfo['name'],
+                "INSERT INTO users_config (user_id, name, value) VALUES (%s, 'pager', '10');" % lid,
+                conn, commit=True)
+            dbase.execute(dbinfo['name'],
+                "INSERT INTO users_config (user_id, name, value) VALUES (%s, 'language', 'en_EN.UTF8');" % lid,
+                conn, commit=True)
         else:
+            dbase = apis.databases(self.app).get_interface(dbinfo['engine'])
+            dbase.chkpath()
             shutil.copy(os.path.join(path, 'install/poche.sqlite'), '/var/lib/sqlite3/%s.db' % dbinfo['name'])
             phpctl.open_basedir('add', '/var/lib/sqlite3')
-            shell('chown http:http /var/lib/sqlite3/%s.db' % dbinfo['name'])
-            shell('chmod 755 /var/lib/sqlite3/%s.db' % dbinfo['name'])
+            shell('chown :sqlite3 /var/lib/sqlite3/%s.db' % dbinfo['name'])
+            dbase.execute(dbinfo['name'],
+                "INSERT INTO users (username, password, name, email) VALUES ('%s', '%s', '%s', '');" % (username, passwd, username))
+            dbase.execute(dbinfo['name'],
+                "INSERT INTO users_config (user_id, name, value) VALUES (1, 'pager', '10');")
+            dbase.execute(dbinfo['name'],
+                "INSERT INTO users_config (user_id, name, value) VALUES (1, 'language', 'en_EN.UTF8');")
         shutil.rmtree(os.path.join(path, 'install'))
 
         # Finally, make sure that permissions are set so that Wallabag
