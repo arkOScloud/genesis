@@ -3,9 +3,11 @@ from genesis.ui import *
 from genesis.com import Plugin, Interface, implements
 from genesis import apis
 from genesis.utils import *
+from genesis.plugins.users.backend import UsersBackend
 
 import os
 import re
+import stat
 import sqlite3
 
 
@@ -63,8 +65,21 @@ class SQLite3(Plugin):
         pass
 
     def chkpath(self):
+        # Make sure the db dir exists and that it has the right perms
+        users = UsersBackend(self.app)
+        try:
+            gid = int(users.get_group("sqlite3", users.get_all_groups()).gid)
+        except AttributeError:
+            users.add_group("sqlite3")
+            users.add_to_group("http", "sqlite3")
+            gid = int(users.get_group("sqlite3", users.get_all_groups()).gid)
         if not os.path.isdir('/var/lib/sqlite3'):
             os.makedirs('/var/lib/sqlite3')
+        if oct(stat.S_IMODE(os.stat('/var/lib/sqlite3').st_mode)) != 0775:
+            os.chmod('/var/lib/sqlite3', 0775)
+        if int(os.stat('/var/lib/sqlite3').st_gid) != gid:
+            os.chown('/var/lib/sqlite3', -1, gid)
+        del users
 
     def get_size(self, dbname, conn=None):
         return str_fsize(os.path.getsize(os.path.join('/var/lib/sqlite3', dbname+'.db')))
