@@ -242,9 +242,13 @@ class CertificatesPlugin(CategoryPlugin, URLHandler):
             self._cinfo = None
         elif params[0] == 'ac' and params[2] == 'w':
             self._tab = 0
-            self._cc.assign(self._cinfo.name,
-                [('website', self._wal[int(params[3])])])
-            self.put_message('success', '%s added to %s website' % (self._cinfo.name, self._wal[int(params[3])].name))
+            try:
+                self._cc.assign(self._cinfo.name,
+                    [('website', self._wal[int(params[3])])])
+                self.put_message('success', '%s added to %s website' % (self._cinfo.name, self._wal[int(params[3])].name))
+            except Exception, e:
+                self.put_message('err', str(e))
+                self.app.log.error(str(e))
             self._cinfo = None
         elif params[0] == 'ac' and params[2] == 'g':
             self._tab = 0
