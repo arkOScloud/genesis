@@ -76,8 +76,9 @@ def make_report(app, err):
     """
     from genesis.plugmgr import PluginLoader
     pr = ''
-    for p in sorted(PluginLoader.list_plugins().keys()):
-        pr += p + '\n'
+    k = PluginLoader.list_plugins()
+    for p in sorted(k.keys()):
+        pr += "%s %s\n" % (p, k[p].version)
 
     # Finalize the reported log
     app.log.blackbox.stop()
