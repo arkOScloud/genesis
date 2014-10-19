@@ -1,7 +1,7 @@
 # Maintainer: Jacob Cook <jacob at citizenweb dot is>
 
 pkgname=genesis
-pkgver=0.6.1
+pkgver=0.6.2
 pkgrel=1
 pkgdesc="Easy, modular server management app"
 
@@ -13,7 +13,7 @@ makedepends=('python2' 'python2-distribute' 'python2-passlib')
 provides=('genesis')
 conflicts=('genesis-git')
 source=("$pkgname-$pkgver.tar.gz"::"http://pkg.arkos.io/resources/$pkgname-$pkgver.tar.gz")
-md5sums=('ca45453029a5c305972a9956f379ae46')
+md5sums=('ef428fcb6c09bc4bd7b6eba7031a964f')
 backup=('etc/genesis/genesis.conf' 'etc/genesis/users/admin.conf')
 
 build() {
