@@ -58,6 +58,8 @@ class Lychee(Plugin):
         # can make adjustments and save plugins when need be.
         shell('chown -R http:http %s' % path)
 
+        return "Lychee has been installed. Login with a blank username and password the first time to set your credentials."
+
     def pre_remove(self, site):
         pass
 

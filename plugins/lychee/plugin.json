@@ -12,7 +12,7 @@
             "secondary": ["Websites", "CMS"]
         }
     ],
-    "version": "2.6.3-1",
+    "version": "2.6.3-2",
     "author": "knitatoms",
     "homepage": "https://knitatoms.net",
     "app_author": "electerious",
@@ -45,6 +45,12 @@
                 "type": "app",
                 "name": "PHP xCache",
                 "package": "php-xcache",
+                "binary": null
+            },
+            {
+                "type": "app",
+                "name": "PHP GD Image Processing",
+                "package": "php-gd",
                 "binary": null
             },
             {
