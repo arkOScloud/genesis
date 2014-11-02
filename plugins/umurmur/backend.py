@@ -30,6 +30,8 @@ class UMurmurConfig(Plugin):
         if not self.config.lookup('arkos_init'):
             self.config.arkos_init = True
             self.config.welcometext = arkos_welcome
+        if not self.config.lookup('ca_path'):
+            self.config.ca_path = "/etc/ssl/certs/"
 
     def save(self):
         running = self.is_service_running()
