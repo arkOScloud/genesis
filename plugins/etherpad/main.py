@@ -120,9 +120,10 @@ class Etherpad(Plugin):
                 'stype': 'program',
                 'directory': path,
                 'user': 'etherpad',
-                'command': os.path.join(path, 'bin/run.sh'),
+                'command': 'node ' + os.path.join(path,
+                    'node_modules/ep_etherpad-lite/node/server.js'),
                 'autostart': 'true',
-                'autorestart': 'true',
+                'autorestart': 'false',
                 'stdout_logfile': '/var/log/etherpad.log',
                 'stderr_logfile': '/var/log/etherpad.log'
             }
@@ -138,7 +139,9 @@ class Etherpad(Plugin):
 
     def post_remove(self, site):
         UsersBackend(self.app).del_user('etherpad')
-        self.app.get_backend(apis.services.IServiceManager).delete('etherpad', 'supervisor')
+        self.app.get_backend(apis.services.IServiceManager).delete(
+            'etherpad', 'supervisor'
+        )
 
     def ssl_enable(self, path, cfile, kfile):
         name = os.path.basename(path)
@@ -164,3 +167,9 @@ class Etherpad(Plugin):
                 x.add(self.addtoblock[0])
                 nginx.dumpf(n, '/etc/nginx/sites-available/%s' % name)
 
+    def update(self, path, pkg, ver):
+        shell('cd %s && git pull origin' % path)
+        shell('cd %s && bin/installDeps.sh' % path)
+        self.app.get_backend(apis.services.IServiceManager).restart(
+            'etherpad', 'supervisor'
+        )
