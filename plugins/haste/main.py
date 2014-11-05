@@ -13,7 +13,7 @@ import os
 class Haste(Plugin):
     implements(apis.webapps.IWebapp)
     name = 'Haste'
-    icon = 'gen-pencil'
+    icon = 'gen-file-xml'
 
     addtoblock = [
         nginx.Location('/',
