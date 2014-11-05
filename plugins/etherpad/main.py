@@ -13,7 +13,7 @@ import random
 class Etherpad(Plugin):
     implements(apis.webapps.IWebapp)
     name = 'Etherpad'
-    icon = 'gen-pen'
+    icon = 'gen-paragraph-left'
 
     addtoblock = [
         nginx.Location('/',
