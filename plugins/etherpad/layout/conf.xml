@@ -48,6 +48,7 @@
             <checkbox name="ep_plugin/ep_webrtc" text="webrtc" checked="False" />
         </formline>-->
     </formline>
+    <label text="After installation etherpad needs some time to properly install itself. Please be patient." />
 </xml>
 <!--
 TODO: checkout theeese fancy plugins:
