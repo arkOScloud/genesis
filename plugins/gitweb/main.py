@@ -36,7 +36,7 @@ class Gitweb(Plugin):
         ]
         f.writelines(oc)
         f.close()
-        os.chmod('/etc/conf.d/gitweb.conf', 0644)
+        os.chmod('/etc/conf.d/gitweb.conf', 644)
 
     def post_install(self, name, path, vars, dbinfo={}):
         svc = self.app.get_backend(apis.services.IServiceManager)
