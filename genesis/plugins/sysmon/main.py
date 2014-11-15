@@ -36,7 +36,7 @@ class SysMon(CategoryPlugin):
             except Exception, e:
                 self.put_message('err', 'One or more widgets failed to load. Check the logs for info, or click Clean Up to remove the offending widget(s).')
                 self._failed.append(x)
-                self.app.log.error('System Monitor Widget failed to load '+w.title if w.title else x+': '+str(e))
+                self.app.log.error('System Monitor Widget failed to load '+w.title if w.title else str(x)+': '+str(e))
 
     def get_ui(self):
         ui = self.app.inflate('sysmon:main')
