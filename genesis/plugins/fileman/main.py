@@ -234,7 +234,7 @@ class FMPlugin(CategoryPlugin, URLHandler):
             if not isdir and not path.startswith('/dev'):
                 tc = ''.join(map(chr, [7,8,9,10,12,13,27] + range(0x20, 0x100)))
                 ibs = lambda b: bool(b.translate(None, tc))
-                if ibs(open(np).read(1024)):
+                if np.endswith((".sock", ".socket")) or ibs(open(np).read(1024)):
                     item = UI.Label(text=name)
                 else:
                     item = UI.Tooltip(UI.LinkLabelRedirect(text=name, 
