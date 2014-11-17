@@ -13,7 +13,7 @@ import random
 class Etherpad(Plugin):
     implements(apis.webapps.IWebapp)
     name = 'Etherpad'
-    icon = 'gen-pen'
+    icon = 'gen-paragraph-left'
 
     addtoblock = [
         nginx.Location('/',
@@ -88,18 +88,6 @@ class Etherpad(Plugin):
         with open(os.path.join(path, 'settings.json'), 'w') as f:
             json.dump(cfg, f, indent=4)
 
-        # node-gyp needs the HOME variable to be set
-        with open(os.path.join(path, 'bin/run.sh')) as f:
-            run_script = f.readlines()
-        run_script.insert(1, "export HOME=%s" % path)
-        with open(os.path.join(path, 'bin/run.sh'), 'w') as f:
-            f.writelines(run_script)
-
-        # Install deps right away
-        if not shell(os.path.join(path, 'bin/installDeps.sh') + ' || exit 1'):
-            raise RuntimeError(
-                "Etherpad dependencies could not be installed.")
-
         # Install selected plugins
         mods = list(                            # e.g. "ep_plugin/ep_adminpads"
             str(var).split("/")[1]              #                 ^^^^^^^^^^^^
@@ -113,6 +101,18 @@ class Etherpad(Plugin):
             nodectl = apis.langassist(self.app).get_interface('NodeJS')
             nodectl.install(*mods, install_path=mod_inst_path)
 
+        # node-gyp needs the HOME variable to be set
+        with open(os.path.join(path, 'bin/installDeps.sh')) as f:
+            run_script = f.readlines()
+        # this is a hack. supervisor does not kill node when stopping ep.
+        run_script.insert(1, 'killall node\n')
+        run_script.insert(1, 'export HOME=%s\n' % path)
+        with open(os.path.join(path, 'bin/installDeps.sh'), 'w') as f:
+            f.writelines(run_script)
+
+        # Change owner of everything in the etherpad path
+        shell('chown -R etherpad:etherpad ' + path)
+
         # Make supervisor entry
         s = self.app.get_backend(apis.services.IServiceManager)
         s.edit('etherpad',
@@ -120,17 +120,14 @@ class Etherpad(Plugin):
                 'stype': 'program',
                 'directory': path,
                 'user': 'etherpad',
-                'command': os.path.join(path, 'bin/run.sh'),
+                'command': 'bash bin/run.sh',
                 'autostart': 'true',
-                'autorestart': 'true',
+                'autorestart': 'false',
                 'stdout_logfile': '/var/log/etherpad.log',
                 'stderr_logfile': '/var/log/etherpad.log'
             }
         )
         s.enable('etherpad', 'supervisor')
-
-        # Change owner of everything in the etherpad path
-        shell('chown -R etherpad ' + path)
         #TODO: user auth with nginx??
 
     def pre_remove(self, site):
@@ -138,7 +135,9 @@ class Etherpad(Plugin):
 
     def post_remove(self, site):
         UsersBackend(self.app).del_user('etherpad')
-        self.app.get_backend(apis.services.IServiceManager).delete('etherpad', 'supervisor')
+        self.app.get_backend(apis.services.IServiceManager).delete(
+            'etherpad', 'supervisor'
+        )
 
     def ssl_enable(self, path, cfile, kfile):
         name = os.path.basename(path)
@@ -164,3 +163,9 @@ class Etherpad(Plugin):
                 x.add(self.addtoblock[0])
                 nginx.dumpf(n, '/etc/nginx/sites-available/%s' % name)
 
+    def update(self, path, pkg, ver):
+        shell('cd %s; git pull origin' % path)
+        shell('chown -R etherpad:etherpad ' + path)
+        self.app.get_backend(apis.services.IServiceManager).restart(
+            'etherpad', 'supervisor'
+        )
