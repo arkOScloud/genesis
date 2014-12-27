@@ -3,8 +3,8 @@
     "type": "plugin",
     "icon": "gen-loop-2",
     "description": {
-        "short": "Sync shared folders across devices with Pulse",
-        "long": "Pulse replaces Dropbox and BitTorrent Sync with something open, trustworthy and decentralized. Your data is your data alone and you deserve to choose where it is stored, if it is shared with some third party and how it's transmitted over the Internet."
+        "short": "Sync shared folders across devices with Syncthing",
+        "long": "Syncthing replaces Dropbox and BitTorrent Sync with something open, trustworthy and decentralized. Your data is your data alone and you deserve to choose where it is stored, if it is shared with some third party and how it's transmitted over the Internet."
     },
     "categories": [
         {
@@ -16,7 +16,7 @@
     "author": "arkOS",
     "homepage": "https://arkos.io",
     "app_author": "Ind.ie",
-    "app_homepage": "https://ind.ie/pulse/",
+    "app_homepage": "http://syncthing.net",
     "logo": true,
     "screenshots": [],
     "services": [
@@ -32,7 +32,7 @@
         "any": [
             {
                 "type": "app",
-                "name": "Pulse",
+                "name": "Syncthing",
                 "package": "syncthing",
                 "binary": "syncthing"
             }

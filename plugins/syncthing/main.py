@@ -34,7 +34,7 @@ class SyncthingPlugin(apis.services.ServiceControlPlugin):
         ui = self.app.inflate('syncthing:main')
 
         if not self._cfg.ready:
-            self.put_message("info", "Pulse is setting itself up in the background. Please make sure it is running via the Status button, and come back in a few minutes...")
+            self.put_message("info", "Syncthing is setting itself up in the background. Please make sure it is running via the Status button, and come back in a few minutes...")
             ui.remove("nid")
             ui.remove("settings")
             ui.remove("repos")

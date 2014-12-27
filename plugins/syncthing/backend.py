@@ -15,7 +15,7 @@ import shutil
 
 class SyncthingConfig(Plugin):
     implements(IConfigurable)
-    name = 'Pulse'
+    name = 'Syncthing'
     id = 'syncthing'
     iconfont = 'gen-loop-2'
 
