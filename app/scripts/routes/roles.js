@@ -7,7 +7,9 @@ Genesis.UsersRoute = Ember.Route.extend({
   },
   actions: {
     delete: function(model){
-      model.destroyRecord();
+      model.destroyRecord().then(function(){}, function(){
+        model.rollback();
+      });
     }
   }
 });
@@ -21,7 +23,9 @@ Genesis.GroupsRoute = Ember.Route.extend({
   },
   actions: {
     delete: function(model){
-      model.destroyRecord();
+      model.destroyRecord().then(function(){}, function(){
+        model.rollback();
+      });
     }
   }
 });
@@ -32,7 +36,9 @@ Genesis.DomainsRoute = Ember.Route.extend({
   },
   actions: {
     delete: function(model){
-      model.destroyRecord();
+      model.destroyRecord().then(function(){}, function(){
+        model.rollback();
+      });
     }
   }
 });

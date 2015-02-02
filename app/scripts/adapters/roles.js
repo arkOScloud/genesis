@@ -1,14 +1,11 @@
-Genesis.UserAdapter = DS.RESTAdapter.extend({
-    namespace: 'system',
-    host: 'http://localhost:8765'
+Genesis.UserAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
 });
 
-Genesis.GroupAdapter = DS.RESTAdapter.extend({
-    namespace: 'system',
-    host: 'http://localhost:8765'
+Genesis.GroupAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
 });
 
-Genesis.DomainAdapter = DS.RESTAdapter.extend({
-    namespace: 'system',
-    host: 'http://localhost:8765'
+Genesis.DomainAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
 });
