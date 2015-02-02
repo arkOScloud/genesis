@@ -1,0 +1,45 @@
+<a class="btn btn-default pull-right" {{action 'showModal' 'user/add' model}}><i class="fa fa-user"></i> Add User</a>
+
+<ul class="nav nav-tabs manual-tabs">
+    <li class="active">{{#link-to 'users'}}<i class="fa fa-user fa-fw"></i> Users{{/link-to}}</li>
+    <li>{{#link-to 'groups'}}<i class="fa fa-users fa-fw"></i> Groups{{/link-to}}</li>
+    <li>{{#link-to 'domains'}}<i class="fa fa-code fa-fw"></i> Domains{{/link-to}}</li>
+</ul>
+
+<table class="table">
+    <tr>
+        <th width="1"></th>
+        <th>Username</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Administrator</th>
+        <th width="150">Actions</th>
+    </tr>
+    {{#each user in model.users}}
+    <tr {{bind-attr class="user.isPending:is-pending"}}>
+        {{#if user.isPending}}
+        <td><i class="fa fa-spinner fa-spin"></i></td>
+        {{else}}
+        <td><i class="fa fa-user"></i></td>
+        {{/if}}
+        <td>{{user.name}}</td>
+        <td>{{user.firstName}}</td>
+        <td>{{user.lastName}}</td>
+        {{#if user.admin}}
+        <td>Yes</td>
+        {{else}}
+        <td>No</td>
+        {{/if}}
+        <td>
+            <div class="btn-group btn-group-sm">
+                <a href="#" {{bind-attr class=":btn :btn-default user.isPending:disabled"}} {{action 'showModal' 'user/edit' user model}}><i class="fa fa-info-circle"></i> Edit</a>
+                <a href="#" {{bind-attr class=":btn :btn-danger user.isPending:disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this user?' user}}><i class="fa fa-minus-circle"></i> Delete</a>        
+            </div>
+        </td>
+    </tr>
+    {{else}}
+    <tr>
+        <td colspan=6 class="text-center">None</td>
+    </tr>
+    {{/each}}
+</table>

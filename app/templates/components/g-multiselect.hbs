@@ -1,0 +1,5 @@
+<select class="multi" multiple="multiple">
+    {{#each item in options}}
+        <option {{bind-attr value="item.selectId"}}>{{item.selectText}}</option>
+    {{/each}}
+</select>

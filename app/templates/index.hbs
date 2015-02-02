@@ -1,0 +1,6 @@
+{{#each app in model}}
+    <div class="ui-homebutton">
+        <h1 class="text-center"><i {{bind-attr class=":fa-2x app.icon"}}></i></h1>
+        <h4 class="text-center">{{app.name}}</h4>
+    </div>
+{{/each}}

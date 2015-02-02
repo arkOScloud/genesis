@@ -1,0 +1,87 @@
+<div id="main">
+    <div class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div id="navbar-brand-div" class="navbar-header">
+                <a id="navbar-brand" class="navbar-brand" href="/#/"><img src="/images/logo-white.png" /></a>
+            </div>
+            <div class="g-user-info pull-right">
+                <strong id="g-username">username</strong>
+                <div class="btn-group">
+                    {{#link-to 'users'}}<i class="fa fa-users fa-fw" style="font-size: 1.5em;"></i>{{/link-to}}
+                    <a href="/#/logout"><i class="fa fa-sign-out fa-fw" style="font-size: 1.5em;"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="g-lower-bar" class="navbar navbar-default">
+        <div class="container">
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    {{#link-to 'index' tagName='li' href=false}}<a href="#" {{bind-attr href=view.href}}><i class="fa fa-home fa-fw"></i> My Applications</a>{{/link-to}}
+                    {{#link-to 'appstore' tagName='li' href=false}}<a href="#" {{bind-attr href=view.href}}><i class="fa fa-cubes fa-fw"></i> App Store</a>{{/link-to}}
+                    {{#link-to 'fileman' tagName='li' href=false}}<a href="#" {{bind-attr href=view.href}}><i class="fa fa-files-o fa-fw"></i> File Manager</a>{{/link-to}}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/#/"><i class="fa fa-life-ring fa-fw"></i> Help</a></li>
+                    <li class="dropdown">
+                        <a href="/#/" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="fa fa-wrench fa-fw"></i> Tools</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/#/"><i class="fa fa-area-chart fa-fw"></i> Statistics</li></a>
+                            <li><a href="/#/"><i class="fa fa-certificate fa-fw"></i> Certificates</li></a>
+                            <li><a href="/#/"><i class="fa fa-database fa-fw"></i> Databases</li></a>
+                            <li><a href="/#/"><i class="fa fa-hdd-o fa-fw"></i> Filesystems</li></a>
+                            <li><a href="/#/"><i class="fa fa-file fa-fw"></i> Notepad</li></a>
+                            <li><a href="/#/"><i class="fa fa-cube fa-fw"></i> Packages</li></a>
+                            <li><a href="/#/"><i class="fa fa-certificate fa-fw"></i> Certificates</li></a>
+                            <li><a href="/#/"><i class="fa fa-spinner fa-fw"></i> Services</li></a>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="/#/" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="fa fa-cogs fa-fw"></i> Settings</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/#/"><i class="fa fa-clock-o fa-fw"></i> Recovery</li></a>
+                            <li><a href="/#/"><i class="fa fa-sitemap fa-fw"></i> Networking</li></a>
+                            <li><a href="/#/"><i class="fa fa-lock fa-fw"></i> Security</li></a>
+                            <li><a href="/#/"><i class="fa fa-sliders fa-fw"></i> Preferences</li></a>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="/#/" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="fa fa-power-off"></i> Power</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/#/"><i class="fa fa-power-off fa-fw"></i> Shutdown</li></a>
+                            <li><a href="/#/"><i class="fa fa-refresh fa-fw"></i> Restart</li></a>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        {{outlet}}
+        {{outlet 'modal'}}
+    </div>
+    
+    <div id="message-box" class="message-box-wr">
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div id="links" class="pull-right">
+                <a href="https://bbs.arkos.io/" id="feedback-link" target="_blank"><i class="fa fa-comments"></i> Community</a>
+                <a href="https://www.gnu.org/licenses/gpl.html" target="_blank"><i class="fa fa-certificate"></i> License</a>
+            </div>
+            <div id="version">Genesis {{ currentVersion }}</div>
+        </div>
+    </div>
+    
+    <script>
+        $('body').tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
+    </script>
+
+    <noscript>
+        You have disabled JavaScript in your browser, or are using a browser plugin that blocks JavaScript programs from executing. Please enable JavaScript, or disable this browser plugin, to continue.
+    </noscript>
+</div>

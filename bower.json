@@ -1,0 +1,18 @@
+{
+  "name": "genesis",
+  "version": "0.7.0",
+  "dependencies": {
+    "ember": "1.9.1",
+    "handlebars": "2.0.0",
+    "ember-data": "1.0.0-beta.14.1",
+    "ember-auth": "9.0.7",
+    "bootstrap-sass-official": "3.1.1",
+    "components-font-awesome": "4.2.0"
+  },
+  "resolutions": {
+    "ember": "1.9.1"
+  },
+  "devDependencies": {
+    "ember-mocha-adapter": "0.2.1"
+  }
+}
