@@ -11,8 +11,10 @@
       {{yield}}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{#if confirm}}No{{else}}Cancel{{/if}}</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{#if confirm}}No{{else}}{{#if ok}}Cancel{{else}}Close{{/if}}{{/if}}</button>
+        {{#if ok}}
         <button type="button" {{bind-attr class=":btn confirm:btn-danger:btn-primary"}} {{action 'ok'}}>{{#if confirm}}Yes{{else}}OK{{/if}}</button>
+        {{/if}}
       </div>
     </div>
   </div>

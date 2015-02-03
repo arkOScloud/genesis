@@ -14,12 +14,9 @@ Genesis.UserAddController = Ember.ObjectController.extend({
         domain: self.get('newUser').domain,
         passwd: self.get('newUser').passwd
       });
-      user.set('isPending', true);
       var promise = user.save();
-      promise.then(function(){
-          user.set('isPending', false);
-        }, function(){
-          user.deleteRecord();
+      promise.then(function(){}, function(){
+        user.deleteRecord();
       });
     },
     removeModal: function(){
@@ -34,13 +31,8 @@ Genesis.UserEditController = Ember.ObjectController.extend({
   actions: {
     save: function(){
       var user = this.get('model');
-      user.set('isPending', true);
+      user.set('isReady', false);
       var promise = user.save();
-      promise.then(function(){
-          user.set('isPending', false);
-        }, function(){
-          user.set('isPending', false);
-      });
     },
     removeModal: function(){
       var user = this.get('model');
@@ -74,12 +66,9 @@ Genesis.GroupAddController = Ember.ObjectController.extend({
         name: self.get('name'),
         users: self.get('usersSelected')
       });
-      group.set('isPending', true);
       var promise = group.save();
-      promise.then(function(){
-          group.set('isPending', false);
-        }, function(){
-          group.deleteRecord();
+      promise.then(function(){}, function(){
+        group.deleteRecord();
       });
     },
     removeModal: function(){
@@ -108,13 +97,8 @@ Genesis.GroupEditController = Ember.ObjectController.extend({
     save: function(){
       var group = this.get('model');
       group.set('users', this.get("usersSelected"));
-      group.set('isPending', true);
+      group.set('isReady', false);
       var promise = group.save();
-      promise.then(function(){
-          group.set('isPending', false);
-        }, function(){
-          group.set('isPending', false);
-      });
     },
     removeModal: function(){
       if (this.get('model').get('isDirty')) {
@@ -132,19 +116,16 @@ Genesis.DomainAddController = Ember.ObjectController.extend({
   needs: 'domain',
   actions: {
     save: function(){
-      if (this.store.find('domain', this.get('name'))) {
+      if (this.store.hasRecordForId('domain', this.get('name'))) {
         Genesis.addMessage('error', 'This domain already exists');
         return false;
       };
       var domain = this.store.createRecord('domain', {
         id: this.get('name')
       });
-      domain.set('isPending', true);
       var promise = domain.save();
-      promise.then(function(){
-          domain.set('isPending', false);
-        }, function(){
-          domain.deleteRecord();
+      promise.then(function(){}, function(){
+        domain.deleteRecord();
       });
     },
     removeModal: function(){

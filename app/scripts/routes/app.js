@@ -1,6 +1,7 @@
 Genesis.ApplicationRoute = Ember.Route.extend({
   setupController: function() {
     if (Ember.isNone(this.get('pollster'))) {
+      var self = this;
       this.set('pollster', Genesis.Pollster.create({
         onPoll: function() {
           $.getJSON(Genesis.Config.krakenHost+'/messages').then(function(j) {
@@ -20,7 +21,7 @@ Genesis.ApplicationRoute = Ember.Route.extend({
                 };
                 if ($('#'+m.id).length>=1) {
                   $('#'+m.id).removeClass('alert-success alert-info alert-warning alert-danger');
-                  $('#'+m.id).addClass(clss);
+                  $('#'+m.id).addClass('alert-'+clss);
                   if (m.complete) {
                     $('#'+m.id).addClass('alert-dismissable');
                     $('#'+m.id).html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&#215;</button><i class="'+ico+'" style="line-height:1;"></i> '+m.message);
@@ -39,6 +40,9 @@ Genesis.ApplicationRoute = Ember.Route.extend({
                   $('#message-box').append('<div id="'+m.id+'" class="alert alert-'+clss+' fade in"><i class="'+ico+'" style="line-height:1;"></i> '+m.message+'</div>');
                 };
               });
+            };
+            if (j && j.models && !$.isEmptyObject(j.models)) {
+              self.store.pushPayload(j.models);
             };
           });
         }

@@ -1,0 +1,30 @@
+<a class="btn btn-default pull-right" {{action 'showModal' 'cert/add' model}}><i class="fa fa-certificate"></i> Generate Certificate</a>
+<h2 class="page-header">My Certificates</h2>
+
+<table class="table">
+    <tr>
+        <th width="1"></th>
+        <th>Name</th>
+        <th width="150">Actions</th>
+    </tr>
+    {{#each cert in model.certs}}
+    <tr {{bind-attr class="cert.isReady::is-pending"}}>
+        {{#if cert.isReady}}
+        <td><i class="fa fa-certificate"></i></td>
+        {{else}}
+        <td><i class="fa fa-spinner fa-spin"></i></td>
+        {{/if}}
+        <td>{{cert.id}}</td>
+        <td>
+            <div class="btn-group btn-group-sm">
+                <a href="#" {{bind-attr class=":btn :btn-default cert.isReady::disabled"}} {{action 'showModal' 'cert/info' cert model}}><i class="fa fa-info-circle"></i> Info</a>
+                <a href="#" {{bind-attr class=":btn :btn-danger cert.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this certificate?' cert}}><i class="fa fa-minus-circle"></i> Delete</a>        
+            </div>
+        </td>
+    </tr>
+    {{else}}
+    <tr>
+        <td colspan=6 class="text-center">None</td>
+    </tr>
+    {{/each}}
+</table>

@@ -14,14 +14,14 @@
     </tr>
     {{#each domain in model}}
     <tr>
-        {{#if domain.isPending}}
-        <td><i class="fa fa-spinner fa-spin"></i></td>
-        {{else}}
+        {{#if domain.isReady}}
         <td><i class="fa fa-code"></i></td>
+        {{else}}
+        <td><i class="fa fa-spinner fa-spin"></i></td>
         {{/if}}
         <td>{{domain.id}}</td>
         <td>
-            <a href="#" {{bind-attr class=":btn :btn-danger :btn-sm domain.isPending:disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this domain?' domain}}><i class="fa fa-minus-circle"></i> Delete</a>        
+            <a href="#" {{bind-attr class=":btn :btn-danger :btn-sm domain.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this domain?' domain}}><i class="fa fa-minus-circle"></i> Delete</a>        
         </td>
     </tr>
     {{else}}

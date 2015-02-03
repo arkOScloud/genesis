@@ -14,6 +14,11 @@ Genesis.Router.map(function () {
       this.route('edit');
     });
   });
+  this.resource('certs', function(){
+    this.resource('cert', { path: '/:cert_id' }, function(){
+      this.route('info');
+    });
+  });
   this.route('appstore');
   this.route('fileman');
 });
