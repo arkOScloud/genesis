@@ -5,24 +5,21 @@ Genesis.UserAddController = Ember.ObjectController.extend({
   actions: {
     save: function(){
       var self = this;
-      $.getJSON(Genesis.Config.krakenHost+'/system/users/nextid', function(j){
-        var user = self.store.createRecord('user', {
-          id: j.uid,
-          name: self.get('newUser').name,
-          firstName: self.get('newUser').firstName,
-          lastName: self.get('newUser').lastName,
-          admin: self.get('newUser').admin || false,
-          sudo: self.get('newUser').sudo || false,
-          domain: self.get('newUser').domain,
-          passwd: self.get('newUser').passwd
-        });
-        user.set('isPending', true);
-        var promise = user.save();
-        promise.then(function(){
-            user.set('isPending', false);
-          }, function(){
-            user.deleteRecord();
-        });
+      var user = self.store.createRecord('user', {
+        name: self.get('newUser').name,
+        firstName: self.get('newUser').firstName,
+        lastName: self.get('newUser').lastName,
+        admin: self.get('newUser').admin || false,
+        sudo: self.get('newUser').sudo || false,
+        domain: self.get('newUser').domain,
+        passwd: self.get('newUser').passwd
+      });
+      user.set('isPending', true);
+      var promise = user.save();
+      promise.then(function(){
+          user.set('isPending', false);
+        }, function(){
+          user.deleteRecord();
       });
     },
     removeModal: function(){
@@ -73,19 +70,16 @@ Genesis.GroupAddController = Ember.ObjectController.extend({
     }),
     save: function(){
       var self = this;
-      $.getJSON(Genesis.Config.krakenHost+'/system/groups/nextid', function(j){
-        var group = self.store.createRecord('group', {
-          id: j.gid,
-          name: self.get('name'),
-          users: self.get('usersSelected')
-        });
-        group.set('isPending', true);
-        var promise = group.save();
-        promise.then(function(){
-            group.set('isPending', false);
-          }, function(){
-            group.deleteRecord();
-        });
+      var group = self.store.createRecord('group', {
+        name: self.get('name'),
+        users: self.get('usersSelected')
+      });
+      group.set('isPending', true);
+      var promise = group.save();
+      promise.then(function(){
+          group.set('isPending', false);
+        }, function(){
+          group.deleteRecord();
       });
     },
     removeModal: function(){
