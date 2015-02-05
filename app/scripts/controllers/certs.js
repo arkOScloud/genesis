@@ -29,3 +29,24 @@ Genesis.CertAddController = Ember.ObjectController.extend({
 });
 
 Genesis.CertInfoController = Ember.ObjectController.extend();
+
+Genesis.CertUploadController = Ember.ObjectController.extend({
+  newCert: {},
+  actions: {
+    save: function(){
+      var uploader = EmberUploader.Uploader.create({
+        url: Genesis.Config.krakenHost+'/certs'
+      });
+      var files = [$('input[name="cert"]')[0].files[0],
+                   $('input[name="key"]')[0].files[0]];
+      if ($('input[name="chain"]')[0].files.length) {
+        files.push($('input[name="chain"]')[0].files[0]);
+      };
+      uploader.upload(files, {id: this.get('name')});
+    },
+    removeModal: function(){
+      this.set('name', '');
+      return true;
+    }
+  }
+});

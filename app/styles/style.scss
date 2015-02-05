@@ -278,20 +278,43 @@ a:link, a:focus, a:active, a:hover {
   max-width: 200px;
 }
 
-.ui-tblbtn {
-  margin: 0 10px 0px 10px;
+.ui-items, .ui-items-3, .ui-items-4 {
+  margin-bottom: 30px;
 }
 
-.tblbtn-icons {
-  text-align: center;
-  margin: 5px 10px;
-  width: 200px;
-}
-
-.ui-tblbtn-cont {
+.ui-item {
   display: inline-block;
   vertical-align: top;
-  margin-bottom: 10px;
+  text-align: left;
+  margin: 10px;
+  width: 45%;
+  min-width: 250px;
+  border: 1px solid #CCC;
+}
+
+.ui-item.is-pending {
+  color: #777777;
+}
+
+.ui-items-3 > .ui-item {
+  width: 30%;
+  min-width: 250px;
+}
+
+.ui-items-4 > .ui-item {
+  width: 23%;
+  min-width: 250px;
+}
+
+.ui-item-icon {
+  float: left;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.ui-item-content {
+  display: inline-block;
+  margin-bottom: 20px;
 }
 
 .ms-container{

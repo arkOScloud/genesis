@@ -1,0 +1,22 @@
+{{#g-modal title="Uploading Certificate" icon="fa fa-upload" ok="save" close="removeModal"}}
+    <form {{action 'ok' on='submit' target=view}}>
+        <div class="form-group">
+            <label for="id">Name</label>
+            {{input type="text" class="form-control required" value=name}}
+            <p class="help-block">An internal name to help you identify this certificate in arkOS.</p>
+        </div>
+        <div class="form-group">
+            <label for="cert">Certificate File</label>
+            {{input type="file" name="cert" class="required"}}
+        </div>
+        <div class="form-group">
+            <label for="key">Key File</label>
+            {{input type="file" name="key" class="required"}}
+        </div>
+        <div class="form-group">
+            <label for="chain">Chain File</label>
+            {{input type="file" name="chain"}}
+            <p class="help-block">This is optional; only set it if you've been given a chain file or told you need one by your provider.</p>
+        </div>
+    </form>
+{{/g-modal}}
