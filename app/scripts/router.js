@@ -19,6 +19,11 @@ Genesis.Router.map(function () {
       this.route('info');
     });
   });
+  this.resource('databases', function(){
+    this.resource('database', { path: '/:database_id' }, function(){
+      this.route('edit');
+    });
+  });
   this.route('appstore');
   this.route('fileman');
 });

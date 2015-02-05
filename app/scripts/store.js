@@ -1,5 +1,9 @@
 Genesis.ApplicationAdapter = DS.RESTAdapter.extend({
     host: Genesis.Config.krakenHost,
+    pathForType: function(type) {
+      var stype = this._super(type);
+      return Ember.String.decamelize(stype);
+    },
     ajaxError: function(jqXHR) {
       var error = this._super(jqXHR);
       if (jqXHR && jqXHR.status === 422) {

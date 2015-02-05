@@ -290,6 +290,7 @@ a:link, a:focus, a:active, a:hover {
   width: 45%;
   min-width: 250px;
   border: 1px solid #CCC;
+  white-space: nowrap;
 }
 
 .ui-item.is-pending {
@@ -301,7 +302,7 @@ a:link, a:focus, a:active, a:hover {
 }
 
 .ui-items-4 > .ui-item {
-  width: 270px;
+  width: 260px;
 }
 
 .ui-item-icon {
