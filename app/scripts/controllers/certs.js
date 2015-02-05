@@ -13,8 +13,7 @@ Genesis.CertAddController = Ember.ObjectController.extend({
         domain: this.get('newCert').domain,
         email: this.get('newCert').email,
         keytype: this.get('newCert').keytype,
-        keylength: this.get('newCert').keylength,
-        operation: 'generate'
+        keylength: this.get('newCert').keylength
       });
       var promise = cert.save();
       promise.then(function(){}, function(){
@@ -31,7 +30,7 @@ Genesis.CertAddController = Ember.ObjectController.extend({
 Genesis.CertInfoController = Ember.ObjectController.extend();
 
 Genesis.CertUploadController = Ember.ObjectController.extend({
-  newCert: {},
+  name: '',
   actions: {
     save: function(){
       var uploader = EmberUploader.Uploader.create({

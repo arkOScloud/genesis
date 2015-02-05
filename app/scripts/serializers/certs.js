@@ -6,7 +6,6 @@ Genesis.CertSerializer = Genesis.ApplicationSerializer.extend({
       json.state = record.get("state") || "";
       json.locale = record.get("locale") || "";
       json.email = record.get("email") || "";
-      json.operation = record.get("operation") || "";
     }
     return json;
   }
