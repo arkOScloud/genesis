@@ -117,7 +117,7 @@ Genesis.DomainAddController = Ember.ObjectController.extend({
   actions: {
     save: function(){
       if (this.store.hasRecordForId('domain', this.get('name'))) {
-        Genesis.addMessage('error', 'This domain already exists');
+        this.message.danger('This domain already exists');
         return false;
       };
       var domain = this.store.createRecord('domain', {

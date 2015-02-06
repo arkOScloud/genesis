@@ -6,7 +6,8 @@ Genesis.DatabaseAddController = Ember.ObjectController.extend({
     save: function(){
       var db = this.store.createRecord('database', {
         name: this.get('name'),
-        typeId: this.get('type')
+        typeId: this.get('type'),
+        typeName: this.get('type')
       });
       var promise = db.save();
       promise.then(function(){}, function(){

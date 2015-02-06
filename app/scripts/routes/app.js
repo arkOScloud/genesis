@@ -7,37 +7,14 @@ Genesis.ApplicationRoute = Ember.Route.extend({
           $.getJSON(Genesis.Config.krakenHost+'/messages').then(function(j) {
             if (j && j.messages) {
               j.messages.forEach(function(m) {
-                var ico = "fa fa-info-circle";
-                var clss = "info"
                 if (m.class == "success") {
-                  ico = "fa fa-thumbs-up";
-                  clss = "success";
+                  self.message.success(m.message, m.id, m.complete);
                 } else if (m.class == "warn") {
-                  ico = "fa fa-exclamation-triangle";
-                  clss = "warning";
+                  self.message.warning(m.message, m.id, m.complete);
                 } else if (m.class == "error") {
-                  ico = "fa fa-exclamation-circle";
-                  clss = "danger";
-                };
-                if ($('#'+m.id).length>=1) {
-                  $('#'+m.id).removeClass('alert-success alert-info alert-warning alert-danger');
-                  $('#'+m.id).addClass('alert-'+clss);
-                  if (m.complete) {
-                    $('#'+m.id).addClass('alert-dismissable');
-                    $('#'+m.id).html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&#215;</button><i class="'+ico+'" style="line-height:1;"></i> '+m.message);
-                    if (clss != "warning" && clss != "danger") {
-                      setTimeout(function () {$('#'+m.id).alert('close')}, 3000);
-                    };
-                  } else {
-                    $('#'+m.id).html('<i class="'+ico+'" style="line-height:1;"></i> '+m.message);
-                  };
-                } else if (m.complete) {
-                  $('#message-box').append('<div id="'+m.id+'" class="alert alert-'+clss+' alert-dismissable fade in"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&#215;</button><i class="'+ico+'" style="line-height:1;"></i> '+m.message+'</div>');
-                  if (clss != "warning" && clss != "danger") {
-                    setTimeout(function () {$('#'+m.id).alert('close')}, 3000);
-                  };
+                  self.message.danger(m.message, m.id, m.complete);
                 } else {
-                  $('#message-box').append('<div id="'+m.id+'" class="alert alert-'+clss+' fade in"><i class="'+ico+'" style="line-height:1;"></i> '+m.message+'</div>');
+                  self.message.info(m.message, m.id, m.complete);
                 };
               });
             };

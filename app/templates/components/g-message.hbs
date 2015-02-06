@@ -1,0 +1,6 @@
+<div {{bind-attr id=msg.id class=":alert :fade :in msg.typeClass msg.dismissable:alert-dismissable:"}}>
+    {{#if msg.dismissable}}
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true" {{action 'dismiss'}}>&#215;</button>
+    {{/if}}
+    <i {{bind-attr class="msg.icon"}} style="line-height:1;"></i> {{msg.message}}
+</div>

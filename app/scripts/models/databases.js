@@ -16,5 +16,6 @@ Genesis.DatabaseUser = DS.Model.extend({
 
 Genesis.DatabaseType = DS.Model.extend({
     name: DS.attr('string'),
+    state: DS.attr('boolean'),
     supportsUsers: DS.attr('boolean', {defaultValue: false})
 });
