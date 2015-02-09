@@ -3,7 +3,7 @@ var Genesis = window.Genesis = Ember.Application.create();
 Genesis.initializer({
   name: "registerMessages",
   initialize: function(container, application) {
-    application.register('message:main', Genesis.Message);
+    application.register('message:main', Genesis.Messager);
   }
 });
 
@@ -50,9 +50,9 @@ Genesis.FieldValidator = function(pre) {
     $(pre+' .form-group').not('.has-error').addClass('has-success');
 };
 
-Genesis.Messagething = Ember.Object.extend();
+Genesis.Message = Ember.Object.extend();
 
-Genesis.Message = Ember.ArrayProxy.extend({
+Genesis.Messager = Ember.ArrayProxy.extend({
   content: Ember.A(),
   timeout: 3000,
   pushObject: function(object) {
@@ -70,12 +70,12 @@ Genesis.Message = Ember.ArrayProxy.extend({
       exists[0].set('message', object.message);
       exists[0].set('dismissable', object.dismissable);
     } else {
-      object = Genesis.Messagething.create(object);
+      object = Genesis.Message.create(object);
       this._super(object);
     };
   },
   danger: function(message, id, dismissable) {
-    id = id || Math.random().toString(36).substring(7);
+    id = id || Math.random().toString(36).substring(10);
     this.pushObject({
       id: id,
       type: 'danger',
@@ -85,7 +85,7 @@ Genesis.Message = Ember.ArrayProxy.extend({
     });
   },
   warning: function(message, id, dismissable) {
-    id = id || Math.random().toString(36).substring(7);
+    id = id || Math.random().toString(36).substring(10);
     this.pushObject({
       id: id,
       type: 'warning',
@@ -95,7 +95,7 @@ Genesis.Message = Ember.ArrayProxy.extend({
     });
   },
   info: function(message, id, dismissable) {
-    id = id || Math.random().toString(36).substring(7);
+    id = id || Math.random().toString(36).substring(10);
     this.pushObject({
       id: id,
       type: 'info',
@@ -105,7 +105,7 @@ Genesis.Message = Ember.ArrayProxy.extend({
     });
   },
   success: function(message, id, dismissable) {
-    id = id || Math.random().toString(36).substring(7);
+    id = id || Math.random().toString(36).substring(10);
     this.pushObject({
       id: id,
       type: 'success',

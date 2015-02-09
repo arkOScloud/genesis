@@ -4,7 +4,7 @@ Genesis.ApplicationRoute = Ember.Route.extend({
       var self = this;
       this.set('pollster', Genesis.Pollster.create({
         onPoll: function() {
-          $.getJSON(Genesis.Config.krakenHost+'/messages').then(function(j) {
+          $.getJSON(Genesis.Config.krakenHost+'/genesis').then(function(j) {
             if (j && j.messages) {
               j.messages.forEach(function(m) {
                 if (m.class == "success") {
@@ -18,8 +18,14 @@ Genesis.ApplicationRoute = Ember.Route.extend({
                 };
               });
             };
-            if (j && j.models && !$.isEmptyObject(j.models)) {
-              self.store.pushPayload(j.models);
+            if (j && j.purges && !$.isEmptyObject(j.purges)) {
+              j.purges.forEach(function(e) {
+                var record = self.store.getById(e.model, e.id);
+                if (record) self.store.unloadRecord(record);
+              });
+            };
+            if (j && j.pushes && !$.isEmptyObject(j.pushes)) {
+              self.store.pushPayload(j.pushes);
             };
           });
         }
