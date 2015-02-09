@@ -12,7 +12,7 @@
                     <i class="fa fa-database fa-fw fa-5x"></i>
                 </div>
                 <div class="ui-item-content">
-                  <h2>{{db.name}}</h2>
+                  <h2>{{db.id}}</h2>
                   <p class="lead">{{db.typeName}}</p>
                   <div class="btn-group btn-group-sm">
                     <a href="#" {{bind-attr class=":btn :btn-default db.isReady::disabled"}} {{action 'showModal' 'database/edit' db model}}><i class="fa fa-info-circle"></i> Info</a>
@@ -43,7 +43,7 @@
                     <i class="fa fa-user fa-fw fa-5x"></i>
                 </div>
                 <div class="ui-item-content">
-                  <h2>{{db.name}}</h2>
+                  <h2>{{db.id}}</h2>
                   <p class="lead">{{db.typeName}}</p>
                   <div class="btn-group btn-group-sm">
                     <a href="#" {{bind-attr class=":btn :btn-default db.isReady::disabled"}} {{action 'showModal' 'database/edit-user' db model}}><i class="fa fa-info-circle"></i> Edit</a>

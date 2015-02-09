@@ -2,9 +2,9 @@
     <form {{action 'ok' on='submit' target=view}}>
         <div class="form-horizontal">
             <div class="form-group">
-                <label for="name" class="col-sm-4 control-label">Database User Name</label>
+                <label for="id" class="col-sm-4 control-label">Database User Name</label>
                 <div class="col-sm-8">
-                    <p class="form-control-static">{{name}}</p>
+                    <p class="form-control-static">{{id}}</p>
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
         </div>
         <div class="form-group">
             <label for="database">On Database</label>
-            {{ view "select" class="form-control required" value=database content=availableDbs optionLabelPath="content.name" optionValuePath="content.id" }}
+            {{ view "select" class="form-control required" value=database content=availableDbs }}
         </div>
     </form>
 {{/g-modal}}

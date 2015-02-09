@@ -1,5 +1,4 @@
 Genesis.Database = DS.Model.extend({
-    name: DS.attr('string'),
     size: DS.attr('string'),
     typeId: DS.attr('string'),
     typeName: DS.attr('string'),
@@ -7,7 +6,6 @@ Genesis.Database = DS.Model.extend({
 });
 
 Genesis.DatabaseUser = DS.Model.extend({
-    name: DS.attr('string'),
     typeId: DS.attr('string'),
     typeName: DS.attr('string'),
     permissions: DS.attr('string'),
