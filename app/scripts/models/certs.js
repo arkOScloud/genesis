@@ -13,5 +13,8 @@ Genesis.Cert = DS.Model.extend({
 });
 
 Genesis.Certauth = DS.Model.extend({
-    expiry: DS.attr('date')
+    expiry: DS.attr('date'),
+    downloadHref: function() {
+      return Genesis.Config.krakenHost+'/certauths/'+this.get('id')+'?download=true';
+    }.property('id')
 });

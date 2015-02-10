@@ -2,6 +2,9 @@ Genesis.Database = DS.Model.extend({
     size: DS.attr('string'),
     typeId: DS.attr('string'),
     typeName: DS.attr('string'),
+    downloadHref: function() {
+      return Genesis.Config.krakenHost+'/databases/'+this.get('id')+'?download=true';
+    }.property('id'),
     isReady: DS.attr('boolean', {defaultValue: false})
 });
 
