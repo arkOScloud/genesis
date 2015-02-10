@@ -180,6 +180,13 @@ a:link, a:focus, a:active, a:hover {
   border-color: #AC2925;
 }
 
+.ui-app-logo {
+  margin-left:auto;
+  margin-right:auto;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
 .ui-firstrun-appselect, .ui-homebutton, .ui-appbutton {
   display: inline-block;
   vertical-align: top;

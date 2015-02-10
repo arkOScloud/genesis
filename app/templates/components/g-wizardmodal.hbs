@@ -1,0 +1,27 @@
+<div class="modal fade">
+  <div {{bind-attr class=":modal-dialog control.isLarge:modal-lg:"}}>
+    <div class="modal-content">
+      {{#if title}}
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">{{#if icon}}<i {{bind-attr class="icon"}}></i> {{/if}}{{title}}</h4>
+      </div>
+      {{/if}}
+      <div class="modal-body">
+      {{yield}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        {{#if firstStep}}
+        {{else}}
+        <button type="button" class="btn btn-default" {{action 'previous'}}>Previous</button>
+        {{/if}}
+        {{#if lastStep}}
+        <button type="button" {{bind-attr class=":btn :btn-primary control.canComplete::disabled"}} {{action 'ok'}}>Finish</button>
+        {{else}}
+        <button type="button" {{bind-attr class=":btn :btn-primary control.canNext::disabled"}} {{action 'next'}}>Next</button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>
