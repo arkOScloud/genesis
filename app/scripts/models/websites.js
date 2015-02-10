@@ -11,6 +11,7 @@ Genesis.Website = DS.Model.extend({
     database: DS.attr('string'),
     php: DS.attr('boolean'),
     enabled: DS.attr('boolean'),
+    extraData: DS.attr(),
     isReady: DS.attr('boolean', {defaultValue: false}),
     address: function() {
       var proto = this.get('certificate')?"https://":"http://",

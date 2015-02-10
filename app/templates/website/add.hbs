@@ -1,0 +1,68 @@
+{{#g-wizardmodal title=pageTitle icon="fa fa-globe" control=this ok='save' close="removeModal"}}
+    {{#g-wizardstep step=1}}
+        <div class="row">
+            <div class="col-sm-3">
+                <ul class="nav nav-pills nav-stacked ui-navlist">
+                  {{#each type in model.apps}}
+                  <li {{bind-attr id=type.id}}><a href="#" {{action 'selectType' type}}><i {{bind-attr class=":fa-fw type.icon"}}></i> {{type.name}}</a></li>
+                  {{/each}}
+                </ul>
+            </div>
+            <div class="col-sm-9">
+                {{#if selectedSite}}
+                <div class="form-horizontal">
+                    {{#if selectedSite.logoURL}}
+                    <img class="img-responsive ui-app-logo" {{bind-attr src="selectedSite.logoURL"}} />
+                    {{/if}}
+                    <div class="form-group">
+                        <label for="id" class="col-sm-2 control-label">Name</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static">{{selectedSite.name}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id" class="col-sm-2 control-label">Intro</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static">{{selectedSite.description.short}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id" class="col-sm-2 control-label">Website</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static"><a target="_blank" {{bind-attr href=selectedSite.appHomepage}}>{{selectedSite.appHomepage}}</a></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id" class="col-sm-2 control-label">Description</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static">{{selectedSite.description.long}}</p>
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <div class="text-center">
+                    <h1 class="fa fa-globe fa-5x"></h1>
+                    <p class="lead">Please select a website type to continue.</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    {{/g-wizardstep}}
+    {{#g-wizardstep step=2}}
+        <div class="form-group">
+            <label for="name">Site Name</label>
+            {{input type="text" class="form-control required" value=newSite.name}}
+            <p class="help-block">A name to help you recognize this website in arkOS. Do not use spaces, dashes or special characters.</p>
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            {{input type="text" class="form-control required" value=newSite.address}}
+            <p class="help-block">The web address you want to use to access this site.</p>
+        </div>
+        <div class="form-group">
+            <label for="port">Port</label>
+            {{input type="text" class="form-control required" value=newSite.port}}
+            <p class="help-block">If you don't know what to put here, leave it at the default.</p>
+        </div>
+    {{/g-wizardstep}}
+{{/g-wizardmodal}}
