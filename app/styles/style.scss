@@ -109,12 +109,17 @@ a:link, a:focus, a:active, a:hover {
 
 .btn, 
 .btn-group-sm > .btn,
-.btn-group-lg > .btn {
+.btn-group-lg > .btn,
+input.form-control {
   border-radius: 0;
 }
 
 .btn i {
   line-height: 1;
+}
+
+.input-group .btn {
+  padding-top: 7px;
 }
 
 .btn-default {

@@ -21,7 +21,6 @@ Genesis.StatsRoute = Ember.Route.extend({
   setupController: function() {
     this.getStats();
     if (Ember.isNone(this.get('pollster'))) {
-      var self = this;
       var p = Genesis.Pollster.extend({
         interval: function() {
           return 5000;

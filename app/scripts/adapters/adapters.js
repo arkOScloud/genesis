@@ -9,3 +9,7 @@ Genesis.GroupAdapter = Genesis.ApplicationAdapter.extend({
 Genesis.DomainAdapter = Genesis.ApplicationAdapter.extend({
     namespace: 'system'
 });
+
+Genesis.ServiceAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
+});
