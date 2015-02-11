@@ -29,6 +29,7 @@ Genesis.Router.map(function () {
       this.route('edit');
     });
   });
+  this.route('stats');
   this.route('appstore');
   this.route('fileman');
 });

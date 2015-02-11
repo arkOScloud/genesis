@@ -1,6 +1,8 @@
 Genesis.App = DS.Model.extend({
     name: DS.attr('string'),
     icon: DS.attr('string'),
+    type: DS.attr('string'),
+    version: DS.attr('string'),
     error: DS.attr('boolean', {defaultValue: false}),
     appAuthor: DS.attr('string'),
     appHomepage: DS.attr('string'),
@@ -18,8 +20,6 @@ Genesis.App = DS.Model.extend({
     modules: DS.attr(),
     screenshots: DS.attr(),
     services: DS.attr(),
-    type: DS.attr('string'),
-    version: DS.attr('string'),
     database_engines: DS.attr(),
     databaseMultiuser: DS.attr('boolean', {defaultValue: false}),
     download_url: DS.attr('string'),
@@ -27,5 +27,15 @@ Genesis.App = DS.Model.extend({
     uses_ssl: DS.attr('boolean', {defaultValue: false}),
     website_datapaths: DS.attr('boolean', {defaultValue: false}),
     website_default_data_subdir: DS.attr('string'),
-    website_updates: DS.attr('boolean', {defaultValue: false})
+    website_updates: DS.attr('boolean', {defaultValue: false}),
+    displayInMenu: function() {
+      return ["app", "website"].indexOf(this.get('type'))>=0;
+    }.property('type'),
+    displayHref: function() {
+      if (this.get('type') == "website") {
+        return 'websites';
+      } else {
+        return 'apps/'+this.get('id');
+      };
+    }.property('id', 'type')
 });
