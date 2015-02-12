@@ -1,4 +1,8 @@
 Genesis.DatabasesRoute = Ember.Route.extend({
+  beforeModel: function(model) {
+    this.get('store').unloadAll('database');
+    this.get('store').unloadAll('databaseUser');
+  },
   afterModel: function(model) {
     var self = this;
     model.types.forEach(function(i) {

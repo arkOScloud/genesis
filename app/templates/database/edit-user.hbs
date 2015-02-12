@@ -18,7 +18,7 @@
         </div>
         <div class="form-group">
             <label for="database">On Database</label>
-            {{ view "select" class="form-control required" value=database content=availableDbs }}
+            {{ view "select" class="form-control required" value=database content=availableDbs optionLabelPath="content.id" optionValuePath="content.id" }}
         </div>
     </form>
 {{/g-modal}}
