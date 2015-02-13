@@ -9,7 +9,7 @@
           <p class="lead">{{site.siteName}}</p>
           <a target="_blank" {{bind-attr class=":btn :btn-primary :btn-block site.isReady::disabled" href="site.address"}}><i class="fa fa-globe"></i> Open Site</a>
           <div class="btn-group btn-group-sm">
-            <a href="#" {{bind-attr class=":btn :btn-default site.isReady::disabled"}} {{action 'showModal' 'website/edit' site model}}><i class="fa fa-info-circle"></i> Edit</a>
+            <a href="#" {{bind-attr class=":btn :btn-default site.isReady::disabled"}} {{action 'showModal' 'website/edit' site}}><i class="fa fa-info-circle"></i> Edit</a>
             <a href="#" {{bind-attr class=":btn :btn-default site.isReady::disabled"}} {{action 'toggleStatus' site}}><i {{bind-attr class=":fa site.enabled:fa-minus-circle:fa-check-square"}}></i> {{#if site.enabled}}Disable{{else}}Enable{{/if}}</a>
             <a href="#" {{bind-attr class=":btn :btn-danger site.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this website?' site}}><i class="fa fa-minus-circle"></i> Remove</a>        
           </div>
