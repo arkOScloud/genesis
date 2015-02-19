@@ -13,7 +13,7 @@ Genesis.ServicesController = Ember.ObjectController.extend({
       svc.set('operation', op);
       var promise = svc.save();
       promise.then(function(){}, function(){
-        this.get('model').rollback();
+        svc.rollback();
       });
     },
     toggleFileState: function(svc) {
@@ -22,7 +22,7 @@ Genesis.ServicesController = Ember.ObjectController.extend({
       svc.set('operation', op);
       var promise = svc.save();
       promise.then(function(){}, function(){
-        this.get('model').rollback();
+        svc.rollback();
       });
     }
   }

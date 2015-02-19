@@ -29,8 +29,10 @@ Genesis.App = DS.Model.extend({
     website_default_data_subdir: DS.attr('string'),
     website_updates: DS.attr('boolean', {defaultValue: false}),
     displayInMenu: function() {
-      return ["app", "website"].indexOf(this.get('type'))>=0;
-    }.property('type'),
+      var goodType = ["app", "website"].indexOf(this.get('type'))>=0,
+          loadable = this.get('loadable');
+      return (goodType && loadable);
+    }.property('type', 'loadable'),
     displayHref: function() {
       if (this.get('type') == "website") {
         return 'websites';

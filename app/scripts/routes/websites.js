@@ -2,7 +2,7 @@ Genesis.WebsitesRoute = Ember.Route.extend({
   model: function() {
     return Ember.RSVP.hash({
       sites: this.get('store').find('website'),
-      apps: this.get('store').find('app', {type: "website"})
+      apps: this.get('store').find('app', {type: "website", loadable: true})
     });
   },
   actions: {
