@@ -24,6 +24,11 @@ Genesis.Router.map(function () {
       this.route('edit');
     });
   });
+  this.resource('filesystems', function(){
+    this.resource('filesystem', { path: '/:filesystem_id' }, function(){
+      this.route('edit');
+    });
+  });
   this.resource('websites', function(){
     this.resource('website', { path: '/:website_id' }, function(){
       this.route('edit');

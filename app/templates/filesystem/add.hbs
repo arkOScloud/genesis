@@ -1,0 +1,30 @@
+{{#g-modal title="Adding Virtual Disk" icon="fa fa-hdd-o" ok="save" close="removeModal"}}
+    <div class="form-group">
+        <label for="name">Name</label>
+        {{input type="text" class="form-control required" value=newFs.name}}
+    </div>
+    <div class="form-group">
+        <label for="size">Size</label>
+        {{input type="text" class="form-control required" value=newFs.size}}
+        <p class="help-block">Desired size of the new disk, in megabytes (Mb).</p>
+    </div>
+    <div class="checkbox">
+        <label>
+            {{input type="checkbox" checked=newFs.crypt}} Encrypted
+        </label>
+        <p class="help-block">Make this an encrypted virtual disk.</p>
+    </div>
+    {{#if newFs.crypt}}
+    <div class="form-group has-feedback">
+        <label for="passwd">Password</label>
+        {{ input type="password" class="form-control password required" value=newFs.passwd }}
+        <span class="fa fa-key form-control-feedback"></span>
+        <p class="help-block">Your password must be at least six characters long.</p>
+    </div>
+    <div class="form-group has-feedback">
+        <label for="passwdb">Confirm Password</label>
+        {{ input type="password" class="form-control password required" value=newFs.passwdb }}
+        <span class="fa fa-key form-control-feedback"></span>
+    </div>
+    {{/if}}
+{{/g-modal}}

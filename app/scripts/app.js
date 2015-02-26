@@ -22,6 +22,18 @@ Genesis.Config = {
     currentVersion: '0.7.0'
 };
 
+Genesis.sizeToString = function(sz) {
+    if (sz < 1024) return sz+' bytes';
+    sz = sz / 1024.0
+    if (sz < 1024) return sz.toFixed(2)+' Kb';
+    sz = sz / 1024.0
+    if (sz < 1024) return sz.toFixed(2)+' Mb';
+    sz = sz / 1024.0
+    if (sz < 1024) return sz.toFixed(2)+' Gb';
+    sz = sz / 1024.0
+    return sz.toFixed(2)+' Tb';
+};
+
 Genesis.FieldValidator = function(pre) {
     pre = pre || "";
     $(pre+' .form-group').removeClass('has-error has-success');

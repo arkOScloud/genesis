@@ -13,3 +13,7 @@ Genesis.DomainAdapter = Genesis.ApplicationAdapter.extend({
 Genesis.ServiceAdapter = Genesis.ApplicationAdapter.extend({
     namespace: 'system'
 });
+
+Genesis.FilesystemAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
+});
