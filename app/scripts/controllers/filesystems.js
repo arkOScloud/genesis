@@ -11,6 +11,16 @@ Genesis.FilesystemsController = Ember.ObjectController.extend({
       fs.set('operation', 'umount');
       fs.set('isReady', false);
       fs.save();
+    },
+    enable: function(fs){
+      fs.set('operation', 'enable');
+      fs.set('isReady', false);
+      fs.save();
+    },
+    disable: function(fs){
+      fs.set('operation', 'disable');
+      fs.set('isReady', false);
+      fs.save();
     }
   }
 });

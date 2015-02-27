@@ -325,10 +325,30 @@ input.form-control {
 }
 
 .ui-item-content {
-  max-width: 70%;
-  overflow: hidden;
+  width: 70%;
   display: inline-block;
-  margin-bottom: 20px;
+}
+
+.ui-item-content h2,
+.ui-item-content .lead {
+  overflow: hidden;
+}
+
+.ui-item-buttons {
+  margin: 10px 0;
+  white-space: normal;
+}
+
+.ui-item-button {
+  display: inline-block;
+  margin: 5px;
+  text-align: center;
+}
+
+.ui-item-button.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .ui-items-3 > .ui-item > .ui-item-content {
