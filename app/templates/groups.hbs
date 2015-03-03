@@ -1,3 +1,4 @@
+<a href="#" class="btn btn-default pull-right" {{action 'showModal' 'group/add' model}}><i class="fa fa-group"></i> Add Group</a>
 <ul class="nav nav-tabs manual-tabs">
     <li>{{#link-to 'users'}}<i class="fa fa-user fa-fw"></i> Users{{/link-to}}</li>
     <li class="active">{{#link-to 'groups'}}<i class="fa fa-users fa-fw"></i> Groups{{/link-to}}</li>
@@ -17,23 +18,11 @@
           {{else}}
           <p class="lead">No members</p>
           {{/if}}
-          <div class="btn-group btn-group-sm">
-            <a href="#" {{bind-attr class=":btn :btn-default group.isReady::disabled"}} {{action 'showModal' 'group/edit' group model}}><i class="fa fa-info-circle"></i> Edit</a>
-            <a href="#" {{bind-attr class=":btn :btn-danger group.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this group?' group}}><i class="fa fa-minus-circle"></i> Delete</a>        
+          <div class="ui-item-buttons">
+            <a href="#" {{bind-attr class=":ui-item-button group.isReady::disabled"}} {{action 'showModal' 'group/edit' group model}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Edit</a>
+            <a href="#" {{bind-attr class=":ui-item-button :text-danger group.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this group?' group}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>        
           </div>
         </div>
       </div>
     {{/each}}
-    <div class="ui-item">
-      <div class="ui-item-icon">
-        <i class="fa fa-plus-circle fa-fw fa-5x"></i>
-      </div>
-      <div class="ui-item-content">
-        <h2>Add</h2>
-        <p class="lead">New Group</p>
-        <div class="btn-group btn-group-sm">
-          <a href="#" class="btn btn-default" {{action 'showModal' 'group/add' model}}><i class="fa fa-group"></i> Add</a>
-        </div>
-      </div>
-    </div>
 </div>

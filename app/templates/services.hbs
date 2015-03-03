@@ -19,8 +19,8 @@
         <tr {{bind-attr class="svc.isReady::text-muted"}}>
             <td><i class="fa fa-spinner"></i></td>
             <td>{{svc.id}}</td>
-            <td>{{#if svc.running}}<i class="fa fa-fw fa-play"></i> Running{{else}}<i class="fa fa-fw fa-stop"></i> Stopped{{/if}}</td>
-            <td>{{#if svc.enabled}}<i class="fa fa-fw fa-thumbs-up"></i> Enabled{{else}}<i class="fa fa-fw fa-thumbs-o-down"></i> Disabled{{/if}}</td>
+            <td {{bind-attr class="svc.running:text-success:text-danger"}}>{{#if svc.running}}<i class="fa fa-fw fa-play"></i> Running{{else}}<i class="fa fa-fw fa-stop"></i> Stopped{{/if}}</td>
+            <td {{bind-attr class="svc.enabled:text-success:text-danger"}}>{{#if svc.enabled}}<i class="fa fa-fw fa-thumbs-up"></i> Enabled{{else}}<i class="fa fa-fw fa-thumbs-o-down"></i> Disabled{{/if}}</td>
             <td>{{svc.displayType}}</td>
             <td>
                 <div class="btn-group btn-group-sm">
