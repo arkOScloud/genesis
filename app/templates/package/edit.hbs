@@ -1,0 +1,140 @@
+{{#g-modal title="Package Info" icon="fa-cube" close="removeModal"}}
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="id" class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.id}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="version" class="col-sm-3 control-label">Version</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.version}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description" class="col-sm-3 control-label">Description</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.description}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="architecture" class="col-sm-3 control-label">Architecture</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.architecture}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="url" class="col-sm-3 control-label">URL</label>
+            <div class="col-sm-9">
+                <p class="form-control-static"><a target="_blank" {{bind-attr href="model.url"}}>{{model.url}}</a></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="licenses" class="col-sm-3 control-label">Licenses</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.licenses}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="groups" class="col-sm-3 control-label">Groups</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.groups}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="provides" class="col-sm-3 control-label">Provides</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.provides}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="dependsOn" class="col-sm-3 control-label">Depends On</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.dependsOn}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="optionalDeps" class="col-sm-3 control-label">Optional Dependencies</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.optionalDeps}}</p>
+            </div>
+        </div>
+        {{#if model.requiredBy}}
+        <div class="form-group">
+            <label for="requiredBy" class="col-sm-3 control-label">Required By</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.requiredBy}}</p>
+            </div>
+        </div>
+        {{/if}}
+        {{#if model.optionalFor}}
+        <div class="form-group">
+            <label for="optionalFor" class="col-sm-3 control-label">Optional For</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.optionalFor}}</p>
+            </div>
+        </div>
+        {{/if}}
+        <div class="form-group">
+            <label for="conflictsWith" class="col-sm-3 control-label">Conflicts With</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.conflictsWith}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="replaces" class="col-sm-3 control-label">Replaces</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.replaces}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="installedSize" class="col-sm-3 control-label">Installed Size</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.installedSize}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="packager" class="col-sm-3 control-label">Packager</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.packager}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="buildDate" class="col-sm-3 control-label">Build Date</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.buildDate}}</p>
+            </div>
+        </div>
+        {{#if model.installDate}}
+        <div class="form-group">
+            <label for="installDate" class="col-sm-3 control-label">Install Date</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.installDate}}</p>
+            </div>
+        </div>
+        {{/if}}
+        {{#if model.installReason}}
+        <div class="form-group">
+            <label for="installReason" class="col-sm-3 control-label">Install Reason</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.installReason}}</p>
+            </div>
+        </div>
+        {{/if}}
+        {{#if model.installScript}}
+        <div class="form-group">
+            <label for="installScript" class="col-sm-3 control-label">Install Script</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.installScript}}</p>
+            </div>
+        </div>
+        {{/if}}
+        <div class="form-group">
+            <label for="validatedBy" class="col-sm-3 control-label">Validated By</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.validatedBy}}</p>
+            </div>
+        </div>
+    </div>
+{{/g-modal}}

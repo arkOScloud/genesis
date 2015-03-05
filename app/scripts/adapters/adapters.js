@@ -14,6 +14,10 @@ Genesis.ServiceAdapter = Genesis.ApplicationAdapter.extend({
     namespace: 'system'
 });
 
+Genesis.PackageAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
+});
+
 Genesis.FilesystemAdapter = Genesis.ApplicationAdapter.extend({
     namespace: 'system'
 });

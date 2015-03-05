@@ -1,0 +1,30 @@
+{{#g-modal title="Operations" icon="fa-cube" ok='save' close="removeModal"}}
+    <p>The following operations will be completed. Click OK to confirm.</p>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th width="1"></th>
+                <th>Package Name</th>
+                <th>Version</th>
+                <th>Action</th>
+            </tr>
+            {{#each pkg in pendingOperations}}
+            <tr {{bind-attr class="pkg.toInstall:success pkg.toRemove:danger"}}>
+                <td><i class="fa fa-cube"></i></td>
+                <td>{{pkg.id}}</td>
+                <td>{{pkg.version}}{{#if pkg.isUpgradable}}<span class="text-success"> ({{pkg.upgradable}} available)</span>{{/if}}</td>
+                <td>{{#if pkg.toInstall}}Install{{else}}Remove{{/if}}</td>
+            </tr>
+            {{else}}
+            <tr>
+                <td class="text-center" colspan="4">None</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <a href="#" class="btn btn-default btn-block" {{action 'clear'}}><i class="fa fa-times"></i> Clear Pending</a>
+    {{#if pendingOperations}}
+    <br />
+    <p class="text-muted">Certain packages that may be required by the above will also be installed. Packages that depend on any packages selected for removal here may be removed as necessary. Take care when removing important system packages with this utility.</p>
+    {{/if}}
+{{/g-modal}}
