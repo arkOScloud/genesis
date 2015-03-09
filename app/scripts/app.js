@@ -19,6 +19,7 @@ Genesis.initializer({
 
 Genesis.Config = {
     krakenHost: 'http://localhost:8765',
+    GRMHost: 'https://grm-test.arkos.io',
     currentVersion: '0.7.0'
 };
 

@@ -14,6 +14,8 @@ Genesis.WebsiteAddController = Ember.ObjectController.extend({
   last: 2,
   newSite: {port: 80, extraData: {}},
   validateFields: [2],
+  sortBy: ['name'],
+  sortedApps: Ember.computed.sort('model.apps', 'sortBy'),
   isLarge: function() {
     return this.get('step')==1;
   }.property('step'),

@@ -2,6 +2,9 @@ Genesis.App = DS.Model.extend({
     name: DS.attr('string'),
     icon: DS.attr('string'),
     type: DS.attr('string'),
+    prettyType: function() {
+      return this.get('type').capitalize();
+    }.property('type'),
     version: DS.attr('string'),
     error: DS.attr('boolean', {defaultValue: false}),
     appAuthor: DS.attr('string'),
@@ -14,11 +17,27 @@ Genesis.App = DS.Model.extend({
     homepage: DS.attr('string'),
     loadable: DS.attr('boolean', {defaultValue: false}),
     logo: DS.attr('boolean', {defaultValue: false}),
+    assets: DS.attr(),
     logoURL: function() {
-      return this.get('logo')?Genesis.Config.krakenHost+'/apps/logo/'+this.get('id'):null;
-    }.property('logo'),
+      if (this.get('installed') && this.get('logo')) {
+        return Genesis.Config.krakenHost+'/apps/logo/'+this.get('id');
+      } else if (!this.get('installed') && this.get('assets').logo) {
+        return Genesis.Config.GRMHost+'/api/v1/assets/'+this.get('assets').logo;
+      } else {
+        return null;
+      }
+    }.property('logo', 'installed', 'assets'),
     modules: DS.attr(),
     screenshots: DS.attr(),
+    screenshotUrls: function() {
+      var shots = [];
+      if (!this.get('installed') && this.get('assets').screens) {
+        this.get('assets').screens.forEach(function(i) {
+          shots.push(Genesis.Config.GRMHost+'/api/v1/assets/'+i);
+        });
+      }
+      return shots;
+    }.property('installed', 'assets'),
     services: DS.attr(),
     database_engines: DS.attr(),
     databaseMultiuser: DS.attr('boolean', {defaultValue: false}),
@@ -28,6 +47,11 @@ Genesis.App = DS.Model.extend({
     website_datapaths: DS.attr('boolean', {defaultValue: false}),
     website_default_data_subdir: DS.attr('string'),
     website_updates: DS.attr('boolean', {defaultValue: false}),
+    installed: DS.attr('boolean', {defaultValue: false}),
+    upgradable: DS.attr('string'),
+    isUpgradable: function() {
+      return !!this.get('upgradable');
+    }.property('upgradable'),
     displayInMenu: function() {
       var goodType = ["app", "website"].indexOf(this.get('type'))>=0,
           loadable = this.get('loadable');
@@ -39,5 +63,6 @@ Genesis.App = DS.Model.extend({
       } else {
         return 'apps/'+this.get('id');
       };
-    }.property('id', 'type')
+    }.property('id', 'type'),
+    isReady: DS.attr('boolean', {defaultValue: false})
 });

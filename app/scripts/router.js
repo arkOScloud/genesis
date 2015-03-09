@@ -39,8 +39,12 @@ Genesis.Router.map(function () {
       this.route('edit');
     });
   });
+  this.resource('apps', function(){
+    this.resource('app', { path: '/:app_id' }, function(){
+      this.route('edit');
+    });
+  });
   this.route('stats');
   this.route('services');
-  this.route('appstore');
   this.route('fileman');
 });

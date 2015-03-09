@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <ul class="nav nav-pills nav-stacked ui-navlist">
-                  {{#each type in model.apps}}
+                  {{#each type in sortedApps}}
                   <li {{bind-attr id=type.id}}><a href="#" {{action 'selectType' type}}><i {{bind-attr class=":fa-fw type.icon"}}></i> {{type.name}}</a></li>
                   {{/each}}
                 </ul>

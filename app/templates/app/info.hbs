@@ -1,0 +1,42 @@
+{{#g-modal title="App Info" icon="fa-cube" large=true close="removeModal"}}
+    <div class="form-horizontal">
+        {{#if model.logoURL}}
+        <img class="img-responsive ui-app-logo" {{bind-attr src="model.logoURL"}} />
+        {{/if}}
+        <h1 class="page-header text-center">{{model.name}} <span class="lead">version {{model.version}}</span></h1>
+        {{#if model.isUpgradable}}
+        <h3 class="text-success text-center">Update available to version {{model.upgradable}}</h3>
+        {{/if}}
+        <div class="form-group">
+            <label for="id" class="col-sm-3 control-label">Intro</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.description.short}}</p>
+            </div>
+        </div>
+        {{#if model.description.long}}
+        <div class="form-group">
+            <label for="id" class="col-sm-3 control-label">Description</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.description.long}}</p>
+            </div>
+        </div>
+        {{/if}}
+        <div class="form-group">
+            <label for="id" class="col-sm-3 control-label">Application by</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.appAuthor}} <a target="_blank" {{bind-attr href=model.appHomepage}}>{{model.appHomepage}}</a></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="id" class="col-sm-3 control-label">Imported to arkOS by</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.author}} <a target="_blank" {{bind-attr href=model.homepage}}>{{model.homepage}}</a></p>
+            </div>
+        </div>
+        {{#each shot in model.screenshotUrls}}
+        <a {{bind-attr href=shot}} data-lightbox="screenshots">
+            <img class="img-responsive img-thumbnail app-screenshot" {{bind-attr src=shot}} />
+        </a>
+        {{/each}}
+    </div>
+{{/g-modal}}
