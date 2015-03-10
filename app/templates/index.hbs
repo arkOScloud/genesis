@@ -1,4 +1,4 @@
-{{#each app in model}}
+{{#each app in sortedApps}}
     {{#if app.displayInMenu}}
     {{#link-to app.displayHref tagName='div' class="ui-homebutton"}}
         <h1 class="text-center"><i {{bind-attr class=":fa-2x app.icon"}}></i></h1>

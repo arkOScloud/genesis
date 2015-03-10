@@ -10,7 +10,14 @@ Genesis.App = DS.Model.extend({
     appAuthor: DS.attr('string'),
     appHomepage: DS.attr('string'),
     author: DS.attr('string'),
-    categories: DS.attr('string'),
+    categories: DS.attr(),
+    categoryString: function() {
+      var cats = [];
+      this.get('categories').forEach(function(i) {
+        cats.push(i.primary+(i.secondary.length?": ":"")+i.secondary.join(", "));
+      });
+      return cats.join("; ");
+    }.property('categories'),
     dependencies: DS.attr(),
     description: DS.attr(),
     generation: DS.attr('number'),
@@ -53,10 +60,11 @@ Genesis.App = DS.Model.extend({
       return !!this.get('upgradable');
     }.property('upgradable'),
     displayInMenu: function() {
-      var goodType = ["app", "website"].indexOf(this.get('type'))>=0,
-          loadable = this.get('loadable');
-      return (goodType && loadable);
-    }.property('type', 'loadable'),
+      var goodType  = ["app", "website"].indexOf(this.get('type'))>=0,
+          installed = this.get('installed'),
+          loadable  = this.get('loadable');
+      return (goodType && loadable && installed);
+    }.property('type', 'loadable', 'installed'),
     displayHref: function() {
       if (this.get('type') == "website") {
         return 'websites';
@@ -64,5 +72,6 @@ Genesis.App = DS.Model.extend({
         return 'apps/'+this.get('id');
       };
     }.property('id', 'type'),
+    operation: DS.attr('string'),
     isReady: DS.attr('boolean', {defaultValue: false})
 });

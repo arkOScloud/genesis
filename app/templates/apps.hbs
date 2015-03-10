@@ -20,7 +20,7 @@
                     {{#if app.isUpgradable}}
                     <a href="#" {{bind-attr class=":ui-item-button :text-success app.isReady::disabled"}} {{action 'install' app}}><i class="fa fa-plus-circle fa-fw fa-lg"></i><br />Update</a>
                     {{else}}
-                    <a href="#" {{bind-attr class=":ui-item-button :text-danger app.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to uninstall this application?' app}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Uninstall</a>        
+                    <a href="#" {{bind-attr class=":ui-item-button :text-danger app.isReady::disabled"}} {{action 'showConfirm' 'uninstall' 'Are you sure you want to uninstall this application?' app}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Uninstall</a>        
                     {{/if}}
                     {{else}}
                     <a href="#" {{bind-attr class=":ui-item-button :text-success app.isReady::disabled"}} {{action 'install' app}}><i class="fa fa-plus-circle fa-fw fa-lg"></i><br />Install</a>
@@ -47,7 +47,7 @@
                     {{#if app.isUpgradable}}
                     <a href="#" {{bind-attr class=":ui-item-button :text-success app.isReady::disabled"}} {{action 'install' app}}><i class="fa fa-plus-circle fa-fw fa-lg"></i><br />Update</a>        
                     {{/if}}
-                    <a href="#" {{bind-attr class=":ui-item-button :text-danger app.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to uninstall this application?' app}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Uninstall</a>        
+                    <a href="#" {{bind-attr class=":ui-item-button :text-danger app.isReady::disabled"}} {{action 'showConfirm' 'uninstall' 'Are you sure you want to uninstall this application?' app}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Uninstall</a>        
                   </div>
                 </div>
               </div>

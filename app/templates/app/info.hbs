@@ -13,6 +13,12 @@
                 <p class="form-control-static">{{model.description.short}}</p>
             </div>
         </div>
+        <div class="form-group">
+            <label for="id" class="col-sm-3 control-label">Categories</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">{{model.categoryString}}</p>
+            </div>
+        </div>
         {{#if model.description.long}}
         <div class="form-group">
             <label for="id" class="col-sm-3 control-label">Description</label>
