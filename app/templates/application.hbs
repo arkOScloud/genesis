@@ -5,7 +5,7 @@
                 <a id="navbar-brand" class="navbar-brand" href="/#/"><img src="/images/logo-white.png" /></a>
             </div>
             <div class="g-user-info pull-right">
-                <strong id="g-username">username</strong>
+                {{#link-to 'users'}}<strong id="g-username">username</strong>{{/link-to}}
                 <div class="btn-group">
                     {{#link-to 'users'}}<i class="fa fa-users fa-fw" style="font-size: 1.5em;"></i>{{/link-to}}
                     <a href="/#/logout"><i class="fa fa-sign-out fa-fw" style="font-size: 1.5em;"></i></a>

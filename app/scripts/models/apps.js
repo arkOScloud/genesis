@@ -38,13 +38,13 @@ Genesis.App = DS.Model.extend({
     screenshots: DS.attr(),
     screenshotUrls: function() {
       var shots = [];
-      if (!this.get('installed') && this.get('assets').screens) {
+      if (this.get('assets') && this.get('assets').screens) {
         this.get('assets').screens.forEach(function(i) {
           shots.push(Genesis.Config.GRMHost+'/api/v1/assets/'+i);
         });
       }
       return shots;
-    }.property('installed', 'assets'),
+    }.property('assets'),
     services: DS.attr(),
     database_engines: DS.attr(),
     databaseMultiuser: DS.attr('boolean', {defaultValue: false}),

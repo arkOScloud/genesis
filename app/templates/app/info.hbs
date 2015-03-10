@@ -39,10 +39,12 @@
                 <p class="form-control-static">{{model.author}} <a target="_blank" {{bind-attr href=model.homepage}}>{{model.homepage}}</a></p>
             </div>
         </div>
-        {{#each shot in model.screenshotUrls}}
-        <a {{bind-attr href=shot}} data-lightbox="screenshots">
-            <img class="img-responsive img-thumbnail app-screenshot" {{bind-attr src=shot}} />
-        </a>
-        {{/each}}
+        <div class="text-center">
+            {{#each shot in model.screenshotUrls}}
+            <a {{bind-attr href=shot}} data-lightbox="screenshots">
+                <img class="img-responsive img-thumbnail app-screenshot" {{bind-attr src=shot}} />
+            </a>
+            {{/each}}
+        </div>
     </div>
 {{/g-modal}}
