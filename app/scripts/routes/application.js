@@ -46,8 +46,12 @@ Genesis.ApplicationRoute = Ember.Route.extend({
       });
     },
     showConfirm: function(action, text, model) {
-      model.set('confirmAction', action);
-      model.set('confirmText', text);
+      if (model) {
+        model.set('confirmAction', action);
+        model.set('confirmText', text);
+      } else {
+        model = {confirmAction: action, confirmText: text};
+      };
       this.render('components/g-confirm', {
         into: 'application',
         outlet: 'modal',
@@ -58,6 +62,18 @@ Genesis.ApplicationRoute = Ember.Route.extend({
       this.disconnectOutlet({
         outlet: 'modal',
         parentView: 'application'
+      });
+    },
+    shutdown: function() {
+      $.ajax({
+        url: Genesis.Config.krakenHost+'/system/shutdown',
+        type: 'POST'
+      });
+    },
+    reboot: function() {
+      $.ajax({
+        url: Genesis.Config.krakenHost+'/system/reboot',
+        type: 'POST'
       });
     }
   }
