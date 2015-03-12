@@ -359,6 +359,10 @@ input.form-control {
   max-width: 160px;
 }
 
+i:not(.fa) {
+  line-height: 1;
+}
+
 .ms-container{
   background: transparent url('../images/switch.png') no-repeat 50% 50%;
   width: 100%;

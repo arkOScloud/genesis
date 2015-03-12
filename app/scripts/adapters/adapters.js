@@ -21,3 +21,11 @@ Genesis.PackageAdapter = Genesis.ApplicationAdapter.extend({
 Genesis.FilesystemAdapter = Genesis.ApplicationAdapter.extend({
     namespace: 'system'
 });
+
+Genesis.PolicyAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
+});
+
+Genesis.JailAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
+});

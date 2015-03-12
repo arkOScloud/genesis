@@ -1,0 +1,49 @@
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#firewall" aria-controls="firewall" role="tab" data-toggle="tab"><i class="fa fa-shield"></i> Firewall Rules</a></li>
+    <li role="presentation"><a href="#defence" aria-controls="defence" role="tab" data-toggle="tab"><i class="fa fa-dot-circle-o"></i> Defence</a></li>
+</ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="firewall">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th width="1"></th>
+                    <th>Name</th>
+                    <th>Ports</th>
+                    <th>Current Policy</th>
+                    <th width="175">Allow</th>
+                </tr>
+                {{#each pol in model.policies}}
+                <tr {{bind-attr class="pol.isReady::text-muted"}}>
+                    <td><i {{bind-attr class=":fa-fw pol.icon"}}></i></td>
+                    <td>{{pol.name}}</td>
+                    <td>{{pol.displayPorts}}</td>
+                    <td {{bind-attr class="pol.policyDisplayClass"}}><i {{bind-attr class=":fa :fa-fw pol.policyDisplayIcon"}}></i> {{pol.policyDisplayText}}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            {{#if pol.notLocal}}
+                            <a href="#" {{bind-attr class=":btn :btn-default pol.isReady::disabled"}} {{action 'local' pol}}><i class="fa fa-home"></i> Local</a>
+                            {{/if}}
+                            {{#if pol.notWideOpen}}
+                            <a href="#" {{bind-attr class=":btn :btn-default pol.isReady::disabled"}} {{action 'allow' pol}}><i class="fa fa-check-circle"></i> Allow</a>
+                            {{/if}}
+                            {{#if pol.notDenied}}
+                            {{#if pol.canDeny}}
+                            <a href="#" {{bind-attr class=":btn :btn-danger pol.isReady::disabled"}} {{action 'deny' pol}}><i class="fa fa-minus-circle"></i> Deny</a>
+                            {{/if}}
+                            {{/if}}
+                        </div>
+                    </td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td class="text-center" colspan="5">None</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="defence">
+    </div>
+</div>
