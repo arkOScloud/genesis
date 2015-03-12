@@ -1,5 +1,7 @@
 var Genesis = window.Genesis = Ember.Application.create();
 
+// TODO organize all this stuff
+
 Genesis.initializer({
   name: "registerMessages",
   initialize: function(container, application) {
@@ -20,8 +22,27 @@ Genesis.initializer({
 Genesis.Config = {
     krakenHost: 'http://localhost:8765',
     GRMHost: 'https://grm-test.arkos.io',
-    currentVersion: '0.7.0'
+    currentVersion: '0.7.0',
+    dateFormat: 'DD MMM YYYY',
+    timeFormat: 'HH:mm:ss'
 };
+
+$.getJSON(Genesis.Config.krakenHost+'/config', function(j){
+  Genesis.Config.dateFormat = j.config.general.date_format;
+  Genesis.Config.timeFormat = j.config.general.time_format;
+});
+
+Ember.Handlebars.helper('formatDate', function(date) {  
+  return new Ember.Handlebars.SafeString(moment(date).format(Genesis.Config.dateFormat));
+});
+
+Ember.Handlebars.helper('formatTime', function(date) {
+  return new Ember.Handlebars.SafeString(moment(date).format(Genesis.Config.timeFormat));
+});
+
+Ember.Handlebars.helper('formatDateTime', function(date) {  
+  return new Ember.Handlebars.SafeString(moment(date).format(Genesis.Config.dateFormat+", "+Genesis.Config.timeFormat));
+});
 
 Genesis.sizeToString = function(sz) {
     if (sz < 1024) return sz+' bytes';

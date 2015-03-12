@@ -2,6 +2,7 @@ Genesis.Timezones=Ember.A([{id:1,region:"Africa",zones:["Abidjan","Accra","Addis
 
 Genesis.ConfigController = Ember.ObjectController.extend({
   timezones: Genesis.Timezones,
+  config: {},
   hostname: "",
   tzRegion: "",
   tzZone: "",
@@ -31,8 +32,15 @@ Genesis.ConfigController = Ember.ObjectController.extend({
         }
       });
     },
-    saveSystem: function() {
+    save: function() {
       var self = this;
+      $.ajax({
+        url: Genesis.Config.krakenHost+'/config',
+        type: 'PUT',
+        data: JSON.stringify({config: self.get('config')}),
+        contentType: 'application/json',
+        processData: false
+      });
       $.ajax({
         url: Genesis.Config.krakenHost+'/config/hostname',
         type: 'PUT',
@@ -47,7 +55,7 @@ Genesis.ConfigController = Ember.ObjectController.extend({
         contentType: 'application/json',
         processData: false
       });
-      self.message.success("System settings saved successfully");
+      self.message.success("System preferences saved successfully");
     }
   }
 });

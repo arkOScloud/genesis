@@ -9,6 +9,7 @@ Genesis.ConfigRoute = Ember.Route.extend({
   },
   setupController: function(controller, model) {
     controller.set('model', model);
+    controller.set('config', model.config.config);
     controller.set('hostname', model.hostname.hostname);
     controller.set('tzRegion', model.timezone.timezone.region);
     controller.set('tzZone', model.timezone.timezone.zone);
