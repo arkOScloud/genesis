@@ -22,6 +22,10 @@ Genesis.FilesystemAdapter = Genesis.ApplicationAdapter.extend({
     namespace: 'system'
 });
 
+Genesis.NetworkAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
+});
+
 Genesis.PolicyAdapter = Genesis.ApplicationAdapter.extend({
     namespace: 'system'
 });
