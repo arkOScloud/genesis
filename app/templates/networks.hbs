@@ -1,35 +1,22 @@
 <a href="#" class="btn btn-default pull-right" {{action 'showModal' 'network/add' model}}><i class="fa fa-plus-circle"></i> Add Network</a>
 <h1 class="page-header">My Networks</h1>
 
-<table class="table">
-    <tbody>
-        <tr>
-            <th width="1"></th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>State</th>
-            <th>IP Addresses</th>
-            <th width="300">Actions</th>
-        </tr>
-        {{#each net in model}}
-        <tr {{bind-attr class="net.isReady::text-muted"}}>
-            <td><i {{bind-attr class=":fa :fa-fw net.typeIcon"}}></i></td>
-            <td>{{net.id}}</td>
-            <td>{{net.type}}</td>
-            <td {{bind-attr class="net.connected:text-success"}}><i {{bind-attr class=":fa :fa-fw net.connected:fa-check-circle:fa-times"}}></i> {{#if net.connected}}Connected{{else}}Not Connected{{/if}}{{#if net.enabled}} and Enabled{{else}} and Not Enabled{{/if}}</td>
-            <td>{{net.address}}</td>
-            <td>
-                <div class="btn-group btn-group-sm">
-                    <a href="#" {{bind-attr class=":btn :btn-default net.isReady::disabled"}} {{action 'toggle' net}}><i {{bind-attr class=":fa net.connected:fa-times:fa-check"}}></i> {{#if net.connected}}Disconnect{{else}}Connect{{/if}}</a>
-                    <a href="#" {{bind-attr class=":btn :btn-default net.isReady::disabled"}} {{action 'toggleEnabled' net}}><i {{bind-attr class=":fa net.enabled:fa-thumbs-down:fa-thumbs-up"}}></i> {{#if net.enabled}}Disable{{else}}Enable{{/if}}</a>
-                    <a href="#" {{bind-attr class=":btn :btn-danger net.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this network? It will be disconnected in the process.' net}}><i class="fa fa-minus-circle"></i> Delete</a>
-                </div>
-            </td>
-        </tr>
-        {{else}}
-        <tr>
-            <td class="text-center" colspan="5">None</td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<div class="ui-items-3">
+    {{#each net in model.networks}}
+      <div {{bind-attr class=":ui-item net.isReady::is-pending"}}>
+        <div class="ui-item-icon">
+            <i {{bind-attr class=":fa :fa-fw :fa-5x net.typeIcon net.connected:text-success"}}></i>
+        </div>
+        <div class="ui-item-content">
+          <h2>{{net.id}}</h2>
+          <p class="lead">{{net.type}}{{#if net.connected}} (Connected){{/if}}</p>
+          <div class="ui-item-buttons">
+            <a href="#" {{bind-attr class=":ui-item-button net.isReady::disabled"}} {{action 'showModal' 'network/info' net model}}><i class="fa fa-fw fa-lg fa-info-circle"></i><br />Info</a>
+            <a href="#" {{bind-attr class=":ui-item-button net.isReady::disabled"}} {{action 'toggle' net}}><i {{bind-attr class=":fa :fa-fw :fa-lg net.connected:fa-times:fa-check"}}></i><br />{{#if net.connected}}Disconnect{{else}}Connect{{/if}}</a>
+            <a href="#" {{bind-attr class=":ui-item-button net.isReady::disabled"}} {{action 'toggleEnabled' net}}><i {{bind-attr class=":fa :fa-fw :fa-lg net.enabled:fa-thumbs-down:fa-thumbs-up"}}></i><br />{{#if net.enabled}}Disable{{else}}Enable{{/if}}</a>
+            <a href="#" {{bind-attr class=":ui-item-button :text-danger net.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this network? It will be disconnected in the process.' net}}><i class="fa fa-fw fa-lg fa-minus-circle"></i><br />Delete</a>       
+          </div>
+        </div>
+      </div>
+    {{/each}}
+</div>

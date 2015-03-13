@@ -38,7 +38,7 @@ Genesis.ApplicationRoute = Ember.Route.extend({
   },
   actions: {
     showModal: function(name, model, extra) {
-      model.extra = extra;
+      model.set('extra', extra);
       this.render(name, {
         into: 'application',
         outlet: 'modal',

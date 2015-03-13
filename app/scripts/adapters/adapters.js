@@ -26,6 +26,10 @@ Genesis.NetworkAdapter = Genesis.ApplicationAdapter.extend({
     namespace: 'system'
 });
 
+Genesis.NetifaceAdapter = Genesis.ApplicationAdapter.extend({
+    namespace: 'system'
+});
+
 Genesis.PolicyAdapter = Genesis.ApplicationAdapter.extend({
     namespace: 'system'
 });

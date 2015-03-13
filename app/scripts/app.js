@@ -56,6 +56,10 @@ Genesis.sizeToString = function(sz) {
     return sz.toFixed(2)+' Tb';
 };
 
+Ember.Handlebars.helper('sizeToString', function(size) {
+  return new Ember.Handlebars.SafeString(Genesis.sizeToString(size));
+});
+
 Genesis.FieldValidator = function(pre) {
     pre = pre || "";
     $(pre+' .form-group').removeClass('has-error has-success');
