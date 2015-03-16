@@ -44,6 +44,11 @@ Genesis.Router.map(function () {
       this.route('edit');
     });
   });
+  this.resource('backups', function(){
+    this.resource('backup', { path: '/:backup_id' }, function(){
+      this.route('edit');
+    });
+  });
   this.resource('networks', function(){
     this.resource('network', { path: '/:network_id' }, function(){
       this.route('edit');
