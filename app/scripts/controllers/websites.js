@@ -62,13 +62,13 @@ Genesis.WebsiteAddController = Ember.ObjectController.extend({
 Genesis.WebsiteEditController = Ember.ObjectController.extend({
   newName: function() {
     return this.get('model').get('id');
-  }.property(),
+  }.property('model'),
   newAddr: function() {
     return this.get('model').get('addr');
-  }.property(),
+  }.property('model'),
   newPort: function() {
     return this.get('model').get('port');
-  }.property(),
+  }.property('model'),
   actions: {
     save: function() {
       var site = this.get('model');
