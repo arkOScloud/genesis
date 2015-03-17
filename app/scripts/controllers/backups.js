@@ -16,7 +16,7 @@ Genesis.BackupsController = Ember.ObjectController.extend({
     selectType: function(item) {
       $('.ui-navlist > li').removeClass('active');
       $('#'+item).addClass('active');
-      this.set('selectedBackupType', item);
+      this.set('selectedBackupType', item!="all"?item:"");
     }
   }
 });

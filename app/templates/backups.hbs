@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-sm-3">
         <ul class="nav nav-pills nav-stacked ui-navlist">
-          <li {{bind-attr class="selectedBackupType::active"}}><a href="#" {{action 'selectType'}}><i class="fa fa-fw fa-clock-o"></i> All Backups</a></li>
+          <li {{bind-attr class="selectedBackupType::active"}}><a href="#" {{action 'selectType' 'all'}}><i class="fa fa-fw fa-clock-o"></i> All Backups</a></li>
           {{#each type in model.types}}
           <li {{bind-attr id=type.id}}><a href="#" {{action 'selectType' type.id}}><i {{bind-attr class=":fa :fa-fw type.icon"}}></i> {{type.id}}</a></li>
           {{/each}}
