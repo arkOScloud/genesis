@@ -2,7 +2,7 @@
 <h1 class="page-header">My Websites</h1>
 
 <div class="ui-items-3">
-    {{#each site in model.sites}}
+    {{#each site in sortedSites}}
       <div {{bind-attr class=":ui-item site.isReady::is-pending"}}>
         <div class="ui-item-icon">
             <i {{bind-attr class=":fa-fw :fa-5x site.siteIcon"}}></i>

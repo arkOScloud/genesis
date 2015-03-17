@@ -56,6 +56,11 @@
     </div>
     <p class="help-block">Cipher and keysize used to create encrypted filesystems (<a target="_blank" href="https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption#Encryption_options_for_plain_mode">click here</a> for more info)</p>
 </div>
+<div class="form-group">
+    <label for="cipher">Backup: Archive Directory</label>
+    {{input type="text" class="form-control required" value=config.backups.location}}
+    <p class="help-block">Directory where backup archives and metadata are stored.</p>
+</div>
 <div class="checkbox">
     <label>
         {{input type="checkbox" checked=config.updates.check_updates}} Check for Updates

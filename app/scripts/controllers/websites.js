@@ -1,6 +1,8 @@
 Genesis.WebsiteController = Ember.ObjectController.extend();
 
 Genesis.WebsitesController = Ember.ObjectController.extend({
+  sortBy: ['id'],
+  sortedSites: Ember.computed.sort('model.sites', 'sortBy'),
   actions: {
     toggleStatus: function(site) {
       site.set('operation', site.get('enabled')?'disable':'enable');
