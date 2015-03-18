@@ -175,6 +175,22 @@ Genesis.Pollster = Ember.Object.extend({
   }
 });
 
+Genesis.toB64 = function(data) {
+  return window.btoa(data).replace(/\=/g, '*').replace(/\//g, '-');
+};
+
+window.addEventListener("keydown",
+    function(e){
+      Genesis.CTRL = (e.ctrlKey || e.metaKey);
+    },
+false);
+
+window.addEventListener('keyup',
+    function(e){
+      Genesis.CTRL = (e.metaKey || e.ctrlKey);
+    },
+false);
+
 /* Order and include as you please. */
 require('scripts/controllers/*');
 require('scripts/store');

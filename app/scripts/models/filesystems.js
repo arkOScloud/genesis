@@ -22,3 +22,9 @@ Genesis.Filesystem = DS.Model.extend({
     operation: DS.attr('string'),
     isReady: DS.attr('boolean', {defaultValue: false})
 });
+
+Genesis.Point = DS.Model.extend({
+    icon: DS.attr('string'),
+    type: DS.attr('string'),
+    path: DS.attr('string')
+});

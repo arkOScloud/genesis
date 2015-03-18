@@ -8,6 +8,7 @@
     "ember-auth": "9.0.7",
     "ember-uploader": "0.3.4",
     "bootstrap-sass-official": "3.1.1",
+    "bootstrap-contextmenu": "0.3.2",
     "components-font-awesome": "4.2.0",
     "moment": "2.9.0"
   },

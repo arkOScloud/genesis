@@ -150,6 +150,24 @@ input.form-control {
   padding: 5px;
 }
 
+.ui-fm-item {
+  display: inline-block;
+  margin: 5px 15px;
+  text-align: center;
+  max-width: 90px;
+}
+
+.ui-fm-item p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-fm-item i {
+  margin-bottom: 5px;
+  overflow: visible;
+}
+
 .btn-outline-inverse, .btn-outline-inverse-gray {
   color: #fff;
   background-color: transparent;

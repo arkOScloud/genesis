@@ -56,7 +56,7 @@ Genesis.Router.map(function () {
   });
   this.route('stats');
   this.route('services');
-  this.route('fileman');
   this.route('security');
   this.route('config');
+  this.route('files');
 });
