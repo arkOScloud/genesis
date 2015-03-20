@@ -1,0 +1,513 @@
+html, body, h1, h2, h3, h4, h5, h6, p, a, span {
+  font-family: 'Fira Sans', 'Helvetica Neue', 'Helvetica', sans-serif;
+}
+
+
+/* Main Content */
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 55px;
+  background-color: #FCFFF5;
+}
+
+#main-content {
+  margin-bottom: 15px;
+}
+
+a:link, a:focus, a:active, a:hover {
+  outline: 0;
+  text-decoration: none;
+}
+
+.page-header {
+  margin-top:0;
+}
+
+
+/* Navbar */
+
+.navbar-inverse .navbar-brand {
+  color: #FFF;
+}
+
+.navbar-static-top {
+  background-color: #3E606F;
+  margin-bottom: 0;
+  border: 0;
+  height: 75px;
+}
+
+#g-lower-bar {
+  background-color: #91AA9D;
+  margin-bottom: 20px;
+  border: 0;
+  border-radius: 0;
+  min-height: 30px;
+}
+
+.container > .navbar-collapse {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #FFF;
+  font-size: 13px;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.navbar-default .navbar-nav > li > a:hover, 
+.navbar-default .navbar-nav > li > a:focus, 
+.navbar-default .navbar-nav > .active > a, 
+.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .open > a, 
+.navbar-default .navbar-nav > .open > a:hover, 
+.navbar-default .navbar-nav > .open > a:focus {
+  background: #3E606F;
+  color: #FFF;
+}
+
+.nav-tabs > li.active > a, 
+.nav-tabs > li.active > a:hover, 
+.nav-tabs > li.active > a:focus {
+    background-color: #FCFFF5;
+}
+
+.dropdown-menu > li > a {
+    padding: 5px 20px;
+}
+
+
+/* Widgets */
+
+.table > tbody > tr > td {
+    line-height: 2;
+}
+
+.btn, 
+.btn-group-sm > .btn,
+.btn-group-lg > .btn,
+input.form-control {
+  border-radius: 0;
+}
+
+.btn i {
+  line-height: 1;
+}
+
+.input-group .btn {
+  padding-top: 7px;
+}
+
+.btn-default {
+    background-color: #FCFFF5;
+}
+
+.btn-tipicon {
+  margin: 2px;
+  padding: 0;
+}
+
+.g-user-info {
+  color: #FFF;
+  margin-top: 25px;
+}
+
+.g-user-info a {
+    color: #FFF;
+}
+
+.table .is-pending > td {
+    background-color: #F5F5F5;
+    color: #777777;
+}
+
+.ui-user-info a {
+  color: #FFF;
+  padding: 5px;
+}
+
+.ui-fm-item {
+  display: inline-block;
+  margin: 5px 15px;
+  text-align: center;
+  max-width: 90px;
+}
+
+.ui-fm-item p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-fm-item i {
+  margin-bottom: 5px;
+  overflow: visible;
+}
+
+.btn-outline-inverse, .btn-outline-inverse-gray {
+  color: #fff;
+  background-color: transparent;
+  border-color: #E0EBF3;
+}
+.btn-outline-inverse-warn {
+  color: #D2322D;
+  background-color: transparent;
+  border-color: #D2322D;
+}
+.btn-outline-inverse:hover,
+.btn-outline-inverse:focus,
+.btn-outline-inverse:active {
+  color: #D1DBBD;
+  text-shadow: none;
+  background-color: #fff;
+  border-color: #fff;
+}
+.btn-outline-inverse-gray:hover,
+.btn-outline-inverse-gray:focus,
+.btn-outline-inverse-gray:active {
+  color: #3E3E3E;
+  text-shadow: none;
+  background-color: #fff;
+  border-color: #fff;
+}
+.btn-outline-inverse-warn:hover,
+.btn-outline-inverse-warn:focus,
+.btn-outline-inverse-warn:active {
+  color: #3E3E3E;
+  text-shadow: none;
+  background-color: #D2322D;
+  border-color: #AC2925;
+}
+
+.ui-app-logo {
+  margin-left:auto;
+  margin-right:auto;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.ui-firstrun-appselect, .ui-homebutton, .ui-appbutton {
+  display: inline-block;
+  vertical-align: top;
+  text-align: left;
+  border: 1px solid #CCC;
+  margin: 10px;
+  padding: 0px 10px 10px 15px;
+  width: 200px;
+  height: 150px;
+}
+
+.ui-homebutton, .ui-appbutton {
+  padding: 0;
+}
+
+.ui-appbutton h1 {
+  line-height: 1.5;
+}
+
+.ui-firstrun-appselect.selected {
+  background-color: #2ECC71;
+  color: #FFF;
+  border-color: #2ECC71;
+}
+
+.ui-firstrun-appselect.selected:hover {
+  background-color: #1DB35C;
+  border-color: #1DB35C;
+}
+
+.ui-firstrun-appselect:hover, .ui-homebutton:hover, .ui-appbutton:hover {
+  background-color: #EBEBEB;
+  border-color: #ADADAD;
+  cursor: pointer;
+}
+
+.ui-firstrun-appselect input {
+  display: none;
+}
+
+.ui-firstrun-appselect h2 {
+  float: left;
+  padding-right: 15px;
+  line-height: 1;
+}
+
+.ui-firstrun-appselect h4 {
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.ui-el-list {
+  background: #fff;
+  border: 1px solid #ccc;
+  margin: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  list-style: none;
+  padding-left: 0;
+}
+
+.ui-el-list li {
+  padding: 2px 10px;
+  width: 100%;
+  line-height: 16px;
+  color: #555;
+}
+
+.ui-el-list li:hover {
+  background: #eee;
+}
+
+.ui-el-list li:active, .ui-el-list li.active {
+  background-color: #3E606F;
+  color: white;
+  font-weight: bold;
+}
+
+.ui-el-scrollcontainer {
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+.form-group > .col-md-10 {
+  padding-top: 7px;
+  margin-bottom: 0;
+}
+
+.app-logo {
+  max-height: 150px;
+}
+
+.app-screenshot {
+  margin: 5px 5px;
+  max-width: 200px;
+}
+
+.ui-items, .ui-items-3, .ui-items-4 {
+  margin-bottom: 30px;
+}
+
+.ui-item {
+  display: inline-block;
+  vertical-align: top;
+  text-align: left;
+  margin: 10px;
+  width: 45%;
+  min-width: 250px;
+  border: 1px solid #CCC;
+  white-space: nowrap;
+}
+
+.ui-item.is-pending {
+  color: #777777;
+}
+
+.ui-items-3 > .ui-item {
+  width: 350px;
+}
+
+.ui-items-4 > .ui-item {
+  width: 260px;
+}
+
+.ui-item-icon {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.ui-item-content {
+  width: 70%;
+  display: inline-block;
+}
+
+.ui-item-content h2,
+.ui-item-content .lead {
+  overflow: hidden;
+}
+
+.ui-item-buttons {
+  margin: 10px 0;
+  white-space: normal;
+}
+
+.ui-item-button {
+  display: inline-block;
+  margin: 5px;
+  text-align: center;
+}
+
+.ui-item-button.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.ui-items-3 > .ui-item > .ui-item-content {
+  max-width: 254px;
+}
+
+.ui-items-4 > .ui-item > .ui-item-content {
+  max-width: 160px;
+}
+
+i:not(.fa) {
+  line-height: 1;
+}
+
+
+/* Alerts, Modals and Message Boxes */
+
+.message-box-wr {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  padding: 20px 10px;
+  z-index: 1000002;
+}
+
+.alert {
+  width: 500px;
+  overflow: hidden;
+  margin: 0 0 5px;
+  border-radius: 0;
+}
+
+.alert-warning {
+  background-color:#F4A425;
+  color: #FFF;
+  border: 0px;
+}
+
+.alert-danger {
+  background-color:#E74C3C;
+  color: #FFF;
+  border: 0px;
+}
+
+.alert-info {
+  background-color:#5BC0DE;
+  color: #FFF;
+  border: 0px;
+}
+
+.alert-success {
+  background-color:#43AC6A;
+  color: #FFF;
+  border: 0px;
+}
+
+.alert-dismissable .close {
+  opacity: 0.4;
+}
+
+.modal-content {
+  border-radius: 0;
+}
+
+.modal-footer {
+  padding: 15px 20px 15px;
+}
+
+button.close {
+  line-height: 1.5;
+}
+
+#warning-text {
+  display: inherit;
+  margin-bottom: 10px;
+}
+
+.alert > i {
+  line-height: 1;
+  float: left;
+  display: inline-block;
+  font-size: 36px;
+  margin: 2px 10px 0 0;
+}
+
+.ui-alert-text {
+  display: inline-block;
+  float: left;
+  width: 80%;
+}
+
+
+/* Special */
+
+.firstrunpage {
+  padding-top: 25px;
+}
+
+.ui-firstrun-stripe {
+  background-color:#D1DBBD;
+  color:#FFF;
+  padding:25px 0px 35px 0px;
+  text-align:center;
+  text-shadow:0px 1px 3px rgba(0,0,0,0.4), 0px 0px 30px rgba(0,0,0,0.075);
+  box-shadow:inset 0px 7px 10px -10px #000,inset 0px -5px 10px -10px #000;
+  margin-bottom:30px;
+}
+
+#ui-firstrun-appselectfield {
+  text-align: center;
+}
+
+.auth-page {
+  background-color: #D1DBBD;
+}
+
+.login-icon {
+  margin-top: 10%;
+  margin-bottom: 20px;
+}
+ 
+.login {
+  background-color: #eceff1;
+  width: 350px;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#login-logo {
+  width: 150px;
+}
+
+#auth-error {
+  display: none;
+  color: #FFF;
+}
+
+.login .has-feedback .form-control-feedback {
+  top: 5px;
+}
+
+
+/* Footer */
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background-color: #3E606F;
+  color: #FFF;
+  padding: 5px;
+  line-height: 35px;
+}
+
+.footer a {
+  color: #FFF;
+  padding: 0px 5px;
+}

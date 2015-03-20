@@ -1,45 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>arkOS Genesis</title>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>arkOS Genesis</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- build:css styles/main.css -->
-        <link rel="stylesheet" href="styles/style.css">
-        <!-- endbuild -->
-</head>
-    <body>
-        <!-- build:js(app) scripts/components.js -->
-        <script src="bower_components/jquery/dist/jquery.js"></script>
-        <script src="bower_components/handlebars/handlebars.runtime.js"></script>
-        <script src="bower_components/moment/moment.js"></script>
-        <script src="@@ember"></script>
-        <script src="@@ember_data"></script>
-        <script src="@@ember_upload"></script>
-        <!-- endbuild -->
+    {{content-for 'head'}}
 
-        <!-- build:js(.tmp) scripts/templates.js -->
-        <script src="scripts/compiled-templates.js"></script>
-        <!-- endbuild -->
+    <link rel="stylesheet" href="assets/vendor.css">
+    <link rel="stylesheet" href="assets/genesis.css">
 
-        <!-- build:js(.tmp) scripts/main.js -->
-        <script src="scripts/combined-scripts.js"></script>
-        <!-- endbuild -->
+    {{content-for 'head-footer'}}
+  </head>
+  <body>
+    {{content-for 'body'}}
 
-        <!-- build:js scripts/plugins.js -->
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/alert.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/dropdown.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/modal.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/transition.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/button.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/popover.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/carousel.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/scrollspy.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
-        <script src="bower_components/bootstrap-contextmenu/bootstrap-contextmenu.js"></script>
-        <!-- endbuild -->
-</body>
+    <script src="assets/vendor.js"></script>
+    <script src="assets/genesis.js"></script>
+
+    {{content-for 'body-footer'}}
+  </body>
 </html>

@@ -21,7 +21,7 @@
                 </div>
                 <div class="ui-item-content">
                   <h2>{{backup.pid}}</h2>
-                  <p class="lead">{{formatDateTime backup.time}}</p>
+                  <p class="lead">{{format-date-time backup.time}}</p>
                   <div class="ui-item-buttons">
                     <a href="#" {{bind-attr class=":ui-item-button backup.isReady::disabled"}} {{action 'showModal' 'backup/info' backup}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
                     <a href="#" {{bind-attr class=":ui-item-button backup.isReady::disabled"}} {{action 'showConfirm' 'restore' 'Are you sure you want to restore this backup? Any existing application data with this name will be overwritten.' backup}}><i class="fa fa-clock-o fa-fw fa-lg"></i><br />Restore</a>

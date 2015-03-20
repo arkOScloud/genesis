@@ -1,7 +1,17 @@
-node_modules
-temp
-dist
-.sass-cache
-.tmp
-app/bower_components
-test/bower_components
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/tmp
+
+# dependencies
+/node_modules
+/bower_components
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
