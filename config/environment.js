@@ -15,7 +15,7 @@ module.exports = function(environment) {
 
     APP: {
       currentVersion: '0.7.0', 
-      krakenHost: 'http://localhost:8765', 
+      krakenHost: '', 
       GRMHost: 'https://grm-test.arkos.io'
     },
     
