@@ -3,37 +3,37 @@
         <div class="form-group">
             <label for="id" class="col-sm-2 control-label">Name</label>
             <div class="col-sm-10">
-                <p class="form-control-static">{{id}}</p>
+                <p class="form-control-static">{{model.id}}</p>
             </div>
         </div>
         <div class="form-group">
             <label for="id" class="col-sm-2 control-label">Serves</label>
             <div class="col-sm-10">
-                <p class="form-control-static">{{domain}}</p>
+                <p class="form-control-static">{{model.domain}}</p>
             </div>
         </div>
         <div class="form-group">
             <label for="id" class="col-sm-2 control-label">Expiry</label>
             <div class="col-sm-10">
-                <p class="form-control-static">{{format-date-time expiry}}</p>
+                <p class="form-control-static">{{format-date-time model.expiry}}</p>
             </div>
         </div>
         <div class="form-group">
             <label for="id" class="col-sm-2 control-label">Key Type</label>
             <div class="col-sm-10">
-                <p class="form-control-static">{{typeString}}</p>
+                <p class="form-control-static">{{model.typeString}}</p>
             </div>
         </div>
         <div class="form-group">
             <label for="id" class="col-sm-2 control-label">MD5</label>
             <div class="col-sm-10">
-                <p class="form-control-static">{{md5}}</p>
+                <p class="form-control-static">{{model.md5}}</p>
             </div>
         </div>
         <div class="form-group">
             <label for="id" class="col-sm-2 control-label">SHA1</label>
             <div class="col-sm-10">
-                <p class="form-control-static">{{sha1}}</p>
+                <p class="form-control-static">{{model.sha1}}</p>
             </div>
         </div>
         <h3>Assign</h3>

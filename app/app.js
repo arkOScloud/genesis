@@ -13,4 +13,12 @@ var App = Ember.Application.extend({
 
 loadInitializers(App, config.modulePrefix);
 
+window.addEventListener("keydown", function(e){
+  window.CTRL = (e.ctrlKey || e.metaKey);
+}, false);
+
+window.addEventListener('keyup', function(e){
+  window.CTRL = (e.metaKey || e.ctrlKey);
+}, false);
+
 export default App;

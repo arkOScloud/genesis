@@ -49,7 +49,7 @@
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li><a href="#" {{action 'upload'}}><i class="fa fa-fw fa-upload"></i> Upload Here...</a></li>
-                <li><a href="#" {{action 'download'}}><i class="fa fa-fw fa-download"}}></i> Download</a></li>
+                <li><a href="#" {{action 'showModal' 'file/download'}}><i class="fa fa-fw fa-download"}}></i> Download</a></li>
               </ul>
             </div>
         </div>
@@ -66,7 +66,15 @@
 <hr />
 
 <div>
-{{#each item in filteredFolder}}
-    {{g-fm-item item=item}}
+{{#each item in sortedFolder}}
+    {{g-fm-item item=item files=this}}
 {{/each}}
+</div>
+
+<div id="context-menu">
+  <ul class="dropdown-menu" role="menu">
+    <li><a tabindex="-1" href="#" {{action 'copy'}}><i class="fa fa-fw fa-files-o"></i> Copy</a></li>
+    <li><a tabindex="-1" href="#" {{action 'showModal' 'file/download'}}><i class="fa fa-fw fa-download"}}></i> Download</a></li>
+    <li><a tabindex="-1" href="#" {{action 'showConfirm' 'delete' 'Are you sure you want to delete the selected files?'}}><i class="fa fa-fw fa-times-circle"></i> Delete...</a></li>
+  </ul>
 </div>

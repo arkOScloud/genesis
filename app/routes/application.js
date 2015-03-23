@@ -1,9 +1,21 @@
 import Ember from "ember";
 import ENV from "../config/environment";
 import Pollster from "../objects/pollster";
+import {showFade, showLoader, hideLoader, hideFade} from "../utils/loading";
 
 
 export default Ember.Route.extend({
+  init: function() {
+    var self = this;
+    var initConfig = $.getJSON(ENV.APP.krakenHost+'/config', function(j){
+      ENV.APP.dateFormat = j.config.general.date_format;
+      ENV.APP.timeFormat = j.config.general.time_format;
+    });
+    initConfig.fail(function(){
+      self.message.error('Could not get initial configuration, reverting to defaults.');
+    });
+    this._super();
+  },
   setupController: function() {
     if (Ember.isNone(this.get('pollster'))) {
       var self = this;
@@ -42,6 +54,21 @@ export default Ember.Route.extend({
     this.get('pollster').stop();
   },
   actions: {
+    error: function(model) {
+      console.log(model);
+      return true;
+    },
+    loading: function(transition, originRoute) {
+      showFade();
+      showLoader();
+      var self = this;
+      transition.then(function(){
+        Ember.run.schedule('afterRender', self, function(){
+          hideLoader();
+          hideFade();
+        });
+      })
+    },
     showModal: function(name, model, extra) {
       if (extra) model.set('extra', extra);
       this.render(name, {

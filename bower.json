@@ -18,6 +18,8 @@
     "font-awesome": "~4.3.0",
     "fira": "~0.1.0",
     "lightbox2": "~2.7.1",
-    "ember-uploader": "0.3.2"
+    "ember-uploader": "0.3.2",
+    "multiselect": "~0.9.12",
+    "bootstrap-contextmenu": "~0.3.2"
   }
 }

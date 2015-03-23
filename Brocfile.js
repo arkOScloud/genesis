@@ -23,9 +23,12 @@ app.import('bower_components/bootstrap/dist/css/bootstrap.css');
 app.import('bower_components/bootstrap/dist/css/bootstrap.css.map', {
   destDir: 'assets'
 })
+app.import('bower_components/bootstrap-contextmenu/bootstrap-contextmenu.js');
 app.import('bower_components/moment/moment.js');
 app.import('bower_components/lightbox2/js/lightbox.js');
 app.import('bower_components/lightbox2/css/lightbox.css');
+app.import('bower_components/multiselect/js/jquery.multi-select.js');
+app.import('bower_components/multiselect/css/multi-select.css');
 app.import("bower_components/font-awesome/css/font-awesome.css");
 app.import("bower_components/fira/fira.css");
 var fontAwesome = pickFiles('bower_components/font-awesome/fonts', {
@@ -52,5 +55,6 @@ app.import("bower_components/lightbox2/img/close.png", {destDir: '/img'});
 app.import("bower_components/lightbox2/img/next.png", {destDir: '/img'});
 app.import("bower_components/lightbox2/img/prev.png", {destDir: '/img'});
 app.import("bower_components/lightbox2/img/loading.gif", {destDir: '/img'});
+app.import("bower_components/multiselect/img/switch.png", {destDir: '/img'});
 
 module.exports = app.toTree([fontAwesome, firaEot, firaOtf, firaTtf, firaWoff]);

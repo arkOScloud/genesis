@@ -7,7 +7,7 @@
         </tr>
         {{#each item in model}}
         <tr>
-            <td><i {{bind-attr class=":fa :fa-fw item.genesis.icon"}}></i></td>
+            <td><i {{bind-attr class=":fa :fa-fw item.icon"}}></i></td>
             <td>{{item.name}}</td>
             <td>
                 <a href="#" class="btn btn-sm btn-default" {{action 'removeFromClipboard' item}}><i class="fa fa-minus-circle"></i> Remove</a>        

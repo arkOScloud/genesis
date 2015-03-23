@@ -15,15 +15,17 @@ module.exports = function(environment) {
 
     APP: {
       currentVersion: '0.7.0', 
-      krakenHost: '', 
-      GRMHost: 'https://grm-test.arkos.io'
+      krakenHost: 'http://localhost:8000', 
+      GRMHost: 'https://grm-test.arkos.io',
+      dateFormat: 'DD MMM YYYY',
+      timeFormat: 'HH:mm:ss'
     },
     
     contentSecurityPolicy: {
       'default-src': "'none'",
       'script-src': "'self'",
       'font-src': "'self'",
-      'connect-src': "'self' http://localhost:8765",
+      'connect-src': "'self' http://localhost:8000",
       'img-src': "'self'",
       'style-src': "'self' 'unsafe-inline'",
       'media-src': "'self'"

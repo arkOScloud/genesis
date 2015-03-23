@@ -1,6 +1,5 @@
 import Ember from "ember";
 import ENV from "../config/environment";
-import toB64 from "../utils/to-b64";
 
 
 export default Ember.Route.extend({
@@ -14,7 +13,7 @@ export default Ember.Route.extend({
     controller.set('model', model);
     if (!this.get("currentPath")) {
         this.set('currentPath', "/");
-        var data = $.getJSON(ENV.APP.krakenHost+'/files/'+toB64("/"), function(j) {
+        var data = $.getJSON(ENV.APP.krakenHost+'/files/Lw**', function(j) {
           controller.set('currentFolder', j.files);
         });
     };
@@ -31,7 +30,7 @@ export default Ember.Route.extend({
           self = this;
       selection.forEach(function(i) {
         $.ajax({
-          url: ENV.APP.krakenHost+'/files/'+toB64(i.path),
+          url: ENV.APP.krakenHost+'/files/'+i.id,
           type: "DELETE",
           success: function(){
             self.get('controller.currentFolder').removeObject(i);
