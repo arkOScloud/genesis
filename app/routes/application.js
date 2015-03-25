@@ -54,10 +54,6 @@ export default Ember.Route.extend({
     this.get('pollster').stop();
   },
   actions: {
-    error: function(model) {
-      console.log(model);
-      return true;
-    },
     loading: function(transition, originRoute) {
       showFade();
       showLoader();
@@ -68,6 +64,12 @@ export default Ember.Route.extend({
           hideFade();
         });
       })
+    },
+    error: function(error, transition) {
+      var self = this;
+      hideLoader();
+      hideFade();
+      return true;
     },
     showModal: function(name, model, extra) {
       if (extra) model.set('extra', extra);

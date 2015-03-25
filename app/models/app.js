@@ -73,7 +73,7 @@ export default DS.Model.extend({
       if (this.get('type') == "website") {
         return 'websites';
       } else {
-        return 'apps/'+this.get('id');
+        return this.get('id');
       };
     }.property('id', 'type'),
     operation: DS.attr('string'),

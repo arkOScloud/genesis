@@ -3,6 +3,13 @@ import DS from "ember-data";
 
 export default DS.Model.extend({
     name: DS.attr('string'),
+    properName: function() {
+      if (this.get('siteType') == "internal") {
+        return this.get("name");
+      } else {
+        return this.get("id");
+      }
+    }.property('id', 'name', 'siteType'),
     path: DS.attr('string'),
     addr: DS.attr('string'),
     port: DS.attr('number'),
