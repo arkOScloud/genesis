@@ -8,7 +8,7 @@ export default DS.Model.extend({
     keytype: DS.attr('string'),
     md5: DS.attr('string'),
     sha1: DS.attr('string'),
-    assign: DS.attr(),
+    assigns: DS.attr(),
     isReady: DS.attr('boolean', {defaultValue: false}),
     typeString: function() {
       return this.get('keylength')+'-bit '+this.get('keytype');

@@ -7,8 +7,14 @@ export default Ember.Component.extend({
       afterInit: (function(_this) {
         return function(controller) {
           if (_this.selected) {
-            $('.multi').multiSelect('select', _this.selected);
-          }
+            var selectedItems = [];
+            _this.selected.forEach(function(i){
+              if (i.selectId) selectedItems.pushObject(i.selectId)
+              else if (i.id) selectedItems.pushObject(i.id)
+              else selectedItems.pushObject(i);
+            });
+          };
+          $('.multi').multiSelect('select', selectedItems);
         }
       })(this),
 
