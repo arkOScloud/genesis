@@ -1,22 +1,27 @@
 import Ember from "ember";
+import Router from "../router";
 import ENV from "../config/environment";
 import Pollster from "../objects/pollster";
 import {showFade, showLoader, hideLoader, hideFade} from "../utils/loading";
+import ApplicationRouteMixin from 'simple-auth/mixins/application-route-mixin';
 
 
-export default Ember.Route.extend({
-  init: function() {
-    var self = this;
-    var initConfig = $.getJSON(ENV.APP.krakenHost+'/config', function(j){
-      ENV.APP.dateFormat = j.config.general.date_format;
-      ENV.APP.timeFormat = j.config.general.time_format;
-    });
-    initConfig.fail(function(){
-      self.message.error('Could not get initial configuration, reverting to defaults.');
-    });
-    this._super();
-  },
+export default Ember.Route.extend(ApplicationRouteMixin, {
   setupController: function() {
+    if (this.get("session.isAuthenticated")) {
+      this.setupParallelCalls();
+    };
+  },
+  setupParallelCalls: function() {
+    $.getJSON(ENV.APP.krakenHost+'/apps', function(m){
+      m.apps.forEach(function(i){
+        if (i.type=='app' && i.installed) {
+          Router.map(function(){
+            this.route(i.id);
+          });
+        };
+      });
+    });
     if (Ember.isNone(this.get('pollster'))) {
       var self = this;
       this.set('pollster', Pollster.create({
@@ -47,13 +52,41 @@ export default Ember.Route.extend({
           });
         }
       }));
-    }
-    this.get('pollster').start();
+      this.get('pollster').start();
+    };
+    var initConfig = $.getJSON(ENV.APP.krakenHost+'/config', function(j){
+      ENV.APP.dateFormat = j.config.general.date_format;
+      ENV.APP.timeFormat = j.config.general.time_format;
+    });
+    initConfig.fail(function(){
+      self.message.danger('Could not get initial configuration, reverting to defaults.');
+    });
   },
   deactivate: function() {
     this.get('pollster').stop();
   },
   actions: {
+    sessionAuthenticationSucceeded: function() {
+      this.setupParallelCalls();
+      this._super();
+    },
+    sessionAuthenticationFailed: function(err) {
+      var msg = "";
+      if (err.message == "Invalid credentials") {
+        msg = "Username or password incorrect.";
+      } else if (err.message == "Not an admin user") {
+        msg = "This user does not have administration rights.";
+      } else {
+        msg = "Unknown error, please check server."
+      };
+      this.controllerFor("login").set("loginMessage", msg);
+    },
+    authorizationFailed: function() {
+      if (this.get('pollster')) {
+        this.get('pollster').stop();
+      };
+      this._super();
+    },
     loading: function(transition, originRoute) {
       showFade();
       showLoader();

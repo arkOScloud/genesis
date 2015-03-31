@@ -1,8 +1,8 @@
 {{#each app in sortedApps}}
     {{#if app.displayInMenu}}
-    {{#link-to app.displayHref tagName='div' class="ui-homebutton"}}
+    <div class="ui-homebutton" {{action 'openApplication' app}}>
         <h1 class="text-center"><i {{bind-attr class=":fa-2x app.icon"}}></i></h1>
         <h4 class="text-center">{{app.name}}</h4>
-    {{/link-to}}
+    </div>
     {{/if}}
 {{/each}}

@@ -66,6 +66,7 @@ Router.map(function() {
   this.route('security');
   this.route('config');
   this.route('files');
+  this.route('login');
 });
 
 export default Router;

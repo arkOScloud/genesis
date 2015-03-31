@@ -28,6 +28,17 @@ a:link, a:focus, a:active, a:hover {
   margin-top:0;
 }
 
+.auth {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1001;
+  background-color: #FCFFF5;
+  background-image: url("/img/wavepat.png")
+}
+
 
 /* Navbar */
 
@@ -311,6 +322,10 @@ input.form-control {
   margin-bottom: 0;
 }
 
+.input-group-addon:first-child {
+  border-radius: 0;
+}
+
 .app-logo {
   max-height: 150px;
 }
@@ -510,15 +525,6 @@ button.close {
 #ui-firstrun-appselectfield {
   text-align: center;
 }
-
-.auth-page {
-  background-color: #D1DBBD;
-}
-
-.login-icon {
-  margin-top: 10%;
-  margin-bottom: 20px;
-}
  
 .login {
   background-color: #eceff1;
@@ -529,12 +535,15 @@ button.close {
 }
 
 #login-logo {
+  margin-top: 10%;
   width: 150px;
+  margin-bottom: 20px;
 }
 
-#auth-error {
-  display: none;
-  color: #FFF;
+.login-alert {
+  width: auto;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .login .has-feedback .form-control-feedback {

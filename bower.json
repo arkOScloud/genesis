@@ -20,6 +20,7 @@
     "lightbox2": "~2.7.1",
     "ember-uploader": "0.3.2",
     "multiselect": "~0.9.12",
-    "bootstrap-contextmenu": "~0.3.2"
+    "bootstrap-contextmenu": "~0.3.2",
+    "ember-simple-auth": "~0.7.3"
   }
 }

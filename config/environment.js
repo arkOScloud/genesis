@@ -53,8 +53,19 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    
   }
+  
+  ENV['simple-auth'] = {
+    authorizer: 'simple-auth-authorizer:token',
+    crossOriginWhitelist: [ENV.APP.krakenHost]
+  };
+  ENV['simple-auth-token'] = {
+    serverTokenEndpoint: ENV.APP.krakenHost+'/token',
+    refreshAccessTokens: true,
+    timeFactor: 1,
+    refreshLeeway: 300
+  };
 
   return ENV;
 };
