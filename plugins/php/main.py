@@ -16,7 +16,7 @@ class PHP(Plugin):
         os.environ['COMPOSER_HOME'] = '/root'
         self.enable_mod('phar')
         self.open_basedir('add', '/root')
-        s = shell_cs('cd /root; curl -sS https://getcomposer.org/installer | php', stderr=True)
+        s = shell_cs('cd /root; curl -sS https://getcomposer.org/installer | php', stderr=True, env={"COMPOSER_HOME": "/root"})
         if s[0] != 0:
             raise Exception('Composer download/config failed. Error: %s'%str(s[1]))
         os.rename('/root/composer.phar', '/usr/local/bin/composer')
@@ -32,7 +32,7 @@ class PHP(Plugin):
 
     def composer_install(self, path):
         self.verify_composer()
-        s = shell_cs('cd %s; composer install'%path, stderr=True)
+        s = shell_cs('cd %s; composer install'%path, stderr=True, env={"COMPOSER_HOME": "/root"})
         if s[0] != 0:
             raise Exception('Composer failed to install this app\'s bundle. Error: %s'%str(s[1]))
 
