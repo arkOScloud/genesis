@@ -5,6 +5,7 @@ import ENV from "../config/environment";
 export default Ember.Route.extend({
   model: function() {
     return Ember.RSVP.hash({
+      shares: this.get('store').find('share'),
       POIs: this.get('store').find('point')
     });
   },

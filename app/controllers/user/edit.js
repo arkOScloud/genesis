@@ -2,7 +2,6 @@ import Ember from "ember";
 
 
 export default Ember.ObjectController.extend({
-  needs: 'user',
   actions: {
     save: function(){
       var user = this.get('model');

@@ -107,6 +107,21 @@ export default Ember.ObjectController.extend({
         });
       });
     },
+    addToDownloads: function() {
+      var self = this;
+      this.get('selectedItems').forEach(function(i){
+        var newShare = self.store.createRecord('share', {
+          path: i.path,
+          expires: false
+        });
+        var promise = newShare.save();
+        promise.then(function(){}, function(){
+          newShare.deleteRecord();
+        });
+      });
+      this.send('deselectAll');
+      this.send('showModal', 'file/downloads', this.get('model'));
+    },
     toggleHidden: function() {
       this.set("showHidden", !this.get("showHidden"));
     }
