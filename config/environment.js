@@ -62,8 +62,9 @@ module.exports = function(environment) {
   };
   ENV['simple-auth-token'] = {
     serverTokenEndpoint: ENV.APP.krakenHost+'/token',
+    serverTokenRefreshEndpoint: ENV.APP.krakenHost+'/token/refresh',
     refreshAccessTokens: true,
-    timeFactor: 1,
+    timeFactor: 1000,
     refreshLeeway: 300
   };
 

@@ -1,0 +1,26 @@
+import Ember from "ember";
+import ENV from "../../config/environment";
+
+
+export default Ember.ObjectController.extend({
+  output: "",
+  actions: {
+    save: function() {
+      if (this.get("output")) {
+        var self = this,
+            file = this.get("model"),
+            output = this.get("output");
+        $.ajax({
+          url: ENV.APP.krakenHost+'/files/'+file.id,
+          type: "PUT",
+          data: JSON.stringify({file:{path:file.path,data:output,operation:"edit"}}),
+          contentType: 'application/json',
+          processData: false,
+          success: function(j) {
+            self.message.success("File saved successfully");
+          }
+        });
+      }
+    }
+  }
+});

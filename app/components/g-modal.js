@@ -3,6 +3,8 @@ import fieldValidator from "../utils/field-validator";
 
 
 export default Ember.Component.extend({
+  okWord: "OK",
+  cancelWord: "Cancel",
   actions: {
     ok: function() {
       if (!this.confirm) {

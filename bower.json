@@ -21,6 +21,7 @@
     "ember-uploader": "0.3.2",
     "multiselect": "~0.9.12",
     "bootstrap-contextmenu": "~0.3.2",
-    "ember-simple-auth": "~0.7.3"
+    "ember-simple-auth": "~0.7.3",
+    "codemirror": "~5.1.0"
   }
 }

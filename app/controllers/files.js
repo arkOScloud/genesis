@@ -27,15 +27,34 @@ export default Ember.ObjectController.extend({
     });
     return path;
   }.property('currentPath'),
+  openPath: function(path) {
+    this.send('openPath', path);
+  },
   actions: {
     refresh: function() {
       this.send('openPath', this.get('currentPath'));
     },
     open: function(f) {
       var self = this;
+      if (f.folder == false && f.binary == false) {
+        this.send('openFile', f);
+        return false;
+      } else if (f.folder == false) {
+        this.message.danger("File cannot be opened.");
+        return false;
+      };
       showFade();
       showLoader(function(){
         var fo = $.getJSON(ENV.APP.krakenHost+'/files/'+f.id, function(j) {
+          if (j.file && j.file.folder == false && j.file.binary == false) {
+            self.send('openFile', f);
+            return false;
+          } else if (j.file && j.file.folder == false) {
+            self.message.danger("File cannot be opened.");
+            hideLoader();
+            hideFade();
+            return false;
+          };
           self.set('currentPath', f.path);
           self.set('currentFolder', j.files);
           hideLoader();
@@ -50,6 +69,22 @@ export default Ember.ObjectController.extend({
     },
     openPath: function(p) {
       this.send('open', {id: toB64(p), path: p});
+    },
+    openFile: function(f) {
+      var self = this;
+      showFade();
+      showLoader(function(){
+        var fo = $.getJSON(ENV.APP.krakenHost+'/files/'+f.id+'?content=true', function(j) {
+          hideLoader();
+          hideFade();
+          self.send('showModal', 'file/notepad', j.file);
+        });
+        fo.fail(function(){
+          hideLoader();
+          hideFade();
+          self.message.danger("Could not load file.");
+        });
+      });
     },
     newFile: function() {
       var fn = this.get("newFile");
@@ -121,6 +156,13 @@ export default Ember.ObjectController.extend({
       });
       this.send('deselectAll');
       this.send('showModal', 'file/downloads', this.get('model'));
+    },
+    properties: function() {
+      if (this.get("selectedItems.length")==1) {
+        this.send('showModal', 'file/properties', this.get('selectedItems')[0]);
+      } else {
+        this.message.danger("Can only check on properties of one item at a time");
+      };
     },
     toggleHidden: function() {
       this.set("showHidden", !this.get("showHidden"));

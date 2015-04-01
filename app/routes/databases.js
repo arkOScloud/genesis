@@ -1,7 +1,8 @@
 import Ember from "ember";
+import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixin';
 
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(AuthenticatedRouteMixin, {
   beforeModel: function(model) {
     this.get('store').unloadAll('database');
     this.get('store').unloadAll('databaseUser');

@@ -8,6 +8,7 @@
               <ul class="dropdown-menu" role="menu">
                 <li><a href="#" {{action 'showModal' 'file/newfile'}}><i class="fa fa-fw fa-file"></i> New File...</a></li>
                 <li><a href="#" {{action 'showModal' 'file/newfolder'}}><i class="fa fa-fw fa-folder"></i> New Folder...</a></li>
+                <li><a href="#" {{action 'showModal' 'file/open'}}><i class="fa fa-fw fa-folder-open"></i> Open File/Path...</a></li>
               </ul>
             </div>
             <div class="btn-group">
@@ -76,5 +77,7 @@
     <li><a tabindex="-1" href="#" {{action 'copy'}}><i class="fa fa-fw fa-files-o"></i> Copy</a></li>
     <li><a tabindex="-1" href="#" {{action 'addToDownloads'}}><i class="fa fa-fw fa-download"}}></i> Download...</a></li>
     <li><a tabindex="-1" href="#" {{action 'showConfirm' 'delete' 'Are you sure you want to delete the selected files?'}}><i class="fa fa-fw fa-times-circle"></i> Delete...</a></li>
+    <li class="divider"></li>
+    <li><a tabindex="-1" href="#" {{action 'properties'}}><i class="fa fa-fw fa-cogs"></i> Properties...</a></li>
   </ul>
 </div>

@@ -29,6 +29,17 @@ app.import('bower_components/lightbox2/js/lightbox.js');
 app.import('bower_components/lightbox2/css/lightbox.css');
 app.import('bower_components/multiselect/js/jquery.multi-select.js');
 app.import('bower_components/multiselect/css/multi-select.css');
+app.import("bower_components/codemirror/lib/codemirror.css");
+app.import("bower_components/codemirror/lib/codemirror.js");
+app.import("bower_components/codemirror/mode/css/css.js");
+app.import("bower_components/codemirror/mode/htmlmixed/htmlmixed.js");
+app.import("bower_components/codemirror/mode/javascript/javascript.js");
+app.import("bower_components/codemirror/mode/markdown/markdown.js");
+app.import("bower_components/codemirror/mode/php/php.js");
+app.import("bower_components/codemirror/mode/python/python.js");
+app.import("bower_components/codemirror/mode/ruby/ruby.js");
+app.import("bower_components/codemirror/mode/shell/shell.js");
+app.import("bower_components/codemirror/mode/xml/xml.js");
 app.import("bower_components/font-awesome/css/font-awesome.css");
 app.import("bower_components/fira/fira.css");
 var fontAwesome = pickFiles('bower_components/font-awesome/fonts', {

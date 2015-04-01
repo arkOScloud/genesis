@@ -505,6 +505,14 @@ button.close {
   width: 80%;
 }
 
+#codemirror, .CodeMirror {
+  height: 500px;
+}
+
+.CodeMirror span {
+  font-family: "Fira Mono", monospace;
+}
+
 
 /* Special */
 
