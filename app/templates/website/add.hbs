@@ -64,5 +64,12 @@
             {{input type="text" class="form-control required" value=newSite.port}}
             <p class="help-block">If you don't know what to put here, leave it at the default.</p>
         </div>
+        {{#if selectedSite.website_datapaths}}
+        <div class="form-group">
+            <label for="port">Data Directory</label>
+            {{input type="text" class="form-control" value=newSite.extraData.datadir}}
+            <p class="help-block">This application supports storage of data in a designated folder. Enter the full path to the folder you wish to use for this. If you leave it blank, the application's default location will be used.</p>
+        </div>
+        {{/if}}
     {{/g-wizardstep}}
 {{/g-wizardmodal}}
