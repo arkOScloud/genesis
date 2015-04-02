@@ -24,6 +24,20 @@ export default Ember.ObjectController.extend({
   canComplete: function() {
     return this.get('selectedSite')!=null;
   }.property('selectedSite'),
+  canChooseDBType: function() {
+    var dbe = this.get('selectedSite.database_engines');
+    return (dbe && dbe.get('length')>1);
+  }.property('selectedSite'),
+  availableDBTypes: function() {
+    var types = [],
+        eng = this.get('selectedSite.database_engines');
+    this.get('model.dbType').forEach(function(i){
+      if (eng && eng.indexOf(i.get('id'))>=0) {
+        types.pushObject(i);
+      };
+    });
+    return types;
+  }.property('canChooseDBType', 'model.dbType'),
   actions: {
     selectType: function(item) {
       $('.ui-navlist > li').removeClass('active');

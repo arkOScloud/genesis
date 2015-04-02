@@ -8,6 +8,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     return Ember.RSVP.hash({
       sites: this.get('store').find('website'),
       domains: this.get('store').find('domain'),
+      dbType: this.get('store').find('databaseType'),
       apps: this.get('store').find('app', {type: "website", loadable: true})
     });
   },
