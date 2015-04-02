@@ -7,7 +7,7 @@
     <div role="tabpanel" class="tab-pane active" id="available">
         <div class="ui-items-3">
             {{#each app in sortedApps}}
-              <div {{bind-attr class=":ui-item app.isReady::is-pending"}}>
+              <div {{bind-attr class=":ui-item app.error:text-danger app.isReady::is-pending"}}>
                 <div class="ui-item-icon">
                     <i {{bind-attr class=":fa-fw :fa-5x app.icon"}}></i>
                 </div>
@@ -35,7 +35,7 @@
         <div class="ui-items-3">
             {{#each app in sortedApps}}
             {{#if app.installed}}
-              <div {{bind-attr class=":ui-item app.isReady::is-pending"}}>
+              <div {{bind-attr class=":ui-item app.error:text-danger app.isReady::is-pending"}}>
                 <div class="ui-item-icon">
                     <i {{bind-attr class=":fa-fw :fa-5x app.icon"}}></i>
                 </div>

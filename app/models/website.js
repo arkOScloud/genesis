@@ -24,6 +24,7 @@ export default DS.Model.extend({
     extraData: DS.attr(),
     operation: DS.attr('string'),
     newName: DS.attr('string'),
+    hasActions: DS.attr('boolean', {defaultValue: false}),
     isReady: DS.attr('boolean', {defaultValue: false}),
     address: function() {
       var proto = this.get('certificate')?"https://":"http://",

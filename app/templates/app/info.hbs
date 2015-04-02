@@ -7,6 +7,9 @@
         {{#if model.isUpgradable}}
         <h3 class="text-success text-center">Update available to version {{model.upgradable}}</h3>
         {{/if}}
+        {{#if model.error}}
+        <h3 class="text-danger text-center">App failed to load &mdash; {{model.error}}</h3>
+        {{/if}}
         <div class="form-group">
             <label for="id" class="col-sm-3 control-label">Intro</label>
             <div class="col-sm-9">

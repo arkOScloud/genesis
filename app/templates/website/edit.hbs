@@ -14,4 +14,7 @@
         {{input type="text" class="form-control required" value=newPort}}
         <p class="help-block">If you don't know what to put here, leave it at the default.</p>
     </div>
+    {{#if model.hasActions}}
+        {{partial model.siteType}}
+    {{/if}}
 {{/g-modal}}

@@ -1,4 +1,5 @@
 import Ember from "ember";
+import ENV from "../../config/environment";
 
 
 export default Ember.ObjectController.extend({
@@ -21,6 +22,19 @@ export default Ember.ObjectController.extend({
         isReady: false
       });
       site.save();
+    },
+    siteAction: function(action) {
+      var self = this;
+      $.ajax({
+        url: ENV.APP.krakenHost+'/websites/actions/'+this.get("model.id")+"/"+action,
+        type: "POST"
+      })
+      .success(function(){
+        self.message.success("Action completed successfully");
+      })
+      .error(function(e){
+        self.message.danger("Action did not complete: "+e.responseJSON.message);
+      });
     }
   }
 });

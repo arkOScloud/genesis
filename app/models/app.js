@@ -10,7 +10,7 @@ export default DS.Model.extend({
       return this.get('type').capitalize();
     }.property('type'),
     version: DS.attr('string'),
-    error: DS.attr('boolean', {defaultValue: false}),
+    error: DS.attr('string'),
     appAuthor: DS.attr('string'),
     appHomepage: DS.attr('string'),
     author: DS.attr('string'),
@@ -58,7 +58,8 @@ export default DS.Model.extend({
     selected_dbengine: DS.attr('string'),
     website_datapaths: DS.attr('boolean', {defaultValue: false}),
     website_default_data_subdir: DS.attr('string'),
-    website_extra_options: DS.attr('string'),
+    website_extra_options: DS.attr('boolean', {defaultValue: false}),
+    website_extra_actions: DS.attr('boolean', {defaultValue: false}),
     website_updates: DS.attr('boolean', {defaultValue: false}),
     installed: DS.attr('boolean', {defaultValue: false}),
     upgradable: DS.attr('string'),
