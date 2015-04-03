@@ -45,6 +45,7 @@ export default Ember.ObjectController.extend({
       this.set('selectedSite', item);
     },
     save: function() {
+      var self = this;
       var site = this.store.createRecord('website', {
         id: this.get('newSite').name,
         siteType: this.get('selectedSite').get('id'),
@@ -54,7 +55,10 @@ export default Ember.ObjectController.extend({
         port: this.get('newSite').port,
         extraData: this.get('newSite').extraData
       });
-      site.save();
+      var promise = site.save();
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
+      });
     },
     removeModal: function() {
       this.set('selectedSite', null);

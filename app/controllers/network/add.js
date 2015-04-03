@@ -26,7 +26,10 @@ export default Ember.ObjectController.extend({
         config: config,
         isReady: false
       });
-      net.save();
+      var promise = net.save();
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
+      });
     }
   }
 });

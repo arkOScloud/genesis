@@ -33,6 +33,9 @@ export default Ember.ObjectController.extend({
         success: function(j) {
           self.get('model').timezone = j;
           self.message.success("Time updated successfully");
+        },
+        error: function(e) {
+          if (e.status == 500) self.transitionToRoute("error", e);
         }
       });
     },
@@ -43,21 +46,30 @@ export default Ember.ObjectController.extend({
         type: 'PUT',
         data: JSON.stringify({config: self.get('config')}),
         contentType: 'application/json',
-        processData: false
+        processData: false,
+        error: function(e) {
+          if (e.status == 500) self.transitionToRoute("error", e);
+        }
       });
       $.ajax({
         url: ENV.APP.krakenHost+'/config/hostname',
         type: 'PUT',
         data: JSON.stringify({hostname: self.get('hostname')}),
         contentType: 'application/json',
-        processData: false
+        processData: false,
+        error: function(e) {
+          if (e.status == 500) self.transitionToRoute("error", e);
+        }
       });
       $.ajax({
         url: ENV.APP.krakenHost+'/config/timezone',
         type: 'PUT',
         data: JSON.stringify({timezone: {region: self.get('tzRegion'), zone: self.get('tzZone').replace(" ", "_")}}),
         contentType: 'application/json',
-        processData: false
+        processData: false,
+        error: function(e) {
+          if (e.status == 500) self.transitionToRoute("error", e);
+        }
       });
       self.message.success("System preferences saved successfully");
     }

@@ -58,9 +58,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       ENV.APP.dateFormat = j.config.general.date_format;
       ENV.APP.timeFormat = j.config.general.time_format;
     });
-    initConfig.fail(function(){
-      self.message.danger('Could not get initial configuration, reverting to defaults.');
-    });
   },
   deactivate: function() {
     this.get('pollster').stop();

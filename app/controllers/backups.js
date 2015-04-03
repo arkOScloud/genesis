@@ -10,9 +10,13 @@ export default Ember.ObjectController.extend({
   }).property('model.backups', 'selectedBackupType'),
   actions: {
     backup: function(type) {
+      var self = this;
       $.ajax({
         url: ENV.APP.krakenHost+'/backups/'+type,
-        type: 'POST'
+        type: 'POST',
+        error: function(e) {
+          if (e.status == 500) self.transitionToRoute("error", e);
+        }
       });
     },
     selectType: function(item) {

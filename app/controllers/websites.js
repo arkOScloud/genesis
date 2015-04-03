@@ -6,8 +6,12 @@ export default Ember.ObjectController.extend({
   sortedSites: Ember.computed.sort('model.sites', 'sortBy'),
   actions: {
     toggleStatus: function(site) {
+      var self = this;
       site.set('operation', site.get('enabled')?'disable':'enable');
-      site.save();
+      var promise = site.save();
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
+      });
     }
   }
 });

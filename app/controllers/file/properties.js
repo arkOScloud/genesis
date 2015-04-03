@@ -46,6 +46,7 @@ export default Ember.ObjectController.extend({
           self.message.success("Permissions changed successfully");
         },
         error: function(j) {
+          if (e.status == 500) self.transitionToRoute("error", e);
           self.message.danger(j.responseJSON.message);
         }
       });

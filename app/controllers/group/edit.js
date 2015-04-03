@@ -14,10 +14,14 @@ export default Ember.ObjectController.extend({
       this.get("usersSelected").removeObject(id[0]);
     }),
     save: function(){
+      var self = this;
       var group = this.get('model');
       group.set('users', this.get("usersSelected"));
       group.set('isReady', false);
       var promise = group.save();
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
+      });
     },
     removeModal: function(){
       if (this.get('model').get('isDirty')) {

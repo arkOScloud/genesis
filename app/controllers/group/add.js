@@ -21,7 +21,8 @@ export default Ember.ObjectController.extend({
         users: self.get('usersSelected')
       });
       var promise = group.save();
-      promise.then(function(){}, function(){
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
         group.deleteRecord();
       });
     },

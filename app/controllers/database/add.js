@@ -5,13 +5,15 @@ export default Ember.ObjectController.extend({
   name: '',
   actions: {
     save: function(){
+      var self = this;
       var db = this.store.createRecord('database', {
         name: this.get('name'),
         typeId: this.get('type'),
         typeName: this.get('type')
       });
       var promise = db.save();
-      promise.then(function(){}, function(){
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
         db.deleteRecord();
       });
     },

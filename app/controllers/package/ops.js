@@ -17,6 +17,7 @@ export default Ember.ObjectController.extend({
       });
     },
     save: function() {
+      var self = this;
       var toSend = Ember.A();
       this.get('pendingOperations').forEach(function(i) {
         toSend.pushObject({id: i.get('id'), operation: i.get('operation')});
@@ -27,7 +28,10 @@ export default Ember.ObjectController.extend({
         data: JSON.stringify({packages: toSend}),
         type: 'POST',
         contentType: 'application/json',
-        processData: false
+        processData: false,
+        error: function(e){
+          if (e.status == 500) self.transitionToRoute("error", e);
+        }
       });
     }
   }

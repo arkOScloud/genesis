@@ -22,7 +22,10 @@ export default Ember.ObjectController.extend({
         data: JSON.stringify({"database_user": {"operation": actionToTake, "database": this.get('database')}}),
         type: 'PUT',
         contentType: 'application/json',
-        processData: false
+        processData: false,
+        error: function(e) {
+          if (e.status == 500) self.transitionToRoute("error", e);
+        }
       });
     },
     removeModal: function(){

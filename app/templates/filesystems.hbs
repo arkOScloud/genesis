@@ -10,7 +10,6 @@
         <div class="ui-item-content">
           <h2>{{fs.id}}</h2>
           <p class="lead">{{#if fs.isVirtual}}Virtual{{else}}Physical{{/if}} Disk{{#if fs.crypt}} (Encrypted){{/if}}</p>
-          <a target="_blank" href="#" {{bind-attr class=":btn :btn-default :btn-block fs.mounted::disabled"}}><i class="fa fa-folder"></i> Open in File Manager</a>
           <div class="ui-item-buttons">
             <a href="#" {{bind-attr class=":ui-item-button fs.isReady::disabled"}} {{action 'showModal' 'filesystem/edit' fs}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
             {{#if fs.mounted}}

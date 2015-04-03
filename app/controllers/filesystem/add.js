@@ -14,7 +14,8 @@ export default Ember.ObjectController.extend({
         isReady: false
       });
       var promise = fs.save();
-      promise.then(function(){}, function(){
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
         fs.deleteRecord();
       });
     },

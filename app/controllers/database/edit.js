@@ -14,6 +14,9 @@ export default Ember.ObjectController.extend({
         processData: false,
         success: function(j){
           self.set('execOutput', j.database.result);
+        },
+        error: function(e){
+          if (e.status == 500) self.transitionToRoute("error", e);
         }
       });
     },

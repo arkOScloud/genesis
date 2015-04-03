@@ -87,25 +87,33 @@ export default Ember.ObjectController.extend({
       });
     },
     newFile: function() {
+      var self = this;
       var fn = this.get("newFile");
       $.ajax({
         url: ENV.APP.krakenHost+'/files/'+toB64(f.currentPath),
         type: "POST",
         data: JSON.stringify({new: "file", name: fn}),
         contentType: 'application/json',
-        processData: false
+        processData: false,
+        error: function(e) {
+          if (e.status == 500) self.transitionToRoute("error", e);
+        }
       });
       this.set("newFile", "");
       this.send('refresh');
     },
     newFolder: function() {
+      var self = this;
       var fn = this.get("newFile");
       $.ajax({
         url: ENV.APP.krakenHost+'/files/'+toB64(f.currentPath),
         type: "POST",
         data: JSON.stringify({new: "folder", name: fn}),
         contentType: 'application/json',
-        processData: false
+        processData: false,
+        error: function(e) {
+          if (e.status == 500) self.transitionToRoute("error", e);
+        }
       });
       this.set("newFile", "");
       this.send('refresh');
@@ -138,6 +146,9 @@ export default Ember.ObjectController.extend({
           processData: false,
           success: function(j) {
             self.get('currentFolder').pushObject(j.file);
+          },
+          error: function(e) {
+            if (e.status == 500) self.transitionToRoute("error", e);
           }
         });
       });
@@ -150,7 +161,8 @@ export default Ember.ObjectController.extend({
           expires: false
         });
         var promise = newShare.save();
-        promise.then(function(){}, function(){
+        promise.then(function(){}, function(e){
+          if (e.status == 500) self.transitionToRoute("error", e);
           newShare.deleteRecord();
         });
       });

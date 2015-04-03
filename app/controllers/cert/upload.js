@@ -6,6 +6,7 @@ export default Ember.ObjectController.extend({
   name: '',
   actions: {
     save: function(){
+      var self = this;
       var uploader = EmberUploader.Uploader.create({
         url: ENV.APP.krakenHost+'/certs'
       });
@@ -14,7 +15,10 @@ export default Ember.ObjectController.extend({
       if ($('input[name="chain"]')[0].files.length) {
         files.push($('input[name="chain"]')[0].files[0]);
       };
-      uploader.upload(files, {id: this.get('name')});
+      var promise = uploader.upload(files, {id: this.get('name')});
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
+      });
     },
     removeModal: function(){
       this.set('name', '');

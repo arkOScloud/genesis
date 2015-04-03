@@ -6,6 +6,7 @@ export default Ember.ObjectController.extend({
   keytypes: ["RSA", "DSA"],
   actions: {
     save: function(){
+      var self = this;
       var cert = this.store.createRecord('cert', {
         id: this.get('newCert').id,
         country: this.get('newCert').country,
@@ -17,7 +18,8 @@ export default Ember.ObjectController.extend({
         keylength: this.get('newCert').keylength
       });
       var promise = cert.save();
-      promise.then(function(){}, function(){
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
         cert.deleteRecord();
       });
     },

@@ -19,6 +19,9 @@ export default Ember.ObjectController.extend({
         processData: false,
         success: function(j) {
           self.get("controllers.files.currentFolder").pushObject(j.file);
+        },
+        error: function(e) {
+          if (e.status == 500) self.transitionToRoute("error", e);
         }
       });
     },

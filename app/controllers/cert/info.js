@@ -14,7 +14,8 @@ export default Ember.ObjectController.extend({
       this.get("assignsSelected").removeObject(id[0]);
     }),
     save: function(){
-      var cert    = this.get('model'),
+      var self    = this,
+          cert    = this.get('model'),
           avail   = this.get('model.extra.assns.certassigns'),
           assigns = [];
       this.get('assignsSelected').forEach(function(i){
@@ -23,6 +24,9 @@ export default Ember.ObjectController.extend({
       cert.set('assigns', assigns);
       cert.set('isReady', false);
       var promise = cert.save();
+      promise.then(function(){}, function(e){
+        if (e.status == 500) self.transitionToRoute("error", e);
+      });
     },
     removeModal: function(){
       if (this.get('model').get('isDirty')) {
