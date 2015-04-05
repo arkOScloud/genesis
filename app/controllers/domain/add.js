@@ -2,7 +2,6 @@ import Ember from "ember";
 
 
 export default Ember.ObjectController.extend({
-  needs: 'domain',
   actions: {
     save: function(){
       var self = this;
