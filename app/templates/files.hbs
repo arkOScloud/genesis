@@ -41,6 +41,8 @@
               <ul class="dropdown-menu" role="menu">
                 {{#each poi in model.POIs}}
                 <li><a href="#" {{action 'openPath' poi.path}}><i {{bind-attr class=":fa :fa-fw poi.icon"}}></i> {{poi.id}}</a></li>
+                {{else}}
+                <li class="disabled"><a>None</a></li>
                 {{/each}}
               </ul>
             </div>
@@ -69,6 +71,11 @@
 <div>
 {{#each item in sortedFolder}}
     {{g-fm-item item=item files=this}}
+{{else}}
+    <div class="text-center text-muted">
+        <h1 class="fa fa-folder fa-5x"></h1>
+        <p class="lead">Empty folder</p>
+    </div>
 {{/each}}
 </div>
 

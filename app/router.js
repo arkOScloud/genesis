@@ -65,6 +65,7 @@ Router.map(function() {
   this.route('services');
   this.route('security');
   this.route('config');
+  this.route('updates');
   this.route('files');
   this.route('login');
 });

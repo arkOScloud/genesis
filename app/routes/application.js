@@ -30,13 +30,13 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
             if (j && j.messages) {
               j.messages.forEach(function(m) {
                 if (m.class == "success") {
-                  self.message.success(m.message, m.id, m.complete);
+                  self.message.success(m.message, m.id, m.complete, m.headline);
                 } else if (m.class == "warn") {
-                  self.message.warning(m.message, m.id, m.complete);
+                  self.message.warning(m.message, m.id, m.complete, m.headline);
                 } else if (m.class == "error") {
-                  self.message.danger(m.message, m.id, m.complete);
+                  self.message.danger(m.message, m.id, m.complete, m.headline);
                 } else {
-                  self.message.info(m.message, m.id, m.complete);
+                  self.message.info(m.message, m.id, m.complete, m.headline);
                 };
               });
             };

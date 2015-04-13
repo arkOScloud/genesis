@@ -12,6 +12,8 @@ var App = Ember.Application.extend({
   Resolver: Resolver
 });
 
+App.currentVersion = "0.7.0 Beta 1";
+
 loadInitializers(App, config.modulePrefix);
 
 window.addEventListener("keydown", function(e){

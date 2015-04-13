@@ -14,7 +14,6 @@ module.exports = function(environment) {
     },
 
     APP: {
-      currentVersion: '0.7.0', 
       krakenHost: 'http://localhost:8000', 
       GRMHost: 'https://grm-test.arkos.io',
       dateFormat: 'DD MMM YYYY',

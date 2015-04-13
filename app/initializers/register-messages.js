@@ -19,49 +19,54 @@ var Messager = Ember.ArrayProxy.extend({
       exists[0].set('typeClass', object.typeClass);
       exists[0].set('icon', object.icon);
       exists[0].set('message', object.message);
+      exists[0].set('headline', object.headline);
       exists[0].set('dismissable', object.dismissable);
     } else {
       object = Message.create(object);
       this._super(object);
     };
   },
-  danger: function(message, id, dismissable) {
+  danger: function(message, id, dismissable, headline) {
     id = id || Math.random().toString(36).substring(10);
     this.pushObject({
       id: id,
       type: 'danger',
       icon: 'fa fa-exclamation-circle',
       message: message,
+      headline: headline,
       dismissable: typeof dismissable !== 'undefined' ? dismissable : true
     });
   },
-  warning: function(message, id, dismissable) {
+  warning: function(message, id, dismissable, headline) {
     id = id || Math.random().toString(36).substring(10);
     this.pushObject({
       id: id,
       type: 'warning',
       icon: 'fa fa-exclamation-triangle',
       message: message,
+      headline: headline,
       dismissable: typeof dismissable !== 'undefined' ? dismissable : true
     });
   },
-  info: function(message, id, dismissable) {
+  info: function(message, id, dismissable, headline) {
     id = id || Math.random().toString(36).substring(10);
     this.pushObject({
       id: id,
       type: 'info',
       icon: 'fa fa-info-circle',
       message: message,
+      headline: headline,
       dismissable: typeof dismissable !== 'undefined' ? dismissable : true
     });
   },
-  success: function(message, id, dismissable) {
+  success: function(message, id, dismissable, headline) {
     id = id || Math.random().toString(36).substring(10);
     this.pushObject({
       id: id,
       type: 'success',
       icon: 'fa fa-thumbs-up',
       message: message,
+      headline: headline,
       dismissable: typeof dismissable !== 'undefined' ? dismissable : true
     });
   }
