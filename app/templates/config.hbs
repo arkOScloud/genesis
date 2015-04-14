@@ -1,4 +1,27 @@
 <h1 class="page-header">System Preferences</h1>
+
+<a href="#" class="btn btn-default btn-sm pull-right" {{action 'showModal' 'config/newkey' model}}><i class="fa fa-upload"></i> Add Public Key</a>
+<h3>SSH Keys</h2>
+<table class="table">
+    <tr>
+        <th width="1"></th>
+        <th>User</th>
+        <th>Key ID</th>
+        <th width="150">Actions</th>
+    </tr>
+    {{#each key in model.ssh}}
+    <tr>
+        <td><i class="fa fa-fw fa-key"></i></td>
+        <td>{{key.user}}</td>
+        <td>{{key.keyId}}</td>
+        <td><a href="#" class="btn btn-sm btn-danger" {{action 'delete' key}}><i class="fa fa-minus-circle"></i> Delete</a></td>
+    </tr>
+    {{else}}
+    <td class="text-center" colspan="4">
+        None
+    </td>
+    {{/each}}
+</table>
 <div class="form-group">
     <label for="hostname">Hostname</label>
     {{input type="text" class="form-control required" value=hostname}}

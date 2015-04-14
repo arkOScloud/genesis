@@ -1,7 +1,7 @@
 export default function fieldValidator(pre) {
     pre = pre || "";
     $(pre+' .form-group').removeClass('has-error has-success');
-    $(pre+' input.required').each(function(i){
+    $(pre+' input.required, '+pre+' textarea.required, '+pre+' select.required').each(function(i){
         if (!$(this).val()) {
             $(this).parent('.form-group').addClass('has-error');
         };
