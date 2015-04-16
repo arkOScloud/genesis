@@ -39,6 +39,18 @@ a:link, a:focus, a:active, a:hover {
   background-image: url("/img/wavepat.png")
 }
 
+.ui-firstrun {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  z-index: 1001;
+  background-color: #FCFFF5;
+  background-image: url("/img/wavepat.png");
+  padding-bottom: 30px;
+}
+
 
 /* Navbar */
 
@@ -152,6 +164,10 @@ input.form-control {
   max-width: 90px;
 }
 
+.ui-fm-item:hover {
+  cursor: pointer;
+}
+
 .ui-fm-item p {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -233,7 +249,7 @@ input.form-control {
   margin-bottom: 20px;
 }
 
-.ui-firstrun-appselect, .ui-homebutton, .ui-appbutton {
+.ui-homebutton, .ui-appbutton {
   display: inline-block;
   vertical-align: top;
   text-align: left;
@@ -250,71 +266,6 @@ input.form-control {
 
 .ui-appbutton h1 {
   line-height: 1.5;
-}
-
-.ui-firstrun-appselect.selected {
-  background-color: #2ECC71;
-  color: #FFF;
-  border-color: #2ECC71;
-}
-
-.ui-firstrun-appselect.selected:hover {
-  background-color: #1DB35C;
-  border-color: #1DB35C;
-}
-
-.ui-firstrun-appselect:hover, .ui-homebutton:hover, .ui-appbutton:hover {
-  background-color: #EBEBEB;
-  border-color: #ADADAD;
-  cursor: pointer;
-}
-
-.ui-firstrun-appselect input {
-  display: none;
-}
-
-.ui-firstrun-appselect h2 {
-  float: left;
-  padding-right: 15px;
-  line-height: 1;
-}
-
-.ui-firstrun-appselect h4 {
-  overflow: hidden;
-  word-wrap: break-word;
-}
-
-.ui-el-list {
-  background: #fff;
-  border: 1px solid #ccc;
-  margin: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  list-style: none;
-  padding-left: 0;
-}
-
-.ui-el-list li {
-  padding: 2px 10px;
-  width: 100%;
-  line-height: 16px;
-  color: #555;
-}
-
-.ui-el-list li:hover {
-  background: #eee;
-}
-
-.ui-el-list li:active, .ui-el-list li.active {
-  background-color: #3E606F;
-  color: white;
-  font-weight: bold;
-}
-
-.ui-el-scrollcontainer {
-  overflow: auto;
-  background: #fff;
-  border: 1px solid #ccc;
 }
 
 .form-group > .col-md-10 {
@@ -402,6 +353,29 @@ input.form-control {
 
 .ui-items-4 > .ui-item > .ui-item-content {
   max-width: 160px;
+}
+
+.ui-firstrun-items .ui-item {
+  background-color: #FCFFF5;
+  min-height: 150px;
+  white-space: normal;
+}
+
+.ui-firstrun-items .ui-item.selected {
+  background-color: #2ECC71;
+  color: #FFF;
+  border-color: #2ECC71;
+}
+
+.ui-firstrun-items .ui-item.selected:hover {
+  background-color: #1DB35C;
+  border-color: #1DB35C;
+}
+
+.ui-firstrun-items .ui-item:hover, .ui-homebutton:hover, .ui-appbutton:hover {
+  background-color: #EBEBEB;
+  border-color: #ADADAD;
+  cursor: pointer;
 }
 
 .ms-container {
@@ -521,7 +495,9 @@ button.close {
 }
 
 .ui-firstrun-stripe {
-  background-color:#D1DBBD;
+  margin-top: 20px;
+  background-color: #3E606F;
+  /*background-color:#D1DBBD;*/
   color:#FFF;
   padding:25px 0px 35px 0px;
   text-align:center;
@@ -530,8 +506,14 @@ button.close {
   margin-bottom:30px;
 }
 
-#ui-firstrun-appselectfield {
-  text-align: center;
+.ui-firstrun-container {
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ui-firstrun-image {
+  margin-bottom: 20px;
 }
  
 .login {

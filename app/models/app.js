@@ -52,6 +52,7 @@ export default DS.Model.extend({
     services: DS.attr(),
     database_engines: DS.attr(),
     databaseMultiuser: DS.attr('boolean', {defaultValue: false}),
+    database_service: DS.attr('string'),
     download_url: DS.attr('string'),
     uses_php: DS.attr('boolean', {defaultValue: false}),
     uses_ssl: DS.attr('boolean', {defaultValue: false}),

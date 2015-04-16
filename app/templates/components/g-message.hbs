@@ -2,8 +2,5 @@
     {{#if msg.dismissable}}
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true" {{action 'dismiss'}}><i class="fa fa-times"></i></button>
     {{/if}}
-    {{#if msg.headline}}
-        <strong>{{msg.headline}}</strong> 
-    {{/if}}
-    <i {{bind-attr class="msg.icon"}} style="line-height:1;"></i> {{msg.message}}
+    <i {{bind-attr class="msg.icon"}} style="line-height:1;"></i> {{#if msg.headline}}<strong>{{msg.headline}}</strong><br /> {{/if}}{{msg.message}}
 </div>

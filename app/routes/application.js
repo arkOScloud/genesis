@@ -8,11 +8,17 @@ import ApplicationRouteMixin from 'simple-auth/mixins/application-route-mixin';
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   setupController: function() {
+    var initConfig = $.getJSON(ENV.APP.krakenHost+'/config', function(j){
+      ENV.APP.dateFormat = j.config.general.date_format;
+      ENV.APP.timeFormat = j.config.general.time_format;
+      ENV.APP.needsFirstRun = !j.config.genesis.firstrun;
+    });
     if (this.get("session.isAuthenticated")) {
       this.setupParallelCalls();
     };
   },
   setupParallelCalls: function() {
+    var self = this;
     $.getJSON(ENV.APP.krakenHost+'/apps', function(m){
       m.apps.forEach(function(i){
         if (i.type=='app' && i.installed) {
@@ -23,19 +29,18 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       });
     });
     if (Ember.isNone(this.get('pollster'))) {
-      var self = this;
       this.set('pollster', Pollster.create({
         onPoll: function() {
           $.getJSON(ENV.APP.krakenHost+'/genesis').then(function(j) {
             if (j && j.messages) {
               j.messages.forEach(function(m) {
-                if (m.class == "success") {
+                if (m.class == "success" && !ENV.APP.needsFirstRun) {
                   self.message.success(m.message, m.id, m.complete, m.headline);
                 } else if (m.class == "warn") {
                   self.message.warning(m.message, m.id, m.complete, m.headline);
                 } else if (m.class == "error") {
                   self.message.danger(m.message, m.id, m.complete, m.headline);
-                } else {
+                } else if (!ENV.APP.needsFirstRun) {
                   self.message.info(m.message, m.id, m.complete, m.headline);
                 };
               });
@@ -54,10 +59,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       }));
       this.get('pollster').start();
     };
-    var initConfig = $.getJSON(ENV.APP.krakenHost+'/config', function(j){
-      ENV.APP.dateFormat = j.config.general.date_format;
-      ENV.APP.timeFormat = j.config.general.time_format;
-    });
   },
   deactivate: function() {
     this.get('pollster').stop();
@@ -83,6 +84,12 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         this.get('pollster').stop();
       };
       this._super();
+    },
+    willTransition: function(transition) {
+      if (transition.targetName != "firstrun" && ENV.APP.needsFirstRun) {
+        transition.abort();
+        this.transitionTo('firstrun');
+      };
     },
     loading: function(transition, originRoute) {
       showFade();

@@ -30,7 +30,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
           self.message.success("Time updated successfully");
         },
         error: function(e) {
-          if (e.status == 500) self.transitionToRoute("error", e);
+          if (e.status == 500) self.transitionTo("error", e);
         }
       });
     },

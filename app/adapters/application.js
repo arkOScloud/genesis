@@ -31,7 +31,7 @@ export default DS.RESTAdapter.extend({
       if (jsonPayload && jsonPayload.message) {
         var msgType = String(jqXHR.status).charAt(0);
         if (msgType=="2") {
-          this.message.success(jsonPayload.message);
+          if (!ENV.APP.needsFirstRun) this.message.success(jsonPayload.message);
         } else {
           this.message.warning(jsonPayload.message);
         }

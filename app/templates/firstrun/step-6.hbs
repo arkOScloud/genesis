@@ -1,0 +1,69 @@
+<div class="ui-firstrun-container">
+    <div class="text-center">
+        <h3 class="page-header">Step 5: Configuring arkOS</h3>
+        <p>The following actions are underway. Please do not turn off power to your server or close this browser window.</p>
+    </div>
+    <table class="table">
+        <tr header="True">
+        	<th width="1" />
+            <th>Operation</th>
+            <th>Item</th>
+        </tr>
+        <tr {{bind-attr class="operations.user:success"}}>
+            <td><i {{bind-attr class=":fa :fa-fw operations.user:fa-check:fa-spinner operations.user:text-success:fa-spin"}}></i></td>
+            <td>Add User</td>
+            <td>{{newUser.firstName}}{{#if newUser.lastName}} {{newUser.lastName}}{{/if}} ({{newUser.name}})</td>
+        </tr>
+        {{#if newDomain}}
+        <tr {{bind-attr class="operations.domain:success"}}>
+            <td><i {{bind-attr class=":fa :fa-fw operations.domain:fa-check:fa-spinner operations.domain:text-success:fa-spin"}}></i></td>
+            <td>Assign Domain</td>
+            <td>{{newDomain}}</td>
+        </tr>
+        {{/if}}
+        <tr {{bind-attr class="operations.timezone:success"}}>
+            <td><i {{bind-attr class=":fa :fa-fw operations.timezone:fa-check:fa-spinner operations.timezone:text-success:fa-spin"}}></i></td>
+            <td>Set Timezone</td>
+            <td>{{tzRegion}} ({{tzZone}})</td>
+        </tr>
+        {{#if resizeSDCard}}
+        <tr {{bind-attr class="operations.resizeSDCard:success"}}>
+            <td><i {{bind-attr class=":fa :fa-fw operations.resizeSDCard:fa-check:fa-spinner operations.resizeSDCard:text-success:fa-spin"}}></i></td>
+            <td>Resize SD Card</td>
+            <td>True</td>
+        </tr>
+        {{/if}}
+        {{#if useGPUMem}}
+        <tr {{bind-attr class="operations.useGPUMem:success"}}>
+            <td><i {{bind-attr class=":fa :fa-fw operations.useGPUMem:fa-check:fa-spinner operations.useGPUMem:text-success:fa-spin"}}></i></td>
+            <td>Reassign GPU Memory</td>
+            <td>True</td>
+        </tr>
+        {{/if}}
+        {{#if cubieMAC}}
+        <tr {{bind-attr class="operations.cubieMAC:success"}}>
+            <td><i {{bind-attr class=":fa :fa-fw operations.cubieMAC:fa-check:fa-spinner operations.cubieMAC:text-success:fa-spin"}}></i></td>
+            <td>Set MAC Address</td>
+            <td>{{cubieMAC}}</td>
+        </tr>
+        {{/if}}
+        {{#each app in model.apps}}
+            {{#if app.firstrunSelected}}
+            <tr {{bind-attr class="app.installed:success"}}>
+                <td><i {{bind-attr class=":fa :fa-fw app.installed:fa-check:fa-spinner app.installed:text-success:fa-spin"}}></i></td>
+                <td>Install</td>
+                <td><i {{bind-attr class=":fa-fw app.icon"}}></i> {{app.name}}</td>
+            </tr>
+            {{/if}}
+        {{/each}}
+    </table>
+    {{#if canFinish}}
+    <div class="text-center">
+        <p>You may begin to use arkOS while your applications install in the background.</p>
+        <a href="#" class="btn btn-primary btn-lg" {{action "finish"}}><i class="fa fa-check"></i> Finish</a>
+        {{#if needsRestart}}
+        <p>Some of the options you chose require a restart to the device before they will take effect. Please wait until your applications have installed and show up before attempting to restart.</p>
+        {{/if}}
+    </div>
+    {{/if}}
+</div>
