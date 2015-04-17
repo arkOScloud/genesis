@@ -52,8 +52,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.APP.krakenHost = window.location.origin;
-    ENV.APP.contentSecurityPolicy['connect-src'] = "'self' "+window.location.origin;
+    ENV.APP.krakenHost = '/';
   }
   
   ENV['simple-auth'] = {
