@@ -27,7 +27,7 @@ export default Ember.ObjectController.extend({
     save: function() {
       var self = this;
       $.ajax({
-        url: ENV.APP.krakenHost+'/config',
+        url: ENV.APP.krakenHost+'/api/config',
         type: 'PUT',
         data: JSON.stringify({config: self.get('config'), hostname: self.get('hostname'), 
             timezone: {region: self.get('tzRegion'), zone: self.get('tzZone').replace(" ", "_")}}),

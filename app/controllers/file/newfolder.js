@@ -12,7 +12,7 @@ export default Ember.ObjectController.extend({
           fn = this.get("newFile"),
           cp = this.get("controllers.files.currentPath") || "/";
       $.ajax({
-        url: ENV.APP.krakenHost+'/files/'+toB64(cp),
+        url: ENV.APP.krakenHost+'/api/files/'+toB64(cp),
         type: "POST",
         data: JSON.stringify({file: {name: fn, folder: true}}),
         contentType: 'application/json',

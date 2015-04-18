@@ -10,7 +10,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   actions: {
     refresh: function() {
       var self = this;
-      $.getJSON(ENV.APP.krakenHost+"/system/packages?refresh=true", function(j){
+      $.getJSON(ENV.APP.krakenHost+"/api/system/packages?refresh=true", function(j){
         self.refresh();
       });
     }

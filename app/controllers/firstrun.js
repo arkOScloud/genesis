@@ -83,7 +83,7 @@ export default Ember.ObjectController.extend({
         });
       });
       $.ajax({
-        url: ENV.APP.krakenHost+'/config',
+        url: ENV.APP.krakenHost+'/api/config',
         type: 'PUT',
         data: JSON.stringify({timezone: {region: self.get('tzRegion'), zone: self.get('tzZone').replace(" ", "_")}}),
         contentType: 'application/json',
@@ -100,7 +100,7 @@ export default Ember.ObjectController.extend({
         self.set("needsRestart", true);
       };
       $.ajax({
-        url: ENV.APP.krakenHost+'/firstrun',
+        url: ENV.APP.krakenHost+'/api/firstrun',
         type: 'POST',
         data: JSON.stringify({
           install: toInstall,
@@ -117,7 +117,7 @@ export default Ember.ObjectController.extend({
         }
       });
       $.ajax({
-        url: ENV.APP.krakenHost+'/config',
+        url: ENV.APP.krakenHost+'/api/config',
         type: 'PATCH',
         data: JSON.stringify({config: {genesis: {firstrun: true}}}),
         contentType: 'application/json',

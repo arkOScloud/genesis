@@ -7,7 +7,7 @@ export default Ember.ObjectController.extend({
     execute: function(){
       var self = this;
       var exec = $.ajax({
-        url: ENV.APP.krakenHost+'/databases/'+this.get('model').get('id'),
+        url: ENV.APP.krakenHost+'/api/databases/'+this.get('model').get('id'),
         data: JSON.stringify({"database": {"execute": this.get('execInput')}}),
         type: 'PUT',
         contentType: 'application/json',

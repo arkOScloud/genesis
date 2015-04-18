@@ -12,7 +12,7 @@ export default Ember.ObjectController.extend({
     backup: function(type) {
       var self = this;
       $.ajax({
-        url: ENV.APP.krakenHost+'/backups/'+type,
+        url: ENV.APP.krakenHost+'/api/backups/'+type,
         type: 'POST',
         error: function(e) {
           if (e.status == 500) self.transitionToRoute("error", e);

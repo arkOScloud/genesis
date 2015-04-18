@@ -7,7 +7,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model: function() {
     return Ember.RSVP.hash({
       backups: this.get('store').find('backup'),
-      types: $.getJSON(ENV.APP.krakenHost+'/backups/types').then(function(j){return j.types;})
+      types: $.getJSON(ENV.APP.krakenHost+'/api/backups/types').then(function(j){return j.types;})
     });
   },
   actions: {

@@ -60,8 +60,8 @@ module.exports = function(environment) {
     crossOriginWhitelist: [ENV.APP.krakenHost]
   };
   ENV['simple-auth-token'] = {
-    serverTokenEndpoint: ENV.APP.krakenHost+'/token',
-    serverTokenRefreshEndpoint: ENV.APP.krakenHost+'/token/refresh',
+    serverTokenEndpoint: ENV.APP.krakenHost+'/api/token',
+    serverTokenRefreshEndpoint: ENV.APP.krakenHost+'/api/token/refresh',
     refreshAccessTokens: true,
     timeFactor: 1000,
     refreshLeeway: 300

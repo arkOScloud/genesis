@@ -31,7 +31,7 @@ export default DS.Model.extend({
     assets: DS.attr(),
     logoURL: function() {
       if (this.get('installed') && this.get('logo')) {
-        return ENV.APP.krakenHost+'/apps/logo/'+this.get('id');
+        return ENV.APP.krakenHost+'/api/apps/logo/'+this.get('id');
       } else if (!this.get('installed') && this.get('assets').logo) {
         return ENV.APP.GRMHost+'/api/v1/assets/'+this.get('assets').logo;
       } else {

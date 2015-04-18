@@ -8,7 +8,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model: function() {
     return Ember.RSVP.hash({
       apps: this.get("store").find("app"),
-      config: $.getJSON(ENV.APP.krakenHost+"/config")
+      config: $.getJSON(ENV.APP.krakenHost+"/api/config")
     });
   },
   step: 1,
@@ -40,7 +40,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     finish: function() {
       var self = this;
       $.ajax({
-        url: ENV.APP.krakenHost+'/config',
+        url: ENV.APP.krakenHost+'/api/config',
         type: 'PATCH',
         data: JSON.stringify({config: {genesis: {anonymous: false, firstrun: true}}}),
         contentType: 'application/json',

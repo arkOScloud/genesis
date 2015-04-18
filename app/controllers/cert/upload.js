@@ -8,7 +8,7 @@ export default Ember.ObjectController.extend({
     save: function(){
       var self = this;
       var uploader = EmberUploader.Uploader.create({
-        url: ENV.APP.krakenHost+'/certs'
+        url: ENV.APP.krakenHost+'/api/certs'
       });
       var files = [$('input[name="cert"]')[0].files[0],
                    $('input[name="key"]')[0].files[0]];

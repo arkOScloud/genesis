@@ -14,7 +14,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   },
   setupParallelCalls: function() {
     var self = this;
-    $.getJSON(ENV.APP.krakenHost+'/apps', function(m){
+    $.getJSON(ENV.APP.krakenHost+'/api/apps', function(m){
       m.apps.forEach(function(i){
         if (i.type=='app' && i.installed) {
           Router.map(function(){
@@ -26,7 +26,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     if (Ember.isNone(this.get('pollster'))) {
       this.set('pollster', Pollster.create({
         onPoll: function() {
-          $.getJSON(ENV.APP.krakenHost+'/genesis').then(function(j) {
+          $.getJSON(ENV.APP.krakenHost+'/api/genesis').then(function(j) {
             if (j && j.messages) {
               j.messages.forEach(function(m) {
                 if (m.class == "success" && !ENV.APP.needsFirstRun) {
@@ -132,13 +132,13 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     },
     shutdown: function() {
       $.ajax({
-        url: ENV.APP.krakenHost+'/system/shutdown',
+        url: ENV.APP.krakenHost+'/api/system/shutdown',
         type: 'POST'
       });
     },
     reboot: function() {
       $.ajax({
-        url: ENV.APP.krakenHost+'/system/reboot',
+        url: ENV.APP.krakenHost+'/api/system/reboot',
         type: 'POST'
       });
     }

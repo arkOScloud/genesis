@@ -6,8 +6,8 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model: function() {
     return Ember.RSVP.hash({
-      config: $.getJSON(ENV.APP.krakenHost+'/config'),
-      datetime: $.getJSON(ENV.APP.krakenHost+'/config/datetime'),
+      config: $.getJSON(ENV.APP.krakenHost+'/api/config'),
+      datetime: $.getJSON(ENV.APP.krakenHost+'/api/config/datetime'),
       users: this.get("store").find("user"),
       ssh: this.get("store").find("sshKey")
     });
@@ -23,7 +23,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     updateTime: function() {
       var self = this;
       $.ajax({
-        url: ENV.APP.krakenHost+'/config/datetime',
+        url: ENV.APP.krakenHost+'/api/config/datetime',
         type: 'PUT',
         success: function(j) {
           self.refresh();

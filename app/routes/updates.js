@@ -10,13 +10,13 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   actions: {
     check: function() {
       var self = this;
-      $.getJSON(ENV.APP.krakenHost+"/updates?rescan=true", function(j){
+      $.getJSON(ENV.APP.krakenHost+"/api/updates?rescan=true", function(j){
         self.refresh();
       });
     },
     install: function() {
       $.ajax({
-        url: ENV.APP.krakenHost+"/updates",
+        url: ENV.APP.krakenHost+"/api/updates",
         method: "POST"
       });
     }

@@ -45,7 +45,7 @@ export default Ember.ObjectController.extend({
       };
       showFade();
       showLoader(function(){
-        var fo = $.getJSON(ENV.APP.krakenHost+'/files/'+f.id, function(j) {
+        var fo = $.getJSON(ENV.APP.krakenHost+'/api/files/'+f.id, function(j) {
           if (j.file && j.file.folder == false && j.file.binary == false) {
             self.send('openFile', f);
             return false;
@@ -74,7 +74,7 @@ export default Ember.ObjectController.extend({
       var self = this;
       showFade();
       showLoader(function(){
-        var fo = $.getJSON(ENV.APP.krakenHost+'/files/'+f.id+'?content=true', function(j) {
+        var fo = $.getJSON(ENV.APP.krakenHost+'/api/files/'+f.id+'?content=true', function(j) {
           hideLoader();
           hideFade();
           self.send('showModal', 'file/notepad', j.file);
@@ -90,7 +90,7 @@ export default Ember.ObjectController.extend({
       var self = this;
       var fn = this.get("newFile");
       $.ajax({
-        url: ENV.APP.krakenHost+'/files/'+toB64(f.currentPath),
+        url: ENV.APP.krakenHost+'/api/files/'+toB64(f.currentPath),
         type: "POST",
         data: JSON.stringify({new: "file", name: fn}),
         contentType: 'application/json',
@@ -106,7 +106,7 @@ export default Ember.ObjectController.extend({
       var self = this;
       var fn = this.get("newFile");
       $.ajax({
-        url: ENV.APP.krakenHost+'/files/'+toB64(f.currentPath),
+        url: ENV.APP.krakenHost+'/api/files/'+toB64(f.currentPath),
         type: "POST",
         data: JSON.stringify({new: "folder", name: fn}),
         contentType: 'application/json',
@@ -139,7 +139,7 @@ export default Ember.ObjectController.extend({
         i.newdir = self.get('currentPath');
         i.operation = "copy";
         $.ajax({
-          url: ENV.APP.krakenHost+'/files/'+toB64(i.newdir),
+          url: ENV.APP.krakenHost+'/api/files/'+toB64(i.newdir),
           type: "PUT",
           data: JSON.stringify({file: i}),
           contentType: 'application/json',

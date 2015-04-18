@@ -30,7 +30,7 @@ export default Ember.ObjectController.extend({
     siteAction: function(action) {
       var self = this;
       $.ajax({
-        url: ENV.APP.krakenHost+'/websites/actions/'+this.get("model.id")+"/"+action,
+        url: ENV.APP.krakenHost+'/api/websites/actions/'+this.get("model.id")+"/"+action,
         type: "POST"
       })
       .success(function(){

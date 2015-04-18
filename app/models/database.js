@@ -7,7 +7,7 @@ export default DS.Model.extend({
     typeId: DS.attr('string'),
     typeName: DS.attr('string'),
     downloadHref: function() {
-      return ENV.APP.krakenHost+'/databases/'+this.get('id')+'?download=true';
+      return ENV.APP.krakenHost+'/api/databases/'+this.get('id')+'?download=true';
     }.property('id'),
     isReady: DS.attr('boolean', {defaultValue: false})
 });

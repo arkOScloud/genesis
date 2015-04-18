@@ -17,7 +17,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     delete: function(model){
       model.set('isReady', false);
       $.ajax({
-        url: ENV.APP.krakenHost+'/websites/'+model.get('id'),
+        url: ENV.APP.krakenHost+'/api/websites/'+model.get('id'),
         type: 'DELETE'
       });
     }

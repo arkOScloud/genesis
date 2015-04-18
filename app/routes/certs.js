@@ -8,7 +8,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     return Ember.RSVP.hash({
       certs: this.get('store').find('cert'),
       auths: this.get('store').find('certauth'),
-      assns: $.getJSON(ENV.APP.krakenHost+'/certassigns')
+      assns: $.getJSON(ENV.APP.krakenHost+'/api/certassigns')
     });
   },
   actions: {

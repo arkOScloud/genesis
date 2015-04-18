@@ -37,7 +37,7 @@ export default Ember.ObjectController.extend({
       file.perms.oct = poct;
       file.operation = "props";
       $.ajax({
-        url: ENV.APP.krakenHost+'/files/'+file.id,
+        url: ENV.APP.krakenHost+'/api/files/'+file.id,
         type: "PUT",
         data: JSON.stringify({file: file}),
         contentType: 'application/json',

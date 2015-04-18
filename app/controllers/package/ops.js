@@ -24,7 +24,7 @@ export default Ember.ObjectController.extend({
         i.set('operation', '');
       });
       var exec = $.ajax({
-        url: ENV.APP.krakenHost+'/system/packages',
+        url: ENV.APP.krakenHost+'/api/system/packages',
         data: JSON.stringify({packages: toSend}),
         type: 'POST',
         contentType: 'application/json',

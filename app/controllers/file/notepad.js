@@ -11,7 +11,7 @@ export default Ember.ObjectController.extend({
             file = this.get("model"),
             output = this.get("output");
         $.ajax({
-          url: ENV.APP.krakenHost+'/files/'+file.id,
+          url: ENV.APP.krakenHost+'/api/files/'+file.id,
           type: "PUT",
           data: JSON.stringify({file:{path:file.path,data:output,operation:"edit"}}),
           contentType: 'application/json',

@@ -6,7 +6,7 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   getStats: function() {
-    $.getJSON(ENV.APP.krakenHost+'/system/stats/all').then(function(j) {
+    $.getJSON(ENV.APP.krakenHost+'/api/system/stats/all').then(function(j) {
       var cpu = Math.round(j.cpu);
       $('#cpu .progress-bar').css('width', cpu+'%').attr('aria-valuenow', cpu);
       $('#cpu .progress-bar').html(cpu+'%');
