@@ -8,11 +8,6 @@ import ApplicationRouteMixin from 'simple-auth/mixins/application-route-mixin';
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   setupController: function() {
-    var initConfig = $.getJSON(ENV.APP.krakenHost+'/config', function(j){
-      ENV.APP.dateFormat = j.config.general.date_format;
-      ENV.APP.timeFormat = j.config.general.time_format;
-      ENV.APP.needsFirstRun = !j.config.genesis.firstrun;
-    });
     if (this.get("session.isAuthenticated")) {
       this.setupParallelCalls();
     };

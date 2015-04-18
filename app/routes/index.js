@@ -6,5 +6,10 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model: function() {
     return this.get('store').find('app');
+  },
+  afterModel: function() {
+    if (ENV.APP.needsFirstRun) {
+      this.transitionTo("firstrun");
+    };
   }
 });
