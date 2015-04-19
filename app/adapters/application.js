@@ -11,7 +11,6 @@ if (ENV.APP.krakenHost) {
 };
 
 export default Adapter.extend({
-    host: ENV.APP.krakenHost || "/",
     namespace: "api",
     pathForType: function(type) {
       var stype = this._super(type);
