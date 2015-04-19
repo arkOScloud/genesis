@@ -3,8 +3,15 @@ import DS from "ember-data";
 import ENV from "../config/environment";
 
 
-export default DS.RESTAdapter.extend({
-    host: ENV.APP.krakenHost,
+var Adapter = DS.RESTAdapter.extend();
+if (ENV.APP.krakenHost) {
+  Adapter.extend({
+    host: ENV.APP.krakenHost
+  });
+};
+
+export default Adapter.extend({
+    host: ENV.APP.krakenHost || "/",
     namespace: "api",
     pathForType: function(type) {
       var stype = this._super(type);
