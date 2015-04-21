@@ -14,7 +14,6 @@ module.exports = function(environment) {
     },
 
     APP: {
-      krakenHost: 'http://localhost:8000', 
       GRMHost: 'https://grm-test.arkos.io',
       dateFormat: 'DD MMM YYYY',
       timeFormat: 'HH:mm:ss'
@@ -32,11 +31,7 @@ module.exports = function(environment) {
   };
 
   if (environment === 'development') {
-    // ENV.APP.LOG_RESOLVER = true;
-    // ENV.APP.LOG_ACTIVE_GENERATION = true;
-    // ENV.APP.LOG_TRANSITIONS = true;
-    // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
-    // ENV.APP.LOG_VIEW_LOOKUPS = true;
+    ENV.APP.krakenHost = 'http://localhost:8000';
   }
 
   if (environment === 'test') {
@@ -48,6 +43,7 @@ module.exports = function(environment) {
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
+    ENV.APP.krakenHost = 'http://localhost:8000';
     ENV.APP.rootElement = '#ember-testing';
   }
 
