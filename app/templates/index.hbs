@@ -1,10 +1,8 @@
-{{#each app in sortedApps}}
-    {{#if app.displayInMenu}}
+{{#each app in filteredApps}}
     <div class="ui-homebutton" {{action 'openApplication' app}}>
         <h1 class="text-center"><i {{bind-attr class=":fa-2x app.icon"}}></i></h1>
         <h4 class="text-center">{{app.name}}</h4>
     </div>
-    {{/if}}
 {{else}}
     <div class="text-center">
         <h1 class="fa fa-cube fa-5x"></h1>
