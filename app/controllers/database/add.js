@@ -7,9 +7,8 @@ export default Ember.ObjectController.extend({
     save: function(){
       var self = this;
       var db = this.store.createRecord('database', {
-        name: this.get('name'),
-        typeId: this.get('type'),
-        typeName: this.get('type')
+        id: this.get('id'),
+        typeId: this.get('type')
       });
       var promise = db.save();
       promise.then(function(){}, function(e){

@@ -10,7 +10,7 @@ export default Ember.ObjectController.extend({
     save: function(){
       var self = this;
       var db = this.store.createRecord('databaseUser', {
-        name: this.get('name'),
+        id: this.get('id'),
         typeId: this.get('type'),
         passwd: this.get('passwd')
       });
