@@ -51,7 +51,7 @@
                 <i class="fa fa-fw fa-wrench"></i> Tools <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="#" {{action 'upload'}}><i class="fa fa-fw fa-upload"></i> Upload Here...</a></li>
+                <li><a href="#" {{action 'showModal' 'file/upload'}}><i class="fa fa-fw fa-upload"></i> Upload Here...</a></li>
                 <li><a href="#" {{action 'addToDownloads'}}><i class="fa fa-fw fa-download"}}></i> Download...</a></li>
               </ul>
             </div>
@@ -73,7 +73,7 @@
     {{g-fm-item item=item files=this}}
 {{else}}
     <div class="text-center text-muted">
-        <h1 class="fa fa-folder fa-5x"></h1>
+        <h1 class="fa fa-folder-o fa-5x"></h1>
         <p class="lead">Empty folder</p>
     </div>
 {{/each}}

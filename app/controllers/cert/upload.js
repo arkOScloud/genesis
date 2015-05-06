@@ -1,5 +1,6 @@
 import Ember from "ember";
 import ENV from "../../config/environment";
+import EmberUploader from 'ember-uploader';
 
 
 export default Ember.ObjectController.extend({
