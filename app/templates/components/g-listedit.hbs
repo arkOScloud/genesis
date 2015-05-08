@@ -1,0 +1,23 @@
+<div class="input-group">
+  {{input type="text" class="form-control" value=newItem placeholder=placeholder}}
+  <span class="input-group-btn">
+    <a class="btn btn-default" {{action 'addItem'}}><i class="fa fa-plus-circle"></i> Add</a>
+  </span>
+</div>
+
+<table class="table">
+  <tbody>
+    {{#each item in items}}
+    <tr>
+      <td>{{item}}</td>
+      <td width=1><a class="btn btn-sm btn-danger" {{action 'removeItem' item}}><i class="fa fa-minus-circle"></i> Remove</a></td>
+    </tr>
+    {{else}}
+    <tr>
+      <td colspan=2 class="text-center">
+        <em>No items found.</em>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -13,6 +13,10 @@ export default DS.Model.extend({
     domain: DS.attr('string'),
     passwd: DS.attr('string'),
     isReady: DS.attr('boolean', {defaultValue: false}),
+    mailAddresses: DS.attr(),
+    addressSuffix: function() {
+      return "@"+this.get('domain');
+    }.property('domain'),
     selectId: function() {
       return this.get('name');
     }.property('name'),

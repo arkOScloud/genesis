@@ -39,5 +39,7 @@
             </label>
             <p class="help-block">A sudo user is allowed root access to this system via the command line (SSH or Terminal).</p>
         </div>
+        <h3>Mail Aliases</h3>
+        {{g-listedit items=model.mailAddresses placeholder="Enter alias name (first part only)" suffix=model.addressSuffix}}
     </form>
 {{/g-modal}}
