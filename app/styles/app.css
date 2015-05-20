@@ -85,20 +85,20 @@ a:link, a:focus, a:active, a:hover {
   padding: 10px;
 }
 
-.navbar-default .navbar-nav > li > a:hover, 
-.navbar-default .navbar-nav > li > a:focus, 
-.navbar-default .navbar-nav > .active > a, 
-.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus,
-.navbar-default .navbar-nav > .open > a, 
-.navbar-default .navbar-nav > .open > a:hover, 
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus {
   background: #3E606F;
   color: #FFF;
 }
 
-.nav-tabs > li.active > a, 
-.nav-tabs > li.active > a:hover, 
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
     background-color: #FCFFF5;
 }
@@ -114,7 +114,7 @@ a:link, a:focus, a:active, a:hover {
     line-height: 2;
 }
 
-.btn, 
+.btn,
 .btn-group-sm > .btn,
 .btn-group-lg > .btn,
 input.form-control {
@@ -193,12 +193,10 @@ input.form-control {
 .ui-loader {
   display: none;
   position: fixed;
-  left: 2%;
-  bottom: 5%;
   background: rgba(0,0,0,0.5);
   z-index: 1000001;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 15px;
+  border-radius: 6px;
   overflow: hidden;
   color: #FFF;
 }
@@ -515,7 +513,7 @@ button.close {
 .ui-firstrun-image {
   margin-bottom: 20px;
 }
- 
+
 .login {
   background-color: #eceff1;
   width: 350px;

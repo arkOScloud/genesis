@@ -5,7 +5,7 @@ var Message = Ember.Object.extend();
 
 var Messager = Ember.ArrayProxy.extend({
   content: Ember.A(),
-  timeout: 3000,
+  timeout: 5000,
   pushObject: function(object) {
     object.typeClass = 'alert-' + object.type;
     Ember.run.later(function() {

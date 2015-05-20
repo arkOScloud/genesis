@@ -56,17 +56,17 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container">
         {{outlet}}
         {{outlet 'modal'}}
     </div>
-    
+
     {{g-messages}}
-    
+
     <div class="ui-fade"></div>
     <div class="ui-loader">
-        <h1><i class="fa fa-circle-o-notch fa-spin"></i> Loading...</h1>
+        <h1><i class="fa fa-circle-o-notch fa-spin"></i></h1>
     </div>
 
     <div class="footer">
@@ -78,7 +78,7 @@
             <div id="version">Genesis {{ currentVersion }}</div>
         </div>
     </div>
-    
+
     <script>
         $('body').tooltip({
             selector: '[data-toggle="tooltip"]'
