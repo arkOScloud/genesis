@@ -86,17 +86,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         this.transitionTo('firstrun');
       };
     },
-    loading: function(transition, originRoute) {
-      showFade();
-      showLoader();
-      var self = this;
-      transition.then(function(){
-        Ember.run.schedule('afterRender', self, function(){
-          hideLoader();
-          hideFade();
-        });
-      })
-    },
     error: function(error, transition) {
       var self = this;
       hideLoader();
@@ -133,6 +122,12 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     shutdown: function() {
       $.ajax({
         url: ENV.APP.krakenHost+'/api/system/shutdown',
+        type: 'POST'
+      });
+    },
+    reload: function() {
+      $.ajax({
+        url: ENV.APP.krakenHost+'/api/system/reload',
         type: 'POST'
       });
     },

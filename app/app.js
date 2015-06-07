@@ -12,7 +12,7 @@ var App = Ember.Application.extend({
   Resolver: Resolver
 });
 
-App.currentVersion = "0.7.0 Beta 3";
+App.currentVersion = "0.7.0";
 
 loadInitializers(App, config.modulePrefix);
 
