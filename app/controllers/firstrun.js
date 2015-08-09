@@ -10,6 +10,7 @@ export default Ember.ObjectController.extend({
   newDomain: "arkos.local",
   tzRegion: "GMT",
   tzZone: "GMT",
+  rootPwd: "Please wait...",
   tzZones: function() {
     var self = this;
     var tzo = timezones.find(function(i) {
@@ -110,10 +111,11 @@ export default Ember.ObjectController.extend({
         }),
         contentType: 'application/json',
         processData: false,
-        success: function() {
+        success: function(j) {
           self.set("operations.resizeSDCard", true);
           self.set("operations.useGPUMem", true);
           self.set("operations.cubieMAC", true);
+          self.set("rootPwd", j.rootpwd);
         }
       });
       $.ajax({
