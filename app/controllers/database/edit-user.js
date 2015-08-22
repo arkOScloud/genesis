@@ -11,9 +11,9 @@ export default Ember.ObjectController.extend({
     save: function(){
       var self = this;
       if (this.get('action') == "Grant all permissions") {
-        actionToTake = "grant"
+        var actionToTake = "grant";
       } else if (this.get('action') == "Revoke all permissions") {
-        actionToTake = "revoke"
+        var actionToTake = "revoke";
       } else {
         return false;
       };
