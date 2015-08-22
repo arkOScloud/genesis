@@ -16,8 +16,8 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "",
-  "license": "MIT",
+  "author": "arkOS",
+  "license": "GPLv3",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.0",
     "broccoli-ember-hbs-template-compiler": "^1.6.1",

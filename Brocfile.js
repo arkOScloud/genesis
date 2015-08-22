@@ -25,8 +25,8 @@ app.import('bower_components/bootstrap/dist/css/bootstrap.css.map', {
 })
 app.import('bower_components/bootstrap-contextmenu/bootstrap-contextmenu.js');
 app.import('bower_components/moment/moment.js');
-app.import('bower_components/lightbox2/js/lightbox.js');
-app.import('bower_components/lightbox2/css/lightbox.css');
+app.import('bower_components/lightbox2/src/js/lightbox.js');
+app.import('bower_components/lightbox2/src/css/lightbox.css');
 app.import('bower_components/multiselect/js/jquery.multi-select.js');
 app.import('bower_components/multiselect/css/multi-select.css');
 app.import("bower_components/codemirror/lib/codemirror.css");
@@ -62,10 +62,10 @@ var firaWoff = pickFiles('bower_components/fira/woff', {
     srcDir: '/',
     destDir: 'assets/woff'
 });
-app.import("bower_components/lightbox2/img/close.png", {destDir: '/img'});
-app.import("bower_components/lightbox2/img/next.png", {destDir: '/img'});
-app.import("bower_components/lightbox2/img/prev.png", {destDir: '/img'});
-app.import("bower_components/lightbox2/img/loading.gif", {destDir: '/img'});
+app.import("bower_components/lightbox2/src/images/close.png", {destDir: '/img'});
+app.import("bower_components/lightbox2/src/images/next.png", {destDir: '/img'});
+app.import("bower_components/lightbox2/src/images/prev.png", {destDir: '/img'});
+app.import("bower_components/lightbox2/src/images/loading.gif", {destDir: '/img'});
 app.import("bower_components/multiselect/img/switch.png", {destDir: '/img'});
 
 module.exports = app.toTree([fontAwesome, firaEot, firaOtf, firaTtf, firaWoff]);
