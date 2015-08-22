@@ -6,7 +6,7 @@
         </div>
         <div class="form-group">
         <h4>Members</h4>
-            {{g-multiselect options=model.users addAction="addSelectedId" removeAction="removeSelectedId" }}
+            {{g-multiselect options=model.users selected=users addAction="addSelectedId" removeAction="removeSelectedId" }}
         </div>
     </form>
 {{/g-modal}}
