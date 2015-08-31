@@ -14,7 +14,7 @@
         <div class="well">
             <h4><i class="fa fa-cube"></i> {{installed.length}} packages installed, {{upgradable.length}} can be upgraded.</h4>
         </div>
-        
+
         <div class="input-group">
             {{input type="text" class="form-control" value=installedQuery placeholder="Filter results"}}
             <span class="input-group-btn">
@@ -40,7 +40,7 @@
                             {{#if pkg.isUpgradable}}
                             <a href="#" {{bind-attr class=":btn :btn-success pkg.toRemove:disabled"}} {{action 'install' pkg}}><i class="fa fa-arrow-circle-up fa-fw"></i> Upgrade</a>
                             {{else}}
-                            <a href="#" class="btn btn-success disabled" {{action 'install' pkg}}><i class="fa fa-arrow-circle-up fa-fw"></i> Upgrade</a>
+                            <a href="#" class="btn btn-default disabled" {{action 'install' pkg}}><i class="fa fa-check-circle fa-fw"></i> Up to date</a>
                             {{/if}}
                             <a href="#" {{bind-attr class=":btn :btn-danger pkg.toInstall:disabled"}} {{action 'remove' pkg}}><i class="fa fa-times-circle fa-fw"></i> Uninstall</a>
                         </div>
@@ -65,7 +65,7 @@
                 <button class="btn btn-default" type="button" {{action 'clearAvailableFilter'}}><i class="fa fa-fw fa-times-circle"></i> Clear</button>
             </span>
         </div>
-        
+
         <table class="table">
             <tbody>
                 <tr>
