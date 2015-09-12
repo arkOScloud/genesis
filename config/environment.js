@@ -14,11 +14,11 @@ module.exports = function(environment) {
     },
 
     APP: {
-      GRMHost: 'https://grm-test.arkos.io',
+      GRMHost: 'https://grm.arkos.io',
       dateFormat: 'DD MMM YYYY',
       timeFormat: 'HH:mm:ss'
     },
-    
+
     contentSecurityPolicy: {
       'default-src': "'none'",
       'script-src': "'self'",
@@ -50,7 +50,7 @@ module.exports = function(environment) {
   if (environment === 'production') {
     ENV.APP.krakenHost = '';
   }
-  
+
   ENV['simple-auth'] = {
     authorizer: 'simple-auth-authorizer:token',
     crossOriginWhitelist: [ENV.APP.krakenHost]
