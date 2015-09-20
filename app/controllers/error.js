@@ -10,27 +10,27 @@ export default Ember.Controller.extend({
     return false;
   }.property("model"),
   networkError: function() {
-    return (this.get("model.responseJSON") == undefined);
+    return (this.get("model.responseJSON") === undefined);
   }.property("model"),
   stackTrace: function() {
     if (!this.get("networkError")) {
       return this.get("model.responseJSON.stacktrace");
     } else {
       return null;
-    };
+    }
   }.property("networkError", "model"),
   crashReport: function() {
     if (!this.get("networkError")) {
       return this.get("model.responseJSON.report");
     } else {
       return null;
-    };
+    }
   }.property("networkError", "model"),
   actions: {
     submitCrashReport: function() {
       var self = this,
           data = this.get("model.responseJSON");
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.GRMHost+'/api/v1/error',
         type: "POST",
         data: JSON.stringify({
@@ -44,7 +44,7 @@ export default Ember.Controller.extend({
         processData: false,
         success: function(j) {
           self.message.success(j.message);
-          $("#reportbtn").addClass("disabled");
+          Ember.$("#reportbtn").addClass("disabled");
         },
         error: function(j) {
           self.message.danger(j.message);

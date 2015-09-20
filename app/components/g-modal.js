@@ -11,15 +11,15 @@ export default Ember.Component.extend({
         fieldValidator('.modal');
         var self = this;
         setTimeout(function(){
-          if (self.$('.modal .form-group.has-error').length == 0) {
+          if (self.$('.modal .form-group.has-error').length === 0) {
             self.$('.modal').modal('hide');
             self.sendAction('ok');
-          };
+          }
         }, 1000);
       } else {
         this.$('.modal').modal('hide');
         this.sendAction('ok', this.get('model'));
-      };
+      }
     }
   },
   show: function() {

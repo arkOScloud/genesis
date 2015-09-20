@@ -1,42 +1,40 @@
 <div class="row">
-    <div class="col-md-1">
-        <i class="fa fa-exclamation-triangle fa-5x"></i>
-    </div>
-    <div class="col-md-11">
-        <h1 class="page-header">An error has occurred.</h1>
-        {{#if networkError}}
-            <p>arkOS encountered a problem in communicating with the server. There may have been an interruption in your network. Please try again by refreshing the page or physically checking the status of your server.</p>
-            <a href="#" class="btn btn-default" onclick="document.location.reload();return false"><i class="fa fa-refresh"></i> Refresh page</a>
-        {{else}}
-            <p>arkOS encountered an error when trying to perform your last requested operation, and it cannot continue with it.</p>
+  <div class="col-md-1">
+    <i class="fa fa-exclamation-triangle fa-5x"></i>
+  </div>
+  <div class="col-md-11">
+    <h1 class="page-header">An error has occurred.</h1>
+    {{#if networkError}}
+      <p>arkOS encountered a problem in communicating with the server. There may have been an interruption in your network. Please try again by refreshing the page or physically checking the status of your server.</p>
+      <a href="#" class="btn btn-default" onclick="document.location.reload();return false"><i class="fa fa-refresh"></i> Refresh page</a>
+    {{else}}
+      <p>arkOS encountered an error when trying to perform your last requested operation, and it cannot continue with it.</p>
 
-            <h3>You can try again...</h3>
-            <p>...by refreshing the page. In some cases, restarting the server or clearing your browser's cache may also help.</p>
-            <div class="btn-group">
-                <a href="#" class="btn btn-default" onclick="document.location.reload();return false"><i class="fa fa-refresh"></i> Refresh page</a>
-                <a href="#" class="btn btn-default" {{action "reboot"}}><i class="fa fa-refresh"></i> Restart server</a>
-            </div>
-            
-            <h3>Still having trouble?</h3>
-            <p>If you think this is a bug, please let us know about the problem by automatically submitting a crash report. You can also manually do this by <a href="https://git.coderouge.co/arkOS/genesis/issues">filing an issue to our tracker</a>. Please make sure to include the full crash report when filing manually.</p>
-            <div class="btn-group">
-                <a href="#" class="btn btn-default" id="reportbtn" {{action "submitCrashReport"}}><i class="fa fa-bug"></i> Submit crash report</a>
-                {{#if showingStacktrace}}
-                {{else}}
-                <a href="#" class="btn btn-default" {{action "showStacktrace"}}><i class="fa fa-search"></i> View stacktrace</a>
-                {{/if}}
-                {{#if showingCrashReport}}
-                {{else}}
-                <a href="#" class="btn btn-default" {{action "showCrashReport"}}><i class="fa fa-search"></i> Show full crash report</a>
-                {{/if}}
-            </div>
-            
-            {{#if showingCrashReport}}
-                {{textarea class="form-control" rows=15 value=crashReport}}
-            {{/if}}
-            {{#if showingStacktrace}}
-                {{textarea class="form-control" rows=15 value=stackTrace}}
-            {{/if}}
-        {{/if}}
-    </div>
+      <h3>You can try again...</h3>
+      <p>...by refreshing the page. In some cases, restarting the server or clearing your browser's cache may also help.</p>
+      <div class="btn-group">
+        <a href="#" class="btn btn-default" onclick="document.location.reload();return false"><i class="fa fa-refresh"></i> Refresh page</a>
+        <a href="#" class="btn btn-default" {{action "reboot"}}><i class="fa fa-refresh"></i> Restart server</a>
+      </div>
+
+      <h3>Still having trouble?</h3>
+      <p>If you think this is a bug, please let us know about the problem by automatically submitting a crash report. You can also manually do this by <a href="https://git.coderouge.co/arkOS/genesis/issues">filing an issue to our tracker</a>. Please make sure to include the full crash report when filing manually.</p>
+      <div class="btn-group">
+        <a href="#" class="btn btn-default" id="reportbtn" {{action "submitCrashReport"}}><i class="fa fa-bug"></i> Submit crash report</a>
+        {{#unless showingStacktrace}}
+        <a href="#" class="btn btn-default" {{action "showStacktrace"}}><i class="fa fa-search"></i> View stacktrace</a>
+        {{/unless}}
+        {{#unless showingCrashReport}}
+        <a href="#" class="btn btn-default" {{action "showCrashReport"}}><i class="fa fa-search"></i> Show full crash report</a>
+        {{/unless}}
+      </div>
+
+      {{#if showingCrashReport}}
+        {{textarea class="form-control" rows=15 value=crashReport}}
+      {{/if}}
+      {{#if showingStacktrace}}
+        {{textarea class="form-control" rows=15 value=stackTrace}}
+      {{/if}}
+    {{/if}}
+  </div>
 </div>

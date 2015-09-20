@@ -5,7 +5,7 @@ import sizeToString from "../utils/size-to-string";
 export default DS.Model.extend({
     type: DS.attr('string'),
     isVirtual: function() {
-      return this.get('type')=="virtual";
+      return this.get('type') === "virtual";
     }.property('type'),
     size: DS.attr('number'),
     sizeString: function() {

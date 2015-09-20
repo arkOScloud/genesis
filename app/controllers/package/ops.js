@@ -6,7 +6,7 @@ export default Ember.ObjectController.extend({
   sortBy: ['id'],
   rawOperations: function() {
     return this.get('model').filter(function(i) {
-      return i.get('operation')!="";
+      return i.get('operation') !== "";
     });
   }.property('model.@each.operation'),
   pendingOperations: Ember.computed.sort('rawOperations', 'sortBy'),
@@ -23,14 +23,16 @@ export default Ember.ObjectController.extend({
         toSend.pushObject({id: i.get('id'), operation: i.get('operation')});
         i.set('operation', '');
       });
-      var exec = $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/system/packages',
         data: JSON.stringify({packages: toSend}),
         type: 'POST',
         contentType: 'application/json',
         processData: false,
         error: function(e){
-          if (e.status == 500) self.transitionToRoute("error", e);
+          if (e.status === 500) {
+            self.transitionToRoute("error", e);
+          }
         }
       });
     }

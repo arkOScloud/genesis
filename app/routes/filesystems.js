@@ -3,11 +3,11 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
-  beforeModel: function(model) {
+  beforeModel: function() {
     this.get('store').unloadAll('filesystem');
   },
   model: function() {
-    return this.get('store').find('filesystem');
+    return this.get('store').findAll('filesystem');
   },
   actions: {
     delete: function(model){

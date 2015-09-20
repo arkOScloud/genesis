@@ -10,7 +10,9 @@ export default Ember.ObjectController.extend({
       site.set('operation', site.get('enabled')?'disable':'enable');
       var promise = site.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     }
   }

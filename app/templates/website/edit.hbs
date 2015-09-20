@@ -1,20 +1,24 @@
 {{#g-modal title="Editing Site" icon="fa-globe" ok='save' close="removeModal"}}
-    <div class="form-group">
-        <label for="name">Site Name</label>
-        {{input type="text" class="form-control required" value=newName}}
-        <p class="help-block">A name to help you recognize this website in arkOS. Do not use spaces, dashes or special characters.</p>
-    </div>
-    <div class="form-group">
-        <label for="address">Address</label>
-        {{ view "select" class="form-control required" value=newAddr content=extra.domains optionLabelPath="content.id" optionValuePath="content.id" }}
-        <p class="help-block">The web address you want to use to access this site.</p>
-    </div>
-    <div class="form-group">
-        <label for="port">Port</label>
-        {{input type="text" class="form-control required" value=newPort}}
-        <p class="help-block">If you don't know what to put here, leave it at the default.</p>
-    </div>
-    {{#if model.hasActions}}
-        {{partial model.siteType}}
-    {{/if}}
+  <div class="form-group">
+    <label for="name">Site Name</label>
+    {{input type="text" class="form-control required" value=newName}}
+    <p class="help-block">A name to help you recognize this website in arkOS. Do not use spaces, dashes or special characters.</p>
+  </div>
+  <div class="form-group">
+    <label for="address">Address</label>
+    {{#x-select class="form-control required" action="didMakeSelection" default=newAddr}}
+      {{#each extra.domains as |dom|}}
+        {{#x-option value=dom.id}}{{dom.id}}{{/x-option}}
+      {{/each}}
+    {{/x-select}}
+    <p class="help-block">The web address you want to use to access this site.</p>
+  </div>
+  <div class="form-group">
+    <label for="port">Port</label>
+    {{input type="text" class="form-control required" value=newPort}}
+    <p class="help-block">If you don't know what to put here, leave it at the default.</p>
+  </div>
+  {{#if model.hasActions}}
+    {{partial model.siteType}}
+  {{/if}}
 {{/g-modal}}

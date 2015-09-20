@@ -9,22 +9,25 @@ export default Ember.ObjectController.extend({
   }.property('dbs'),
   actions: {
     save: function(){
-      var self = this;
-      if (this.get('action') == "Grant all permissions") {
-        var actionToTake = "grant";
-      } else if (this.get('action') == "Revoke all permissions") {
-        var actionToTake = "revoke";
+      var self = this,
+          actionToTake = "";
+      if (this.get('action') === "Grant all permissions") {
+        actionToTake = "grant";
+      } else if (this.get('action') === "Revoke all permissions") {
+        actionToTake = "revoke";
       } else {
         return false;
-      };
-      var exec = $.ajax({
+      }
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/database_users/'+this.get('model').get('id'),
         data: JSON.stringify({"database_user": {"operation": actionToTake, "database": this.get('database')}}),
         type: 'PUT',
         contentType: 'application/json',
         processData: false,
         error: function(e) {
-          if (e.status == 500) self.transitionToRoute("error", e);
+          if (e.status === 500) {
+            self.transitionToRoute("error", e);
+          }
         }
       });
     },

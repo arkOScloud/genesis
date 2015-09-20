@@ -6,6 +6,6 @@ export default Ember.Component.extend({
     return 'wizardstep'+this.step;
   }.property(),
   hidden: function() {
-    return this.step!=1?'display:none;':'';
+    return this.step !== 1 ? 'display:none;' : '';
   }.property()
 });

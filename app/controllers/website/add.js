@@ -9,14 +9,14 @@ export default Ember.ObjectController.extend({
   sortBy: ['name'],
   sortedApps: Ember.computed.sort('model.apps', 'sortBy'),
   isLarge: function() {
-    return this.get('step')==1;
+    return this.get('step') === 1;
   }.property('step'),
   pageTitle: function() {
-    if (this.get('step')==1) {
+    if (this.get('step') === 1) {
       return "Step 1: Choose a Website Type";
     } else {
       return "Step 2: General Settings";
-    };
+    }
   }.property('step'),
   canNext: function() {
     return this.get('selectedSite')!=null;
@@ -34,14 +34,14 @@ export default Ember.ObjectController.extend({
     this.get('model.dbType').forEach(function(i){
       if (eng && eng.indexOf(i.get('id'))>=0) {
         types.pushObject(i);
-      };
+      }
     });
     return types;
   }.property('canChooseDBType', 'model.dbType'),
   actions: {
     selectType: function(item) {
-      $('.ui-navlist > li').removeClass('active');
-      $('#'+item.id).addClass('active');
+      Ember.$('.ui-navlist > li').removeClass('active');
+      Ember.$('#'+item.id).addClass('active');
       this.set('selectedSite', item);
     },
     save: function() {
@@ -57,7 +57,9 @@ export default Ember.ObjectController.extend({
       });
       var promise = site.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     },
     removeModal: function() {

@@ -1,6 +1,6 @@
-<div {{bind-attr id=msg.id class=":alert :fade :in msg.typeClass msg.dismissable:alert-dismissable:"}}>
-    {{#if msg.dismissable}}
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true" {{action 'dismiss'}}><i class="fa fa-times"></i></button>
-    {{/if}}
-    <i {{bind-attr class="msg.icon"}} style="line-height:1;"></i> {{#if msg.headline}}<strong>{{msg.headline}}</strong><br /> {{/if}}{{msg.message}}
+<div id={{msg.id}} class="alert fade in {{msg.typeClass}} {{if msg.dismissable 'alert-dismissable'}}">
+  {{#if msg.dismissable}}
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" {{action 'dismiss'}}><i class="fa fa-times"></i></button>
+  {{/if}}
+  <i class={{msg.icon}} style="line-height:1;"></i> {{#if msg.headline}}<strong>{{msg.headline}}</strong><br /> {{/if}}{{msg.message}}
 </div>

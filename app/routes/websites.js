@@ -6,17 +6,17 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model: function() {
     return Ember.RSVP.hash({
-      sites: this.get('store').find('website'),
-      users: this.get('store').find('user'),
-      domains: this.get('store').find('domain'),
-      dbType: this.get('store').find('databaseType'),
-      apps: this.get('store').find('app', {type: "website", loadable: true})
+      sites: this.get('store').findAll('website'),
+      users: this.get('store').findAll('user'),
+      domains: this.get('store').findAll('domain'),
+      dbType: this.get('store').findAll('databaseType'),
+      apps: this.get('store').findAll('app', {type: "website", loadable: true})
     });
   },
   actions: {
     delete: function(model){
       model.set('isReady', false);
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/websites/'+model.get('id'),
         type: 'DELETE'
       });

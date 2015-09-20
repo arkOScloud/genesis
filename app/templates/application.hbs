@@ -1,92 +1,92 @@
 <div id="main">
-    <div class="navbar navbar-inverse navbar-static-top">
-        <div class="container">
-            <div id="navbar-brand-div" class="navbar-header">
-                <a id="navbar-brand" class="navbar-brand" href="/#/"><img src="/img/logo-white.png" /></a>
-            </div>
-            <div class="g-user-info pull-right">
-                {{#link-to 'users'}}<strong>{{ userId }}</strong>{{/link-to}}
-                <div class="btn-group">
-                    {{#link-to 'users'}}<i class="fa fa-users fa-fw" style="font-size: 1.5em;"></i>{{/link-to}}
-                    <a href="#" {{action 'invalidateSession'}}><i class="fa fa-sign-out fa-fw" style="font-size: 1.5em;"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="g-lower-bar" class="navbar navbar-default">
-        <div class="container">
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    {{#link-to 'index' tagName='li' href=false}}<a href="#" {{bind-attr href=view.href}}><i class="fa fa-home fa-fw"></i> Home</a>{{/link-to}}
-                    {{#link-to 'websites' tagName='li' href=false}}<a href="#" {{bind-attr href=view.href}}><i class="fa fa-globe fa-fw"></i> Websites</a>{{/link-to}}
-                    {{#link-to 'apps' tagName='li' href=false}}<a href="#" {{bind-attr href=view.href}}><i class="fa fa-cubes fa-fw"></i> App Store</a>{{/link-to}}
-                    {{#link-to 'files' tagName='li' href=false}}<a href="#" {{bind-attr href=view.href}}><i class="fa fa-files-o fa-fw"></i> File Manager</a>{{/link-to}}
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <!--<li><a href="#"><i class="fa fa-life-ring fa-fw"></i> Help</a></li>-->
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="fa fa-wrench fa-fw"></i> Tools</a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>{{#link-to 'stats'}}<i class="fa fa-area-chart fa-fw"></i> Statistics{{/link-to}}</li>
-                            <li>{{#link-to 'certs'}}<i class="fa fa-certificate fa-fw"></i> Certificates{{/link-to}}</li>
-                            <li>{{#link-to 'databases'}}<i class="fa fa-database fa-fw"></i> Databases{{/link-to}}</li>
-                            <li>{{#link-to 'filesystems'}}<i class="fa fa-hdd-o fa-fw"></i> Filesystems{{/link-to}}</li>
-                            <li>{{#link-to 'packages'}}<i class="fa fa-cube fa-fw"></i> Packages{{/link-to}}</li>
-                            <li>{{#link-to 'services'}}<i class="fa fa-spinner fa-fw"></i> Services{{/link-to}}</li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="fa fa-cogs fa-fw"></i> Settings</a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>{{#link-to 'updates'}}<i class="fa fa-star fa-fw"></i> Updates{{/link-to}}</li>
-                            <li>{{#link-to 'backups'}}<i class="fa fa-clock-o fa-fw"></i> Recovery{{/link-to}}</li>
-                            <li>{{#link-to 'networks'}}<i class="fa fa-sitemap fa-fw"></i> Networking{{/link-to}}</li>
-                            <li>{{#link-to 'security'}}<i class="fa fa-lock fa-fw"></i> Security{{/link-to}}</li>
-                            <li>{{#link-to 'config'}}<i class="fa fa-sliders fa-fw"></i> Preferences{{/link-to}}</li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="fa fa-power-off"></i> Power</a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#" {{action 'showConfirm' 'shutdown' 'Are you sure you want to shutdown your arkOS device?'}}><i class="fa fa-power-off fa-fw"></i> Shutdown</li></a>
-                            <li><a href="#" {{action 'showConfirm' 'reload' 'Are you sure you want to reload the arkOS service?'}}><i class="fa fa-refresh fa-fw"></i> Reload</li></a>
-                            <li><a href="#" {{action 'showConfirm' 'reboot' 'Are you sure you want to reboot your arkOS device?'}}><i class="fa fa-refresh fa-fw"></i> Restart</li></a>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
+  <div class="navbar navbar-inverse navbar-static-top">
     <div class="container">
-        {{outlet}}
-        {{outlet 'modal'}}
-    </div>
-
-    {{g-messages}}
-
-    <div class="ui-fade"></div>
-    <div class="ui-loader">
-        <h1><i class="fa fa-circle-o-notch fa-spin"></i></h1>
-    </div>
-
-    <div class="footer">
-        <div class="container">
-            <div id="links" class="pull-right">
-                <a href="https://bbs.arkos.io/" id="feedback-link" target="_blank"><i class="fa fa-comments"></i> Community</a>
-                <a href="https://www.gnu.org/licenses/gpl.html" target="_blank"><i class="fa fa-certificate"></i> License</a>
-            </div>
-            <div id="version">Genesis {{ currentVersion }}</div>
+      <div id="navbar-brand-div" class="navbar-header">
+        <a id="navbar-brand" class="navbar-brand" href="/#/"><img src="/img/logo-white.png" /></a>
+      </div>
+      <div class="g-user-info pull-right">
+        {{#link-to 'users'}}<strong>{{ userId }}</strong>{{/link-to}}
+        <div class="btn-group">
+          {{#link-to 'users'}}<i class="fa fa-users fa-fw" style="font-size: 1.5em;"></i>{{/link-to}}
+          <a href="#" {{action 'invalidateSession'}}><i class="fa fa-sign-out fa-fw" style="font-size: 1.5em;"></i></a>
         </div>
+      </div>
     </div>
+  </div>
+  <div id="g-lower-bar" class="navbar navbar-default">
+    <div class="container">
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          {{#link-to 'index' tagName='li' href=false}}<a href="#" href={{view.href}}><i class="fa fa-home fa-fw"></i> Home</a>{{/link-to}}
+          {{#link-to 'websites' tagName='li' href=false}}<a href="#" href={{view.href}}><i class="fa fa-globe fa-fw"></i> Websites</a>{{/link-to}}
+          {{#link-to 'apps' tagName='li' href=false}}<a href="#" href={{view.href}}><i class="fa fa-cubes fa-fw"></i> App Store</a>{{/link-to}}
+          {{#link-to 'files' tagName='li' href=false}}<a href="#" href={{view.href}}><i class="fa fa-files-o fa-fw"></i> File Manager</a>{{/link-to}}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <!--<li><a href="#"><i class="fa fa-life-ring fa-fw"></i> Help</a></li>-->
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="fa fa-wrench fa-fw"></i> Tools</a>
+            <ul class="dropdown-menu" role="menu">
+              <li>{{#link-to 'stats'}}<i class="fa fa-area-chart fa-fw"></i> Statistics{{/link-to}}</li>
+              <li>{{#link-to 'certs'}}<i class="fa fa-certificate fa-fw"></i> Certificates{{/link-to}}</li>
+              <li>{{#link-to 'databases'}}<i class="fa fa-database fa-fw"></i> Databases{{/link-to}}</li>
+              <li>{{#link-to 'filesystems'}}<i class="fa fa-hdd-o fa-fw"></i> Filesystems{{/link-to}}</li>
+              <li>{{#link-to 'packages'}}<i class="fa fa-cube fa-fw"></i> Packages{{/link-to}}</li>
+              <li>{{#link-to 'services'}}<i class="fa fa-spinner fa-fw"></i> Services{{/link-to}}</li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="fa fa-cogs fa-fw"></i> Settings</a>
+            <ul class="dropdown-menu" role="menu">
+              <li>{{#link-to 'updates'}}<i class="fa fa-star fa-fw"></i> Updates{{/link-to}}</li>
+              <li>{{#link-to 'backups'}}<i class="fa fa-clock-o fa-fw"></i> Recovery{{/link-to}}</li>
+              <li>{{#link-to 'networks'}}<i class="fa fa-sitemap fa-fw"></i> Networking{{/link-to}}</li>
+              <li>{{#link-to 'security'}}<i class="fa fa-lock fa-fw"></i> Security{{/link-to}}</li>
+              <li>{{#link-to 'config'}}<i class="fa fa-sliders fa-fw"></i> Preferences{{/link-to}}</li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="fa fa-power-off"></i> Power</a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#" {{action 'showConfirm' 'shutdown' 'Are you sure you want to shutdown your arkOS device?'}}><i class="fa fa-power-off fa-fw"></i> Shutdown</a></li>
+              <li><a href="#" {{action 'showConfirm' 'reload' 'Are you sure you want to reload the arkOS service?'}}><i class="fa fa-refresh fa-fw"></i> Reload</a></li>
+              <li><a href="#" {{action 'showConfirm' 'reboot' 'Are you sure you want to reboot your arkOS device?'}}><i class="fa fa-refresh fa-fw"></i> Restart</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        $('body').tooltip({
-            selector: '[data-toggle="tooltip"]'
-        });
-    </script>
+  <div class="container">
+    {{outlet}}
+    {{outlet 'modal'}}
+  </div>
 
-    <noscript>
-        You have disabled JavaScript in your browser, or are using a browser plugin that blocks JavaScript programs from executing. Please enable JavaScript, or disable this browser plugin, to continue.
-    </noscript>
+  {{g-messages}}
+
+  <div class="ui-fade"></div>
+  <div class="ui-loader">
+    <h1><i class="fa fa-circle-o-notch fa-spin"></i></h1>
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      <div id="links" class="pull-right">
+        <a href="https://bbs.arkos.io/" id="feedback-link" target="_blank"><i class="fa fa-comments"></i> Community</a>
+        <a href="https://www.gnu.org/licenses/gpl.html" target="_blank"><i class="fa fa-certificate"></i> License</a>
+      </div>
+      <div id="version">Genesis {{app-version}}</div>
+    </div>
+  </div>
+
+  <script>
+    $('body').tooltip({
+      selector: '[data-toggle="tooltip"]'
+    });
+  </script>
+
+  <noscript>
+    You have disabled JavaScript in your browser, or are using a browser plugin that blocks JavaScript programs from executing. Please enable JavaScript, or disable this browser plugin, to continue.
+  </noscript>
 </div>

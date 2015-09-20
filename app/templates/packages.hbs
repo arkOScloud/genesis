@@ -5,93 +5,87 @@
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#installed" aria-controls="installed" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Installed Packages</a></li>
-    <li role="presentation"><a href="#available" aria-controls="available" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Available Packages</a></li>
+  <li role="presentation" class="active"><a href="#installed" aria-controls="installed" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Installed Packages</a></li>
+  <li role="presentation"><a href="#available" aria-controls="available" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Available Packages</a></li>
 </ul>
 
 <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="installed">
-        <div class="well">
-            <h4><i class="fa fa-cube"></i> {{installed.length}} packages installed, {{upgradable.length}} can be upgraded.</h4>
-        </div>
-        
-        <div class="input-group">
-            {{input type="text" class="form-control" value=installedQuery placeholder="Filter results"}}
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button" {{action 'clearInstalledFilter'}}><i class="fa fa-fw fa-times-circle"></i> Clear</button>
-            </span>
-        </div>
-        <table class="table">
-            <tbody>
-                <tr>
-                    <th width="1"></th>
-                    <th>Package Name</th>
-                    <th>Version</th>
-                    <th width="275">Actions</th>
-                </tr>
-                {{#each pkg in filteredInstalled}}
-                <tr {{bind-attr class="pkg.toInstall:success pkg.toRemove:danger"}}>
-                    <td><i {{bind-attr class=":fa pkg.isUpgradable:fa-arrow-circle-up:fa-cube"}}></i></td>
-                    <td>{{pkg.id}}</td>
-                    <td>{{pkg.version}}{{#if pkg.isUpgradable}}<span class="text-success"> ({{pkg.upgradable}} available)</span>{{/if}}</td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <a href="#" class="btn btn-default" {{action 'showInfo' pkg}}><i class="fa fa-info-circle fa-fw"></i> Info</a>
-                            {{#if pkg.isUpgradable}}
-                            <a href="#" {{bind-attr class=":btn :btn-success pkg.toRemove:disabled"}} {{action 'install' pkg}}><i class="fa fa-arrow-circle-up fa-fw"></i> Upgrade</a>
-                            {{else}}
-                            <a href="#" class="btn btn-success disabled" {{action 'install' pkg}}><i class="fa fa-arrow-circle-up fa-fw"></i> Upgrade</a>
-                            {{/if}}
-                            <a href="#" {{bind-attr class=":btn :btn-danger pkg.toInstall:disabled"}} {{action 'remove' pkg}}><i class="fa fa-times-circle fa-fw"></i> Uninstall</a>
-                        </div>
-                    </td>
-                </tr>
-                {{else}}
-                <tr>
-                    <td class="text-center" colspan="4">None</td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
+  <div role="tabpanel" class="tab-pane active" id="installed">
+    <div class="well">
+      <h4><i class="fa fa-cube"></i> {{installed.length}} packages installed, {{upgradable.length}} can be upgraded.</h4>
     </div>
-    <div role="tabpanel" class="tab-pane" id="available">
-        <div class="well">
-            <h4><i class="fa fa-cube"></i> {{model.length}} packages available. {{filteredAvailable.length}} result(s) in current search.</h4>
-        </div>
-        <div class="input-group">
-            {{input type="text" class="form-control" value=availableQuery placeholder="Search available packages"}}
-            <span class="input-group-btn">
-                <button class="btn btn-default"}} type="button" {{action 'filterAvailable'}}><i class="fa fa-fw fa-search"></i> Search</button>
-                <button class="btn btn-default" type="button" {{action 'clearAvailableFilter'}}><i class="fa fa-fw fa-times-circle"></i> Clear</button>
-            </span>
-        </div>
-        
-        <table class="table">
-            <tbody>
-                <tr>
-                    <th width="1"></th>
-                    <th>Package Name</th>
-                    <th>Version</th>
-                    <th width="175">Actions</th>
-                </tr>
-                {{#each pkg in filteredAvailable}}
-                <tr {{bind-attr class="pkg.toInstall:success pkg.toRemove:danger"}}>
-                    <td><i {{bind-attr class=":fa pkg.isUpgradable:fa-arrow-circle-up:fa-cube"}}></i></td>
-                    <td>{{pkg.id}}</td>
-                    <td>{{pkg.version}}{{#if pkg.isUpgradable}}<span class="text-success"> ({{pkg.upgradable}} available)</span>{{/if}}</td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <a href="#" class="btn btn-default" {{action 'showInfo' pkg}}><i class="fa fa-info-circle fa-fw"></i> Info</a>
-                            <a href="#" class="btn btn-success" {{action 'install' pkg}}><i class="fa fa-check fa-fw"></i> Install</a>
-                        </div>
-                    </td>
-                </tr>
-                {{else}}
-                <tr>
-                    <td class="text-center" colspan="4">No packages found. Use the Search bar above to find by name.</td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
+
+    <div class="input-group">
+      {{input type="text" class="form-control" value=installedQuery placeholder="Filter results"}}
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" {{action 'clearInstalledFilter'}}><i class="fa fa-fw fa-times-circle"></i> Clear</button>
+      </span>
     </div>
+    <table class="table">
+      <tbody>
+        <tr>
+          <th width="1"></th>
+          <th>Package Name</th>
+          <th>Version</th>
+          <th width="275">Actions</th>
+        </tr>
+        {{#each filteredInstalled as |pkg|}}
+          <tr class="{{if pkg.toInstall 'success'}} {{if pkg.toRemove 'danger'}}">
+            <td><i class="fa {{if pkg.isUpgradable 'fa-arrow-circle-up' 'fa-cube'}}"></i></td>
+            <td>{{pkg.id}}</td>
+            <td>{{pkg.version}}{{#if pkg.isUpgradable}}<span class="text-success"> ({{pkg.upgradable}} available)</span>{{/if}}</td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <a href="#" class="btn btn-default" {{action 'showInfo' pkg}}><i class="fa fa-info-circle fa-fw"></i> Info</a>
+                <a href="#" class="btn btn-success {{if pkg.isUpgradable (if pkg.toRemove 'disabled')}}" {{action 'install' pkg}}><i class="fa fa-arrow-circle-up fa-fw"></i> Upgrade</a>
+                <a href="#" class="btn btn-danger {{if pkg.toInstall 'disabled'}}" {{action 'remove' pkg}}><i class="fa fa-times-circle fa-fw"></i> Uninstall</a>
+              </div>
+            </td>
+          </tr>
+        {{else}}
+          <tr><td class="text-center" colspan="4">None</td></tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="available">
+    <div class="well">
+      <h4><i class="fa fa-cube"></i> {{model.length}} packages available. {{filteredAvailable.length}} result(s) in current search.</h4>
+    </div>
+    <div class="input-group">
+      {{input type="text" class="form-control" value=availableQuery placeholder="Search available packages"}}
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" {{action 'filterAvailable'}}><i class="fa fa-fw fa-search"></i> Search</button>
+        <button class="btn btn-default" type="button" {{action 'clearAvailableFilter'}}><i class="fa fa-fw fa-times-circle"></i> Clear</button>
+      </span>
+    </div>
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <th width="1"></th>
+          <th>Package Name</th>
+          <th>Version</th>
+          <th width="175">Actions</th>
+        </tr>
+        {{#each filteredAvailable as |pkg|}}
+          <tr class="{{if pkg.toInstall 'success'}} {{if pkg.toRemove 'danger'}}">
+            <td><i class="fa {{if pkg.isUpgradable 'fa-arrow-circle-up' 'fa-cube'}}"></i></td>
+            <td>{{pkg.id}}</td>
+            <td>{{pkg.version}}{{#if pkg.isUpgradable}}<span class="text-success"> ({{pkg.upgradable}} available)</span>{{/if}}</td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <a href="#" class="btn btn-default" {{action 'showInfo' pkg}}><i class="fa fa-info-circle fa-fw"></i> Info</a>
+                <a href="#" class="btn btn-success" {{action 'install' pkg}}><i class="fa fa-check fa-fw"></i> Install</a>
+              </div>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td class="text-center" colspan="4">No packages found. Use the Search bar above to find by name.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </div>

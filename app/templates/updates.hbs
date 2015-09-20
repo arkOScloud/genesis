@@ -1,17 +1,17 @@
 <div class="btn-group pull-right">
-    <a href="#" class="btn btn-default" {{action "check"}}><i class="fa fa-refresh"></i> Refresh</a>
-    {{#if updates}}
+  <a href="#" class="btn btn-default" {{action "check"}}><i class="fa fa-refresh"></i> Refresh</a>
+  {{#if updates}}
     <a href="#" class="btn btn-default" {{action "install"}}><i class="fa fa-download"></i> Install Updates</a>
-    {{/if}}
+  {{/if}}
 </div>
 <h1 class="page-header">Updates</h1>
 
-{{#each update in updates}}
-    <h3><i class="fa fa-star"></i> <span class="text-muted">#{{update.id}}</span> {{update.name}} <small>released {{format-date update.date}}</small></h3>
-    <p class="lead">{{update.info}}</p>
+{{#each updates as |update|}}
+  <h3><i class="fa fa-star"></i> <span class="text-muted">#{{update.id}}</span> {{update.name}} <small>released {{format-date update.date}}</small></h3>
+  <p class="lead">{{update.info}}</p>
 {{else}}
-<div class="text-center">
+  <div class="text-center">
     <h1 class="fa fa-thumbs-up fa-5x"></h1>
     <p class="lead">Your system is up-to-date.</p>
-</div>
+  </div>
 {{/each}}

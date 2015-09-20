@@ -1,23 +1,23 @@
 {{#g-modal title="Clipboard" icon="fa-clipboard" close="removeModal"}}
-    <table class="table">
-        <tr>
-            <th width="1"></th>
-            <th>Name</th>
-            <th width="125">Actions</th>
-        </tr>
-        {{#each item in model}}
-        <tr>
-            <td><i {{bind-attr class=":fa :fa-fw item.icon"}}></i></td>
-            <td>{{item.name}}</td>
-            <td>
-                <a href="#" class="btn btn-sm btn-default" {{action 'removeFromClipboard' item}}><i class="fa fa-minus-circle"></i> Remove</a>        
-            </td>
-        </tr>
-        {{else}}
-        <tr>
-            <td colspan=6 class="text-center">None</td>
-        </tr>
-        {{/each}}
-    </table>
-    <a href="#" class="btn btn-default btn-block" {{action 'clearClipboard'}}><i class="fa fa-times"></i> Clear Clipboard</a>
+  <table class="table">
+    <tr>
+      <th width="1"></th>
+      <th>Name</th>
+      <th width="125">Actions</th>
+    </tr>
+    {{#each model as |item|}}
+      <tr>
+        <td><i class="fa fa-fw {{item.icon}}"></i></td>
+        <td>{{item.name}}</td>
+        <td>
+          <a href="#" class="btn btn-sm btn-default" {{action 'removeFromClipboard' item}}><i class="fa fa-minus-circle"></i> Remove</a>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan=6 class="text-center">None</td>
+      </tr>
+    {{/each}}
+  </table>
+  <a href="#" class="btn btn-default btn-block" {{action 'clearClipboard'}}><i class="fa fa-times"></i> Clear Clipboard</a>
 {{/g-modal}}

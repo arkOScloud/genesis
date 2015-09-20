@@ -1,24 +1,32 @@
 {{#g-modal title="Edit Database User" icon="fa-user" ok="save" close="removeModal"}}
-    <form {{action 'ok' on='submit' target=view}}>
-        <div class="form-horizontal">
-            <div class="form-group">
-                <label for="id" class="col-sm-4 control-label">Database User Name</label>
-                <div class="col-sm-8">
-                    <p class="form-control-static">{{id}}</p>
-                </div>
-            </div>
+  <form {{action 'ok' on='submit' target=view}}>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label for="id" class="col-sm-4 control-label">Database User Name</label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{id}}</p>
         </div>
-        <div class="form-group">
-            <label for="permissions" class="control-label">Permissions</label>
-            {{textarea class="form-control" rows="6" value=permissions disabled="true"}}
-        </div>
-        <div class="form-group">
-            <label for="action">Take Action</label>
-            {{ view "select" class="form-control required" value=action content=actionsToTake }}
-        </div>
-        <div class="form-group">
-            <label for="database">On Database</label>
-            {{ view "select" class="form-control required" value=database content=availableDbs optionLabelPath="content.id" optionValuePath="content.id" }}
-        </div>
-    </form>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="permissions" class="control-label">Permissions</label>
+      {{textarea class="form-control" rows="6" value=permissions disabled="true"}}
+    </div>
+    <div class="form-group">
+      <label for="action">Take Action</label>
+      {{#x-select class="form-control required" action="didMakeSelection" default=action}}
+        {{#each actionsToTake as |actionToTake|}}
+          {{#x-option value=actionToTake}}{{actionToTake}}{{/x-option}}
+        {{/each}}
+      {{/x-select}}
+    </div>
+    <div class="form-group">
+      <label for="database">On Database</label>
+      {{#x-select class="form-control required" action="didMakeSelection" default=database}}
+        {{#each availableDbs as |db|}}
+          {{#x-option value=db.id}}{{db.id}}{{/x-option}}
+        {{/each}}
+      {{/x-select}}
+    </div>
+  </form>
 {{/g-modal}}

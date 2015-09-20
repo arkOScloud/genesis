@@ -11,7 +11,7 @@ export default Ember.ObjectController.extend({
       var self = this,
           fn = this.get("newFile"),
           cp = this.get("controllers.files.currentPath") || "/";
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/files/'+toB64(cp),
         type: "POST",
         data: JSON.stringify({file: {name: fn, folder: true}}),
@@ -21,7 +21,9 @@ export default Ember.ObjectController.extend({
           self.get("controllers.files.currentFolder").pushObject(j.file);
         },
         error: function(e) {
-          if (e.status == 500) self.transitionToRoute("error", e);
+          if (e.status === 500) {
+            self.transitionToRoute("error", e);
+          }
         }
       });
     },

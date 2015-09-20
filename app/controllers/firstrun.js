@@ -14,17 +14,17 @@ export default Ember.ObjectController.extend({
   tzZones: function() {
     var self = this;
     var tzo = timezones.find(function(i) {
-      return i.region.replace(" ", "_") == self.get('tzRegion');
+      return i.region.replace(" ", "_") === self.get('tzRegion');
     });
-    if (tzo.region == "GMT" || tzo.region == "UTC") {
+    if (tzo.region === "GMT" || tzo.region === "UTC") {
       return [tzo.region];
     } else {
       return tzo.zones;
-    };
+    }
   }.property('tzRegion'),
   canFinish: false,
   usesSDCard: function() {
-    return ["Unknown", "General"].indexOf(this.get("model.config").config.enviro.board) == -1;
+    return ["Unknown", "General"].indexOf(this.get("model.config").config.enviro.board) === -1;
   }.property("model.config"),
   isRPi: function() {
     return ["Raspberry Pi", "Raspberry Pi 2"].indexOf(this.get("model.config").config.enviro.board) >= 0;
@@ -38,7 +38,7 @@ export default Ember.ObjectController.extend({
         app.set("firstrunSelected", false);
       } else {
         app.set("firstrunSelected", true);
-      };
+      }
     },
     selectAll: function() {
       this.get("model.apps").forEach(function(i) {
@@ -83,7 +83,7 @@ export default Ember.ObjectController.extend({
           self.set("canFinish", true);
         });
       });
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/config',
         type: 'PUT',
         data: JSON.stringify({timezone: {region: self.get('tzRegion'), zone: self.get('tzZone').replace(" ", "_")}}),
@@ -99,8 +99,8 @@ export default Ember.ObjectController.extend({
       });
       if (this.get("resizeSDCard") || this.get("useGPUMem") || this.get("cubieMAC")) {
         self.set("needsRestart", true);
-      };
-      $.ajax({
+      }
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/firstrun',
         type: 'POST',
         data: JSON.stringify({
@@ -118,7 +118,7 @@ export default Ember.ObjectController.extend({
           self.set("rootPwd", j.rootpwd);
         }
       });
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/config',
         type: 'PATCH',
         data: JSON.stringify({config: {genesis: {firstrun: true}}}),

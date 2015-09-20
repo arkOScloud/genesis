@@ -5,12 +5,12 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model: function() {
-    return this.get('store').find('app');
+    return this.get('store').findAll('app');
   },
   actions: {
     refresh: function() {
       var self = this;
-      $.getJSON(ENV.APP.krakenHost+"/api/apps?rescan=true", function(j){
+      Ember.$.getJSON(ENV.APP.krakenHost+"/api/apps?rescan=true", function(){
         self.refresh();
       });
     },

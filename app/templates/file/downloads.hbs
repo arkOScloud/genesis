@@ -1,25 +1,25 @@
 {{#g-modal title="Downloads" large=true icon="fa-download" close="removeModal"}}
-    <table class="table">
-        <tr>
-            <th>Path</th>
-            <th>Share URL</th>
-            <th>Downloads</th>
-            <th>Expires</th>
-            <th></th>
-        </tr>
-        {{#each share in model.shares}}
-        <tr>
-            <td>{{share.path}}</td>
-            <td>{{input type="text" value=share.url}}</td>
-            <td>{{share.fetchCount}}</td>
-            <td>{{#if share.expires}}{{from-now share.expiresAt}}{{else}}Immediately{{/if}}</td>
-            <td>
-                <div class="btn-group btn-group-sm">
-                    <a class="btn btn-default" {{bind-attr href=share.url}}><i class="fa fa-download"></i> Download</a>
-                    <a href="#" class="btn btn-default" {{action "remove" share}}><i class="fa fa-chain-broken"></i> Remove Link</a>
-                </div>
-            </td>
-        </tr>
-        {{/each}}
-    </table>
+  <table class="table">
+    <tr>
+      <th>Path</th>
+      <th>Share URL</th>
+      <th>Downloads</th>
+      <th>Expires</th>
+      <th></th>
+    </tr>
+    {{#each model.shares as |share|}}
+      <tr>
+        <td>{{share.path}}</td>
+        <td>{{input type="text" value=share.url}}</td>
+        <td>{{share.fetchCount}}</td>
+        <td>{{#if share.expires}}{{from-now share.expiresAt}}{{else}}Immediately{{/if}}</td>
+        <td>
+          <div class="btn-group btn-group-sm">
+            <a class="btn btn-default" href={{share.url}}><i class="fa fa-download"></i> Download</a>
+            <a href="#" class="btn btn-default" {{action "remove" share}}><i class="fa fa-chain-broken"></i> Remove Link</a>
+          </div>
+        </td>
+      </tr>
+    {{/each}}
+  </table>
 {{/g-modal}}

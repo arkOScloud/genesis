@@ -2,30 +2,30 @@
   <a href="#" class="btn btn-default" {{action 'showModal' 'cert/add' model}}><i class="fa fa-plus-circle"></i> Generate New</a>
   <a href="#" class="btn btn-default" {{action 'showModal' 'cert/upload' model}}><i class="fa fa-upload"></i> Upload New</a>
   {{#if model.auths}}
-  <a href="#" class="btn btn-default" {{action 'showModal' 'cert/auths' model}}><i class="fa fa-certificate"></i> Authorities</a>
+    <a href="#" class="btn btn-default" {{action 'showModal' 'cert/auths' model}}><i class="fa fa-certificate"></i> Authorities</a>
   {{/if}}
 </div>
 <h1 class="page-header">My Certificates</h1>
 
 <div class="ui-items-4">
-    {{#each cert in model.certs}}
-      <div {{bind-attr class=":ui-item cert.isReady::is-pending"}}>
-        <div class="ui-item-icon">
-            <i class="fa fa-certificate fa-fw fa-5x"></i>
-        </div>
-        <div class="ui-item-content">
-          <h2>{{cert.id}}</h2>
-          <p class="lead">{{cert.typeString}}</p>
-          <div class="ui-item-buttons">
-            <a href="#" {{bind-attr class=":ui-item-button cert.isReady::disabled"}} {{action 'showModal' 'cert/info' cert model}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
-            <a href="#" {{bind-attr class=":ui-item-button :text-danger cert.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this certificate?' cert}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>        
-          </div>
+  {{#each model.certs as |cert|}}
+    <div class="ui-item {{if cert.isReady '' 'is-pending'}}">
+      <div class="ui-item-icon">
+        <i class="fa fa-certificate fa-fw fa-5x"></i>
+      </div>
+      <div class="ui-item-content">
+        <h2>{{cert.id}}</h2>
+        <p class="lead">{{cert.typeString}}</p>
+        <div class="ui-item-buttons">
+          <a href="#" class="ui-item-button {{if cert.isReady '' 'disabled'}}" {{action 'showModal' 'cert/info' cert model}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
+          <a href="#" class="ui-item-button text-danger {{if cert.isReady '' 'disabled'}}" {{action 'showConfirm' 'delete' 'Are you sure you want to delete this certificate?' cert}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>
         </div>
       </div>
-    {{else}}
-    <div class="text-center">
-        <h1 class="fa fa-certificate fa-5x"></h1>
-        <p class="lead">No certificates found.</p>
     </div>
-    {{/each}}
+  {{else}}
+    <div class="text-center">
+      <h1 class="fa fa-certificate fa-5x"></h1>
+      <p class="lead">No certificates found.</p>
+    </div>
+  {{/each}}
 </div>

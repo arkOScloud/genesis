@@ -1,28 +1,28 @@
 {{#g-modal title="Backup Info" icon="fa-clock-o" close="removeModal"}}
-    <div class="form-horizontal">
-        <div class="form-group">
-            <label for="pid" class="col-sm-3 control-label">Backup for</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{model.pid}}</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="time" class="col-sm-3 control-label">Made at</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{format-date-time model.time}}</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="version" class="col-sm-3 control-label">Version</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{model.version}}</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="time" class="col-sm-3 control-label">Size</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{size-to-string model.size}}</p>
-            </div>
-        </div>
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label for="pid" class="col-sm-3 control-label">Backup for</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{model.pid}}</p>
+      </div>
     </div>
+    <div class="form-group">
+      <label for="time" class="col-sm-3 control-label">Made at</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{format-date-time model.time}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="version" class="col-sm-3 control-label">Version</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{model.version}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="time" class="col-sm-3 control-label">Size</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{size-to-string model.size}}</p>
+      </div>
+    </div>
+  </div>
 {{/g-modal}}

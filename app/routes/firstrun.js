@@ -7,8 +7,8 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model: function() {
     return Ember.RSVP.hash({
-      apps: this.get("store").find("app"),
-      config: $.getJSON(ENV.APP.krakenHost+"/api/config")
+      apps: this.get("store").findAll("app"),
+      config: Ember.$.getJSON(ENV.APP.krakenHost+"/api/config")
     });
   },
   step: 1,
@@ -29,17 +29,19 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     },
     nextStep: function() {
       var self = this;
-      if (!$('.ui-firstrun-container .form-group').length) return this.incrementProperty("step");
+      if (!Ember.$('.ui-firstrun-container .form-group').length) {
+        return this.incrementProperty("step");
+      }
       fieldValidator(".ui-firstrun-container");
       setTimeout(function(){
-        if ($('.ui-firstrun-container .form-group.has-error').length == 0) {
+        if (Ember.$('.ui-firstrun-container .form-group.has-error').length === 0) {
           self.incrementProperty("step");
-        };
+        }
       }, 1000);
     },
     finish: function() {
       var self = this;
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/config',
         type: 'PATCH',
         data: JSON.stringify({config: {genesis: {anonymous: false, firstrun: true}}}),

@@ -1,19 +1,19 @@
 <div class="modal fade">
-  <div {{bind-attr class=":modal-dialog large:modal-lg:"}}>
+  <div class="modal-dialog {{if large 'modal-lg'}}">
     <div class="modal-content">
       {{#if title}}
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-        <h4 class="modal-title">{{#if icon}}<i {{bind-attr class=":fa :fa-lg :fa-fw icon"}}></i> {{/if}}{{title}}</h4>
-      </div>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+          <h4 class="modal-title">{{#if icon}}<i class="fa fa-lg fa-fw {{icon}}"></i> {{/if}}{{title}}</h4>
+        </div>
       {{/if}}
       <div class="modal-body">
-      {{yield}}
+        {{yield}}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{#if confirm}}No{{else}}{{#if ok}}{{cancelWord}}{{else}}Close{{/if}}{{/if}}</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{#if confirm}}No{{else if ok}}{{cancelWord}}{{else}}Close{{/if}}</button>
         {{#if ok}}
-        <button type="button" {{bind-attr class=":btn confirm:btn-danger:btn-primary"}} {{action 'ok'}}>{{#if confirm}}Yes{{else}}{{okWord}}{{/if}}</button>
+          <button type="button" class="btn {{if confirm 'btn-danger' 'btn-primary'}}" {{action 'ok'}}>{{if confirm 'Yes' okWord}}</button>
         {{/if}}
       </div>
     </div>

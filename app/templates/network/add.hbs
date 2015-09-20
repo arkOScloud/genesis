@@ -1,49 +1,61 @@
 {{#g-modal title="Adding Network" icon="fa-sitemap" ok="save" close="removeModal"}}
+  <div class="form-group">
+    <label for="id">Connection Name</label>
+    {{input type="text" class="form-control required" value=newConn.id}}
+    <p class="help-block">This is an internal name for referring to your network within Genesis.</p>
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    {{input type="text" class="form-control" value=newConn.config.description}}
+    <p class="help-block">An internal description to describe this network (optional)</p>
+  </div>
+  <div class="form-group">
+    <label for="interface">Interface</label>
+    {{#x-select class="form-control required" action="didMakeSelection" default=newIface}}
+      {{#each model.netifaces as |nif|}}
+        {{#x-option value=nif}}{{nif.prettyType}}{{/x-option}}
+      {{/each}}
+    {{/x-select}}
+  </div>
+  <div class="form-group">
+    <label for="ip">Addressing</label>
+    {{#x-select class="form-control required" action="didMakeSelection" default=newConn.config.addressing}}
+      {{#each ipTypes as |ipType|}}
+        {{#x-option value=ipType.id}}{{ipType.name}}{{/x-option}}
+      {{/each}}
+    {{/x-select}}
+  </div>
+  {{#if isStatic}}
     <div class="form-group">
-        <label for="id">Connection Name</label>
-        {{input type="text" class="form-control required" value=newConn.id}}
-        <p class="help-block">This is an internal name for referring to your network within Genesis.</p>
+      <label for="address">Address/Netmask</label>
+      {{input type="text" class="form-control required" value=newConn.config.address}}
+      <p class="help-block">IP address to set with netmask in CIDR format (i.e. 192.168.0.5/24)</p>
     </div>
     <div class="form-group">
-        <label for="description">Description</label>
-        {{input type="text" class="form-control" value=newConn.config.description}}
-        <p class="help-block">An internal description to describe this network (optional)</p>
+      <label for="gateway">Gateway</label>
+      {{input type="text" class="form-control" value=newConn.config.gateway}}
+      <p class="help-block">IP address to use as gateway (i.e. 192.168.0.1)</p>
+    </div>
+  {{/if}}
+  {{#if isWireless}}
+    <div class="form-group">
+      <label for="essid">Network ID (ESSID)</label>
+      {{input type="essid" class="form-control required" value=newConn.config.essid}}
+      <p class="help-block">The name of your wireless network or access point used to connect.</p>
     </div>
     <div class="form-group">
-        <label for="interface">Interface</label>
-        {{ view "select" class="form-control required" value=newIface content=model.netifaces optionLabelPath="content.prettyType" }}
-    </div>
-    <div class="form-group">
-        <label for="ip">Addressing</label>
-        {{ view "select" class="form-control required" value=newConn.config.addressing content=ipTypes optionLabelPath="content.name" optionValuePath="content.id" }}
-    </div>
-    {{#if isStatic}}
-    <div class="form-group">
-        <label for="address">Address/Netmask</label>
-        {{input type="text" class="form-control required" value=newConn.config.address}}
-        <p class="help-block">IP address to set with netmask in CIDR format (i.e. 192.168.0.5/24)</p>
-    </div>
-    <div class="form-group">
-        <label for="gateway">Gateway</label>
-        {{input type="text" class="form-control" value=newConn.config.gateway}}
-        <p class="help-block">IP address to use as gateway (i.e. 192.168.0.1)</p>
-    </div>
-    {{/if}}
-    {{#if isWireless}}
-    <div class="form-group">
-        <label for="essid">Network ID (ESSID)</label>
-        {{input type="essid" class="form-control required" value=newConn.config.essid}}
-        <p class="help-block">The name of your wireless network or access point used to connect.</p>
-    </div>
-    <div class="form-group">
-        <label for="security">Wireless Security</label>
-        {{ view "select" class="form-control required" value=newConn.config.security content=secTypes optionLabelPath="content.name" optionValuePath="content.id" }}
+      <label for="security">Wireless Security</label>
+      {{#x-select class="form-control required" action="didMakeSelection" default=newConn.config.security}}
+        {{#each secTypes as |secType|}}
+          {{#x-option value=secType.id}}{{secType.name}}{{/x-option}}
+        {{/each}}
+      {{/x-select}}
     </div>
     {{#if isSecure}}
-    <div class="form-group">
+      <div class="form-group">
         <label for="key">Passphrase</label>
         {{input type="essid" class="form-control required" value=newConn.config.key}}
-    </div>
+      </div>
     {{/if}}
-    {{/if}}
+  {{/if}}
 {{/g-modal}}
