@@ -1,38 +1,38 @@
 <div class="ui-firstrun-container">
-    <div class="text-center">
-        <h3 class="page-header">Step 1: User Account</h3>
-        <p>Please create a new user account for managing your device and accessing your services. You will be able to create additional accounts for other users later.</p>
-    </div>
-    <div class="form-group">
-        <label for="name">New Username</label>
-        {{input type="text" class="form-control username required" value=newUser.name}}
-        <p class="help-block">Username must be lowercase letters or numbers, and less than 30 characters</p>
-    </div>
-    <div class="form-group has-feedback">
-        <label for="passwd">New Password</label>
-        {{ input type="password" class="form-control password required" value=newUser.passwd }}
-        <span class="fa fa-key form-control-feedback"></span>
-        <p class="help-block">Your password must be at least six characters long.</p>
-    </div>
-    <div class="form-group has-feedback">
-        <label for="passwdb">Confirm New Password</label>
-        {{ input type="password" class="form-control password required" value=newUser.passwdb }}
-        <span class="fa fa-key form-control-feedback"></span>
-    </div>
-    <div class="form-group">
-        <label for="name">First Name</label>
-        {{input type="text" class="form-control required" value=newUser.firstName}}
-        <p class="help-block">For internal purposes only. Feel free to use a pseudonym.</p>
-    </div>
-    <div class="form-group">
-        <label for="name">Last Name</label>
-        {{input type="text" class="form-control" value=newUser.lastName}}
-    </div>
-    <div class="form-group">
-        <label for="name">Add a domain name</label>
-        {{input type="text" class="form-control required" value=newDomain}}
-        <p class="help-block">If you have a domain name registered and pointing at your server, enter it here.</p>
-    </div>
-    <a href="#" class="btn btn-default btn-lg" {{action "previousStep"}}><i class="fa fa-chevron-left"></i> Previous</a>
-    <a href="#" class="btn btn-primary btn-lg pull-right" {{action "nextStep"}}>Next <i class="fa fa-chevron-right"></i></a>
+  <div class="text-center">
+    <h3 class="page-header">Step 1: User Account</h3>
+    <p>Please create a new user account for managing your device and accessing your services. You will be able to create additional accounts for other users later.</p>
+  </div>
+  <div class="form-group">
+    <label for="name">New Username</label>
+    {{input type="text" class="form-control username required" value=newUser.name}}
+    <p class="help-block">Username must be lowercase letters or numbers, and less than 30 characters</p>
+  </div>
+  <div class="form-group has-feedback">
+    <label for="passwd">New Password</label>
+    {{ input type="password" class="form-control password required" value=newUser.passwd }}
+    <span class="fa fa-key form-control-feedback"></span>
+    <p class="help-block">Your password must be at least six characters long.</p>
+  </div>
+  <div class="form-group has-feedback">
+    <label for="passwdb">Confirm New Password</label>
+    {{ input type="password" class="form-control password required" value=newUser.passwdb }}
+    <span class="fa fa-key form-control-feedback"></span>
+  </div>
+  <div class="form-group">
+    <label for="name">First Name</label>
+    {{input type="text" class="form-control required" value=newUser.firstName}}
+    <p class="help-block">For internal purposes only. Feel free to use a pseudonym.</p>
+  </div>
+  <div class="form-group">
+    <label for="name">Last Name</label>
+    {{input type="text" class="form-control" value=newUser.lastName}}
+  </div>
+  <div class="form-group">
+    <label for="name">Add a domain name</label>
+    {{input type="text" class="form-control required" value=newDomain}}
+    <p class="help-block">If you have a domain name registered and pointing at your server, enter it here.</p>
+  </div>
+  <a href="#" class="btn btn-default btn-lg" {{action "previousStep"}}><i class="fa fa-chevron-left"></i> Previous</a>
+  <a href="#" class="btn btn-primary btn-lg pull-right" {{action "nextStep"}}>Next <i class="fa fa-chevron-right"></i></a>
 </div>

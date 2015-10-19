@@ -11,12 +11,12 @@
       {{/if}}
       <form {{action 'authenticate' on='submit'}}>
         <div class="form-group input-group">
-            <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
-            {{input id="username" value=identification class="form-control" placeholder="Username"}}
+          <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+          {{input id="username" value=identification class="form-control" placeholder="Username"}}
         </div>
         <div class="form-group input-group">
-            <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
-            {{input type="password" id="password" value=password class="form-control" placeholder="Password"}}
+          <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+          {{input type="password" id="password" value=password class="form-control" placeholder="Password"}}
         </div>
         <button type="submit" class="btn btn-primary btn-block" id="login"><i class="gen-checkmark"></i> Login</button>
       </form>

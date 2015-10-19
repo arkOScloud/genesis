@@ -11,7 +11,9 @@ export default Ember.ObjectController.extend({
       promise.then(function(){
         self.message.success('Policy changed successfully');
       }, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     },
     local: function(policy) {
@@ -22,7 +24,9 @@ export default Ember.ObjectController.extend({
       promise.then(function(){
         self.message.success('Policy changed successfully');
       }, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     },
     deny: function(policy) {
@@ -33,7 +37,9 @@ export default Ember.ObjectController.extend({
       promise.then(function(){
         self.message.success('Policy changed successfully');
       }, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     }
   }

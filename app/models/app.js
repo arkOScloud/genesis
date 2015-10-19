@@ -74,11 +74,11 @@ export default DS.Model.extend({
       return (goodType && loadable && installed);
     }.property('type', 'loadable', 'installed'),
     displayHref: function() {
-      if (this.get('type') == "website") {
+      if (this.get('type') === "website") {
         return 'websites';
       } else {
         return this.get('id');
-      };
+      }
     }.property('id', 'type'),
     operation: DS.attr('string'),
     isReady: DS.attr('boolean', {defaultValue: false})

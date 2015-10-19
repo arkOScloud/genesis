@@ -5,7 +5,7 @@ export default DS.Model.extend({
     version: DS.attr('string'),
     upgradable: DS.attr('string'),
     isUpgradable: function() {
-      return this.get('upgradable')!="false";
+      return this.get('upgradable') !== "false";
     }.property('upgradable'),
     architecture: DS.attr('string'),
     buildDate: DS.attr('string'),
@@ -30,9 +30,9 @@ export default DS.Model.extend({
     installed: DS.attr('boolean', {defaultValue: false}),
     operation: DS.attr('string', {defaultValue: ""}),
     toInstall: function() {
-      return this.get('operation') == "install";
+      return this.get('operation') === "install";
     }.property('operation'),
     toRemove: function() {
-      return this.get('operation') == "remove";
+      return this.get('operation') === "remove";
     }.property('operation')
 });

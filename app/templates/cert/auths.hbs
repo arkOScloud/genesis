@@ -5,14 +5,14 @@
             <th>Name</th>
             <th width="200">Actions</th>
         </tr>
-        {{#each cert in model.auths}}
+        {{#each model.auths as |cert|}}
         <tr>
             <td><i class="fa fa-certificate"></i></td>
             <td>{{cert.id}}</td>
             <td>
                 <div class="btn-group btn-group-sm">
-                    <a {{bind-attr href=cert.downloadHref}} class="btn btn-default"><i class="fa fa-download"></i> Download</a>
-                    <a href="#" class="btn btn-danger" {{action 'delete' cert}}><i class="fa fa-minus-circle"></i> Delete</a>        
+                    <a href={{cert.downloadHref}} class="btn btn-default"><i class="fa fa-download"></i> Download</a>
+                    <a href="#" class="btn btn-danger" {{action 'delete' cert}}><i class="fa fa-minus-circle"></i> Delete</a>
                 </div>
             </td>
         </tr>

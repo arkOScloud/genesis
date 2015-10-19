@@ -7,7 +7,7 @@
 
 <table class="table">
   <tbody>
-    {{#each item in items}}
+    {{#each items as |item|}}
     <tr>
       <td>{{item}}</td>
       <td width=1><a class="btn btn-sm btn-danger" {{action 'removeItem' item}}><i class="fa fa-minus-circle"></i> Remove</a></td>

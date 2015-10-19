@@ -1,85 +1,83 @@
 {{#g-wizardmodal title=pageTitle icon="fa-globe" control=this ok='save' close="removeModal"}}
-    {{#g-wizardstep step=1}}
-        <div class="row">
-            <div class="col-sm-3">
-                <ul class="nav nav-pills nav-stacked ui-navlist">
-                  {{#each type in sortedApps}}
-                  <li {{bind-attr id=type.id}}><a href="#" {{action 'selectType' type}}><i {{bind-attr class=":fa-fw type.icon"}}></i> {{type.name}}</a></li>
-                  {{/each}}
-                </ul>
+  {{#g-wizardstep step=1}}
+    <div class="row">
+      <div class="col-sm-3">
+        <ul class="nav nav-pills nav-stacked ui-navlist">
+          {{#each sortedApps as |type|}}
+            <li id={{type.id}}><a href="#" {{action 'selectType' type}}><i class="fa-fw {{type.icon}}"></i> {{type.name}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+      <div class="col-sm-9">
+        {{#if selectedSite}}
+          <div class="form-horizontal">
+            {{#if selectedSite.logoURL}}<img class="img-responsive ui-app-logo" src={{selectedSite.logoURL}} />{{/if}}
+            <div class="form-group">
+              <label for="id" class="col-sm-2 control-label">Name</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">{{selectedSite.name}}</p>
+              </div>
             </div>
-            <div class="col-sm-9">
-                {{#if selectedSite}}
-                <div class="form-horizontal">
-                    {{#if selectedSite.logoURL}}
-                    <img class="img-responsive ui-app-logo" {{bind-attr src="selectedSite.logoURL"}} />
-                    {{/if}}
-                    <div class="form-group">
-                        <label for="id" class="col-sm-2 control-label">Name</label>
-                        <div class="col-sm-10">
-                            <p class="form-control-static">{{selectedSite.name}}</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="id" class="col-sm-2 control-label">Intro</label>
-                        <div class="col-sm-10">
-                            <p class="form-control-static">{{selectedSite.description.short}}</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="id" class="col-sm-2 control-label">Website</label>
-                        <div class="col-sm-10">
-                            <p class="form-control-static"><a target="_blank" {{bind-attr href=selectedSite.appHomepage}}>{{selectedSite.appHomepage}}</a></p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="id" class="col-sm-2 control-label">Description</label>
-                        <div class="col-sm-10">
-                            <p class="form-control-static">{{selectedSite.description.long}}</p>
-                        </div>
-                    </div>
-                </div>
-                {{else}}
-                <div class="text-center">
-                    <h1 class="fa fa-globe fa-5x"></h1>
-                    <p class="lead">Please select a website type to continue.</p>
-                </div>
-                {{/if}}
+            <div class="form-group">
+              <label for="id" class="col-sm-2 control-label">Intro</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">{{selectedSite.description.short}}</p>
+              </div>
             </div>
-        </div>
-    {{/g-wizardstep}}
-    {{#g-wizardstep step=2}}
-        <div class="form-group">
-            <label for="name">Site Name</label>
-            {{input type="text" class="form-control required username" value=newSite.name}}
-            <p class="help-block">A name to help you recognize this website in arkOS. Do not use spaces, dashes or special characters.</p>
-        </div>
-        <div class="form-group">
-            <label for="address">Address</label>
-            {{ view "select" class="form-control required" value=newSite.address content=model.domains optionLabelPath="content.id" optionValuePath="content.id" }}
-            <p class="help-block">The web address you want to use to access this site. To add new ones, click the Users icon then the Domains tab.</p>
-        </div>
-        <div class="form-group">
-            <label for="port">Port</label>
-            {{input type="text" class="form-control required" value=newSite.port}}
-            <p class="help-block">If you don't know what to put here, leave it at the default.</p>
-        </div>
-        {{#if selectedSite.website_datapaths}}
-        <div class="form-group">
-            <label for="port">Data Directory</label>
-            {{input type="text" class="form-control" value=newSite.extraData.datadir}}
-            <p class="help-block">This application supports storage of data in a designated folder. Enter the full path to the folder you wish to use for this. If you leave it blank, the application's default location will be used.</p>
-        </div>
+            <div class="form-group">
+              <label for="id" class="col-sm-2 control-label">Website</label>
+              <div class="col-sm-10">
+                <p class="form-control-static"><a target="_blank" href={{selectedSite.appHomepage}}>{{selectedSite.appHomepage}}</a></p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="id" class="col-sm-2 control-label">Description</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">{{selectedSite.description.long}}</p>
+              </div>
+            </div>
+          </div>
+        {{else}}
+          <div class="text-center">
+            <h1 class="fa fa-globe fa-5x"></h1>
+            <p class="lead">Please select a website type to continue.</p>
+          </div>
         {{/if}}
-        {{#if canChooseDBType}}
-        <div class="form-group">
-            <label for="dbtype">Database Type</label>
-            {{ view "select" class="form-control required" value=newSite.extraData.dbengine content=availableDBTypes optionLabelPath="content.name" optionValuePath="content.id" }}
-            <p class="help-block">This application supports multiple types of databases. Choose the one you would like to use as the backend for this website.</p>
-        </div>
-        {{/if}}
-        {{#if selectedSite.website_extra_options}}
-            {{partial selectedSite.id}}
-        {{/if}}
-    {{/g-wizardstep}}
+      </div>
+    </div>
+  {{/g-wizardstep}}
+  {{#g-wizardstep step=2}}
+    <div class="form-group">
+      <label for="name">Site Name</label>
+      {{input type="text" class="form-control required username" value=newSite.name}}
+      <p class="help-block">A name to help you recognize this website in arkOS. Do not use spaces, dashes or special characters.</p>
+    </div>
+    <div class="form-group">
+      <label for="address">Address</label>
+      {{ember-selectize value=newSite.address content=model.domains required=true placeholder="Select an address" optionLabelPath="content.id" optionValuePath="content.id"}}
+      <p class="help-block">The web address you want to use to access this site. To add new ones, click the Users icon then the Domains tab.</p>
+    </div>
+    <div class="form-group">
+      <label for="port">Port</label>
+      {{input type="text" class="form-control required" value=newSite.port}}
+      <p class="help-block">If you don't know what to put here, leave it at the default.</p>
+    </div>
+    {{#if selectedSite.website_datapaths}}
+      <div class="form-group">
+        <label for="port">Data Directory</label>
+        {{input type="text" class="form-control" value=newSite.extraData.datadir}}
+        <p class="help-block">This application supports storage of data in a designated folder. Enter the full path to the folder you wish to use for this. If you leave it blank, the application's default location will be used.</p>
+      </div>
+    {{/if}}
+    {{#if canChooseDBType}}
+      <div class="form-group">
+        <label for="dbtype">Database Type</label>
+        {{ember-selectize value=newSite.extraData.dbengine content=availableDBTypes required=true placeholder="Select a database type" optionLabelPath="content.name" optionValuePath="content.id"}}
+        <p class="help-block">This application supports multiple types of databases. Choose the one you would like to use as the backend for this website.</p>
+      </div>
+    {{/if}}
+    {{#if selectedSite.website_extra_options}}
+      {{partial selectedSite.id}}
+    {{/if}}
+  {{/g-wizardstep}}
 {{/g-wizardmodal}}

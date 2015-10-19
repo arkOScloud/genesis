@@ -4,10 +4,10 @@ import fieldValidator from "../utils/field-validator";
 
 export default Ember.Component.extend({
   firstStep: function() {
-    return this.get('control').get('step')==1;
+    return this.get('control').get('step') === 1;
   }.property('control.step'),
   lastStep: function() {
-    return this.get('control').get('step')==this.get('control').get('last');
+    return this.get('control').get('step') === this.get('control').get('last');
   }.property('control.step'),
   actions: {
     ok: function() {
@@ -16,10 +16,10 @@ export default Ember.Component.extend({
       if (this.get('control').get('validateFields').indexOf(last)>=0) {
         fieldValidator('#wizardstep'+last);
         setTimeout(function(){
-          if ($('#wizardstep'+last+' .form-group.has-error').length == 0) {
+          if (Ember.$('#wizardstep'+last+' .form-group.has-error').length === 0) {
             self.$('.modal').modal('hide');
             self.sendAction('ok');
-          };
+          }
         }, 1000);
       } else {
         self.$('.modal').modal('hide');
@@ -28,9 +28,9 @@ export default Ember.Component.extend({
     },
     previous: function() {
       var step = this.get('control').get('step');
-      $('#wizardstep'+step).hide();
+      Ember.$('#wizardstep'+step).hide();
       this.get('control').set('step', step-1);
-      $('#wizardstep'+(step-1)).show();
+      Ember.$('#wizardstep'+(step-1)).show();
     },
     next: function() {
       var self = this,
@@ -38,17 +38,17 @@ export default Ember.Component.extend({
       if (this.get('control').get('validateFields').indexOf(step)>0) {
         fieldValidator('#wizardstep'+step);
         setTimeout(function(){
-          if ($('#wizardstep'+step+' .form-group.has-error').length == 0) {
-            $('#wizardstep'+step).hide();
+          if (Ember.$('#wizardstep'+step+' .form-group.has-error').length === 0) {
+            Ember.$('#wizardstep'+step).hide();
             self.get('control').set('step', step+1);
-            $('#wizardstep'+(step+1)).show();
-          };
+            Ember.$('#wizardstep'+(step+1)).show();
+          }
         }, 1000);
       } else {
-        $('#wizardstep'+step).hide();
+        Ember.$('#wizardstep'+step).hide();
         this.get('control').set('step', step+1);
-        $('#wizardstep'+(step+1)).show();
-      };
+        Ember.$('#wizardstep'+(step+1)).show();
+      }
     }
   },
   show: function() {

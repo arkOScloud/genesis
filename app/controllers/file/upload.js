@@ -13,13 +13,15 @@ export default Ember.ObjectController.extend({
       var uploader = EmberUploader.Uploader.create({
         url: ENV.APP.krakenHost+'/api/files/'+toB64(cp)
       });
-      var promise = uploader.upload($('input[name="file"]')[0].files);
+      var promise = uploader.upload(Ember.$('input[name="file"]')[0].files);
       promise.then(function(j){
         j.files.forEach(function(i) {
           self.get("controllers.files.currentFolder").pushObject(i);
         });
       }, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     }
   }

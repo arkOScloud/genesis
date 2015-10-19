@@ -11,7 +11,9 @@ export default Ember.ObjectController.extend({
       app.set('isReady', false);
       var promise = app.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     }
   }

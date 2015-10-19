@@ -10,7 +10,7 @@ export default DS.Model.extend({
       return this.get('type').capitalize();
     }.property('type'),
     canManage: function() {
-      return ["arkos-redis", "kraken", "slapd"].indexOf(this.get('id'))==-1;
+      return ["arkos-redis", "kraken", "slapd"].indexOf(this.get('id')) === -1;
     }.property('id'),
     operation: DS.attr('string'),
     cfg: DS.attr(),

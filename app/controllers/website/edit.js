@@ -19,17 +19,19 @@ export default Ember.ObjectController.extend({
       site.setProperties({
         addr: this.get('newAddr'),
         port: this.get('newPort'),
-        newName: (this.get('newName')!=site.get('id'))?this.get('newName'):'',
+        newName: (this.get('newName') !== site.get('id')) ? this.get('newName') : '',
         isReady: false
       });
       var promise = site.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     },
     siteAction: function(action) {
       var self = this;
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/websites/actions/'+this.get("model.id")+"/"+action,
         type: "POST"
       })
@@ -37,7 +39,9 @@ export default Ember.ObjectController.extend({
         self.message.success("Action completed successfully");
       })
       .error(function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
         self.message.danger("Action did not complete: "+e.responseJSON.message);
       });
     }

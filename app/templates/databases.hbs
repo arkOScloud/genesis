@@ -3,58 +3,58 @@
   <a href="#" class="btn btn-default pull-right" {{action 'showModal' 'database/add-user' model}}><i class="fa fa-user"></i> Add Database User</a>
 </div>
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#dbs" aria-controls="dbs" role="tab" data-toggle="tab"><i class="fa fa-database"></i> Databases</a></li>
-    <li role="presentation"><a href="#users" aria-controls="users" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Database Users</a></li>
+  <li role="presentation" class="active"><a href="#dbs" aria-controls="dbs" role="tab" data-toggle="tab"><i class="fa fa-database"></i> Databases</a></li>
+  <li role="presentation"><a href="#users" aria-controls="users" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Database Users</a></li>
 </ul>
 
 <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="dbs">
-        <div class="ui-items-3">
-            {{#each db in model.dbs}}
-              <div {{bind-attr class=":ui-item db.isReady::is-pending"}}>
-                <div class="ui-item-icon">
-                    <i class="fa fa-database fa-fw fa-5x"></i>
-                </div>
-                <div class="ui-item-content">
-                  <h2>{{db.id}}</h2>
-                  <p class="lead">{{db.typeName}}</p>
-                  <div class="ui-item-buttons">
-                    <a href="#" {{bind-attr class=":ui-item-button db.isReady::disabled"}} {{action 'showModal' 'database/edit' db model}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
-                    <a {{bind-attr href=db.downloadHref class=":ui-item-button db.isReady::disabled"}}><i class="fa fa-download fa-fw fa-lg"></i><br />Download</a>
-                    <a href="#" {{bind-attr class=":ui-item-button :text-danger db.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this database?' db}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>        
-                  </div>
-                </div>
-              </div>
-            {{else}}
-            <div class="text-center">
-                <h1 class="fa fa-database fa-5x"></h1>
-                <p class="lead">No databases found.</p>
+  <div role="tabpanel" class="tab-pane active" id="dbs">
+    <div class="ui-items-3">
+      {{#each model.dbs as |db|}}
+        <div class="ui-item {{if db.isReady '' 'is-pending'}}">
+          <div class="ui-item-icon">
+            <i class="fa fa-database fa-fw fa-5x"></i>
+          </div>
+          <div class="ui-item-content">
+            <h2>{{db.id}}</h2>
+            <p class="lead">{{db.typeName}}</p>
+            <div class="ui-item-buttons">
+              <a href="#" class="ui-item-button {{if db.isReady '' 'disabled'}}" {{action 'showModal' 'database/edit' db model}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
+              <a href={{db.downloadHref}} class="ui-item-button {{if db.isReady '' 'disabled'}}"><i class="fa fa-download fa-fw fa-lg"></i><br />Download</a>
+              <a href="#" class="ui-item-button text-danger {{if db.isReady '' 'disabled'}}" {{action 'showConfirm' 'delete' 'Are you sure you want to delete this database?' db}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>
             </div>
-            {{/each}}
+          </div>
         </div>
+      {{else}}
+        <div class="text-center">
+          <h1 class="fa fa-database fa-5x"></h1>
+          <p class="lead">No databases found.</p>
+        </div>
+      {{/each}}
     </div>
-    <div role="tabpanel" class="tab-pane" id="users">
-        <div class="ui-items-4">
-            {{#each db in model.users}}
-              <div {{bind-attr class=":ui-item db.isReady::is-pending"}}>
-                <div class="ui-item-icon">
-                    <i class="fa fa-user fa-fw fa-5x"></i>
-                </div>
-                <div class="ui-item-content">
-                  <h2>{{db.id}}</h2>
-                  <p class="lead">{{db.typeName}}</p>
-                  <div class="ui-item-buttons">
-                    <a href="#" {{bind-attr class=":ui-item-button db.isReady::disabled"}} {{action 'showModal' 'database/edit-user' db model}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Edit</a>
-                    <a href="#" {{bind-attr class=":ui-item-button :text-danger db.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this database user?' db}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>        
-                  </div>
-                </div>
-              </div>
-            {{else}}
-            <div class="text-center">
-                <h1 class="fa fa-user fa-5x"></h1>
-                <p class="lead">No database users found.</p>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="users">
+    <div class="ui-items-4">
+      {{#each model.users as |db|}}
+        <div class="ui-item {{if db.isReady '' 'is-pending'}}">
+          <div class="ui-item-icon">
+            <i class="fa fa-user fa-fw fa-5x"></i>
+          </div>
+          <div class="ui-item-content">
+            <h2>{{db.id}}</h2>
+            <p class="lead">{{db.typeName}}</p>
+            <div class="ui-item-buttons">
+              <a href="#" class=":ui-item-button {{if db.isReady '' 'disabled'}}" {{action 'showModal' 'database/edit-user' db model}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Edit</a>
+              <a href="#" class="ui-item-button text-danger {{if db.isReady '' 'disabled'}}" {{action 'showConfirm' 'delete' 'Are you sure you want to delete this database user?' db}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>
             </div>
-            {{/each}}
+          </div>
         </div>
+      {{else}}
+        <div class="text-center">
+          <h1 class="fa fa-user fa-5x"></h1>
+          <p class="lead">No database users found.</p>
+        </div>
+      {{/each}}
     </div>
+  </div>
 </div>

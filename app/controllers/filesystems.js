@@ -9,7 +9,9 @@ export default Ember.ObjectController.extend({
       fs.set('isReady', false);
       var promise = fs.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     },
     umount: function(fs){
@@ -18,7 +20,9 @@ export default Ember.ObjectController.extend({
       fs.set('isReady', false);
       var promise = fs.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     },
     enable: function(fs){
@@ -27,7 +31,9 @@ export default Ember.ObjectController.extend({
       fs.set('isReady', false);
       var promise = fs.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     },
     disable: function(fs){
@@ -36,7 +42,9 @@ export default Ember.ObjectController.extend({
       fs.set('isReady', false);
       var promise = fs.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     }
   }

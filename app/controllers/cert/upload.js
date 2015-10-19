@@ -11,14 +11,16 @@ export default Ember.ObjectController.extend({
       var uploader = EmberUploader.Uploader.create({
         url: ENV.APP.krakenHost+'/api/certs'
       });
-      var files = [$('input[name="cert"]')[0].files[0],
-                   $('input[name="key"]')[0].files[0]];
-      if ($('input[name="chain"]')[0].files.length) {
-        files.push($('input[name="chain"]')[0].files[0]);
-      };
+      var files = [Ember.$('input[name="cert"]')[0].files[0],
+                   Ember.$('input[name="key"]')[0].files[0]];
+      if (Ember.$('input[name="chain"]')[0].files.length) {
+        files.push(Ember.$('input[name="chain"]')[0].files[0]);
+      }
       var promise = uploader.upload(files, {id: this.get('name')});
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     },
     removeModal: function(){
