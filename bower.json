@@ -21,6 +21,7 @@
     "loader.js": "ember-cli/loader.js#3.2.1",
     "moment": "~2.10.6",
     "multiselect": "~0.9.12",
-    "qunit": "~1.18.0"
+    "qunit": "~1.18.0",
+    "selectize": "~0.12.1"
   }
 }

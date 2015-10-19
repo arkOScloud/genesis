@@ -30,18 +30,10 @@
   <label for="timezone">Timezone</label>
   <div class="row">
     <div class="col-md-6">
-      {{#x-select class="form-control required" action="didMakeSelection" default=tzRegion}}
-        {{#each timezones as |timezone|}}
-          {{#x-option value=timezone.region}}{{timezone.region}}{{/x-option}}
-        {{/each}}
-      {{/x-select}}
+      {{ember-selectize selection=tzRegion value=tzRegionName content=timezones required=true placeholder="Select a region" optionLabelPath="content.region" optionValuePath="content.region"}}
     </div>
     <div class="col-md-6">
-      {{#x-select class="form-control required" action="didMakeSelection" default=tzZone}}
-        {{#each tzZones as |tzz|}}
-          {{#x-option value=tzz}}{{tzz}}{{/x-option}}
-        {{/each}}
-      {{/x-select}}
+      {{ember-selectize selection=tzZone value=tzZone content=tzZones required=true placeholder="Select a zone"}}
     </div>
   </div>
   <p class="help-block">Select your time zone's region and individual zone.</p>

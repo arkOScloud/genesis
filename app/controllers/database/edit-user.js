@@ -3,6 +3,7 @@ import ENV from "../../config/environment";
 
 
 export default Ember.ObjectController.extend({
+  action: "No action",
   actionsToTake: ["No action", "Grant all permissions", "Revoke all permissions"],
   availableDbs: function(){
     return this.get('model').get('extra').dbs.filterProperty('typeId', this.get('model').get('typeId'));
@@ -11,16 +12,16 @@ export default Ember.ObjectController.extend({
     save: function(){
       var self = this,
           actionToTake = "";
-      if (this.get('action') === "Grant all permissions") {
+      if (this.get('action').startsWith("Grant")) {
         actionToTake = "grant";
-      } else if (this.get('action') === "Revoke all permissions") {
+      } else if (this.get('action').startsWith("Revoke")) {
         actionToTake = "revoke";
       } else {
         return false;
       }
       Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/database_users/'+this.get('model').get('id'),
-        data: JSON.stringify({"database_user": {"operation": actionToTake, "database": this.get('database')}}),
+        data: JSON.stringify({"database_user": {"operation": actionToTake, "database": this.get('selectedDb')}}),
         type: 'PUT',
         contentType: 'application/json',
         processData: false,
@@ -28,6 +29,9 @@ export default Ember.ObjectController.extend({
           if (e.status === 500) {
             self.transitionToRoute("error", e);
           }
+        },
+        success: function() {
+          self.model.reload();
         }
       });
     },

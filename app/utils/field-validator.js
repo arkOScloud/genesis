@@ -4,9 +4,14 @@ import Ember from "ember";
 export default function fieldValidator(pre) {
   pre = pre || "";
   Ember.$(pre+' .form-group').removeClass('has-error has-success');
-  Ember.$(pre+' input.required, '+pre+' textarea.required, '+pre+' select.required').each(function(){
+  Ember.$(pre+' input.required, '+pre+' textarea.required').each(function(){
     if (!Ember.$(this).val()) {
       Ember.$(this).parent('.form-group').addClass('has-error');
+    }
+  });
+  Ember.$(pre+' .selectize-input.required').each(function(){
+    if (!Ember.$(this).parent('.selectize-control').siblings('.selectized').val()) {
+      Ember.$(this).closest('.form-group').addClass('has-error');
     }
   });
   Ember.$(pre+' input.username').each(function(){

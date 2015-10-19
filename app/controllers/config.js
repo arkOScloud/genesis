@@ -7,19 +7,20 @@ export default Ember.ObjectController.extend({
   timezones: timezones,
   config: {},
   hostname: "",
-  tzRegion: "",
+  tzRegion: {},
+  tzRegionName: "",
   tzZone: "",
   tzZones: function() {
     var self = this;
     var tzo = timezones.find(function(i) {
-      return i.region.replace(" ", "_") === self.get('tzRegion');
+      return i.region.replace(" ", "_") === self.get('tzRegionName');
     });
     if (tzo.region === "GMT" || tzo.region === "UTC") {
       return [tzo.region];
     } else {
       return tzo.zones;
     }
-  }.property('tzRegion'),
+  }.property('tzRegionName'),
   offset: function() {
     return this.get('model').datetime.datetime.offset.toFixed(2);
   }.property('model.datetime'),
@@ -30,7 +31,7 @@ export default Ember.ObjectController.extend({
         url: ENV.APP.krakenHost+'/api/config',
         type: 'PUT',
         data: JSON.stringify({config: self.get('config'), hostname: self.get('hostname'),
-            timezone: {region: self.get('tzRegion'), zone: self.get('tzZone').replace(" ", "_")}}),
+            timezone: {region: self.get('tzRegionName'), zone: self.get('tzZone').replace(" ", "_")}}),
         contentType: 'application/json',
         processData: false,
         error: function(e) {

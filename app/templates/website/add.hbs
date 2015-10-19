@@ -54,11 +54,7 @@
     </div>
     <div class="form-group">
       <label for="address">Address</label>
-      {{#x-select class="form-control required" action="didMakeSelection"}}
-        {{#each model.domains as |dom|}}
-          {{#x-option value=dom.id}}{{dom.id}}{{/x-option}}
-        {{/each}}
-      {{/x-select}}
+      {{ember-selectize value=newSite.address content=model.domains required=true placeholder="Select an address" optionLabelPath="content.id" optionValuePath="content.id"}}
       <p class="help-block">The web address you want to use to access this site. To add new ones, click the Users icon then the Domains tab.</p>
     </div>
     <div class="form-group">
@@ -76,11 +72,7 @@
     {{#if canChooseDBType}}
       <div class="form-group">
         <label for="dbtype">Database Type</label>
-        {{#x-select class="form-control required" action="didMakeSelection"}}
-          {{#each availableDBTypes as |adbt|}}
-            {{#x-option value=adbt.id}}{{adbt.name}}{{/x-option}}
-          {{/each}}
-        {{/x-select}}
+        {{ember-selectize value=newSite.extraData.dbengine content=availableDBTypes required=true placeholder="Select a database type" optionLabelPath="content.name" optionValuePath="content.id"}}
         <p class="help-block">This application supports multiple types of databases. Choose the one you would like to use as the backend for this website.</p>
       </div>
     {{/if}}

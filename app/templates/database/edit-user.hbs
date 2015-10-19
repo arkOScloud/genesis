@@ -14,19 +14,11 @@
     </div>
     <div class="form-group">
       <label for="action">Take Action</label>
-      {{#x-select class="form-control required" action="didMakeSelection" default=action}}
-        {{#each actionsToTake as |actionToTake|}}
-          {{#x-option value=actionToTake}}{{actionToTake}}{{/x-option}}
-        {{/each}}
-      {{/x-select}}
+      {{ember-selectize selection=action value=action content=actionsToTake required=true placeholder="Select an action"}}
     </div>
     <div class="form-group">
       <label for="database">On Database</label>
-      {{#x-select class="form-control required" action="didMakeSelection" default=database}}
-        {{#each availableDbs as |db|}}
-          {{#x-option value=db.id}}{{db.id}}{{/x-option}}
-        {{/each}}
-      {{/x-select}}
+      {{ember-selectize value=selectedDb content=availableDbs required=true placeholder="Select a database" optionLabelPath="content.id" optionValuePath="content.id"}}
     </div>
   </form>
 {{/g-modal}}
