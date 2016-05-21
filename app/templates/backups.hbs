@@ -1,40 +1,40 @@
 {{#if selectedBackupType}}
-<a href="#" class="btn btn-default pull-right" {{action 'backup' selectedBackupType}}><i class="fa fa-plus-circle"></i> New Backup</a>
+  <a href="#" class="btn btn-default pull-right" {{action 'backup' selectedBackupType}}><i class="fa fa-plus-circle"></i> New Backup</a>
 {{/if}}
 <h1 class="page-header">My Backups</h1>
 
 <div class="row">
-    <div class="col-sm-3">
-        <ul class="nav nav-pills nav-stacked ui-navlist">
-          <li {{bind-attr class="selectedBackupType::active"}}><a href="#" {{action 'selectType' 'all'}}><i class="fa fa-fw fa-clock-o"></i> All Backups</a></li>
-          {{#each type in model.types}}
-          <li {{bind-attr id=type.id}}><a href="#" {{action 'selectType' type.id}}><i {{bind-attr class=":fa :fa-fw type.icon"}}></i> {{type.id}}</a></li>
-          {{/each}}
-        </ul>
-    </div>
-    <div class="col-sm-9">
-        <div class="ui-items-3">
-            {{#each backup in selectedBackups}}
-              <div {{bind-attr class=":ui-item backup.isReady::is-pending"}}>
-                <div class="ui-item-icon">
-                    <i {{bind-attr class=":fa-fw :fa-5x backup.icon"}}></i>
-                </div>
-                <div class="ui-item-content">
-                  <h2>{{backup.pid}}</h2>
-                  <p class="lead">{{format-date-time backup.time}}</p>
-                  <div class="ui-item-buttons">
-                    <a href="#" {{bind-attr class=":ui-item-button backup.isReady::disabled"}} {{action 'showModal' 'backup/info' backup}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
-                    <a href="#" {{bind-attr class=":ui-item-button backup.isReady::disabled"}} {{action 'showConfirm' 'restore' 'Are you sure you want to restore this backup? Any existing application data with this name will be overwritten.' backup}}><i class="fa fa-clock-o fa-fw fa-lg"></i><br />Restore</a>
-                    <a href="#" {{bind-attr class=":ui-item-button :text-danger backup.isReady::disabled"}} {{action 'showConfirm' 'delete' 'Are you sure you want to delete this backup?' backup}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>        
-                  </div>
-                </div>
-              </div>
-            {{else}}
-            <div class="text-center">
-                <h1 class="fa fa-clock-o fa-5x"></h1>
-                <p class="lead">No backups found.</p>
+  <div class="col-sm-3">
+    <ul class="nav nav-pills nav-stacked ui-navlist">
+      <li class="{{if selectedBackupType '' 'active'}}"><a href="#" {{action 'selectType' 'all'}}><i class="fa fa-fw fa-clock-o"></i> All Backups</a></li>
+      {{#each model.types as |type|}}
+        <li id={{type.id}}><a href="#" {{action 'selectType' type.id}}><i class="fa fa-fw {{type.icon}}"></i> {{type.id}}</a></li>
+      {{/each}}
+    </ul>
+  </div>
+  <div class="col-sm-9">
+    <div class="ui-items-3">
+      {{#each selectedBackups as |backup|}}
+        <div class="ui-item {{if backup.isReady '' 'is-pending'}}">
+          <div class="ui-item-icon">
+            <i class="fa-fw fa-5x {{backup.icon}}"></i>
+          </div>
+          <div class="ui-item-content">
+            <h2>{{backup.pid}}</h2>
+            <p class="lead">{{format-date-time backup.time}}</p>
+            <div class="ui-item-buttons">
+              <a href="#" class="ui-item-button {{if backup.isReady '' 'disabled'}}" {{action 'showModal' 'backup/info' backup}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
+              <a href="#" class="ui-item-button {{if backup.isReady '' 'disabled'}}" {{action 'showConfirm' 'restore' 'Are you sure you want to restore this backup? Any existing application data with this name will be overwritten.' backup}}><i class="fa fa-clock-o fa-fw fa-lg"></i><br />Restore</a>
+              <a href="#" class="ui-item-button text-danger {{if backup.isReady '' 'disabled'}}" {{action 'showConfirm' 'delete' 'Are you sure you want to delete this backup?' backup}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>
             </div>
-            {{/each}}
+          </div>
         </div>
+      {{else}}
+        <div class="text-center">
+          <h1 class="fa fa-clock-o fa-5x"></h1>
+          <p class="lead">No backups found.</p>
+        </div>
+      {{/each}}
     </div>
+  </div>
 </div>

@@ -1,65 +1,57 @@
 {{#g-modal title="Network Info" icon="fa-sitemap" close="removeModal"}}
-    <div class="form-horizontal">
-        <div class="form-group">
-            <label for="id" class="col-sm-3 control-label">Name</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{model.id}}</p>
-            </div>
-        </div>
-        {{#if model.config.description}}
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Description</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{model.config.description}}</p>
-            </div>
-        </div>
-        {{/if}}
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Interface</label>
-            <div class="col-sm-9">
-                <p class="form-control-static"><i {{bind-attr class=":fa model.typeIcon"}}></i> {{model.type}} ({{model.config.interface}})</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Addressing</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{model.config.ip}}</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Connected</label>
-            <div class="col-sm-9">
-                {{#if model.connected}}
-                <p class="form-control-static text-success"><i class="fa fa-check-circle"></i> Yes</p>
-                {{else}}
-                <p class="form-control-static"><i class="fa fa-times-circle"></i> No</p>
-                {{/if}}
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Enabled</label>
-            <div class="col-sm-9">
-                {{#if model.enabled}}
-                <p class="form-control-static text-success"><i class="fa fa-check-circle"></i> Yes</p>
-                {{else}}
-                <p class="form-control-static"><i class="fa fa-times-circle"></i> No</p>
-                {{/if}}
-            </div>
-        </div>
-        {{#if model.connected}}
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Address/Netmask</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{address}}</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Statistics</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{size-to-string iface.rx}} received, {{size-to-string iface.tx}} sent</p>
-                <p class="help-block">Global stats for the interface since last boot.</p>
-            </div>
-        </div>
-        {{/if}}
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label for="id" class="col-sm-3 control-label">Name</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{model.id}}</p>
+      </div>
     </div>
+    {{#if model.config.description}}
+      <div class="form-group">
+        <label for="size" class="col-sm-3 control-label">Description</label>
+        <div class="col-sm-9">
+          <p class="form-control-static">{{model.config.description}}</p>
+        </div>
+      </div>
+    {{/if}}
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">Interface</label>
+      <div class="col-sm-9">
+        <p class="form-control-static"><i class="fa {{model.typeIcon}}"></i> {{model.type}} ({{model.config.interface}})</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">Addressing</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{model.config.ip}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">Connected</label>
+      <div class="col-sm-9">
+        <p class="form-control-static {{if model.connected 'text-success'}}"><i class="fa {{if model.connected 'fa-check-circle' 'fa-times-circle'}}"></i> {{if model.connected 'Yes' 'No'}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">Enabled</label>
+      <div class="col-sm-9">
+        <p class="form-control-static {{if model.enabled 'text-success'}}"><i class="fa {{if model.enabled 'fa-check-circle' 'fa-times-circle'}}"></i> {{if model.enabled 'Yes' 'No'}}</p>
+      </div>
+    </div>
+    {{#if model.connected}}
+      <div class="form-group">
+        <label for="size" class="col-sm-3 control-label">Address/Netmask</label>
+        <div class="col-sm-9">
+          <p class="form-control-static">{{address}}</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="size" class="col-sm-3 control-label">Statistics</label>
+        <div class="col-sm-9">
+          <p class="form-control-static">{{size-to-string iface.rx}} received, {{size-to-string iface.tx}} sent</p>
+          <p class="help-block">Global stats for the interface since last boot.</p>
+        </div>
+      </div>
+    {{/if}}
+  </div>
 {{/g-modal}}

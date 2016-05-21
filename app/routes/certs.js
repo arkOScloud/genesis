@@ -6,9 +6,9 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model: function() {
     return Ember.RSVP.hash({
-      certs: this.get('store').find('cert'),
-      auths: this.get('store').find('certauth'),
-      assns: $.getJSON(ENV.APP.krakenHost+'/api/certassigns')
+      certs: this.get('store').findAll('cert'),
+      auths: this.get('store').findAll('certauth'),
+      assns: Ember.$.getJSON(ENV.APP.krakenHost+'/api/certassigns')
     });
   },
   actions: {

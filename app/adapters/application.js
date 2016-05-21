@@ -23,26 +23,26 @@ export default DS.RESTAdapter.extend({
             self.message.danger(e.message);
           });
           delete jsonPayload.messages;
-        };
+        }
       } else {
         return error;
       }
     },
-    ajaxSuccess: function(jqXHR, jsonPayload) {
+    isSuccess: function(jqXHR, jsonPayload) {
       if (jsonPayload && jsonPayload.message) {
         var msgType = String(jqXHR.status).charAt(0);
-        if (msgType=="2") {
-          if (!ENV.APP.needsFirstRun) this.message.success(jsonPayload.message);
-        } else {
+        if (msgType === "2" && !ENV.APP.needsFirstRun) {
+          this.message.success(jsonPayload.message);
+        } else if (msgType !== "2") {
           this.message.warning(jsonPayload.message);
         }
         delete jsonPayload.message;
       } else if (jsonPayload && jsonPayload.messages) {
         jsonPayload.messages.forEach(function(e) {
           this.message.success(e.message);
-        })
+        });
         delete jsonPayload.messages;
-      };
+      }
       return jsonPayload;
     }
 });

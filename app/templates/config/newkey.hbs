@@ -1,12 +1,12 @@
 {{#g-modal title="Add Public Key" icon="fa-key" ok="save" close="removeModal"}}
-    <form {{action 'ok' on='submit' target=view}}>
-        <div class="form-group">
-            <label for="key">For user</label>
-            {{ view "select" class="form-control required" value=keyUser content=model.users optionLabelPath="content.name" optionValuePath="content.name" }}
-        </div>
-        <div class="form-group">
-            <label for="key">Paste public key here</label>
-            {{textarea class="form-control required" value=key}}
-        </div>
-    </form>
+  <form {{action 'ok' on='submit' target=view}}>
+    <div class="form-group">
+      <label for="key">For user</label>
+      {{ember-selectize selection=keyUser value=keyUser content=model.users required=true placeholder="Select a user" optionLabelPath="content.name" optionValuePath="content.name"}}
+    </div>
+    <div class="form-group">
+      <label for="key">Paste public key here</label>
+      {{textarea class="form-control required" value=key}}
+    </div>
+  </form>
 {{/g-modal}}

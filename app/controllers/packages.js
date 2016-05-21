@@ -18,7 +18,7 @@ export default Ember.ObjectController.extend({
   filteredAvailable: [],
   pendingOperations: function() {
     return this.get('model').filter(function(i) {
-      return i.get('operation')!="";
+      return i.get('operation') !== "";
     });
   }.property('model.@each.operation'),
   actions: {
@@ -34,17 +34,17 @@ export default Ember.ObjectController.extend({
       this.set('filteredAvailable', []);
     },
     filterAvailable: function() {
-      if (this.get('availableQuery') == '') {
+      if (this.get('availableQuery') === '') {
         this.set('filteredAvailable', []);
         return false;
-      };
+      }
       var self = this;
       this.set('filteredAvailable', this.get('sortedPackages').filter(function(i){
-        return (i.get('installed') == false && i.get('id').indexOf(self.get('availableQuery'))>=0);
+        return (i.get('installed') === false && i.get('id').indexOf(self.get('availableQuery'))>=0);
       }));
     },
     install: function(pkg) {
-      if (pkg.get('operation') != 'install') {
+      if (pkg.get('operation') !== 'install') {
         pkg.set('operation', 'install');
         this.message.success(pkg.get('id')+' marked for install. Click Apply Changes to complete.');
       } else {
@@ -52,7 +52,7 @@ export default Ember.ObjectController.extend({
       }
     },
     remove: function(pkg) {
-      if (pkg.get('operation') != 'remove') {
+      if (pkg.get('operation') !== 'remove') {
         pkg.set('operation', 'remove');
         this.message.success(pkg.get('id')+' marked for removal. Click Apply Changes to complete.');
       } else {

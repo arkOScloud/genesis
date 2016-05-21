@@ -1,47 +1,46 @@
 <div class="ui-firstrun-container">
-    <div class="text-center">
-        <h3 class="page-header">Step 2: System Settings</h3>
-        <p>You can change the settings below if you wish. It's fine to leave them as they are, though.</p>
+  <div class="text-center">
+    <h3 class="page-header">Step 2: System Settings</h3>
+    <p>You can change the settings below if you wish. It's fine to leave them as they are, though.</p>
+  </div>
+  <div class="form-group">
+    <label for="timezone">Choose your timezone</label>
+    <div class="row">
+      <div class="col-md-6">
+        {{ember-selectize value=tzRegion content=timezones required=true placeholder="Select a region" optionLabelPath="content.region" optionValuePath="content.region"}}
+      </div>
+      <div class="col-md-6">
+        {{ember-selectize value=tzZone content=tzZones required=true placeholder="Select a zone"}}
+      </div>
     </div>
+    <p class="help-block">Select your time zone's region and individual zone.</p>
+  </div>
+  {{#if usesSDCard}}
     <div class="form-group">
-        <label for="timezone">Choose your timezone</label>
-        <div class="row">
-            <div class="col-md-6">
-                {{ view "select" class="form-control required" value=tzRegion content=timezones optionLabelPath="content.region" optionValuePath="content.region" }}
-            </div>
-            <div class="col-md-6">
-                {{ view "select" class="form-control required" value=tzZone content=tzZones }}
-            </div>
-        </div>
-        <p class="help-block">Select your time zone's region and individual zone.</p>
+      <div class="checkbox">
+        <label>
+          {{input type="checkbox" checked=resizeSDCard}} Let arkOS use your whole SD card
+        </label>
+      </div>
+      <p class="help-block">If you have an SD card larger than 2GB and are not using a split boot configuration, select this option. This expands arkOS so it can use the entire SD card. You will need to restart the system before the changes take effect.</p>
     </div>
-    {{#if usesSDCard}}
+  {{/if}}
+  {{#if isRPi}}
     <div class="form-group">
-        <div class="checkbox">
-            <label>
-                {{input type="checkbox" checked=resizeSDCard}} Let arkOS use your whole SD card
-            </label>
-        </div>
-        <p class="help-block">If you have an SD card larger than 2GB and are not using a split boot configuration, select this option. This expands arkOS so it can use the entire SD card. You will need to restart the system before the changes take effect.</p>
+      <div class="checkbox">
+        <label>
+          {{input type="checkbox" checked=useGPUMem}} Let arkOS use some of your graphics memory for other things
+        </label>
+      </div>
+      <p class="help-block">Because you won't be using your Raspberry Pi with a monitor or keyboard, you can use some of that memory to make arkOS run better elsewhere. (Sets GPU memory to the minimum 16MB)</p>
     </div>
-    {{/if}}
-    {{#if isRPi}}
+  {{else if isCubie}}
     <div class="form-group">
-        <div class="checkbox">
-            <label>
-                {{input type="checkbox" checked=useGPUMem}} Let arkOS use some of your graphics memory for other things
-            </label>
-        </div>
-        <p class="help-block">Because you won't be using your Raspberry Pi with a monitor or keyboard, you can use some of that memory to make arkOS run better elsewhere. (Sets GPU memory to the minimum 16MB)</p>
+      <label for="cubieMAC">Set MAC Address</label>
+      {{input type="text" class="form-control required" value=cubieMAC}}
+      <p class="help-block">Your device needs a MAC address to keep a constant connection (via DHCP). If you leave this blank, one will be generated for you. You will need to restart the system before it will take effect.</p>
     </div>
-    {{/if}}
-    {{#if isCubie}}
-    <div class="form-group">
-        <label for="cubieMAC">Set MAC Address</label>
-        {{input type="text" class="form-control required" value=cubieMAC}}
-        <p class="help-block">Your device needs a MAC address to keep a constant connection (via DHCP). If you leave this blank, one will be generated for you. You will need to restart the system before it will take effect.</p>
-    </div>
-    {{/if}}
-    <a href="#" class="btn btn-default btn-lg" {{action "previousStep"}}><i class="fa fa-chevron-left"></i> Previous</a>
-    <a href="#" class="btn btn-primary btn-lg pull-right" {{action "nextStep"}}>Next <i class="fa fa-chevron-right"></i></a>
+  {{/if}}
+  <a href="#" class="btn btn-default btn-lg" {{action "previousStep"}}><i class="fa fa-chevron-left"></i> Previous</a>
+  <a href="#" class="btn btn-primary btn-lg pull-right" {{action "nextStep"}}>Next <i class="fa fa-chevron-right"></i></a>
 </div>

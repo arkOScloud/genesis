@@ -8,19 +8,19 @@ export default Ember.ObjectController.extend({
     var p = this.get("model.perms.str");
     this.set("perms", {
       user: {
-        read: p[0]=="r",
-        write: p[1]=="w",
-        execute: p[2]=="x"
+        read: p[0] === "r",
+        write: p[1] === "w",
+        execute: p[2] === "x"
       },
       group: {
-        read: p[3]=="r",
-        write: p[4]=="w",
-        execute: p[5]=="x"
+        read: p[3] === "r",
+        write: p[4] === "w",
+        execute: p[5] === "x"
       },
       all: {
-        read: p[6]=="r",
-        write: p[7]=="w",
-        execute: p[8]=="x"
+        read: p[6] === "r",
+        write: p[7] === "w",
+        execute: p[8] === "x"
       }
     });
   }.observes('model.perms.str'),
@@ -36,18 +36,20 @@ export default Ember.ObjectController.extend({
       file = JSON.parse(JSON.stringify(file));
       file.perms.oct = poct;
       file.operation = "props";
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/files/'+file.id,
         type: "PUT",
         data: JSON.stringify({file: file}),
         contentType: 'application/json',
         processData: false,
-        success: function(j) {
+        success: function() {
           self.message.success("Permissions changed successfully");
         },
-        error: function(j) {
-          if (e.status == 500) self.transitionToRoute("error", e);
-          self.message.danger(j.responseJSON.message);
+        error: function(e) {
+          if (e.status === 500) {
+            self.transitionToRoute("error", e);
+          }
+          self.message.danger(e.responseJSON.message);
         }
       });
     }

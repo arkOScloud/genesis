@@ -17,7 +17,9 @@ export default Ember.ObjectController.extend({
       svc.set('operation', op);
       var promise = svc.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
         svc.rollback();
       });
     },
@@ -28,7 +30,9 @@ export default Ember.ObjectController.extend({
       svc.set('operation', op);
       var promise = svc.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
         svc.rollback();
       });
     }

@@ -1,69 +1,69 @@
 <a href="#" class="btn btn-default pull-right" {{action 'refresh'}}><i class="fa fa-refresh"></i> Refresh</a>
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#available" aria-controls="available" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Available Apps</a></li>
-    <li role="presentation"><a href="#installed" aria-controls="installed" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Installed Apps</a></li>
+  <li role="presentation" class="active"><a href="#available" aria-controls="available" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Available Apps</a></li>
+  <li role="presentation"><a href="#installed" aria-controls="installed" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Installed Apps</a></li>
 </ul>
 
 <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="available">
-        <div class="ui-items-3">
-            {{#each app in sortedApps}}
-              <div {{bind-attr class=":ui-item app.error:text-danger app.isReady::is-pending"}}>
-                <div class="ui-item-icon">
-                    <i {{bind-attr class=":fa-fw :fa-5x app.icon"}}></i>
-                </div>
-                <div class="ui-item-content">
-                  <h3>{{app.name}}</h3>
-                  <p class="lead">{{app.prettyType}}</p>
-                  <div class="ui-item-buttons">
-                    <a href="#" {{bind-attr class=":ui-item-button app.isReady::disabled"}} {{action 'showModal' 'app/info' app}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
-                    {{#if app.installed}}
-                    {{#if app.isUpgradable}}
-                    <a href="#" {{bind-attr class=":ui-item-button :text-success app.isReady::disabled"}} {{action 'install' app}}><i class="fa fa-plus-circle fa-fw fa-lg"></i><br />Update</a>
-                    {{else}}
-                    <a href="#" {{bind-attr class=":ui-item-button :text-danger app.isReady::disabled"}} {{action 'showConfirm' 'uninstall' 'Are you sure you want to uninstall this application?' app}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Uninstall</a>        
-                    {{/if}}
-                    {{else}}
-                    <a href="#" {{bind-attr class=":ui-item-button :text-success app.isReady::disabled"}} {{action 'install' app}}><i class="fa fa-plus-circle fa-fw fa-lg"></i><br />Install</a>
-                    {{/if}}
-                  </div>
-                </div>
-              </div>
-            {{else}}
-            <div class="text-center">
-                <h1 class="fa fa-cube fa-5x"></h1>
-                <p class="lead">No applications found.</p>
+  <div role="tabpanel" class="tab-pane active" id="available">
+    <div class="ui-items-3">
+      {{#each sortedApps as |app|}}
+        <div class="ui-item {{if app.error 'text-danger'}} {{if app.isReady '' 'is-pending'}}">
+          <div class="ui-item-icon">
+            <i class="fa-fw fa-5x {{app.icon}}"></i>
+          </div>
+          <div class="ui-item-content">
+            <h3>{{app.name}}</h3>
+            <p class="lead">{{app.prettyType}}</p>
+            <div class="ui-item-buttons">
+              <a href="#" class="ui-item-button {{if app.isReady '' 'disabled'}}" {{action 'showModal' 'app/info' app}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
+              {{#if app.installed}}
+                {{#if app.isUpgradable}}
+                  <a href="#" class="ui-item-button text-success {{if app.isReady '' 'disabled'}}" {{action 'install' app}}><i class="fa fa-plus-circle fa-fw fa-lg"></i><br />Update</a>
+                {{else}}
+                  <a href="#" class="ui-item-button text-danger {{if app.isReady '' 'disabled'}}" {{action 'showConfirm' 'uninstall' 'Are you sure you want to uninstall this application?' app}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Uninstall</a>
+                {{/if}}
+              {{else}}
+                <a href="#" class="ui-item-button text-success {{if app.isReady '' 'disabled'}}" {{action 'install' app}}><i class="fa fa-plus-circle fa-fw fa-lg"></i><br />Install</a>
+              {{/if}}
             </div>
-            {{/each}}
+          </div>
         </div>
+      {{else}}
+        <div class="text-center">
+          <h1 class="fa fa-cube fa-5x"></h1>
+          <p class="lead">No applications found.</p>
+        </div>
+      {{/each}}
     </div>
-    <div role="tabpanel" class="tab-pane" id="installed">
-        <div class="ui-items-3">
-            {{#each app in sortedApps}}
-            {{#if app.installed}}
-              <div {{bind-attr class=":ui-item app.error:text-danger app.isReady::is-pending"}}>
-                <div class="ui-item-icon">
-                    <i {{bind-attr class=":fa-fw :fa-5x app.icon"}}></i>
-                </div>
-                <div class="ui-item-content">
-                  <h3>{{app.name}}</h3>
-                  <p class="lead">{{app.prettyType}}</p>
-                  <div class="ui-item-buttons">
-                    <a href="#" {{bind-attr class=":ui-item-button app.isReady::disabled"}} {{action 'showModal' 'app/info' app}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
-                    {{#if app.isUpgradable}}
-                    <a href="#" {{bind-attr class=":ui-item-button :text-success app.isReady::disabled"}} {{action 'install' app}}><i class="fa fa-plus-circle fa-fw fa-lg"></i><br />Update</a>        
-                    {{/if}}
-                    <a href="#" {{bind-attr class=":ui-item-button :text-danger app.isReady::disabled"}} {{action 'showConfirm' 'uninstall' 'Are you sure you want to uninstall this application?' app}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Uninstall</a>        
-                  </div>
-                </div>
-              </div>
-            {{/if}}
-            {{else}}
-            <div class="text-center">
-                <h1 class="fa fa-cube fa-5x"></h1>
-                <p class="lead">No applications found.</p>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="installed">
+    <div class="ui-items-3">
+      {{#each sortedApps as |app|}}
+        {{#if app.installed}}
+          <div class="ui-item {{if app.error 'text-danger'}} {{if app.isReady '' 'is-pending'}}">
+            <div class="ui-item-icon">
+              <i class="fa-fw fa-5x {{app.icon}}"></i>
             </div>
-            {{/each}}
+            <div class="ui-item-content">
+              <h3>{{app.name}}</h3>
+              <p class="lead">{{app.prettyType}}</p>
+              <div class="ui-item-buttons">
+                <a href="#" class="ui-item-button {{if app.isReady '' 'disabled'}}" {{action 'showModal' 'app/info' app}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
+                {{#if app.isUpgradable}}
+                  <a href="#" class="ui-item-button text-success {{if app.isReady '' 'disabled'}}" {{action 'install' app}}><i class="fa fa-plus-circle fa-fw fa-lg"></i><br />Update</a>
+                {{/if}}
+                <a href="#" class="ui-item-button text-danger {{if app.isReady '' 'disabled'}}" {{action 'showConfirm' 'uninstall' 'Are you sure you want to uninstall this application?' app}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Uninstall</a>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+      {{else}}
+        <div class="text-center">
+          <h1 class="fa fa-cube fa-5x"></h1>
+          <p class="lead">No applications found.</p>
         </div>
+      {{/each}}
     </div>
+  </div>
 </div>

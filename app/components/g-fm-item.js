@@ -11,12 +11,12 @@ export default Ember.Component.extend({
   }.property('item'),
   initContextMenu: function() {
     var self = this;
-    $('#'+this.get('elementId')).contextmenu({
-      target: '#context-menu', 
-      before: function(e, context) {
-        if (self.get('files.selectedItems.length') && self.get('files.selectedItems').indexOf(self.get("item"))==-1) {
+    Ember.$('#'+this.get('elementId')).contextmenu({
+      target: '#context-menu',
+      before: function() {
+        if (self.get('files.selectedItems.length') && self.get('files.selectedItems').indexOf(self.get("item")) === -1) {
           self.get('files.currentFolder').setEach('selected', false);
-        };
+        }
         self.set('item.selected', true);
         return true;
       }

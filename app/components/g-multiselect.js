@@ -3,19 +3,23 @@ import Ember from "ember";
 
 export default Ember.Component.extend({
   _initializeMulti: (function() {
-    return $(".multi").multiSelect({
+    return Ember.$(".multi").multiSelect({
       afterInit: (function(_this) {
-        return function(controller) {
+        return function() {
+          var selectedItems = [];
           if (_this.selected) {
-            var selectedItems = [];
             _this.selected.forEach(function(i){
-              if (i.selectId) selectedItems.pushObject(i.selectId)
-              else if (i.id) selectedItems.pushObject(i.id)
-              else selectedItems.pushObject(i);
+              if (i.selectId) {
+                selectedItems.pushObject(i.selectId);
+              } else if (i.id) {
+                selectedItems.pushObject(i.id);
+              } else {
+                selectedItems.pushObject(i);
+              }
             });
-          };
-          $('.multi').multiSelect('select', selectedItems);
-        }
+          }
+          Ember.$('.multi').multiSelect('select', selectedItems);
+        };
       })(this),
 
       afterSelect: (function(_this) {

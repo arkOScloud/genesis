@@ -6,8 +6,8 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model: function() {
     return Ember.RSVP.hash({
-      backups: this.get('store').find('backup'),
-      types: $.getJSON(ENV.APP.krakenHost+'/api/backups/types').then(function(j){return j.types;})
+      backups: this.get('store').findAll('backup'),
+      types: Ember.$.getJSON(ENV.APP.krakenHost+'/api/backups/types').then(function(j){return j.types;})
     });
   },
   actions: {

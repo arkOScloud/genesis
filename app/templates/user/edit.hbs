@@ -1,45 +1,45 @@
 {{#g-modal title="Editing User" icon="fa-user" ok="save" close="removeModal"}}
-    <form {{action 'ok' on='submit' target=view}}>
-        <div class="form-group">
-            <label for="name">Username</label>
-            {{input type="text" class="form-control" value=model.name disabled=true}}
-        </div>
-        <div class="form-group">
-            <label for="firstName">First Name</label>
-            {{input type="text" class="form-control" value=model.firstName}}
-        </div>
-        <div class="form-group">
-            <label for="lastName">Last Name</label>
-            {{input type="text" class="form-control" value=model.lastName}}
-        </div>
-        <div class="form-group">
-            <label for="domains">Domain</label>
-            {{ view "select" class="form-control required" value=model.domain content=model.extra.domains optionLabelPath="content.id" optionValuePath="content.id" }}
-        </div>
-        <div class="form-group has-feedback">
-            <label for="passwd">New Password</label>
-            {{ input type="password" class="form-control password" value=passwd }}
-            <span class="fa fa-key form-control-feedback"></span>
-            <p class="help-block">Leave these blank if you do not want to change your password. Your password must be at least six characters long.</p>
-        </div>
-        <div class="form-group has-feedback">
-            <label for="passwdb">Confirm Password</label>
-            {{ input type="password" class="form-control password" value=passwdb }}
-            <span class="fa fa-key form-control-feedback"></span>
-        </div>
-        <div class="checkbox">
-            <label>
-                {{input type="checkbox" checked=model.admin}} Administrator
-            </label>
-            <p class="help-block">An administrator can login to Genesis and modify settings.</p>
-        </div>
-        <div class="checkbox">
-            <label>
-                {{input type="checkbox" checked=model.sudo}} Sudo
-            </label>
-            <p class="help-block">A sudo user is allowed root access to this system via the command line (SSH or Terminal).</p>
-        </div>
-        <h3>Mail Aliases</h3>
-        {{g-listedit items=model.mailAddresses placeholder="Enter alias name (first part only)" suffix=model.addressSuffix}}
-    </form>
+  <form {{action 'ok' on='submit' target=view}}>
+    <div class="form-group">
+      <label for="name">Username</label>
+      {{input type="text" class="form-control" value=model.name disabled=true}}
+    </div>
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      {{input type="text" class="form-control" value=model.firstName}}
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      {{input type="text" class="form-control" value=model.lastName}}
+    </div>
+    <div class="form-group">
+      <label for="domains">Domain</label>
+      {{ember-selectize value=model.domain content=model.extra.domains required=true placeholder="Select a domain" optionLabelPath="content.id" optionValuePath="content.id"}}
+    </div>
+    <div class="form-group has-feedback">
+      <label for="passwd">New Password</label>
+      {{ input type="password" class="form-control password" value=passwd }}
+      <span class="fa fa-key form-control-feedback"></span>
+      <p class="help-block">Leave these blank if you do not want to change your password. Your password must be at least six characters long.</p>
+    </div>
+    <div class="form-group has-feedback">
+      <label for="passwdb">Confirm Password</label>
+      {{ input type="password" class="form-control password" value=passwdb }}
+      <span class="fa fa-key form-control-feedback"></span>
+    </div>
+    <div class="checkbox">
+      <label>
+        {{input type="checkbox" checked=model.admin}} Administrator
+      </label>
+      <p class="help-block">An administrator can login to Genesis and modify settings.</p>
+    </div>
+    <div class="checkbox">
+      <label>
+        {{input type="checkbox" checked=model.sudo}} Sudo
+      </label>
+      <p class="help-block">A sudo user is allowed root access to this system via the command line (SSH or Terminal).</p>
+    </div>
+    <h3>Mail Aliases</h3>
+    {{g-listedit items=model.mailAddresses placeholder="Enter alias name (first part only)" suffix=model.addressSuffix}}
+  </form>
 {{/g-modal}}

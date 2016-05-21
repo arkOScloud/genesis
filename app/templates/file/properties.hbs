@@ -1,116 +1,116 @@
 {{#g-modal title=model.name icon=model.icon ok="save" close="removeModal"}}
-    <div class="form-horizontal">
-        <div class="form-group">
-            <label for="id" class="col-sm-3 control-label">Name</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{model.name}}</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Full Path</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{model.path}}</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">File Size</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{size-to-string model.size}}</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Mimetype</label>
-            <div class="col-sm-9">
-                <p class="form-control-static">{{#if model.mimetype}}{{model.mimetype}}{{else}}Unknown{{/if}}</p>
-            </div>
-        </div>
-        <br />
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Permissions</label>
-            <div class="col-sm-9">
-                <p class="form-control-static"><code>{{unbound model.user}}:{{unbound model.group}} {{model.perms.oct}} {{model.perms.str}}</code></p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">User/Group</label>
-            <div class="col-sm-4">
-                {{input type="text" class="form-control" value=model.user}}
-            </div>
-            <div class="col-sm-4">
-                {{input type="text" class="form-control" value=model.group}}
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">User</label>
-            <div class="col-sm-2">
-                <div class="checkbox">
-                  <label>
-                    {{input type="checkbox" checked=perms.user.read}} Read
-                  </label>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="checkbox">
-                  <label>
-                    {{input type="checkbox" checked=perms.user.write}} Write
-                  </label>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="checkbox">
-                  <label>
-                    {{input type="checkbox" checked=perms.user.execute}} Execute
-                  </label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">Group</label>
-            <div class="col-sm-2">
-                <div class="checkbox">
-                  <label>
-                    {{input type="checkbox" checked=perms.group.read}} Read
-                  </label>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="checkbox">
-                  <label>
-                    {{input type="checkbox" checked=perms.group.write}} Write
-                  </label>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="checkbox">
-                  <label>
-                    {{input type="checkbox" checked=perms.group.execute}} Execute
-                  </label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="size" class="col-sm-3 control-label">All</label>
-            <div class="col-sm-2">
-                <div class="checkbox">
-                  <label>
-                    {{input type="checkbox" checked=perms.all.read}} Read
-                  </label>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="checkbox">
-                  <label>
-                    {{input type="checkbox" checked=perms.all.write}} Write
-                  </label>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="checkbox">
-                  <label>
-                    {{input type="checkbox" checked=perms.all.execute}} Execute
-                  </label>
-                </div>
-            </div>
-        </div>
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label for="id" class="col-sm-3 control-label">Name</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{model.name}}</p>
+      </div>
     </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">Full Path</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{model.path}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">File Size</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{size-to-string model.size}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">Mimetype</label>
+      <div class="col-sm-9">
+        <p class="form-control-static">{{if model.mimetype model.mimetype 'Unknown'}}</p>
+      </div>
+    </div>
+    <br />
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Permissions</label>
+      <div class="col-sm-9">
+        <p class="form-control-static"><code>{{unbound model.user}}:{{unbound model.group}} {{model.perms.oct}} {{model.perms.str}}</code></p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">User/Group</label>
+      <div class="col-sm-4">
+        {{input type="text" class="form-control" value=model.user}}
+      </div>
+      <div class="col-sm-4">
+        {{input type="text" class="form-control" value=model.group}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">User</label>
+      <div class="col-sm-2">
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=perms.user.read}} Read
+          </label>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=perms.user.write}} Write
+          </label>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=perms.user.execute}} Execute
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">Group</label>
+      <div class="col-sm-2">
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=perms.group.read}} Read
+          </label>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=perms.group.write}} Write
+          </label>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=perms.group.execute}} Execute
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="size" class="col-sm-3 control-label">All</label>
+      <div class="col-sm-2">
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=perms.all.read}} Read
+          </label>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=perms.all.write}} Write
+          </label>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="checkbox">
+          <label>
+            {{input type="checkbox" checked=perms.all.execute}} Execute
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
 {{/g-modal}}

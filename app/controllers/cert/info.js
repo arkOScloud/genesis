@@ -25,13 +25,15 @@ export default Ember.ObjectController.extend({
       cert.set('isReady', false);
       var promise = cert.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
       });
     },
     removeModal: function(){
       if (this.get('model').get('isDirty')) {
         this.get('model').rollback();
-      };
+      }
       this.set("assignsSelected", []);
       return true;
     }

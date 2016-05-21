@@ -6,7 +6,7 @@ export default Ember.ObjectController.extend({
   actions: {
     execute: function(){
       var self = this;
-      var exec = $.ajax({
+      Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/databases/'+this.get('model').get('id'),
         data: JSON.stringify({"database": {"execute": this.get('execInput')}}),
         type: 'PUT',
@@ -16,7 +16,9 @@ export default Ember.ObjectController.extend({
           self.set('execOutput', j.database.result);
         },
         error: function(e){
-          if (e.status == 500) self.transitionToRoute("error", e);
+          if (e.status === 500) {
+            self.transitionToRoute("error", e);
+          }
         }
       });
     },

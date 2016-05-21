@@ -11,12 +11,14 @@ export default Ember.ObjectController.extend({
       var self = this;
       var db = this.store.createRecord('databaseUser', {
         id: this.get('id'),
-        typeId: this.get('type'),
+        typeId: this.get('type.id'),
         passwd: this.get('passwd')
       });
       var promise = db.save();
       promise.then(function(){}, function(e){
-        if (e.status == 500) self.transitionToRoute("error", e);
+        if (e.status === 500) {
+          self.transitionToRoute("error", e);
+        }
         db.deleteRecord();
       });
     },
