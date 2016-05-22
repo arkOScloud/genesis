@@ -1,5 +1,7 @@
 # Genesis
 
+[![Build Status](https://api.travis-ci.org/mapbox/node-pre-gyp.svg)](https://travis-ci.org/mapbox/node-pre-gyp)
+
 Genesis is the interactive server management application for systems running arkOS server software. This project is currently in development. For more information about arkOS, visit [our website](https://arkos.io).
 
 ## Prerequisites
