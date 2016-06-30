@@ -9,11 +9,18 @@
 /node_modules
 /bower_components
 
+# eclipse
+.project
+
 # misc
 /lib
 /.sass-cache
 /connect.lock
 /coverage/*
 /libpeerconnection.log
+/tests
+/.settings
+/app/resolver.js
 npm-debug.log
 testem.log
+testem.js
