@@ -1,18 +1,18 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# compiled output
+# Compiled output
 /dist
 /tmp
 *.tgz
 
-# dependencies
+# Dependencies
 /node_modules
 /bower_components
 
-# eclipse
+# Eclipse project files 
 .project
 
-# misc
+# Misc
 /lib
 /.sass-cache
 /connect.lock
