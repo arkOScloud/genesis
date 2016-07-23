@@ -1,0 +1,29 @@
+image: node:0.12
+
+stages:
+- before_install
+- install
+- test
+
+before_install_job:
+  stage: before_install
+  script:
+    - export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
+    - npm config set spin false
+ 
+install_job:
+  stage: install
+  script:
+    - npm install -g bower
+    - npm install
+    - bower install
+
+test_job:
+  stage: test
+  script:
+    - npm test
+  cache:
+    paths:
+    - node_modules
+
+

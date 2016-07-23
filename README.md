@@ -1,5 +1,7 @@
 # Genesis
 
+[![build status](https://git.coderouge.co/folatt/genesis/badges/master/build.svg)](https://git.coderouge.co/folatt/genesis/commits/master)
+
 Genesis is the interactive server management application for systems running arkOS server software. This project is currently in development. For more information about arkOS, visit [our website](https://arkos.io).
 
 ## Prerequisites
