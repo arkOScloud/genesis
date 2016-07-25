@@ -6,16 +6,21 @@ stages:
 - test
 
 before_install:
-  - npm config set spin false
+  stage: before_install
+  script:
+    - npm config set spin false
   
 install:
-  - npm install -g bower
-  - npm install -g ember-cli
-  - npm install -g phantomjs-prebuilt
-  - npm install
-  - bower install --allow-root
+  stage: install
+  script:
+    - npm install -g bower
+    - npm install -g ember-cli
+    - npm install -g phantomjs-prebuilt
+    - npm install
+    - bower install --allow-root
   
 test:
+  stage: test
   script:
     - ember test
 
