@@ -16,3 +16,4 @@ export default function startApp(attrs) {
 
   return application;
 }
+
