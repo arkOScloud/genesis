@@ -14,7 +14,6 @@ before_install_job:
 install_job:
   stage: install
   script:
-    - sudo npm install -g bower
     - npm install
     - bower install
 
