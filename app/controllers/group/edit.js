@@ -5,7 +5,7 @@ export default Ember.ObjectController.extend({
   usersSelected: [],
   usersSelectedProp: (function(){
     this.get('model').get("usersSelected");
-  }).property("usersSelected.@each"),
+  }).property("usersSelected.[]"),
   actions: {
     addSelectedId: (function(id){
       this.get("usersSelected").pushObject(id[0]);
