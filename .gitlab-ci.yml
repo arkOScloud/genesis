@@ -9,14 +9,13 @@ before_install:
   stage: before_install
   script:
     - npm config set spin false
-    - export PATH=$HOME/bin:/usr/local/bin:/usr/bin:/bin
   
 install:
   stage: install
   script:
-    - sudo npm install -g bower
-    - npm install -g ember-cli
-    - npm install -g phantomjs-prebuilt
+    - sudo npm install bower
+    - npm install ember-cli
+    - npm install phantomjs-prebuilt
     - npm install
     - bower install --allow-root
   
