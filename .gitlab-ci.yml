@@ -9,6 +9,7 @@ before_install:
   stage: before_install
   script:
     - npm config set spin false
+    - export PATH=$HOME/bin:/usr/local/bin:/usr/bin:/bin
   
 install:
   stage: install
