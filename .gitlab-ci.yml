@@ -13,7 +13,7 @@ before_install:
 install:
   stage: install
   script:
-    - sudo npm install bower
+    - npm install bower
     - npm install ember-cli
     - npm install phantomjs-prebuilt
     - npm install
