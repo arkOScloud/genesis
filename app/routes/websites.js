@@ -10,7 +10,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       users: this.get('store').findAll('user'),
       domains: this.get('store').findAll('domain'),
       dbType: this.get('store').findAll('databaseType'),
-      apps: this.get('store').findAll('app', {type: "website", loadable: true})
+      apps: this.get('store').query('app', {type: "website", loadable: true})
     });
   },
   actions: {

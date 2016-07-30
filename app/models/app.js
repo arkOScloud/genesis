@@ -59,7 +59,10 @@ export default DS.Model.extend({
     selected_dbengine: DS.attr('string'),
     website_datapaths: DS.attr('boolean', {defaultValue: false}),
     website_default_data_subdir: DS.attr('string'),
-    website_extra_options: DS.attr('boolean', {defaultValue: false}),
+    website_options: DS.attr(),
+    website_has_options: function() {
+      return (this.get("website_options") !== false && Object.keys(this.get("website_options")).length > 0);
+    }.property('website_options'),
     website_extra_actions: DS.attr('boolean', {defaultValue: false}),
     website_updates: DS.attr('boolean', {defaultValue: false}),
     installed: DS.attr('boolean', {defaultValue: false}),

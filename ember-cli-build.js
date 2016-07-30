@@ -4,7 +4,9 @@ var Funnel = require('broccoli-funnel');
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
-    // Add options here
+    'ember-cli-selectize': {
+      'theme': 'bootstrap3'
+    }
   });
 
   // Use `app.import` to add additional libraries to the generated
@@ -20,12 +22,6 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  app.import('bower_components/bootstrap/dist/js/bootstrap.js');
-  app.import('bower_components/bootstrap/dist/css/bootstrap.css');
-  app.import('bower_components/bootstrap/dist/css/bootstrap.css.map', {
-    destDir: 'assets'
-  })
-  app.import('bower_components/bootstrap-contextmenu/bootstrap-contextmenu.js');
   app.import('bower_components/moment/moment.js');
   app.import('bower_components/lightbox2/src/js/lightbox.js');
   app.import('bower_components/lightbox2/src/css/lightbox.css');
@@ -69,6 +65,12 @@ module.exports = function(defaults) {
   app.import("bower_components/lightbox2/src/images/prev.png", {destDir: '/img'});
   app.import("bower_components/lightbox2/src/images/loading.gif", {destDir: '/img'});
   app.import("bower_components/multiselect/img/switch.png", {destDir: '/img'});
+  app.import('bower_components/bootstrap/dist/js/bootstrap.js');
+  app.import('bower_components/bootstrap/dist/css/bootstrap.css');
+  app.import('bower_components/bootstrap/dist/css/bootstrap.css.map', {
+    destDir: 'assets'
+  });
+  app.import('bower_components/bootstrap-contextmenu/bootstrap-contextmenu.js');
 
   return app.toTree([fontAwesome, firaEot, firaOtf, firaTtf, firaWoff]);
 };

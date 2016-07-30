@@ -72,4 +72,4 @@ export function initialize(container, application) {
     }
   });
   application.register('message:main', Messager);
-};
+}

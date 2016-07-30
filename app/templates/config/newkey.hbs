@@ -2,11 +2,7 @@
   <form {{action 'ok' on='submit' target=view}}>
     <div class="form-group">
       <label for="key">For user</label>
-      {{#x-select class="form-control required" action="didMakeSelection" default=keyUser}}
-        {{#each model.users as |user|}}
-          {{#x-option value=user.name}}{{user.name}}{{/x-option}}
-        {{/each}}
-      {{/x-select}}
+      {{ember-selectize selection=keyUser value=keyUser content=model.users required=true placeholder="Select a user" optionLabelPath="content.name" optionValuePath="content.name"}}
     </div>
     <div class="form-group">
       <label for="key">Paste public key here</label>

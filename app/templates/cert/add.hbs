@@ -31,11 +31,7 @@
     <h3 class="page-header">Advanced</h3>
     <div class="form-group">
       <label for="domains">Key Type</label>
-      {{#x-select class="form-control required" action="didMakeSelection" default=newCert.keytype}}
-        {{#each keytypes as |keytype|}}
-          {{#x-option value=keytype}}{{keytype}}{{/x-option}}
-        {{/each}}
-      {{/x-select}}
+      {{ember-selectize selection="RSA" value=newCert.keytype content=keytypes required=true placeholder="Select a key type"}}
     </div>
     <div class="form-group">
       <label for="keylength">Keylength</label>

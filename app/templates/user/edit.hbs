@@ -14,11 +14,7 @@
     </div>
     <div class="form-group">
       <label for="domains">Domain</label>
-      {{#x-select class="form-control required" action="didMakeSelection" default=model.domain}}
-        {{#each model.extra.domains as |dom|}}
-          {{#x-option value=dom.id}}{{dom.id}}{{/x-option}}
-        {{/each}}
-      {{/x-select}}
+      {{ember-selectize value=model.domain content=model.extra.domains required=true placeholder="Select a domain" optionLabelPath="content.id" optionValuePath="content.id"}}
     </div>
     <div class="form-group has-feedback">
       <label for="passwd">New Password</label>
