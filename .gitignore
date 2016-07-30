@@ -1,19 +1,26 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# compiled output
+# Compiled output
 /dist
+/lib
 /tmp
 *.tgz
 
-# dependencies
+# Dependencies
 /node_modules
 /bower_components
 
-# misc
-/lib
-/.sass-cache
-/connect.lock
-/coverage/*
+# Eclipse project files 
+.project
+
+# Logs
 /libpeerconnection.log
 npm-debug.log
 testem.log
+
+# Misc
+/.sass-cache
+/connect.lock
+/coverage
+/.settings
+
