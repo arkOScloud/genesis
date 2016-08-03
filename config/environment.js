@@ -32,6 +32,8 @@ module.exports = function(environment) {
 
   if (environment === 'development') {
     ENV.APP.krakenHost = 'http://localhost:8000';
+    ENV.APP.LOG_TRANSITIONS = true;
+    ENV.APP.OG_TRANSITIONS_INTERNAL = true;
   }
 
   if (environment === 'test') {

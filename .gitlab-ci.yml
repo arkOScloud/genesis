@@ -5,6 +5,7 @@ stages:
 - install
 - test
 
+<<<<<<< HEAD
 before_install_job:
   stage: before_install
   script:
@@ -25,5 +26,25 @@ test_job:
   cache:
     paths:
     - node_modules
+=======
+before_install:
+  stage: before_install
+  script:
+    - npm config set spin false
+  
+install:
+  stage: install
+  script:
+    - npm install -g bower
+    - npm install -g ember-cli
+    - npm install -g phantomjs-prebuilt
+    - npm install
+    - bower install --allow-root
+  
+test:
+  stage: test
+  script:
+    - ember test
+>>>>>>> branch 'master' of https://git.coderouge.co/folatt/genesis.git
 
 
