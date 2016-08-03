@@ -1,10 +1,16 @@
+v 0.8
+
+- No changes for genesis.
+
 v 0.7 "Noah"
 
-- ??
+- It turned green.
+- Computer language support is no longer a package.
+- The terminal is no longer runs at a snail's pace.
 
 v 0.6 "Panoply"
 
-- ??
+- It got a whole lot faster.
 
 v 0.5 
 
