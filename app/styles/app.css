@@ -1,5 +1,5 @@
 html, body, h1, h2, h3, h4, h5, h6, p, a, span {
-  font-family: 'Fira Sans', 'Helvetica Neue', 'Helvetica', sans-serif;
+  font-family: 'Lato', 'Helvetica Neue', 'Helvetica', sans-serif;
 }
 
 
@@ -7,16 +7,16 @@ html, body, h1, h2, h3, h4, h5, h6, p, a, span {
 
 html {
   position: relative;
-  min-height: 100%;
+  height: 100%;
 }
 
 body {
-  margin-bottom: 55px;
-  background-color: #FCFFF5;
+  background-color: #FFF;
+  height: 100%;
 }
 
-#main-content {
-  margin-bottom: 15px;
+.ember-app {
+  min-height: 100%;
 }
 
 a:link, a:focus, a:active, a:hover {
@@ -28,73 +28,70 @@ a:link, a:focus, a:active, a:hover {
   margin-top:0;
 }
 
-.auth {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1001;
-  background-color: #FCFFF5;
-  background-image: url("/img/wavepat.png")
+.genesis-theme-default {
+  background: url('/img/arkos-pattern.png') repeat;
+  font-color: #333;
 }
 
-.ui-firstrun {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  min-height: 100%;
-  z-index: 1001;
-  background-color: #FCFFF5;
-  background-image: url("/img/wavepat.png");
-  padding-bottom: 30px;
+.main-container {
+  background-color: #FFF;
+  min-height: 85vh;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 
 /* Navbar */
 
-.navbar-inverse .navbar-brand {
-  color: #FFF;
+.navbar-brand {
+  padding: 15px 0;
+}
+
+.navbar-brand img {
+  width: 60px;
 }
 
 .navbar-static-top {
-  background-color: #3E606F;
-  margin-bottom: 0;
+  background-color: transparent;
+  margin-bottom: 15px;
   border: 0;
   height: 75px;
 }
 
-#g-lower-bar {
-  background-color: #91AA9D;
-  margin-bottom: 20px;
-  border: 0;
-  border-radius: 0;
-  min-height: 30px;
+.navbar-nav > li > a {
+  padding: 30px 10px;
+  color: #FFF:
+}
+
+.navbar-link {
+  color: #FFF;
+}
+
+.navbar-link:hover {
+  color: #FFF;
+  text-decoration: underline;
+}
+
+.navbar-text {
+  margin: 30px 20px !important;
+}
+
+.navbar-nav > li > a {
+  color: #FFF;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus,
+.nav .open > a,
+.nav .open > a:hover,
+.nav .open > a:focus {
+  color: #165389;
+  background-color: #FFF;
 }
 
 .container > .navbar-collapse {
     margin-left: -15px;
     margin-right: -15px;
-}
-
-.navbar-default .navbar-nav > li > a {
-  color: #FFF;
-  font-size: 13px;
-  text-decoration: none;
-  padding: 10px;
-}
-
-.navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus,
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus,
-.navbar-default .navbar-nav > .open > a,
-.navbar-default .navbar-nav > .open > a:hover,
-.navbar-default .navbar-nav > .open > a:focus {
-  background: #3E606F;
-  color: #FFF;
 }
 
 .nav-tabs > li.active > a,
@@ -127,10 +124,6 @@ input.form-control {
 
 .input-group .btn {
   padding-top: 7px;
-}
-
-.btn-default {
-    background-color: #FCFFF5;
 }
 
 .btn-tipicon {
@@ -488,8 +481,16 @@ button.close {
 
 /* Special */
 
+.auth-group {
+  margin-top: 15%;
+}
+
 .firstrunpage {
   padding-top: 25px;
+}
+
+.text-thin {
+  font-weight: 100;
 }
 
 .ui-firstrun-stripe {
@@ -522,12 +523,6 @@ button.close {
   margin-right: auto;
 }
 
-#login-logo {
-  margin-top: 10%;
-  width: 150px;
-  margin-bottom: 20px;
-}
-
 .login-alert {
   width: auto;
   margin-bottom: 10px;
@@ -536,23 +531,4 @@ button.close {
 
 .login .has-feedback .form-control-feedback {
   top: 5px;
-}
-
-
-/* Footer */
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 40px;
-  background-color: #3E606F;
-  color: #FFF;
-  padding: 5px;
-  line-height: 35px;
-}
-
-.footer a {
-  color: #FFF;
-  padding: 0px 5px;
 }

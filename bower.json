@@ -22,7 +22,8 @@
     "moment": "~2.10.6",
     "multiselect": "~0.9.12",
     "qunit": "~1.20.0",
-    "selectize": "~0.12.1"
+    "selectize": "~0.12.1",
+    "lato": "^0.3.0"
   },
   "resolutions": {
     "jquery": "1.11.3"

@@ -39,6 +39,7 @@ module.exports = function(defaults) {
   app.import("bower_components/codemirror/mode/shell/shell.js");
   app.import("bower_components/codemirror/mode/xml/xml.js");
   app.import("bower_components/font-awesome/css/font-awesome.css");
+  app.import("bower_components/lato/css/lato.min.css");
   app.import("bower_components/fira/fira.css");
   var fontAwesome = new Funnel('bower_components/font-awesome/fonts', {
       srcDir: '/',
@@ -60,6 +61,26 @@ module.exports = function(defaults) {
       srcDir: '/',
       destDir: 'assets/woff'
   });
+  var latoLight = new Funnel('bower_components/lato/font/lato-light', {
+      srcDir: '/',
+      destDir: 'assets/lato-light'
+  });
+  var latoThin = new Funnel('bower_components/lato/font/lato-thin', {
+      srcDir: '/',
+      destDir: 'assets/lato-thin'
+  });
+  var latoRegular = new Funnel('bower_components/lato/font/lato-regular', {
+      srcDir: '/',
+      destDir: 'assets/lato-regular'
+  });
+  var latoBold = new Funnel('bower_components/lato/font/lato-bold', {
+      srcDir: '/',
+      destDir: 'assets/lato-bold'
+  });
+  var latoItalic = new Funnel('bower_components/lato/font/lato-italic', {
+      srcDir: '/',
+      destDir: 'assets/lato-italic'
+  });
   app.import("bower_components/lightbox2/src/images/close.png", {destDir: '/img'});
   app.import("bower_components/lightbox2/src/images/next.png", {destDir: '/img'});
   app.import("bower_components/lightbox2/src/images/prev.png", {destDir: '/img'});
@@ -72,5 +93,5 @@ module.exports = function(defaults) {
   });
   app.import('bower_components/bootstrap-contextmenu/bootstrap-contextmenu.js');
 
-  return app.toTree([fontAwesome, firaEot, firaOtf, firaTtf, firaWoff]);
+  return app.toTree([fontAwesome, firaEot, firaOtf, firaTtf, firaWoff, latoThin, latoLight, latoRegular, latoBold, latoItalic]);
 };

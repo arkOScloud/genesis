@@ -9,5 +9,8 @@ export default Ember.Controller.extend({
     } else {
       return "Unknown User";
     }
-  }.property("session.isAuthenticated")
+  }.property("session.isAuthenticated"),
+  showBreadCrumbs: function() {
+    return ["login", "index"].indexOf(this.get("currentRouteName")) === -1;
+  }.property("currentRouteName")
 });

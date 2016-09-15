@@ -7,5 +7,15 @@
   <div class="text-center">
     <h1 class="fa fa-cube fa-5x"></h1>
     <p class="lead">No applications installed yet. Go to the App Store to find some.</p>
+    {{#link-to 'apps' tagName='div' class='ui-homebutton'}}
+      <h1 class="text-center"><i class="fa fa-2x fa-cubes"></i></h1>
+      <h4 class="text-center">App Store</h4>
+    {{/link-to}}
   </div>
 {{/each}}
+{{#if filteredApps}}
+  {{#link-to 'apps' tagName='div' class='ui-homebutton'}}
+    <h1 class="text-center"><i class="fa fa-2x fa-cubes"></i></h1>
+    <h4 class="text-center">App Store</h4>
+  {{/link-to}}
+{{/if}}

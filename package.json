@@ -31,16 +31,7 @@
     "test": "tests"
   },
   "ember-addon": {
-    "paths": [
-      "lib/basicsite",
-      "lib/jekyll",
-      "lib/owncloud",
-      "lib/radicale",
-      "lib/wallabag",
-      "lib/xmpp",
-      "lib/cmsjs",
-      "lib/duniter"
-    ]
+    "paths": []
   },
   "engines": {
     "node": ">= 0.10.0"
@@ -54,5 +45,5 @@
     "start": "ember server",
     "test": "ember test"
   },
-  "version": "0.7.1-3"
+  "version": "0.8.0"
 }
