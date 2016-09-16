@@ -15,8 +15,12 @@ body {
   height: 100%;
 }
 
+footer {
+  height: 20px;
+}
+
 .ember-app {
-  min-height: 100%;
+  height: 100%;
 }
 
 a:link, a:focus, a:active, a:hover {
@@ -28,16 +32,13 @@ a:link, a:focus, a:active, a:hover {
   margin-top:0;
 }
 
-.genesis-theme-default {
-  background: url('/img/arkos-pattern.png') repeat;
-  font-color: #333;
-}
-
 .main-container {
   background-color: #FFF;
-  min-height: 85vh;
+  color: #333;
+  min-height: 83vh;
   padding: 20px;
   border-radius: 10px;
+  margin-bottom: 30px;
 }
 
 
@@ -78,15 +79,6 @@ a:link, a:focus, a:active, a:hover {
 
 .navbar-nav > li > a {
   color: #FFF;
-}
-
-.nav > li > a:hover,
-.nav > li > a:focus,
-.nav .open > a,
-.nav .open > a:hover,
-.nav .open > a:focus {
-  color: #165389;
-  background-color: #FFF;
 }
 
 .container > .navbar-collapse {
@@ -531,4 +523,24 @@ button.close {
 
 .login .has-feedback .form-control-feedback {
   top: 5px;
+}
+
+
+/* Themes */
+
+.genesis-theme-default {
+  background: url('/img/arkos-pattern.png') repeat;
+}
+
+.genesis-theme-default .navbar .nav > li > a {
+  color: #FFF;
+}
+
+.genesis-theme-default .navbar .nav > li > a:hover,
+.genesis-theme-default .navbar .nav > li > a:focus,
+.genesis-theme-default .navbar .nav .open > a,
+.genesis-theme-default .navbar .nav .open > a:hover,
+.genesis-theme-default .navbar .nav .open > a:focus {
+  color: #165389;
+  background-color: #FFF;
 }

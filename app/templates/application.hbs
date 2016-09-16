@@ -48,14 +48,9 @@
 
 <div class="container main-container">
   {{#if showBreadCrumbs}}
-  <ol class="breadcrumb">
-    <li>{{#link-to 'index'}}<i class="fa fa-fw fa-home"></i> Home{{/link-to}}</li>
-    <li>{{#link-to currentRouteName}}{{ currentRouteName }}{{/link-to}}</li>
-  </ol>
+  {{bread-crumbs tagName="ol" outputStyle="bootstrap" linkable=true}}
   {{/if}}
-  {{#each breadCrumbs as |breadCrumb|}}
-    {{#link-to breadCrumb.path}}{{breadCrumb.name}}{{/link-to}} /
-  {{/each}}
+
   {{outlet}}
   {{outlet 'modal'}}
 </div>
@@ -67,11 +62,8 @@
   <h1><i class="fa fa-circle-o-notch fa-spin"></i></h1>
 </div>
 
-<script>
-  $('body').tooltip({
-    selector: '[data-toggle="tooltip"]'
-  });
-</script>
+<footer>
+</footer>
 
 <noscript>
   You have disabled JavaScript in your browser, or are using a browser plugin that blocks JavaScript programs from executing. Please enable JavaScript, or disable this browser plugin, to continue.
