@@ -1,58 +1,57 @@
-<div class="navbar navbar-static-top">
-  <div class="container">
-    <div id="navbar-brand-div" class="navbar-header">
-      {{#link-to 'index' class='navbar-brand'}}<img src="/img/logo-white-round.png" />{{/link-to}}
+<div class="ui container">
+  <div class="ui secondary menu">
+    <div class="genesis-logo item">
+      {{#link-to 'index'}}<img src="/img/logo-round.png" />{{/link-to}}
     </div>
     {{#if session.isAuthenticated}}
-    <div class="nav navbar-nav navbar-right">
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench fa-2x"></i></a>
-        <ul class="dropdown-menu">
-          <li>{{#link-to 'stats'}}<i class="fa fa-area-chart fa-fw"></i> Statistics{{/link-to}}</li>
-          <li>{{#link-to 'files'}}<i class="fa fa-files-o fa-fw"></i> File Manager{{/link-to}}</li>
-          <li>{{#link-to 'certs'}}<i class="fa fa-certificate fa-fw"></i> Certificates{{/link-to}}</li>
-          <li>{{#link-to 'databases'}}<i class="fa fa-database fa-fw"></i> Databases{{/link-to}}</li>
-          <li>{{#link-to 'filesystems'}}<i class="fa fa-hdd-o fa-fw"></i> Filesystems{{/link-to}}</li>
-          <li>{{#link-to 'packages'}}<i class="fa fa-cube fa-fw"></i> Packages{{/link-to}}</li>
-          <li>{{#link-to 'services'}}<i class="fa fa-spinner fa-fw"></i> Services{{/link-to}}</li>
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs fa-2x"></i></a>
-        <ul class="dropdown-menu">
-          <li>{{#link-to 'users'}}<i class="fa fa-users fa-fw"></i> Users, Groups and Domains{{/link-to}}</li>
-          <li>{{#link-to 'updates'}}<i class="fa fa-star fa-fw"></i> Updates{{/link-to}}</li>
-          <li>{{#link-to 'backups'}}<i class="fa fa-clock-o fa-fw"></i> Recovery{{/link-to}}</li>
-          <li>{{#link-to 'networks'}}<i class="fa fa-sitemap fa-fw"></i> Networking{{/link-to}}</li>
-          <li>{{#link-to 'security'}}<i class="fa fa-lock fa-fw"></i> Security{{/link-to}}</li>
-          <li role="separator" class="divider"></li>
-          <li>{{#link-to 'config'}}<i class="fa fa-sliders fa-fw"></i> Preferences{{/link-to}}</li>
-          <li><a href="#" {{action 'showModal' 'about' model}}><i class="fa fa-question-circle fa-fw"></i> About</a></li>
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-power-off fa-2x"></i></a>
-        <ul class="dropdown-menu">
-          <li><a href="#" {{action 'invalidateSession'}}><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
-          <li role="separator" class="divider"></li>
-          <li><a href="#" {{action 'showConfirm' 'shutdown' 'Are you sure you want to shutdown your arkOS device?'}}><i class="fa fa-power-off fa-fw"></i> Shutdown</a></li>
-          <li><a href="#" {{action 'showConfirm' 'reload' 'Are you sure you want to reload the arkOS service?'}}><i class="fa fa-refresh fa-fw"></i> Reload</a></li>
-          <li><a href="#" {{action 'showConfirm' 'reboot' 'Are you sure you want to reboot your arkOS device?'}}><i class="fa fa-refresh fa-fw"></i> Restart</a></li>
-        </ul>
-      </li>
+    <div class="right menu">
+      <div class="item">
+        <i class="fa fa-fw fa-user"></i> {{#link-to 'roles.users' class='item'}}{{ userId }}{{/link-to}}
+      </div>
+      {{#ui-dropdown-menu}}
+        <i class="fa fa-wrench"></i>
+        <div class="menu">
+          {{#link-to 'stats' class='item'}}<i class="fa fa-area-chart fa-fw"></i> Statistics{{/link-to}}
+          {{#link-to 'files' class='item'}}<i class="fa fa-files-o fa-fw"></i> File Manager{{/link-to}}
+          {{#link-to 'certs' class='item'}}<i class="fa fa-certificate fa-fw"></i> Certificates{{/link-to}}
+          {{#link-to 'databases' class='item'}}<i class="fa fa-database fa-fw"></i> Databases{{/link-to}}
+          {{#link-to 'filesystems' class='item'}}<i class="fa fa-hdd-o fa-fw"></i> Filesystems{{/link-to}}
+          {{#link-to 'packages' class='item'}}<i class="fa fa-cube fa-fw"></i> Packages{{/link-to}}
+          {{#link-to 'services' class='item'}}<i class="fa fa-spinner fa-fw"></i> Services{{/link-to}}
+        </div>
+      {{/ui-dropdown-menu}}
+      {{#ui-dropdown-menu}}
+        <i class="fa fa-cogs"></i>
+        <div class="menu">
+          {{#link-to 'roles.users' class='item'}}<i class="fa fa-group fa-fw"></i> Users, Groups and Domains{{/link-to}}
+          {{#link-to 'updates' class='item'}}<i class="fa fa-star fa-fw"></i> Updates{{/link-to}}
+          {{#link-to 'backups' class='item'}}<i class="fa fa-clock-o fa-fw"></i> Recovery{{/link-to}}
+          {{#link-to 'networks' class='item'}}<i class="fa fa-sitemap fa-fw"></i> Networking{{/link-to}}
+          {{#link-to 'security' class='item'}}<i class="fa fa-lock fa-fw"></i> Security{{/link-to}}
+          {{#link-to 'config' class='item'}}<i class="fa fa-sliders fa-fw"></i> Preferences{{/link-to}}
+          <a href="#" class='item' {{action 'showModal' 'about' model}}><i class="fa fa-question-circle fa-fw"></i> About</a>
+        </div>
+      {{/ui-dropdown-menu}}
+      {{#ui-dropdown-menu}}
+        <i class="fa fa-power-off"></i>
+        <div class="menu">
+          <a href="#" class='item' {{action 'invalidateSession'}}><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+          <a href="#" class='item' {{action 'showConfirm' 'shutdown' 'Are you sure you want to shutdown your arkOS device?'}}><i class="fa fa-power-off fa-fw"></i> Shutdown</a>
+          <a href="#" class='item' {{action 'showConfirm' 'reload' 'Are you sure you want to reload the arkOS service?'}}><i class="fa fa-refresh fa-fw"></i> Reload</a>
+          <a href="#" class='item' {{action 'showConfirm' 'reboot' 'Are you sure you want to reboot your arkOS device?'}}><i class="fa fa-refresh fa-fw"></i> Restart</a>
+        </div>
+      {{/ui-dropdown-menu}}
     </div>
-    <p class="lead navbar-text navbar-right">{{#link-to 'users' class='navbar-link'}}{{ userId }}{{/link-to}}</p>
     {{/if}}
   </div>
 </div>
 
-<div class="container main-container">
+<div class="ui container main-container">
   {{#if showBreadCrumbs}}
-  {{bread-crumbs tagName="ol" outputStyle="bootstrap" linkable=true}}
+  {{bread-crumbs}}
   {{/if}}
 
   {{outlet}}
-  {{outlet 'modal'}}
 </div>
 
 {{g-messages}}

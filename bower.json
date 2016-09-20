@@ -1,8 +1,6 @@
 {
   "name": "genesis",
   "dependencies": {
-    "bootstrap": "~3.3.5",
-    "bootstrap-contextmenu": "~0.3.3",
     "codemirror": "~5.6.0",
     "ember": "1.13.11",
     "ember-cli-shims": "0.0.6",
@@ -20,10 +18,9 @@
     "lightbox2": "~2.8.1",
     "loader.js": "ember-cli/loader.js#3.4.0",
     "moment": "~2.10.6",
-    "multiselect": "~0.9.12",
     "qunit": "~1.20.0",
-    "selectize": "~0.12.1",
-    "lato": "^0.3.0"
+    "lato": "^0.3.0",
+    "semantic-ui": "^2.2.4"
   },
   "resolutions": {
     "jquery": "1.11.3"

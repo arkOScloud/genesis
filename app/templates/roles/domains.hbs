@@ -1,0 +1,44 @@
+<div class="ui four cards">
+  {{#each model as |domain|}}
+    <div class="card">
+      <div class="image">
+        <div class="{{domain.cardColor}}">
+          <i class="fa fa-code"></i>
+        </div>
+      </div>
+      <div class="content">
+        <div class="header">
+          <i class="fa fa-code fa-fw"></i> {{domain.id}}
+        </div>
+        <div class="meta">
+          Domain
+        </div>
+      </div>
+      <div class="ui bottom attached button red {{if domain.isReady '' 'disabled'}}" {{action 'openModal' 'delete-domain' domain}}>
+        <i class="fa fa-minus-circle fa-fw"></i> Delete
+      </div>
+    </div>
+  {{/each}}
+</div>
+
+{{#ui-modal name="delete-domain" class="basic delete-domain" onApprove=(action 'deleteDomain') onRefuse=(action 'clearModal')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="code icon"></i>
+    Delete domain?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete domain <strong>{{selectedDomain.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

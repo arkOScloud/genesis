@@ -63,35 +63,34 @@ module.exports = function(defaults) {
   });
   var latoLight = new Funnel('bower_components/lato/font/lato-light', {
       srcDir: '/',
-      destDir: 'assets/lato-light'
+      destDir: 'font/lato-light'
   });
   var latoThin = new Funnel('bower_components/lato/font/lato-thin', {
       srcDir: '/',
-      destDir: 'assets/lato-thin'
+      destDir: 'font/lato-thin'
   });
   var latoRegular = new Funnel('bower_components/lato/font/lato-regular', {
       srcDir: '/',
-      destDir: 'assets/lato-regular'
+      destDir: 'font/lato-regular'
+  });
+  var latoMedium = new Funnel('bower_components/lato/font/lato-medium', {
+      srcDir: '/',
+      destDir: 'font/lato-medium'
   });
   var latoBold = new Funnel('bower_components/lato/font/lato-bold', {
       srcDir: '/',
-      destDir: 'assets/lato-bold'
+      destDir: 'font/lato-bold'
   });
   var latoItalic = new Funnel('bower_components/lato/font/lato-italic', {
       srcDir: '/',
-      destDir: 'assets/lato-italic'
+      destDir: 'font/lato-italic'
   });
-  app.import("bower_components/lightbox2/src/images/close.png", {destDir: '/img'});
-  app.import("bower_components/lightbox2/src/images/next.png", {destDir: '/img'});
-  app.import("bower_components/lightbox2/src/images/prev.png", {destDir: '/img'});
-  app.import("bower_components/lightbox2/src/images/loading.gif", {destDir: '/img'});
+  app.import("bower_components/lightbox2/src/images/close.png", {destDir: '/images'});
+  app.import("bower_components/lightbox2/src/images/next.png", {destDir: '/images'});
+  app.import("bower_components/lightbox2/src/images/prev.png", {destDir: '/images'});
+  app.import("bower_components/lightbox2/src/images/loading.gif", {destDir: '/images'});
   app.import("bower_components/multiselect/img/switch.png", {destDir: '/img'});
-  app.import('bower_components/bootstrap/dist/js/bootstrap.js');
-  app.import('bower_components/bootstrap/dist/css/bootstrap.css');
-  app.import('bower_components/bootstrap/dist/css/bootstrap.css.map', {
-    destDir: 'assets'
-  });
   app.import('bower_components/bootstrap-contextmenu/bootstrap-contextmenu.js');
 
-  return app.toTree([fontAwesome, firaEot, firaOtf, firaTtf, firaWoff, latoThin, latoLight, latoRegular, latoBold, latoItalic]);
+  return app.toTree([fontAwesome, firaEot, firaOtf, firaTtf, firaWoff, latoThin, latoLight, latoRegular, latoMedium, latoBold, latoItalic]);
 };

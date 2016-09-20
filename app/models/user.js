@@ -1,4 +1,5 @@
 import DS from "ember-data";
+import cardColor from "../utils/card-color";
 
 
 export default DS.Model.extend({
@@ -10,7 +11,7 @@ export default DS.Model.extend({
     }.property('firstName', 'lastName'),
     admin: DS.attr('boolean', {defaultValue: false}),
     sudo: DS.attr('boolean', {defaultValue: false}),
-    domain: DS.attr('string'),
+    domain: DS.belongsTo('domain', {async: true}),
     passwd: DS.attr('string'),
     isReady: DS.attr('boolean', {defaultValue: false}),
     mailAddresses: DS.attr(),
@@ -22,5 +23,8 @@ export default DS.Model.extend({
     }.property('name'),
     selectText: function() {
       return this.get('name');
-    }.property('name')
+    }.property('name'),
+    cardColor: function() {
+      return cardColor();
+    }.property()
 });

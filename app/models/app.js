@@ -1,5 +1,6 @@
 import DS from "ember-data";
 import ENV from "../config/environment";
+import cardColor from "../utils/card-color";
 
 
 export default DS.Model.extend({
@@ -31,13 +32,16 @@ export default DS.Model.extend({
     assets: DS.attr(),
     logoURL: function() {
       if (this.get('installed') && this.get('logo')) {
-        return ENV.APP.krakenHost+'/api/apps/logo/'+this.get('id');
+        return ENV.APP.krakenHost+'/api/apps/assets/'+this.get('id')+'/logo.png';
       } else if (!this.get('installed') && this.get('assets').logo) {
         return ENV.APP.GRMHost+'/api/v1/assets/'+this.get('assets').logo;
       } else {
         return null;
       }
     }.property('logo', 'installed', 'assets'),
+    cardImageClass: function() {
+      return cardColor();
+    }.property(),
     modules: DS.attr(),
     screenshots: DS.attr(),
     screenshotUrls: function() {

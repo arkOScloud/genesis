@@ -1,21 +1,24 @@
-{{#each filteredApps as |app|}}
-  <div class="ui-homebutton" {{action 'openApplication' app}}>
-    <h1 class="text-center"><i class="fa-2x {{app.icon}}"></i></h1>
-    <h4 class="text-center">{{app.name}}</h4>
-  </div>
-{{else}}
-  <div class="text-center">
-    <h1 class="fa fa-cube fa-5x"></h1>
-    <p class="lead">No applications installed yet. Go to the App Store to find some.</p>
-    {{#link-to 'apps' tagName='div' class='ui-homebutton'}}
-      <h1 class="text-center"><i class="fa fa-2x fa-cubes"></i></h1>
-      <h4 class="text-center">App Store</h4>
-    {{/link-to}}
-  </div>
-{{/each}}
-{{#if filteredApps}}
-  {{#link-to 'apps' tagName='div' class='ui-homebutton'}}
-    <h1 class="text-center"><i class="fa fa-2x fa-cubes"></i></h1>
-    <h4 class="text-center">App Store</h4>
+<div class="ui four cards">
+  {{#each filteredApps as |app|}}
+    <a class="ui card" {{action 'openApplication' app}}>
+      <div class="image">
+        <div class="{{app.cardImageClass}}">
+          <i class="{{app.icon}}"></i>
+        </div>
+      </div>
+      <div class="content">
+        <div class="header">{{app.name}}</div>
+      </div>
+    </a>
+  {{/each}}
+  {{#link-to 'apps' class='ui card'}}
+    <div class="image">
+      <div class="card-image blue">
+        <i class="fa fa-cubes"></i>
+      </div>
+    </div>
+    <div class="content">
+      <div class="header">App Store</div>
+    </div>
   {{/link-to}}
-{{/if}}
+</div>

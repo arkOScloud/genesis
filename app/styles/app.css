@@ -28,76 +28,77 @@ a:link, a:focus, a:active, a:hover {
   text-decoration: none;
 }
 
-.page-header {
-  margin-top:0;
-}
-
-.main-container {
-  background-color: #FFF;
-  color: #333;
-  min-height: 83vh;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 30px;
-}
-
-
-/* Navbar */
-
-.navbar-brand {
-  padding: 15px 0;
-}
-
-.navbar-brand img {
-  width: 60px;
-}
-
-.navbar-static-top {
-  background-color: transparent;
-  margin-bottom: 15px;
-  border: 0;
-  height: 75px;
-}
-
-.navbar-nav > li > a {
-  padding: 30px 10px;
-  color: #FFF:
-}
-
-.navbar-link {
-  color: #FFF;
-}
-
-.navbar-link:hover {
-  color: #FFF;
-  text-decoration: underline;
-}
-
-.navbar-text {
-  margin: 30px 20px !important;
-}
-
-.navbar-nav > li > a {
-  color: #FFF;
-}
-
-.container > .navbar-collapse {
-    margin-left: -15px;
-    margin-right: -15px;
-}
-
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-    background-color: #FCFFF5;
-}
-
-.dropdown-menu > li > a {
-    padding: 5px 20px;
-}
-
 
 /* Widgets */
+
+.text.lead {
+  font-size: 24px;
+  font-weight: 200;
+}
+
+.text.center {
+  text-align: center;
+}
+
+.text.green {
+  color: #398439;
+}
+
+.card-image {
+  max-width: 266px;
+  height: 200px;
+  padding-top: 20%;
+  text-align: center;
+  font-size: 84px;
+  color: #FFF;
+}
+
+.card-image-unique {
+  width: 266px;
+  padding-top: 0;
+  margin: 0 20px;
+}
+
+.card-image-unique i {
+  margin-top: 20%;
+}
+
+.card-image-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card-image.red {
+  background-color: #AC2925;
+}
+
+.card-image.blue {
+  background-color: #285E8E;
+}
+
+.card-image.orange {
+  background-color: #D58512;
+}
+
+.card-image.green {
+  background-color: #398439;
+}
+
+.card-image.teal {
+  background-color: #269ABC;
+}
+
+.card-image.olive {
+  background-color: #AAD500;
+}
+
+.card-image.violet {
+  background-color: #7400CB;
+}
+
+.genesis-logo img {
+  width: 65px;
+}
 
 .table > tbody > tr > td {
     line-height: 2;
@@ -264,11 +265,6 @@ input.form-control {
   max-height: 150px;
 }
 
-.app-screenshot {
-  margin: 5px 5px;
-  max-width: 200px;
-}
-
 .ui-items, .ui-items-3, .ui-items-4 {
   margin-bottom: 30px;
 }
@@ -339,7 +335,7 @@ input.form-control {
 }
 
 .ui-firstrun-items .ui-item {
-  background-color: #FCFFF5;
+  background-color: #FFF;
   min-height: 150px;
   white-space: normal;
 }
@@ -529,7 +525,7 @@ button.close {
 /* Themes */
 
 .genesis-theme-default {
-  background: url('/img/arkos-pattern.png') repeat;
+  /*background: url('/img/arkos-pattern.png') repeat;*/
 }
 
 .genesis-theme-default .navbar .nav > li > a {

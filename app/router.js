@@ -6,58 +6,56 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.resource('domains', function(){
-    this.resource('domain', { path: '/:domain_id' }, function(){
+  this.route('domains', function(){
+    this.route('domain', { path: '/:domain_id' }, function(){
       this.route('edit');
     });
   });
-  this.resource('groups', function(){
-    this.resource('group', { path: '/:group_id' }, function(){
+  this.route('groups', function(){
+    this.route('group', { path: '/:group_id' }, function(){
       this.route('edit');
     });
   });
-  this.resource('users', function(){
-    this.resource('user', { path: '/:user_id' }, function(){
+  this.route('users', function(){
+    this.route('user', { path: '/:user_id' }, function(){
       this.route('edit');
     });
   });
-  this.resource('certs', function(){
-    this.resource('cert', { path: '/:cert_id' }, function(){
+  this.route('certs', function(){
+    this.route('cert', { path: '/:cert_id' }, function(){
       this.route('info');
     });
   });
-  this.resource('databases', function(){
-    this.resource('database', { path: '/:database_id' }, function(){
+  this.route('databases', function(){
+    this.route('database', { path: '/:database_id' }, function(){
       this.route('edit');
     });
   });
-  this.resource('filesystems', function(){
-    this.resource('filesystem', { path: '/:filesystem_id' }, function(){
+  this.route('filesystems', function(){
+    this.route('filesystem', { path: '/:filesystem_id' }, function(){
       this.route('edit');
     });
   });
-  this.resource('websites', function(){
-    this.resource('website', { path: '/:website_id' }, function(){
+  this.route('websites', function(){
+    this.route('website', { path: '/:website_id' }, function(){
       this.route('edit');
     });
   });
-  this.resource('packages', function(){
-    this.resource('package', { path: '/:package_id' }, function(){
+  this.route('packages', function(){
+    this.route('package', { path: '/:package_id' }, function(){
       this.route('edit');
     });
   });
-  this.resource('apps', function(){
-    this.resource('app', { path: '/:app_id' }, function(){
+  this.route('apps', { path: '/apps' }, function() {
+    this.route('info', { path: '/:app_id' });
+  });
+  this.route('backups', function(){
+    this.route('backup', { path: '/:backup_id' }, function(){
       this.route('edit');
     });
   });
-  this.resource('backups', function(){
-    this.resource('backup', { path: '/:backup_id' }, function(){
-      this.route('edit');
-    });
-  });
-  this.resource('networks', function(){
-    this.resource('network', { path: '/:network_id' }, function(){
+  this.route('networks', function(){
+    this.route('network', { path: '/:network_id' }, function(){
       this.route('edit');
     });
   });
@@ -69,6 +67,19 @@ Router.map(function() {
   this.route('files');
   this.route('firstrun');
   this.route('login');
+  this.route('roles', function() {
+    this.route('users', function() {
+      this.route('edit', { path: '/:user_id' });
+      this.route('add');
+    });
+    this.route('groups', function() {
+      this.route('edit', { path: '/:group_id' });
+      this.route('add');
+    });
+    this.route('domains', function() {
+      this.route('add');
+    });
+  });
 });
 
 export default Router;
