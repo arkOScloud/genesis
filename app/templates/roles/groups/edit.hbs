@@ -1,24 +1,67 @@
-<div class="ui segment">
-  <form class="ui form" {{action 'ok' on='submit'}}>
-    <h4 class="ui dividing header">Editing group: {{model.name}}</h4>
-    <div class="field">
-      <label>Group name</label>
-      {{input type="text" class="form-control" value=model.name disabled=true}}
-    </div>
-    <div class="field">
-      <label>Members</label>
-      {{#ui-dropdown class="fluid multiple selection" selected=model.users onChange=(action (mut model.users)) as |execute mapper|}}
-        <i class="dropdown icon"></i>
-        <div class="default text">Select users</div>
-        <div class="menu">
-          {{#each users as |user|}}
-            <div class="item" data-value="{{map-value mapper user}}">
-              {{user.name}}
-            </div>
-          {{/each}}
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="group icon"></i>
+          </div>
         </div>
-      {{/ui-dropdown}}
+        <div class="content">
+          <div class="header"><i class="group icon"></i> {{model.name}}</div>
+          <div class="meta">{{if model.users model.users.length 'No'}} member(s)</div>
+        </div>
+        <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-group'}}>
+          <i class="fa fa-minus-circle fa-fw"></i> Delete
+        </div>
+      </div>
     </div>
-    <button type="submit" class="ui button" ><i class="fa fa-fw fa-floppy-o"></i> Save</button>
-  </form>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        <form class="ui form" {{action 'ok' on='submit'}}>
+          <div class="field">
+            <label>Group name</label>
+            {{input type="text" class="form-control" value=model.name disabled=true}}
+          </div>
+          <div class="field">
+            <label>Members</label>
+            {{#ui-dropdown class="fluid multiple selection" selected=model.users onChange=(action (mut model.users)) as |execute mapper|}}
+              <i class="dropdown icon"></i>
+              <div class="default text">Select users</div>
+              <div class="menu">
+                {{#each users as |user|}}
+                  <div class="item" data-value="{{map-value mapper user}}">
+                    {{user.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <button type="submit" class="ui button" ><i class="fa fa-fw fa-floppy-o"></i> Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
+{{#ui-modal name="delete-group" class="basic delete-group" onApprove=(action 'deleteGroup')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="group icon"></i>
+    Delete group?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete group <strong>{{model.name}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

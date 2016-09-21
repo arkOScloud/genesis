@@ -12,7 +12,7 @@
   {{#each filteredApps as |app|}}
     <div class="card {{if app.error 'red'}}">
       {{#link-to "apps.info" app class="image"}}
-        <div class="{{app.cardImageClass}}">
+        <div class="{{app.cardColor}}">
           <i class="{{app.icon}}"></i>
         </div>
       {{/link-to}}
@@ -45,7 +45,7 @@
   {{/each}}
 </div>
 
-{{#ui-modal name="uninstall-app" class="basic uninstall-app" onApprove=(action 'uninstallApp') onRefuse=(action 'clearModal')}}
+{{#ui-modal name="uninstall-app" class="basic uninstall-app" onApprove=(action 'uninstallApp') onDeny=(action 'clearModal')}}
   <i class="close icon"></i>
   <div class="ui icon header">
     <i class="{{selectedApp.icon}} fa-4x"></i><br /><br />

@@ -7,6 +7,7 @@ export default Ember.Controller.extend({
     authenticate: function() {
       var credentials = this.getProperties('identification', 'password'),
         authenticator = 'simple-auth-authenticator:jwt';
+      this.controllerFor("login").set("isLoading", true);
       this.set("loginMessage", "");
       this.get('session').authenticate(authenticator, credentials);
     }

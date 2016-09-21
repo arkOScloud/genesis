@@ -21,7 +21,7 @@
   {{/each}}
 </div>
 
-{{#ui-modal name="delete-group" class="basic delete-group" onApprove=(action 'deleteGroup') onRefuse=(action 'clearModal')}}
+{{#ui-modal name="delete-group" class="basic delete-group" onApprove=(action 'deleteGroup') onDeny=(action 'clearModal')}}
   <i class="close icon"></i>
   <div class="ui icon header">
     <i class="group icon"></i>

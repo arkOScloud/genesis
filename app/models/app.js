@@ -39,7 +39,7 @@ export default DS.Model.extend({
         return null;
       }
     }.property('logo', 'installed', 'assets'),
-    cardImageClass: function() {
+    cardColor: function() {
       return cardColor();
     }.property(),
     modules: DS.attr(),

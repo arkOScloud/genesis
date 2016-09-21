@@ -21,7 +21,7 @@
   {{/each}}
 </div>
 
-{{#ui-modal name="delete-user" class="basic delete-user" onApprove=(action 'deleteUser') onRefuse=(action 'clearModal')}}
+{{#ui-modal name="delete-user" class="basic delete-user" onApprove=(action 'deleteUser') onDeny=(action 'clearModal')}}
   <i class="close icon"></i>
   <div class="ui icon header">
     <i class="user icon"></i>

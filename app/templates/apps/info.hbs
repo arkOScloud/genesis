@@ -1,70 +1,95 @@
-<div class="ui center aligned segment">
-  {{#if model.logoURL}}
-    <img class="img-responsive ui-app-logo" src={{model.logoURL}} />
-  {{else}}
-  <div class="card-image-unique card-image-center {{model.cardImageClass}}">
-    <i class="{{model.icon}}"></i>
-  </div>
-  <h1>{{model.name}}</h1>
-  {{/if}}
-  <p class="text lead">{{model.description.short}}</p>
-  {{#if model.error}}
-  <p class="text lead">App failed to load &mdash; {{model.error}}</p>
-  {{/if}}
-  <div class="ui list">
-    <div class="item">
-      <div class="header">Version</div>
-      {{model.version}}{{#if model.isUpgradable}} &mdash; <span class="text green"><strong>Update available to version {{model.upgradable}}</strong></span>{{/if}}
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card {{if model.error 'red'}}">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="{{model.icon}}"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header"><i class="fa-fw {{model.icon}}"></i> {{model.name}}</div>
+          <div class="meta">{{model.description.short}}</div>
+        </div>
+        {{#if model.installed}}
+          {{#if model.isUpgradable}}
+            <div class="ui bottom attached buttons">
+              <div class="ui bottom attached button green {{if model.isReady '' 'disabled'}}" {{action 'install' model}}>
+                <i class="fa fa-plus-circle fa-fw"></i> Upgrade
+              </div>
+              <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app' model}}>
+                <i class="fa fa-minus-circle fa-fw"></i> Uninstall
+              </div>
+            </div>
+          {{else}}
+            <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app' model}}>
+              <i class="fa fa-minus-circle fa-fw"></i> Uninstall
+            </div>
+          {{/if}}
+        {{else}}
+          <div class="ui bottom attached button green {{if model.isReady '' 'disabled'}}" {{action 'install' model}}>
+            <i class="fa fa-plus-circle fa-fw"></i> Install
+          </div>
+        {{/if}}
+      </div>
     </div>
-    <div class="item">
-      <div class="header">Categories</div>
-      {{model.categoryString}}
+    <div class="twelve wide column">
+      <div class="ui center aligned segment">
+        {{#if model.logoURL}}
+          <img class="img-responsive ui-app-logo" src={{model.logoURL}} />
+        {{else}}
+        <div class="card-image-unique card-image-center {{model.cardColor}}">
+          <i class="{{model.icon}}"></i>
+        </div>
+        <h1>{{model.name}}</h1>
+        {{/if}}
+        <p class="text lead">{{model.description.short}}</p>
+        {{#if model.error}}
+        <p class="text lead">App failed to load &mdash; {{model.error}}</p>
+        {{/if}}
+        <div class="ui list">
+          <div class="item">
+            <div class="header">Version</div>
+            {{model.version}}{{#if model.isUpgradable}} &mdash; <span class="text green"><strong>Update available to version {{model.upgradable}}</strong></span>{{/if}}
+          </div>
+          <div class="item">
+            <div class="header">Categories</div>
+            {{model.categoryString}}
+          </div>
+          {{#if model.description.long}}
+          <div class="item">
+            <div class="header">Description</div>
+            {{model.description.long}}
+          </div>
+          {{/if}}
+          <div class="item">
+            <div class="header">Application by</div>
+            {{model.appAuthor}} &mdash; <a target="_blank" href={{model.appHomepage}}>{{model.appHomepage}}</a>
+          </div>
+          <div class="item">
+            <div class="header">Created for arkOS by</div>
+            {{model.author}} &mdash; <a target="_blank" href={{model.homepage}}>{{model.homepage}}</a>
+          </div>
+          {{#if model.screenshotUrls}}
+          <div class="ui divider"></div>
+          {{/if}}
+          {{#each model.screenshotUrls as |shot|}}
+          <div class="ui small image">
+            <a href={{shot}} data-lightbox="screenshots">
+                <img class="app-screenshot" src={{shot}} />
+            </a>
+          </div>
+          {{/each}}
+        </div>
+      </div>
     </div>
-    {{#if model.description.long}}
-    <div class="item">
-      <div class="header">Description</div>
-      {{model.description.long}}
-    </div>
-    {{/if}}
-    <div class="item">
-      <div class="header">Application by</div>
-      {{model.appAuthor}} &mdash; <a target="_blank" href={{model.appHomepage}}>{{model.appHomepage}}</a>
-    </div>
-    <div class="item">
-      <div class="header">Created for arkOS by</div>
-      {{model.author}} &mdash; <a target="_blank" href={{model.homepage}}>{{model.homepage}}</a>
-    </div>
-    <div class="ui hidden divider"></div>
-    <div class="ui buttons">
-    {{#if model.installed}}
-      {{#if model.isUpgradable}}
-        <a href="#" class="ui big button basic green {{if model.isReady '' 'disabled'}}" {{action 'install' model}}><i class="fa fa-plus-circle"></i> Update</a>
-      {{/if}}
-      <a href="#" class="ui big button basic red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app'}}><i class="fa fa-minus-circle"></i> Uninstall</a>
-    {{else}}
-      <a href="#" class="ui big button basic green {{if model.isReady '' 'disabled'}}" {{action 'install' model}}><i class="fa fa-plus-circle"></i> Install</a>
-    {{/if}}
-    </div>
-    {{#if model.screenshotUrls}}
-    <div class="ui divider"></div>
-    {{/if}}
-    {{#each model.screenshotUrls as |shot|}}
-    <div class="ui small image">
-      <a href={{shot}} data-lightbox="screenshots">
-          <img class="app-screenshot" src={{shot}} />
-      </a>
-    </div>
-    {{/each}}
   </div>
 </div>
 
 {{#ui-modal name="uninstall-app" class="basic uninstall-app" onApprove=(action 'uninstallApp')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <div class="card-image-unique card-image-center {{model.cardImageClass}}">
-      <i class="{{model.icon}}"></i>
-    </div>
-    <br />
+    <i class="{{model.icon}} fa-4x"></i><br /><br />
     Uninstall app?
   </div>
   <div class="text center content">

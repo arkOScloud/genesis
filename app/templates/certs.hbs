@@ -1,31 +1,49 @@
-<div class="btn-group pull-right">
-  <a href="#" class="btn btn-default" {{action 'showModal' 'cert/add' model}}><i class="fa fa-plus-circle"></i> Generate New</a>
-  <a href="#" class="btn btn-default" {{action 'showModal' 'cert/upload' model}}><i class="fa fa-upload"></i> Upload New</a>
-  {{#if model.auths}}
-    <a href="#" class="btn btn-default" {{action 'showModal' 'cert/auths' model}}><i class="fa fa-certificate"></i> Authorities</a>
-  {{/if}}
+<div class="ui pointing menu">
+  <div class="header item">Filter by</div>
+  <a class="{{if certificatesFilter 'active'}} item" {{action 'setFilter' 'certificates'}}>Certificates</a>
+  <a class="{{if authoritiesFilter 'active'}} item" {{action 'setFilter' 'authorities'}}>Authorities</a>
+  <div class="right menu">
+    {{#link-to "certs.add" class="item"}}<i class="fa fa-plus-circle fa-fw"></i> New Certificate{{/link-to}}
+  </div>
 </div>
-<h1 class="page-header">My Certificates</h1>
 
-<div class="ui-items-4">
-  {{#each model.certs as |cert|}}
-    <div class="ui-item {{if cert.isReady '' 'is-pending'}}">
-      <div class="ui-item-icon">
-        <i class="fa fa-certificate fa-fw fa-5x"></i>
-      </div>
-      <div class="ui-item-content">
-        <h2>{{cert.id}}</h2>
-        <p class="lead">{{cert.typeString}}</p>
-        <div class="ui-item-buttons">
-          <a href="#" class="ui-item-button {{if cert.isReady '' 'disabled'}}" {{action 'showModal' 'cert/info' cert model}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
-          <a href="#" class="ui-item-button text-danger {{if cert.isReady '' 'disabled'}}" {{action 'showConfirm' 'delete' 'Are you sure you want to delete this certificate?' cert}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>
+<div class="ui four cards">
+  {{#each filteredCerts as |cert|}}
+    <div class="card">
+      {{#link-to "certs.info" cert class="image"}}
+        <div class="{{cert.cardColor}}">
+          <i class="certificate icon"></i>
         </div>
+      {{/link-to}}
+      <div class="content">
+        {{#link-to "certs.info" cert class="header"}}<i class="certificate icon"></i> {{cert.id}}{{/link-to}}
+        <div class="meta">{{cert.typeString}}</div>
       </div>
-    </div>
-  {{else}}
-    <div class="text-center">
-      <h1 class="fa fa-certificate fa-5x"></h1>
-      <p class="lead">No certificates found.</p>
+      <div class="ui bottom attached button red {{if cert.isReady '' 'disabled'}}" {{action 'openModal' 'delete-cert' cert}}>
+        <i class="fa fa-minus-circle fa-fw"></i> Delete
+      </div>
     </div>
   {{/each}}
 </div>
+
+{{#ui-modal name="delete-cert" class="basic delete-cert" onApprove=(action 'deleteCert') onDeny=(action 'clearModal')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="certificate icon"></i><br /><br />
+    Delete certificate?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to uninstall <strong>{{selectedCert.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

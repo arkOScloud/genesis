@@ -1,65 +1,108 @@
-<div class="ui segment">
-  <form class="ui form" {{action 'ok' on='submit'}}>
-    <h4 class="ui dividing header">Editing user: {{model.name}}</h4>
-    <div class="field">
-      <label>Name</label>
-      <div class="two fields">
-        <div class="field">
-          {{input type="text" value=model.firstName placeholder="First name"}}
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="user icon"></i>
+          </div>
         </div>
-        <div class="field">
-          {{input type="text" value=model.lastName placeholder="Last name"}}
+        <div class="content">
+          <div class="header"><i class="user icon"></i> {{model.fullName}}</div>
+          <div class="meta">{{model.name}}</div>
         </div>
-      </div>
-    </div>
-    <div class="field">
-      <label>Domain</label>
-      {{#ui-dropdown class="selection" selected=model.domain onChange=(action (mut model.id))}}
-        <div class="default text">Select a domain</div>
-        <i class="dropdown icon"></i>
-        <div class="menu">
-          {{#each domains as |domain|}}
-            <div class="item" data-value="{{domain.id}}">
-              {{domain.id}}
-            </div>
-          {{/each}}
-        </div>
-      {{/ui-dropdown}}
-    </div>
-    <div class="field">
-      <label>New Password</label>
-      <div class="two fields">
-        <div class="field">
-          {{input type="password" value=passwd placeholder="New password"}}
-        </div>
-        <div class="field">
-          {{input type="password" value=passwdb placeholder="Confirm password"}}
+        <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-user'}}>
+          <i class="fa fa-minus-circle fa-fw"></i> Delete
         </div>
       </div>
-      <p>Leave these blank if you do not want to change your password. Your password must be at least six characters long.</p>
     </div>
-    <div class="field">
-      {{ui-checkbox label="Administrator" checked=model.admin onChange=(action (mut model.admin))}}
-      <p>An administrator can login to Genesis and modify settings.</p>
-    </div>
-    <div class="field">
-      {{ui-checkbox label="Sudo" checked=model.sudo onChange=(action (mut model.sudo))}}
-      <p>A sudo user is allowed root access to this system via the command line (SSH or Terminal).</p>
-    </div>
-    <h4 class="ui dividing header">Mail addresses</h4>
-    <div class="field">
-      {{#ui-dropdown class="fluid multiple search selection" allowAdditions=true selected=model.mailAddresses onChange=(action (mut model.mailAddresses)) as |execute mapper|}}
-        <i class="dropdown icon"></i>
-        <div class="default text">Enter alias name</div>
-        <div class="menu">
-          {{#each model.mailAddresses as |mailAddress|}}
-            <div class="item" data-value="{{map-value mapper mailAddress}}">
-              {{mailAddress}}
+    <div class="twelve wide column">
+      <div class="ui segment">
+        <form class="ui form" {{action 'ok' on='submit'}}>
+          <div class="field">
+            <label>Name</label>
+            <div class="two fields">
+              <div class="field">
+                {{input type="text" value=model.firstName placeholder="First name"}}
+              </div>
+              <div class="field">
+                {{input type="text" value=model.lastName placeholder="Last name"}}
+              </div>
             </div>
-          {{/each}}
-        </div>
-      {{/ui-dropdown}}
+          </div>
+          <div class="field">
+            <label>Domain</label>
+            {{#ui-dropdown class="selection" selected=model.domain onChange=(action (mut model.id))}}
+              <div class="default text">Select a domain</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each domains as |domain|}}
+                  <div class="item" data-value="{{domain.id}}">
+                    {{domain.id}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="field">
+            <label>New Password</label>
+            <div class="two fields">
+              <div class="field">
+                {{input type="password" value=passwd placeholder="New password"}}
+              </div>
+              <div class="field">
+                {{input type="password" value=passwdb placeholder="Confirm password"}}
+              </div>
+            </div>
+            <p>Leave these blank if you do not want to change your password. Your password must be at least six characters long.</p>
+          </div>
+          <div class="field">
+            {{ui-checkbox label="Administrator" checked=model.admin onChange=(action (mut model.admin))}}
+            <p>An administrator can login to Genesis and modify settings.</p>
+          </div>
+          <div class="field">
+            {{ui-checkbox label="Sudo" checked=model.sudo onChange=(action (mut model.sudo))}}
+            <p>A sudo user is allowed root access to this system via the command line (SSH or Terminal).</p>
+          </div>
+          <div class="field">
+            <label>Mail addresses</label>
+            {{#ui-dropdown class="fluid multiple search selection" allowAdditions=true selected=model.mailAddresses onChange=(action (mut model.mailAddresses)) as |execute mapper|}}
+              <i class="dropdown icon"></i>
+              <div class="default text">Enter alias name</div>
+              <div class="menu">
+                {{#each model.mailAddresses as |mailAddress|}}
+                  <div class="item" data-value="{{map-value mapper mailAddress}}">
+                    {{mailAddress}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <button type="submit" class="ui button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
+        </form>
+      </div>
     </div>
-    <button type="submit" class="ui button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
-  </form>
+  </div>
 </div>
+
+{{#ui-modal name="delete-user" class="basic delete-user" onApprove=(action 'deleteUser')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="user icon"></i>
+    Delete user?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete user <strong>{{model.name}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

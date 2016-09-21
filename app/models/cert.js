@@ -1,4 +1,5 @@
 import DS from "ember-data";
+import cardColor from "../utils/card-color";
 
 
 export default DS.Model.extend({
@@ -10,7 +11,16 @@ export default DS.Model.extend({
     sha1: DS.attr('string'),
     assigns: DS.attr(),
     isReady: DS.attr('boolean', {defaultValue: false}),
+    certType: function() {
+      return 'certificate';
+    }.property(),
+    isAuthority: function() {
+      return this.get('certType') === 'authority';
+    }.property('certType'),
     typeString: function() {
       return this.get('keylength')+'-bit '+this.get('keytype');
-    }.property('keylength', 'keytype')
+    }.property('keylength', 'keytype'),
+    cardColor: function() {
+      return cardColor();
+    }.property()
 });

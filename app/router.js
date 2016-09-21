@@ -22,9 +22,8 @@ Router.map(function() {
     });
   });
   this.route('certs', function(){
-    this.route('cert', { path: '/:cert_id' }, function(){
-      this.route('info');
-    });
+    this.route('info', { path: '/:cert_id' });
+    this.route('add');
   });
   this.route('databases', function(){
     this.route('database', { path: '/:database_id' }, function(){

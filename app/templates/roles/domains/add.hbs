@@ -1,10 +1,30 @@
-<div class="ui segment">
-  <form class="ui form" {{action 'ok' on='submit'}}>
-    <h4 class="ui dividing header">Add new domain</h4>
-    <div class="required field">
-      <label>Domain name</label>
-      {{input type="text" value=name}}
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{cardColor}}">
+            <i class="code icon"></i>
+          </div>
+        </div>
+        {{#if name}}
+        <div class="content">
+          <div class="header"><i class="code icon"></i> {{name}}</div>
+          <div class="meta">Domain</div>
+        </div>
+        {{/if}}
+      </div>
     </div>
-    <button type="submit" class="ui button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
-  </form>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        <form class="ui form" {{action 'ok' on='submit'}}>
+          <div class="required field">
+            <label>Domain name</label>
+            {{input type="text" value=name}}
+          </div>
+          <button type="submit" class="ui button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

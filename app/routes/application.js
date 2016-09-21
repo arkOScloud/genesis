@@ -62,6 +62,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   },
   actions: {
     sessionAuthenticationSucceeded: function() {
+      this.controllerFor("login").set("isLoading", false);
       this.setupParallelCalls();
       this._super();
     },
@@ -75,6 +76,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         msg = "Unknown error, please check server.";
       }
       this.controllerFor("login").set("loginMessage", msg);
+      this.controllerFor("login").set("isLoading", false);
     },
     authorizationFailed: function() {
       if (this.get('pollster')) {

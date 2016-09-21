@@ -1,24 +1,44 @@
-<div class="ui segment">
-  <form class="ui form" {{action 'ok' on='submit' target=view}}>
-    <h4 class="ui dividing header">Add new group</h4>
-    <div class="required field">
-      <label>Group Name</label>
-      {{input type="text" class="username" value=newGroup.name}}
-    </div>
-    <div class="required field">
-      <label>Members</label>
-      {{#ui-dropdown class="fluid multiple selection" selected=newGroup.users onChange=(action (mut newGroup.users)) as |execute mapper|}}
-        <i class="dropdown icon"></i>
-        <div class="default text">Select users</div>
-        <div class="menu">
-          {{#each users as |user|}}
-            <div class="item" data-value="{{map-value mapper user}}">
-              {{user.name}}
-            </div>
-          {{/each}}
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{newGroup.cardColor}}">
+            <i class="group icon"></i>
+          </div>
         </div>
-      {{/ui-dropdown}}
+        {{#if newGroup.name}}
+        <div class="content">
+          <div class="header"><i class="group icon"></i> {{newGroup.name}}</div>
+          <div class="meta">{{if newGroup.users newGroup.users.length 'No'}} member(s)</div>
+        </div>
+        {{/if}}
+      </div>
     </div>
-    <button type="submit" class="ui button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
-  </form>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        <form class="ui form" {{action 'ok' on='submit' target=view}}>
+          <div class="required field">
+            <label>Group Name</label>
+            {{input type="text" class="username" value=newGroup.name}}
+          </div>
+          <div class="required field">
+            <label>Members</label>
+            {{#ui-dropdown class="fluid multiple selection" selected=newGroup.users onChange=(action (mut newGroup.users)) as |execute mapper|}}
+              <i class="dropdown icon"></i>
+              <div class="default text">Select users</div>
+              <div class="menu">
+                {{#each users as |user|}}
+                  <div class="item" data-value="{{map-value mapper user}}">
+                    {{user.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <button type="submit" class="ui button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

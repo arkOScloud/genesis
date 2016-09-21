@@ -1,8 +1,10 @@
 import Ember from 'ember';
+import cardColor from '../../../utils/card-color';
+
 
 export default Ember.Controller.extend({
   breadCrumb: {name: 'New user', icon: 'fa-user'},
-  newUser: {},
+  newUser: {cardColor: cardColor()},
   actions: {
     save: function(){
       var self = this;
@@ -13,7 +15,8 @@ export default Ember.Controller.extend({
         admin: self.get('newUser').admin || false,
         sudo: self.get('newUser').sudo || false,
         domain: self.get('newUser').domain,
-        passwd: self.get('newUser').passwd
+        passwd: self.get('newUser').passwd,
+        cardColor: self.get('newUser').cardColor
       });
       var promise = user.save();
       promise.then(function(){}, function(e){

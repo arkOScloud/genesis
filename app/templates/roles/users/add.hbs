@@ -1,56 +1,76 @@
-<div class="ui segment">
-  <form class="ui form" {{action 'ok' on='submit'}}>
-    <h4 class="ui dividing header">Add new user</h4>
-    <div class="required field">
-      <label>Username</label>
-      {{input type="text" value=newUser.name}}
-      <p>Username must be lowercase letters or numbers, and less than 30 characters</p>
-    </div>
-    <div class="field">
-      <label>Name</label>
-      <div class="two fields">
-        <div class="required field">
-          {{input type="text" value=newUser.firstName placeholder="First name"}}
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{newUser.cardColor}}">
+            <i class="user icon"></i>
+          </div>
         </div>
-        <div class="field">
-          {{input type="text" value=newUser.lastName placeholder="Last name"}}
+        {{#if newUser.name}}
+        <div class="content">
+          <div class="header"><i class="user icon"></i> {{newUser.firstName}}{{#if newUser.lastName}} {{newUser.lastName}}{{/if}}</div>
+          <div class="meta">{{newUser.name}}</div>
         </div>
+        {{/if}}
       </div>
     </div>
-    <div class="required field">
-      <label>Domain</label>
-      {{#ui-dropdown class="selection" selected=newUser.domain onChange=(action (mut newUser.id))}}
-        <div class="default text">Select a domain</div>
-        <i class="dropdown icon"></i>
-        <div class="menu">
-          {{#each domains as |domain|}}
-            <div class="item" data-value="{{domain.id}}">
-              {{domain.id}}
+    <div class="twelve wide column">
+      <div class="ui segment">
+        <form class="ui form" {{action 'ok' on='submit'}}>
+          <div class="required field">
+            <label>Username</label>
+            {{input type="text" value=newUser.name}}
+            <p>Username must be lowercase letters or numbers, and less than 30 characters</p>
+          </div>
+          <div class="field">
+            <label>Name</label>
+            <div class="two fields">
+              <div class="required field">
+                {{input type="text" value=newUser.firstName placeholder="First name"}}
+              </div>
+              <div class="field">
+                {{input type="text" value=newUser.lastName placeholder="Last name"}}
+              </div>
             </div>
-          {{/each}}
-        </div>
-      {{/ui-dropdown}}
-    </div>
-    <div class="required field">
-      <label>New Password</label>
-      <div class="two fields">
-        <div class="field">
-          {{input type="password" value=newUser.passwd placeholder="New password"}}
-        </div>
-        <div class="field">
-          {{input type="password" value=newUser.passwdb placeholder="Confirm password"}}
-        </div>
+          </div>
+          <div class="required field">
+            <label>Domain</label>
+            {{#ui-dropdown class="selection" selected=newUser.domain onChange=(action (mut newUser.id))}}
+              <div class="default text">Select a domain</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each domains as |domain|}}
+                  <div class="item" data-value="{{domain.id}}">
+                    {{domain.id}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="required field">
+            <label>New Password</label>
+            <div class="two fields">
+              <div class="field">
+                {{input type="password" value=newUser.passwd placeholder="New password"}}
+              </div>
+              <div class="field">
+                {{input type="password" value=newUser.passwdb placeholder="Confirm password"}}
+              </div>
+            </div>
+            <p>Leave these blank if you do not want to change your password. Your password must be at least six characters long.</p>
+          </div>
+          <div class="field">
+            {{ui-checkbox label="Administrator" checked=newUser.admin onChange=(action (mut newUser.admin))}}
+            <p>An administrator can login to Genesis and modify settings.</p>
+          </div>
+          <div class="field">
+            {{ui-checkbox label="Sudo" checked=newUser.sudo onChange=(action (mut newUser.sudo))}}
+            <p>A sudo user is allowed root access to this system via the command line (SSH or Terminal).</p>
+          </div>
+          <button type="submit" class="ui button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
+        </form>
       </div>
-      <p>Leave these blank if you do not want to change your password. Your password must be at least six characters long.</p>
     </div>
-    <div class="field">
-      {{ui-checkbox label="Administrator" checked=newUser.admin onChange=(action (mut newUser.admin))}}
-      <p>An administrator can login to Genesis and modify settings.</p>
-    </div>
-    <div class="field">
-      {{ui-checkbox label="Sudo" checked=newUser.sudo onChange=(action (mut newUser.sudo))}}
-      <p>A sudo user is allowed root access to this system via the command line (SSH or Terminal).</p>
-    </div>
-    <button type="submit" class="ui button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
-  </form>
+  </div>
 </div>

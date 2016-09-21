@@ -1,44 +1,80 @@
-<h1 class="page-header">Statistics</h1>
-<div class="row">
-  <div id="cpu" class="col-md-6">
-    <h2><i class="fa fa-bolt fa-fw"></i> CPU</h2>
-    <div class="progress">
-      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width:2em;">
-        0%
+<div class="ui segment">
+  <div class="ui grid">
+    <div class="three column row">
+      <div id="cpu" class="column">
+        <h2><i class="fa fa-bolt fa-fw"></i> CPU</h2>
+        <div id="cpu" class="ui blue progress">
+          <div class="bar" style="width: {{cpuPct}}%">
+            <div class="progress"></div>
+          </div>
+          <div class="label">{{cpuPct}}%</div>
+        </div>
+      </div>
+      <div id="memory" class="column">
+        <h2><i class="fa fa-cube fa-fw"></i> Memory</h2>
+        <div id="memory" class="ui green progress">
+          <div class="bar" style="width: {{memoryPct}}%">
+            <div class="progress"></div>
+          </div>
+          <div class="label">{{size-to-string memory}} of {{size-to-string memoryTotal}} used</div>
+        </div>
+      </div>
+      <div id="swap" class="column">
+        <h2><i class="fa fa-random fa-fw"></i> Swap</h2>
+        <div id="swap" class="ui orange progress">
+          <div class="bar" style="width: {{swapPct}}%">
+            <div class="progress"></div>
+          </div>
+          <div class="label">{{size-to-string swap}} of {{size-to-string swapTotal}} used</div>
+        </div>
       </div>
     </div>
-    <p class="text-center text-muted">Loading...</p>
-  </div>
-  <div id="memory" class="col-md-6">
-    <h2><i class="fa fa-cube fa-fw"></i> Memory</h2>
-    <div class="progress">
-      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width:2em;">
-        0%
+    <div class="two wide column">
+      <h2><i class="fa fa-sun-o fa-fw"></i> Temp</h2>
+      <div class="ui statistics">
+        <div id="temp" class="ui statistic">
+          <div class="value">{{temp}}</div>
+          <div class="label">degrees</div>
+        </div>
       </div>
     </div>
-    <p class="text-center text-muted">Loading...</p>
-  </div>
-</div>
-<div class="row">
-  <div id="swap" class="col-md-3">
-    <h2><i class="fa fa-random fa-fw"></i> Swap</h2>
-    <div class="progress">
-      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width:2em;">
-        0%
+    <div id="load" class="seven wide column">
+      <h2><i class="fa fa-cogs fa-fw"></i> Load</h2>
+      <div class="ui statistics">
+        <div id="load-1min" class="statistic">
+          <div class="value">{{load1min}}</div>
+          <div class="label">1 min</div>
+        </div>
+        <div id="load-5min" class="statistic">
+          <div class="value">{{load5min}}</div>
+          <div class="label">5 min</div>
+        </div>
+        <div id="load-10min" class="statistic">
+          <div class="value">{{load10min}}</div>
+          <div class="label">10 min</div>
+        </div>
       </div>
     </div>
-    <p class="text-center text-muted">Loading...</p>
-  </div>
-  <div id="load" class="col-md-3">
-    <h2><i class="fa fa-cogs fa-fw"></i> Load</h2>
-    <p class="text-center">Loading...</p>
-  </div>
-  <div id="temp" class="col-md-3">
-    <h2><i class="fa fa-sun-o fa-fw"></i> Temp</h2>
-    <p class="text-center">Loading...</p>
-  </div>
-  <div id="uptime" class="col-md-3">
-    <h2><i class="fa fa-clock-o fa-fw"></i> Uptime</h2>
-    <p class="text-center">Loading...</p>
+    <div id="uptime" class="seven wide column">
+      <h2><i class="fa fa-clock-o fa-fw"></i> Uptime</h2>
+      <div class="ui statistics">
+        <div id="uptime-days" class="ui statistic">
+          <div class="value">{{uptimeDays}}</div>
+          <div class="label">days</div>
+        </div>
+        <div id="uptime-hours" class="ui statistic">
+          <div class="value">{{uptimeHours}}</div>
+          <div class="label">hours</div>
+        </div>
+        <div id="uptime-minutes" class="ui statistic">
+          <div class="value">{{uptimeMinutes}}</div>
+          <div class="label">minutes</div>
+        </div>
+        <div id="uptime-seconds" class="ui statistic">
+          <div class="value">{{uptimeSeconds}}</div>
+          <div class="label">seconds</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

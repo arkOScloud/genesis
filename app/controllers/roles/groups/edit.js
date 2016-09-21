@@ -17,6 +17,16 @@ export default Ember.Controller.extend({
           self.transitionToRoute("error", e);
         }
       });
+    },
+    openModal: function(name) {
+      Ember.$('.ui.' + name + '.modal').modal('show');
+    },
+    deleteGroup: function() {
+      var self = this;
+      this.get('model').destroyRecord();
+      Ember.$('.ui.delete-group.modal').modal('hide', function() {
+        self.transitionToRoute('roles.groups');
+      });
     }
   }
 });

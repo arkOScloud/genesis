@@ -1,24 +1,29 @@
-<div class="auth">
-  <div class="auth-group text-center">
-    <h1 class="text-thin">Login</h1>
-    <br />
-    <div class="login">
-      {{#if loginMessage}}
-        <div class="alert alert-danger login-alert">
-          {{loginMessage}}
-        </div>
-      {{/if}}
+<div class="ui center aligned grid">
+  <div class="login column">
+    <div class="ui large form">
+      <h1 class="text center lead">Login</h1>
       <form {{action 'authenticate' on='submit'}}>
-        <div class="form-group input-group">
-          <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
-          {{input id="username" value=identification class="form-control" placeholder="Username"}}
+        <div class="ui stacked segment">
+          <div class="field">
+            <div class="ui left icon input {{if isLoading 'disabled'}}">
+              <i class="user icon"></i>
+              {{input id="username" value=identification placeholder="Username"}}
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input {{if isLoading 'disabled'}}">
+              <i class="key icon"></i>
+              {{input type="password" id="password" value=password placeholder="Password"}}
+            </div>
+          </div>
+          <button type="submit" class="ui fluid primary button {{if isLoading 'disabled loading'}}" id="login"><i class="gen-checkmark"></i> Login</button>
         </div>
-        <div class="form-group input-group">
-          <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
-          {{input type="password" id="password" value=password class="form-control" placeholder="Password"}}
-        </div>
-        <button type="submit" class="btn btn-primary btn-block" id="login"><i class="gen-checkmark"></i> Login</button>
       </form>
     </div>
+    {{#if loginMessage}}
+      <div class="ui negative message">
+        <p>{{loginMessage}}</p>
+      </div>
+    {{/if}}
   </div>
 </div>
