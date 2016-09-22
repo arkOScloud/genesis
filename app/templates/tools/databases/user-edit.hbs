@@ -9,7 +9,7 @@
         </div>
         <div class="content">
           <div class="header"><i class="user icon"></i> {{model.id}}</div>
-          <div class="meta">{{model.typeName}}</div>
+          <div class="meta">{{model.databaseType.name}}</div>
         </div>
         <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-user'}}>
           <i class="fa fa-minus-circle fa-fw"></i> Delete
@@ -18,14 +18,14 @@
     </div>
     <div class="twelve wide column">
       <div class="ui segment">
-        <form class="ui form" {{action 'save' on='submit'}}>
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
           <div class="field">
             <label>Permissions</label>
             {{textarea rows="6" value=model.permissions disabled="true"}}
           </div>
           <div class="required field">
             <label>Take Action</label>
-            {{#ui-dropdown class="selection" onChange=(action (mut action))}}
+            {{#ui-dropdown class="selection" selected="No action" onChange=(action (mut action))}}
               <div class="default text">Select an action</div>
               <i class="dropdown icon"></i>
               <div class="menu">
@@ -39,21 +39,19 @@
           </div>
           <div class="required field">
             <label>On Database</label>
-            {{#ui-dropdown class="selection" onChange=(action (mut selectedDb))}}
+            {{#ui-dropdown class="selection" selected=availableDbs.firstObject onChange=(action (mut selectedDb)) as |execute mapper|}}
               <div class="default text">Select a database</div>
               <i class="dropdown icon"></i>
               <div class="menu">
                 {{#each availableDbs as |db|}}
-                  <div class="item" data-value="{{db.id}}">
+                  <div class="item" data-value="{{map-value mapper db}}">
                     {{db.id}}
                   </div>
                 {{/each}}
               </div>
             {{/ui-dropdown}}
           </div>
-          <button type="submit" class="ui primary button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
-          {{#link-to "tools.databases" activeClass="" class="ui button"}}<i class="fa fa-fw fa-times-circle"></i> Cancel{{/link-to}}
-        </form>
+        {{/ui-form}}
       </div>
     </div>
   </div>

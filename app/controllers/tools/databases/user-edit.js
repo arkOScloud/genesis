@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
   action: "No action",
   actionsToTake: ["No action", "Grant all permissions", "Revoke all permissions"],
   availableDbs: function(){
-    return this.get('dbs').filterProperty('typeId', this.get('model').get('typeId'));
+    return this.get('dbs').filterProperty('databaseType', this.get('model.databaseType'));
   }.property('dbs'),
   actions: {
     save: function(){
@@ -22,11 +22,17 @@ export default Ember.Controller.extend({
       } else if (this.get('action').startsWith("Revoke")) {
         actionToTake = "revoke";
       } else {
+        this.transitionToRoute('tools.databases');
         return false;
       }
       Ember.$.ajax({
         url: ENV.APP.krakenHost+'/api/database_users/'+this.get('model').get('id'),
-        data: JSON.stringify({"database_user": {"operation": actionToTake, "database": this.get('selectedDb')}}),
+        data: JSON.stringify({
+          database_user: {
+            operation: actionToTake,
+            database: this.get('selectedDb.id') || this.get('availableDbs.firstObject.id')
+          }
+        }),
         type: 'PUT',
         contentType: 'application/json',
         processData: false,

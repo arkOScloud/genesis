@@ -7,24 +7,24 @@
             <i class="user icon"></i>
           </div>
         </div>
-        {{#if name}}
+        {{#if id}}
         <div class="content">
-          <div class="header"><i class="user icon"></i> {{name}}</div>
-          <div class="meta">{{#if type}}{{type.name}}{{/if}}</div>
+          <div class="header"><i class="user icon"></i> {{id}}</div>
+          <div class="meta">{{#if dbType}}{{dbType.name}}{{else}}{{userTypes.firstObject.name}}{{/if}}</div>
         </div>
         {{/if}}
       </div>
     </div>
     <div class="twelve wide column">
       <div class="ui segment">
-        <form class="ui form" {{action 'save' on='submit'}}>
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
           <div class="required field">
             <label>Username</label>
-            {{input type="text" value=name}}
+            {{input type="text" name="username" value=id}}
           </div>
           <div class="required field">
             <label>Database type</label>
-            {{#ui-dropdown class="selection" onChange=(action (mut type)) as |execute mapper|}}
+            {{#ui-dropdown class="selection" selected=userTypes.firstObject onChange=(action (mut dbType)) as |execute mapper|}}
               <div class="default text">Select a database type</div>
               <i class="dropdown icon"></i>
               <div class="menu">
@@ -40,16 +40,14 @@
             <label>New Password</label>
             <div class="two fields">
               <div class="field">
-                {{input type="password" value=passwd placeholder="New password"}}
+                {{input type="password" name="password" value=passwd placeholder="New password"}}
               </div>
               <div class="field">
-                {{input type="password" value=passwdb placeholder="Confirm password"}}
+                {{input type="password" name="passwordConf" value=passwdb placeholder="Confirm password"}}
               </div>
             </div>
           </div>
-          <button type="submit" class="ui primary button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
-          {{#link-to "tools.databases" activeClass="" class="ui button"}}<i class="fa fa-fw fa-times-circle"></i> Cancel{{/link-to}}
-        </form>
+        {{/ui-form}}
       </div>
     </div>
   </div>

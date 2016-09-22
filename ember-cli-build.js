@@ -25,8 +25,6 @@ module.exports = function(defaults) {
   app.import('bower_components/moment/moment.js');
   app.import('bower_components/lightbox2/src/js/lightbox.js');
   app.import('bower_components/lightbox2/src/css/lightbox.css');
-  app.import('bower_components/multiselect/js/jquery.multi-select.js');
-  app.import('bower_components/multiselect/css/multi-select.css');
   app.import("bower_components/codemirror/lib/codemirror.css");
   app.import("bower_components/codemirror/lib/codemirror.js");
   app.import("bower_components/codemirror/mode/css/css.js");
@@ -89,8 +87,6 @@ module.exports = function(defaults) {
   app.import("bower_components/lightbox2/src/images/next.png", {destDir: '/images'});
   app.import("bower_components/lightbox2/src/images/prev.png", {destDir: '/images'});
   app.import("bower_components/lightbox2/src/images/loading.gif", {destDir: '/images'});
-  app.import("bower_components/multiselect/img/switch.png", {destDir: '/img'});
-  app.import('bower_components/bootstrap-contextmenu/bootstrap-contextmenu.js');
 
   return app.toTree([fontAwesome, firaEot, firaOtf, firaTtf, firaWoff, latoThin, latoLight, latoRegular, latoMedium, latoBold, latoItalic]);
 };

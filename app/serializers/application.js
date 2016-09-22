@@ -9,5 +9,8 @@ export default DS.RESTSerializer.extend({
   },
   keyForAttribute: function(attr) {
     return Ember.String.decamelize(attr);
+  },
+  keyForRelationship: function(name) {
+    return Ember.String.decamelize(name);
   }
 });

@@ -61,6 +61,10 @@ a:link, a:focus, a:active, a:hover {
   color: #000;
 }
 
+.text.monospace {
+  font-family: 'Fira Mono', monospace;
+}
+
 .card-image {
   min-width: 254px;
   height: 200px;

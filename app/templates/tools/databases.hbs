@@ -22,7 +22,7 @@
         {{/link-to}}
         <div class="content">
           {{#link-to "tools.databases.info" db class="header"}}<i class="database icon"></i> {{db.id}}{{/link-to}}
-          <div class="meta">{{db.typeName}}</div>
+          <div class="meta">{{db.databaseType.name}}</div>
         </div>
         <div class="ui bottom attached buttons">
           <a href={{db.downloadHref}} class="ui button {{if db.isReady '' 'disabled'}}">
@@ -45,7 +45,7 @@
         {{/link-to}}
         <div class="content">
           {{#link-to "tools.databases.user-edit" db class="header"}}<i class="user icon"></i> {{db.id}}{{/link-to}}
-          <div class="meta">{{db.typeName}}</div>
+          <div class="meta">{{db.databaseType.name}}</div>
         </div>
         <div class="ui bottom attached button red {{if db.isReady '' 'disabled'}}" {{action 'openModal' 'delete-user' db}}>
           <i class="fa fa-minus-circle fa-fw"></i> Delete

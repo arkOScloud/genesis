@@ -9,7 +9,7 @@
         </div>
         <div class="content">
           <div class="header"><i class="database icon"></i> {{model.id}}</div>
-          <div class="meta">{{model.typeName}}</div>
+          <div class="meta">{{model.databaseType.name}}</div>
         </div>
         <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-db'}}>
           <i class="fa fa-minus-circle fa-fw"></i> Delete
@@ -25,7 +25,7 @@
           </div>
           <div class="item">
             <div class="header">Database type</div>
-            {{model.typeName}}
+            {{model.databaseType.name}}
           </div>
           <div class="item">
             <div class="header">Database size</div>
@@ -35,12 +35,12 @@
         <form class="ui form">
           <div class="field">
             <label>Execute Input</label>
-            {{textarea rows="6" value=execInput placeholder="Input goes here"}}
+            {{textarea rows="6" value=execInput class="text monospace" placeholder="Input goes here"}}
             <a href="#" class="ui button" {{action 'execute'}}><i class="fa fa-code"></i> Execute</a>
           </div>
           <div class="field">
             <label>Execute Output</label>
-            {{textarea rows="6" value=execOutput placeholder="Output shown here" wrap="off"}}
+            {{textarea rows="6" value=execOutput class="text monospace" placeholder="Output shown here" wrap="off"}}
           </div>
         </form>
       </div>

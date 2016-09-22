@@ -4,17 +4,19 @@ import cardColor from '../../../utils/card-color';
 
 export default Ember.Controller.extend({
   breadCrumb: {name: 'New database', icon: 'fa-database'},
-  name: '',
-  cardColor: cardColor(),
+  cardColor: function() {
+    return cardColor();
+  }.property(),
   actions: {
     save: function(){
       var self = this;
       var db = this.store.createRecord('database', {
-        id: this.get('name'),
-        typeId: this.get('type.id')
+        id: this.get('id'),
+        databaseType: this.get('dbType') || this.get('dbTypes.firstObject')
       });
       var promise = db.save();
       promise.then(function(){
+        self.setProperties({id: '', dbType: self.get('dbTypes.firstObject')});
         self.transitionToRoute("tools.databases");
       }, function(e){
         if (e.status === 500) {
@@ -22,6 +24,10 @@ export default Ember.Controller.extend({
         }
         db.deleteRecord();
       });
+    },
+    redirect: function() {
+      this.setProperties({id: '', dbType: this.get('dbTypes.firstObject')});
+      this.transitionToRoute('tools.databases');
     }
   }
 });

@@ -11,8 +11,11 @@ export default Ember.Controller.extend({
   actions: {
     execute: function(){
       var self = this;
+      if (!this.get('execInput')) {
+        return false;
+      }
       Ember.$.ajax({
-        url: ENV.APP.krakenHost+'/api/databases/'+this.get('model').get('id'),
+        url: ENV.APP.krakenHost+'/api/databases/'+this.get('model.id'),
         data: JSON.stringify({"database": {"execute": this.get('execInput')}}),
         type: 'PUT',
         contentType: 'application/json',

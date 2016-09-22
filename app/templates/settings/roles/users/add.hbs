@@ -3,14 +3,14 @@
     <div class="four wide column">
       <div class="ui card">
         <div class="image">
-          <div class="{{newUser.cardColor}}">
+          <div class="{{cardColor}}">
             <i class="user icon"></i>
           </div>
         </div>
-        {{#if newUser.name}}
+        {{#if name}}
         <div class="content">
-          <div class="header"><i class="user icon"></i> {{newUser.firstName}}{{#if newUser.lastName}} {{newUser.lastName}}{{/if}}</div>
-          <div class="meta">{{newUser.name}}</div>
+          <div class="header"><i class="user icon"></i> {{firstName}}{{#if lastName}} {{lastName}}{{/if}}</div>
+          <div class="meta">{{name}}</div>
         </div>
         {{/if}}
       </div>
@@ -20,22 +20,22 @@
         {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
           <div class="required field">
             <label>Username</label>
-            {{input type="text" name="username" value=newUser.name}}
+            {{input type="text" name="username" value=name}}
           </div>
           <div class="field">
             <label>Name</label>
             <div class="two fields">
               <div class="required field">
-                {{input type="text" name="firstName" value=newUser.firstName placeholder="First name"}}
+                {{input type="text" name="firstName" value=firstName placeholder="First name"}}
               </div>
               <div class="field">
-                {{input type="text" name="lastName" value=newUser.lastName placeholder="Last name"}}
+                {{input type="text" name="lastName" value=lastName placeholder="Last name"}}
               </div>
             </div>
           </div>
           <div class="required field">
             <label>Domain</label>
-            {{#ui-dropdown class="selection" selected=domains.firstObject onChange=(action (mut newUser.domain)) as |execute mapper|}}
+            {{#ui-dropdown class="selection" selected=domains.firstObject onChange=(action (mut domain)) as |execute mapper|}}
               <div class="text"></div>
               <i class="dropdown icon"></i>
               <div class="menu">
@@ -51,19 +51,19 @@
             <label>New Password</label>
             <div class="two fields">
               <div class="field">
-                {{input type="password" name="password" value=newUser.passwd placeholder="New password"}}
+                {{input type="password" name="password" value=passwd placeholder="New password"}}
               </div>
               <div class="field">
-                {{input type="password" name="passwordConf" value=newUser.passwdb placeholder="Confirm password"}}
+                {{input type="password" name="passwordConf" value=passwdb placeholder="Confirm password"}}
               </div>
             </div>
           </div>
           <div class="field">
-            {{ui-checkbox label="Administrator" name="admin" checked=newUser.admin onChange=(action (mut newUser.admin))}}
+            {{ui-checkbox label="Administrator" name="admin" checked=admin onChange=(action (mut admin))}}
             <p>An administrator can login to Genesis and modify settings.</p>
           </div>
           <div class="field">
-            {{ui-checkbox label="Sudo" name="sudo" checked=newUser.sudo onChange=(action (mut newUser.sudo))}}
+            {{ui-checkbox label="Sudo" name="sudo" checked=sudo onChange=(action (mut sudo))}}
             <p>A sudo user is allowed root access to this system via the command line (SSH or Terminal).</p>
           </div>
         {{/ui-form}}

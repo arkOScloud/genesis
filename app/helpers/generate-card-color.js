@@ -3,7 +3,7 @@ import cardColor from '../utils/card-color';
 
 
 export function generateCardColor() {
-  return new Ember.String.htmlSafe(cardColor());
+  return new Ember.Handlebars.SafeString(cardColor());
 }
 
 export default Ember.Helper.helper(generateCardColor);

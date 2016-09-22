@@ -8,8 +8,8 @@ export default Ember.Route.extend({
     var me = this;
     var dbPromise = this.store.findAll('database-type');
 
-    dbPromise.then(function(types) {
-      me.controllerFor('tools.databases.add').set('types', types);
+    dbPromise.then(function(dbTypes) {
+      me.controllerFor('tools.databases.add').set('dbTypes', dbTypes);
     });
 
     return dbPromise;

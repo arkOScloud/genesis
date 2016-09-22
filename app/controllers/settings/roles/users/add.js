@@ -4,7 +4,9 @@ import cardColor from '../../../../utils/card-color';
 
 export default Ember.Controller.extend({
   breadCrumb: {name: 'New user', icon: 'fa-user'},
-  newUser: {cardColor: cardColor()},
+  cardColor: function() {
+    return cardColor();
+  }.property(),
   fields: {
     username: {
       rules: [
@@ -48,19 +50,21 @@ export default Ember.Controller.extend({
   actions: {
     save: function() {
       var self = this;
-      var user = self.store.createRecord('user', {
-        name: self.get('newUser').name,
-        firstName: self.get('newUser').firstName,
-        lastName: self.get('newUser').lastName,
-        admin: self.get('newUser').admin || false,
-        sudo: self.get('newUser').sudo || false,
-        domain: self.get('newUser').domain,
-        passwd: self.get('newUser').passwd,
-        cardColor: self.get('newUser').cardColor
+      var user = this.store.createRecord('user', {
+        name: this.get('name'),
+        firstName: this.get('firstName'),
+        lastName: this.get('lastName'),
+        admin: this.get('admin') || false,
+        sudo: this.get('sudo') || false,
+        domain: this.get('domain') || this.get('domains.firstObject'),
+        passwd: this.get('passwd')
       });
       var promise = user.save();
-      promise.then(function(){
-        self.set('newUser', {cardColor: cardColor()});
+      promise.then(function() {
+        self.setProperties({
+          name: '', firstName: '', lastName: '', admin: false, sudo: false,
+          domain: self.get('domains.firstObject'), passwd: '', passwdb: ''
+        });
         self.transitionToRoute("settings.roles.users");
       }, function(e){
         if (e.status === 500) {
@@ -70,7 +74,10 @@ export default Ember.Controller.extend({
       });
     },
     redirect: function() {
-      this.set('newUser', {cardColor: cardColor()});
+      this.setProperties({
+        name: '', firstName: '', lastName: '', admin: false, sudo: false,
+        domain: this.get('domains.firstObject'), passwd: '', passwdb: ''
+      });
       this.transitionToRoute('settings.roles.users');
     }
   }
