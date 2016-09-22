@@ -1,0 +1,42 @@
+<div class="ui pointing menu">
+  <div class="right menu">
+    <div class="ui right aligned category search item">
+      <div class="ui transparent icon input">
+        {{input type="text" class="prompt" value=filter placeholder="Filter results"}}
+        <i class="remove circle link icon" {{action 'clearFilter'}}></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th width="1"></th>
+      <th>Service Name</th>
+      <th>State</th>
+      <th>Enabled</th>
+      <th>Provider</th>
+      <th width="175">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each filteredServices as |svc|}}
+      <tr class="{{if svc.isReady '' 'disabled'}}">
+        <td><i class="fa fa-spinner"></i></td>
+        <td>{{svc.id}}</td>
+        <td class="{{if svc.running 'positive' 'negative'}}"><i class="fa fa-fw {{if svc.running 'fa-play' 'fa-stop'}}"></i> {{if svc.running 'Running' 'Stopped'}}</td>
+        <td class="{{if svc.enabled 'positive' 'negative'}}"><i class="fa fa-fw {{if svc.running 'fa-thumbs-up' 'fa-thumbs-o-down'}}"></i> {{if svc.enabled 'Enabled' 'Disabled'}}</td>
+        <td>{{svc.displayType}}</td>
+        <td>
+          <div class="ui mini buttons">
+            <a href="#" class="ui mini button {{if svc.isReady '' 'disabled'}} {{if svc.canManage '' 'disabled'}}" {{action 'toggleState' svc}}><i class="fa fa-fw {{if svc.running 'fa-stop' 'fa-play'}}"></i> {{if svc.running 'Stop' 'Start'}}</a>
+            <a href="#" class="ui mini button {{if svc.isReady '' 'disabled'}} {{if svc.canManage '' 'disabled'}}" {{action 'toggleFileState' svc}}><i class="fa fa-fw {{if svc.enabled 'fa-thumbs-down' 'fa-thumbs-up'}}"></i> {{if svc.enabled 'Disable' 'Enable'}}</a>
+          </div>
+        </td>
+      </tr>
+    {{else}}
+      <tr><td class="text-center" colspan="6">None</td></tr>
+    {{/each}}
+  </tbody>
+</table>

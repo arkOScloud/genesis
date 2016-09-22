@@ -1,0 +1,49 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{cardColor}}">
+            <i class="disk outline icon"></i>
+          </div>
+        </div>
+        {{#if id}}
+        <div class="content">
+          <div class="header"><i class="disk outline icon"></i> {{id}}</div>
+          <div class="meta">Virtual Disk {{if fs.crypt '(Encrypted)'}}</div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Name</label>
+            {{input type="text" name="name" value=id}}
+          </div>
+          <div class="required field">
+            <label>Size</label>
+            {{input type="text" name="size" value=size placeholder="Size of disk in MB"}}
+          </div>
+          <div class="field">
+            {{ui-checkbox label="Encrypted" name="crypt" value=crypt checked=crypt onChange=(action (mut crypt))}}
+          </div>
+          {{#if crypt}}
+          <div class="required field">
+            <label>New Password</label>
+            <div class="two fields">
+              <div class="field">
+                {{input type="password" name="password" value=passwd placeholder="New password"}}
+              </div>
+              <div class="field">
+                {{input type="password" name="passwordConf" value=passwdb placeholder="Confirm password"}}
+              </div>
+            </div>
+          </div>
+          {{/if}}
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>

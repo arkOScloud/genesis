@@ -1,11 +1,11 @@
 {{#g-modal title="Adding Virtual Disk" icon="fa-hdd-o" ok="save" close="removeModal"}}
   <div class="form-group">
     <label for="name">Name</label>
-    {{input type="text" class="form-control required" value=newFs.name}}
+    {{input type="text" name="name" value=newFs.name}}
   </div>
   <div class="form-group">
     <label for="size">Size</label>
-    {{input type="text" class="form-control required" value=newFs.size}}
+    {{input type="text" name="size" value=newFs.size}}
     <p class="help-block">Desired size of the new disk, in megabytes (Mb).</p>
   </div>
   <div class="checkbox">

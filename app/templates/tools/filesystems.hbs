@@ -1,0 +1,104 @@
+<div class="ui pointing menu">
+  <div class="header item">Filter by</div>
+  <a class="{{if allFilter 'active'}} item" {{action 'setFilter' 'all'}}>All</a>
+  <a class="{{if virtualFilter 'active'}} item" {{action 'setFilter' 'virtual'}}>Virtual</a>
+  <a class="{{if physicalFilter 'active'}} item" {{action 'setFilter' 'physical'}}>Physical</a>
+  <div class="right menu">
+    {{#link-to "tools.filesystems.add" class="item"}}<i class="fa fa-plus-circle fa-fw"></i> Add Virtual Disk{{/link-to}}
+  </div>
+</div>
+
+<div class="ui three cards">
+  {{#each filteredFSes as |fs|}}
+    <div class="card">
+      {{#link-to "tools.filesystems.info" fs class="image"}}
+        <div class="{{fs.cardColor}}">
+          <i class="disk outline icon"></i>
+        </div>
+      {{/link-to}}
+      <div class="content">
+        {{#link-to "tools.filesystems.info" fs class="header"}}<i class="disk outline icon"></i> {{fs.id}}{{/link-to}}
+        <div class="meta">{{if fs.isVirtual 'Virtual' 'Physical'}} Disk{{if fs.crypt ' (Encrypted)'}}</div>
+      </div>
+      <div class="ui bottom attached buttons">
+        {{#if fs.mounted}}
+          <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'umount' fs}}>
+            <i class="fa fa-hdd-o fa-fw"></i> Unmount
+          </div>
+        {{else if fs.crypt}}
+          <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'openModal' 'mount-encrypted' fs}}>
+            <i class="fa fa-hdd-o fa-fw"></i> Mount
+          </div>
+        {{else}}
+          <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'mount' fs}}>
+            <i class="fa fa-hdd-o fa-fw"></i> Mount
+          </div>
+        {{/if}}
+        {{#unless fs.crypt}}
+          {{#if fs.enabled}}
+            <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'disable' fs}}>
+              <i class="fa fa-hdd-o fa-fw"></i> Disable
+            </div>
+          {{else}}
+            <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'enable' fs}}>
+              <i class="fa fa-hdd-o fa-fw"></i> Enable
+            </div>
+          {{/if}}
+        {{/unless}}
+        {{#if fs.isVirtual}}
+          <div class="ui bottom attached button red {{if fs.isReady '' 'disabled'}}" {{action 'openModal' 'delete-fs' fs}}>
+            <i class="fa fa-minus-circle fa-fw"></i> Delete
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  {{/each}}
+</div>
+
+{{#ui-modal name="delete-fs" class="basic delete-fs" onApprove=(action 'deleteFs') onDeny=(action 'clearModal')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="user icon"></i>
+    Delete virtual disk?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete virtual disk <strong>{{selectedFS.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="mount-encrypted" class="mount-encrypted" onApprove=(action 'mountEnc') onDeny=(action 'clearModal')}}
+  <i class="close icon"></i>
+  <div class="header">
+    Mount Encrypted Disk
+  </div>
+  <div class="content">
+    <div class="description">
+      <p>Please enter your password to decrypt and mount <strong>{{selectedFS.id}}</strong>.</p>
+    </div>
+    <div class="ui form">
+      <div class="field">
+        {{input type="password" value=passwd}}
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui black cancel button">
+      Cancel
+    </div>
+    <div class="ui positive right labeled icon button">
+      Mount
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+  {{/ui-modal}}

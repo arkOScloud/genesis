@@ -8,12 +8,5 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   },
   model: function() {
     return this.get('store').findAll('filesystem');
-  },
-  actions: {
-    delete: function(model){
-      model.destroyRecord().then(function(){}, function(){
-        model.rollback();
-      });
-    }
   }
 });

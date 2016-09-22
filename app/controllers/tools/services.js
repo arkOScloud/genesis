@@ -2,13 +2,15 @@ import Ember from "ember";
 
 
 export default Ember.ObjectController.extend({
-  filterQuery: '',
+  breadCrumb: {name: 'Services', icon: 'fa-spinner'},
+  queryParams: ['filter'],
+  filter: null,
   filteredServices: Ember.computed.filter('model', function(i) {
-    return i.get('id').indexOf(this.get('filterQuery'))>=0;
-  }).property('model', 'filterQuery'),
+    return this.get('filter') ? i.get('id').indexOf(this.get('filter')) >= 0 : true;
+  }).property('model', 'filter'),
   actions: {
     clearFilter: function() {
-      this.set('filterQuery', '');
+      this.set('filter', null);
     },
     toggleState: function(svc) {
       var self = this;

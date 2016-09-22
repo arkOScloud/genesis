@@ -6,11 +6,6 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('filesystems', function(){
-    this.route('filesystem', { path: '/:filesystem_id' }, function(){
-      this.route('edit');
-    });
-  });
   this.route('websites', function(){
     this.route('website', { path: '/:website_id' }, function(){
       this.route('edit');
@@ -34,7 +29,6 @@ Router.map(function() {
       this.route('edit');
     });
   });
-  this.route('services');
   this.route('config');
   this.route('updates');
 
@@ -75,6 +69,11 @@ Router.map(function() {
       this.route('user-edit', { path: '/user/:database-user_id' });
     });
     this.route('files');
+    this.route('filesystems', function(){
+      this.route('info', { path: '/:filesystem_id' });
+      this.route('add');
+    });
+    this.route('services');
     this.route('stats');
   });
 

@@ -7,6 +7,9 @@ export default Ember.Controller.extend({
   cardColor: function() {
     return cardColor();
   }.property(),
+  fields: {
+    name: ['empty']
+  },
   actions: {
     save: function(){
       var self = this;

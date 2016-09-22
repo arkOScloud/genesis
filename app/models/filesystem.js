@@ -1,5 +1,5 @@
 import DS from "ember-data";
-import sizeToString from "../utils/size-to-string";
+import cardColor from "../utils/card-color";
 
 
 export default DS.Model.extend({
@@ -8,9 +8,6 @@ export default DS.Model.extend({
       return this.get('type') === "virtual";
     }.property('type'),
     size: DS.attr('number'),
-    sizeString: function() {
-      return sizeToString(this.get('size'));
-    }.property('size'),
     path: DS.attr('string'),
     mountpoint: DS.attr('string'),
     mounted: function() {
@@ -24,5 +21,8 @@ export default DS.Model.extend({
     enabled: DS.attr('boolean'),
     passwd: DS.attr('string'),
     operation: DS.attr('string'),
-    isReady: DS.attr('boolean', {defaultValue: false})
+    isReady: DS.attr('boolean', {defaultValue: false}),
+    cardColor: function() {
+      return cardColor();
+    }.property()
 });
