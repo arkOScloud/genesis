@@ -1,0 +1,37 @@
+<div class="ui four cards">
+  {{#each model as |policy|}}
+    <div class="card">
+      <div class="image">
+        <div class="{{policy.cardColor}}">
+          <i class="{{policy.icon}}"></i>
+        </div>
+      </div>
+      <div class="content">
+        <div class="header"><i class="fa-fw {{policy.icon}}"></i> {{policy.name}}</div>
+        <div class="meta">{{policy.displayPorts}}</div>
+      </div>
+      <div class="extra content">
+        Current Policy:
+        <h5 class="{{policy.policyDisplayClass}}"><i class="fa fa-fw {{policy.policyDisplayIcon}}"></i> {{policy.policyDisplayText}}</h5>
+      </div>
+
+      <div class="ui bottom attached buttons">
+        {{#if policy.notLocal}}
+          <div class="ui bottom attached button {{if policy.isReady '' 'disabled'}}" {{action 'local' policy}}>
+            <i class="fa fa-home"></i> Local
+          </div>
+        {{/if}}
+        {{#if policy.notWideOpen}}
+        <div class="ui bottom attached green button {{if policy.isReady '' 'disabled'}}" {{action 'allow' policy}}>
+          <i class="fa fa-check-circle"></i> Allow
+        </div>
+        {{/if}}
+        {{#if policy.notDenied}}
+        <div class="ui bottom attached red button {{if policy.canDeny '' 'disabled'}} {{if policy.isReady '' 'disabled'}}" {{action 'deny' policy}}>
+          <i class="fa fa-minus-circle"></i> Deny
+        </div>
+        {{/if}}
+      </div>
+    </div>
+  {{/each}}
+</div>

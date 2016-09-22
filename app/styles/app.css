@@ -31,6 +31,10 @@ a:link, a:focus, a:active, a:hover {
 
 /* Widgets */
 
+.genesis.message {
+  margin-top: 25px !important;
+}
+
 .login.column {
   max-width: 450px;
   margin-top: 18%;
@@ -49,10 +53,18 @@ a:link, a:focus, a:active, a:hover {
   color: #398439;
 }
 
+.text.red {
+  color: #AC2925;
+}
+
+.text.black {
+  color: #000;
+}
+
 .card-image {
-  max-width: 266px;
+  min-width: 254px;
   height: 200px;
-  padding-top: 20%;
+  padding-top: 60px;
   text-align: center;
   font-size: 84px;
   color: #FFF;

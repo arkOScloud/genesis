@@ -2,7 +2,6 @@ import Ember from "ember";
 import Router from "../router";
 import ENV from "../config/environment";
 import Pollster from "../objects/pollster";
-import {hideLoader, hideFade} from "../utils/loading";
 import ApplicationRouteMixin from 'simple-auth/mixins/application-route-mixin';
 
 
@@ -31,10 +30,10 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
               j.messages.forEach(function(m) {
                 if (m.class === "success" && !ENV.APP.needsFirstRun) {
                   self.message.success(m.message, m.id, m.complete, m.headline);
-                } else if (m.class === "warn") {
+                } else if (m.class === "warn" || m.class === "warning") {
                   self.message.warning(m.message, m.id, m.complete, m.headline);
                 } else if (m.class === "error") {
-                  self.message.danger(m.message, m.id, m.complete, m.headline);
+                  self.message.error(m.message, m.id, m.complete, m.headline);
                 } else if (!ENV.APP.needsFirstRun) {
                   self.message.info(m.message, m.id, m.complete, m.headline);
                 }
@@ -91,8 +90,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       }
     },
     error: function() {
-      hideLoader();
-      hideFade();
       return true;
     },
     showModal: function(name, model, extra) {

@@ -1,0 +1,29 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{cardColor}}">
+            <i class="code icon"></i>
+          </div>
+        </div>
+        {{#if name}}
+        <div class="content">
+          <div class="header"><i class="code icon"></i> {{name}}</div>
+          <div class="meta">Domain</div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Domain name</label>
+            {{input type="text" name="name" value=name}}
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>

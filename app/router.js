@@ -6,30 +6,6 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('domains', function(){
-    this.route('domain', { path: '/:domain_id' }, function(){
-      this.route('edit');
-    });
-  });
-  this.route('groups', function(){
-    this.route('group', { path: '/:group_id' }, function(){
-      this.route('edit');
-    });
-  });
-  this.route('users', function(){
-    this.route('user', { path: '/:user_id' }, function(){
-      this.route('edit');
-    });
-  });
-  this.route('certs', function(){
-    this.route('info', { path: '/:cert_id' });
-    this.route('add');
-  });
-  this.route('databases', function(){
-    this.route('database', { path: '/:database_id' }, function(){
-      this.route('edit');
-    });
-  });
   this.route('filesystems', function(){
     this.route('filesystem', { path: '/:filesystem_id' }, function(){
       this.route('edit');
@@ -58,27 +34,52 @@ Router.map(function() {
       this.route('edit');
     });
   });
-  this.route('stats');
   this.route('services');
-  this.route('security');
   this.route('config');
   this.route('updates');
-  this.route('files');
-  this.route('firstrun');
-  this.route('login');
-  this.route('roles', function() {
-    this.route('users', function() {
-      this.route('edit', { path: '/:user_id' });
+
+  this.route('settings', function() {
+    this.route('networks', function() {
+      this.route('info', { path: '/:network_id' });
       this.route('add');
     });
-    this.route('groups', function() {
-      this.route('edit', { path: '/:group_id' });
-      this.route('add');
+    this.route('roles', function() {
+      this.route('users', function() {
+        this.route('edit', { path: '/:user_id' });
+        this.route('add');
+      });
+      this.route('groups', function() {
+        this.route('edit', { path: '/:group_id' });
+        this.route('add');
+      });
+      this.route('domains', function() {
+        this.route('add');
+      });
     });
-    this.route('domains', function() {
-      this.route('add');
+    this.route('security', function() {
+      this.route('firewall', function() {
+        this.route('add');
+      });
+      this.route('fail2ban');
     });
   });
+  this.route('tools', function() {
+    this.route('certificates', function(){
+      this.route('info', { path: '/:certificate_id' });
+      this.route('add');
+    });
+    this.route('databases', function(){
+      this.route('add');
+      this.route('add-user');
+      this.route('info', { path: '/:database_id' });
+      this.route('user-edit', { path: '/user/:database-user_id' });
+    });
+    this.route('files');
+    this.route('stats');
+  });
+
+  this.route('firstrun');
+  this.route('login');
 });
 
 export default Router;

@@ -8,7 +8,7 @@
     "ember-cli": "1.13.13",
     "ember-cli-app-version": "^1.0.0",
     "ember-cli-babel": "^5.1.5",
-    "ember-cli-content-security-policy": "0.4.0",
+    "ember-cli-content-security-policy": "0.5.0",
     "ember-cli-dependency-checker": "^1.1.0",
     "ember-cli-ember-uploader": "0.0.1",
     "ember-cli-htmlbars": "^1.0.1",

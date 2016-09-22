@@ -49,7 +49,7 @@ export default Ember.ObjectController.extend({
           if (e.status === 500) {
             self.transitionToRoute("error", e);
           }
-          self.message.danger(e.responseJSON.message);
+          self.message.error(e.responseJSON.message);
         }
       });
     }

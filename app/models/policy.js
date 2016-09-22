@@ -1,4 +1,5 @@
 import DS from "ember-data";
+import cardColor from "../utils/card-color";
 
 
 export default DS.Model.extend({
@@ -7,6 +8,9 @@ export default DS.Model.extend({
     policy: DS.attr('number'),
     ports: DS.attr(),
     type: DS.attr('string'),
+    cardColor: function() {
+      return cardColor();
+    }.property(),
     displayPorts: function() {
       var portsStrings = [];
       this.get('ports').forEach(function(i) {
@@ -41,11 +45,11 @@ export default DS.Model.extend({
     policyDisplayClass: function() {
       var policy = this.get('policy');
       if (policy === 0) {
-        return "text-danger";
+        return "text red";
       } else if (policy === 2) {
-        return "text-success";
+        return "text green";
       } else {
-        return "";
+        return "text black";
       }
     }.property('policy'),
     notWideOpen: function() {

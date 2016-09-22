@@ -6,15 +6,15 @@
     {{#if session.isAuthenticated}}
     <div class="right menu">
       <div class="item">
-        <i class="fa fa-fw fa-user"></i> {{#link-to 'roles.users' class='item'}}{{ userId }}{{/link-to}}
+        <i class="fa fa-fw fa-user"></i> {{#link-to 'settings.roles.users' class='item'}}{{ userId }}{{/link-to}}
       </div>
       {{#ui-dropdown-menu}}
         <i class="fa fa-wrench"></i>
         <div class="menu">
-          {{#link-to 'stats' class='item'}}<i class="fa fa-area-chart fa-fw"></i> Statistics{{/link-to}}
-          {{#link-to 'files' class='item'}}<i class="fa fa-files-o fa-fw"></i> File Manager{{/link-to}}
-          {{#link-to 'certs' class='item'}}<i class="fa fa-certificate fa-fw"></i> Certificates{{/link-to}}
-          {{#link-to 'databases' class='item'}}<i class="fa fa-database fa-fw"></i> Databases{{/link-to}}
+          {{#link-to 'tools.stats' class='item'}}<i class="fa fa-area-chart fa-fw"></i> Statistics{{/link-to}}
+          {{#link-to 'tools.files' class='item'}}<i class="fa fa-files-o fa-fw"></i> File Manager{{/link-to}}
+          {{#link-to 'tools.certificates' class='item'}}<i class="fa fa-certificate fa-fw"></i> Certificates{{/link-to}}
+          {{#link-to 'tools.databases' class='item'}}<i class="fa fa-database fa-fw"></i> Databases{{/link-to}}
           {{#link-to 'filesystems' class='item'}}<i class="fa fa-hdd-o fa-fw"></i> Filesystems{{/link-to}}
           {{#link-to 'packages' class='item'}}<i class="fa fa-cube fa-fw"></i> Packages{{/link-to}}
           {{#link-to 'services' class='item'}}<i class="fa fa-spinner fa-fw"></i> Services{{/link-to}}
@@ -23,19 +23,21 @@
       {{#ui-dropdown-menu}}
         <i class="fa fa-cogs"></i>
         <div class="menu">
-          {{#link-to 'roles.users' class='item'}}<i class="fa fa-group fa-fw"></i> Users, Groups and Domains{{/link-to}}
+          {{#link-to 'settings.roles.users' class='item'}}<i class="fa fa-group fa-fw"></i> Users, Groups and Domains{{/link-to}}
           {{#link-to 'updates' class='item'}}<i class="fa fa-star fa-fw"></i> Updates{{/link-to}}
           {{#link-to 'backups' class='item'}}<i class="fa fa-clock-o fa-fw"></i> Recovery{{/link-to}}
-          {{#link-to 'networks' class='item'}}<i class="fa fa-sitemap fa-fw"></i> Networking{{/link-to}}
-          {{#link-to 'security' class='item'}}<i class="fa fa-lock fa-fw"></i> Security{{/link-to}}
+          {{#link-to 'settings.networks' class='item'}}<i class="fa fa-sitemap fa-fw"></i> Networking{{/link-to}}
+          {{#link-to 'settings.security.firewall' class='item'}}<i class="fa fa-lock fa-fw"></i> Security{{/link-to}}
           {{#link-to 'config' class='item'}}<i class="fa fa-sliders fa-fw"></i> Preferences{{/link-to}}
-          <a href="#" class='item' {{action 'showModal' 'about' model}}><i class="fa fa-question-circle fa-fw"></i> About</a>
+          <div class="divider"></div>
+          <a href="#" class='item' {{action 'openModal' 'about-genesis'}}><i class="fa fa-question-circle fa-fw"></i> About</a>
         </div>
       {{/ui-dropdown-menu}}
       {{#ui-dropdown-menu}}
         <i class="fa fa-power-off"></i>
         <div class="menu">
           <a href="#" class='item' {{action 'invalidateSession'}}><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+          <div class="divider"></div>
           <a href="#" class='item' {{action 'showConfirm' 'shutdown' 'Are you sure you want to shutdown your arkOS device?'}}><i class="fa fa-power-off fa-fw"></i> Shutdown</a>
           <a href="#" class='item' {{action 'showConfirm' 'reload' 'Are you sure you want to reload the arkOS service?'}}><i class="fa fa-refresh fa-fw"></i> Reload</a>
           <a href="#" class='item' {{action 'showConfirm' 'reboot' 'Are you sure you want to reboot your arkOS device?'}}><i class="fa fa-refresh fa-fw"></i> Restart</a>
@@ -56,10 +58,35 @@
 
 {{g-messages}}
 
-<div class="ui-fade"></div>
-<div class="ui-loader">
-  <h1><i class="fa fa-circle-o-notch fa-spin"></i></h1>
-</div>
+{{#ui-modal name="about-genesis" class="about-genesis"}}
+  <i class="close icon"></i>
+  <div class="header">
+    <i class="question circle icon"></i>
+    About
+  </div>
+  <div class="image content">
+    <div class="ui medium image">
+      <img src="/img/logo-round.png">
+    </div>
+    <div class="description">
+      <h1>arkOS Genesis</h1>
+      <p class="text lead">Version {{app-version}}</p>
+      <h4>arkOS is free software, mostly licensed under the GPLv3. Please report bugs to <a href="https://git.coderouge.co/arkOS/Genesis">our issue tracker</a> or ask questions <a href="https://bbs.arkos.io/" target="_blank">on the forum</a>. Otherwise, enjoy!</h4>
+      <div class="ui divider"></div>
+      <div class="ui fluid buttons">
+        <a class="ui button" href="https://git.coderouge.co/arkOS" target="_blank"><i class="fa fa-code"></i> Source Code</a>
+        <a class="ui button" href="https://bbs.arkos.io/" target="_blank"><i class="fa fa-comments"></i> Questions and Comments</a>
+        <a class="ui button" href="https://www.gnu.org/licenses/gpl.html" target="_blank"><i class="fa fa-certificate"></i> License</a>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui ok green basic inverted right labeled icon button">
+      OK
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
 
 <footer>
 </footer>

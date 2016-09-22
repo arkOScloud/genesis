@@ -1,0 +1,11 @@
+<div class="ui pointing menu">
+  <div class="header item">Filter by</div>
+  {{#link-to 'settings.roles.users' class="item"}}<i class="fa fa-user fa-fw"></i> Users{{/link-to}}
+  {{#link-to 'settings.roles.groups' class="item"}}<i class="fa fa-group fa-fw"></i> Groups{{/link-to}}
+  {{#link-to 'settings.roles.domains' class="item"}}<i class="fa fa-code fa-fw"></i> Domains{{/link-to}}
+  <div class="right menu">
+    {{#link-to navLink class="item"}}<i class="fa fa-fw {{navIcon}}"></i> Add {{navName}}{{/link-to}}
+  </div>
+</div>
+
+{{outlet}}

@@ -19,15 +19,7 @@ module.exports = function(environment) {
       timeFormat: 'HH:mm:ss'
     },
 
-    contentSecurityPolicy: {
-      'default-src': "'none'",
-      'script-src': "'self'",
-      'font-src': "'self'",
-      'connect-src': "'self' http://localhost:8000",
-      'img-src': "'self'",
-      'style-src': "'self' 'unsafe-inline'",
-      'media-src': "'self'"
-    }
+    contentSecurityPolicy: null
   };
 
   if (environment === 'development') {

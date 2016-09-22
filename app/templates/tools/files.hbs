@@ -1,0 +1,72 @@
+<div id="file-manager-segment" class="ui basic segment">
+  <div class="ui grid">
+    <div class="eight wide column">
+      <div class="ui fluid five item menu">
+        {{#ui-dropdown-menu}}
+          <i class="fa fa-fw fa-file-o"></i> File <i class="dropdown icon"></i>
+          <div class="menu">
+            <a href="#" class="item" {{action 'showModal' 'file/newfile'}}><i class="fa fa-fw fa-file"></i> New File...</a>
+            <a href="#" class="item" {{action 'showModal' 'file/newfolder'}}><i class="fa fa-fw fa-folder"></i> New Folder...</a>
+            <a href="#" class="item" {{action 'showModal' 'file/open'}}><i class="fa fa-fw fa-folder-open"></i> Open File/Path...</a>
+            <div class="divider"></div>
+            <a href="#" class="item" {{action 'properties'}}><i class="fa fa-fw fa-cogs"></i> Properties...</a>
+          </div>
+        {{/ui-dropdown-menu}}
+        {{#ui-dropdown-menu}}
+          <i class="fa fa-fw fa-pencil"></i> Edit <i class="dropdown icon"></i>
+          <div class="menu">
+            <a href="#" class="item" {{action 'copy'}}><i class="fa fa-fw fa-files-o"></i> Copy</a>
+            <a href="#" class="item" {{action 'paste'}}><i class="fa fa-fw fa-clipboard"></i> Paste</a>
+            <a href="#" class="item" {{action 'showModal' 'file/clipboard'}}><i class="fa fa-fw fa-clipboard"></i> Clipboard...{{#if clipboard}} <span class="badge">{{clipboard.length}}</span>{{/if}}</a>
+            <a href="#" class="item" {{action 'selectAll'}}><i class="fa fa-fw fa-check-square-o"></i> Select All</a>
+            <a href="#" class="item" {{action 'deselectAll'}}><i class="fa fa-fw fa-square-o"></i> Deselect All</a>
+            <div class="divider"></div>
+            <a href="#" class="item" {{action 'showConfirm' 'delete' 'Are you sure you want to delete the selected files?'}}><i class="fa fa-fw fa-times-circle"></i> Delete...</a>
+          </div>
+        {{/ui-dropdown-menu}}
+        {{#ui-dropdown-menu}}
+          <i class="fa fa-fw fa-search"></i> View <i class="dropdown icon"></i>
+          <div class="menu">
+            <a href="#" class="item" {{action 'refresh'}}><i class="fa fa-fw fa-refresh"></i> Refresh</a>
+            <a href="#" class="item" {{action 'toggleHidden'}}><i class="fa fa-fw {{if showHidden 'fa-eye-slash' 'fa-eye'}}"></i> {{if showHidden 'Hide Hidden' 'Show Hidden'}}</a>
+          </div>
+        {{/ui-dropdown-menu}}
+        {{#ui-dropdown-menu}}
+          <i class="fa fa-fw fa-arrow-circle-right"></i> Go <i class="dropdown icon"></i>
+          <div class="menu">
+            {{#each model.POIs as |poi|}}
+              <a href="#" class="item" {{action 'openPath' poi.path}}><i class="fa fa-fw {{poi.icon}}"></i> {{poi.id}}</a>
+            {{else}}
+              <div class="disabled item">None</div>
+            {{/each}}
+          </div>
+        {{/ui-dropdown-menu}}
+        {{#ui-dropdown-menu}}
+          <i class="fa fa-fw fa-wrench"></i> Tools <i class="dropdown icon"></i>
+          <div class="menu">
+            <a href="#" class="item" {{action 'showModal' 'file/upload'}}><i class="fa fa-fw fa-upload"></i> Upload Here...</a>
+            <a href="#" class="item" {{action 'addToDownloads'}}><i class="fa fa-fw fa-download"></i> Download...</a>
+          </div>
+        {{/ui-dropdown-menu}}
+      </div>
+    </div>
+    <div class="eight wide column">
+      <div class="ui pointing menu">
+        {{#each breadcrumbs as |item|}}
+          {{#if item.active}}
+            <div class="active item">{{item.name}}</div>
+          {{else}}
+            <a href="#" class="item" {{action 'openPath' item.path}}>{{item.name}}</a>
+          {{/if}}
+        {{/each}}
+      </div>
+    </div>
+  </div>
+  <div class="ui eight column grid">
+    {{#each sortedFolder as |item|}}
+      <div class="column">
+        {{g-fm-item item=item files=this}}
+      </div>
+    {{/each}}
+  </div>
+</div>

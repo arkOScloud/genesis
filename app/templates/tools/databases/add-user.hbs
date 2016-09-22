@@ -1,0 +1,56 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{cardColor}}">
+            <i class="user icon"></i>
+          </div>
+        </div>
+        {{#if name}}
+        <div class="content">
+          <div class="header"><i class="user icon"></i> {{name}}</div>
+          <div class="meta">{{#if type}}{{type.name}}{{/if}}</div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        <form class="ui form" {{action 'save' on='submit'}}>
+          <div class="required field">
+            <label>Username</label>
+            {{input type="text" value=name}}
+          </div>
+          <div class="required field">
+            <label>Database type</label>
+            {{#ui-dropdown class="selection" onChange=(action (mut type)) as |execute mapper|}}
+              <div class="default text">Select a database type</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each userTypes as |ty|}}
+                  <div class="item" data-value="{{map-value mapper ty}}">
+                    {{ty.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="required field">
+            <label>New Password</label>
+            <div class="two fields">
+              <div class="field">
+                {{input type="password" value=passwd placeholder="New password"}}
+              </div>
+              <div class="field">
+                {{input type="password" value=passwdb placeholder="Confirm password"}}
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="ui primary button"><i class="fa fa-fw fa-floppy-o"></i> Save</button>
+          {{#link-to "tools.databases" activeClass="" class="ui button"}}<i class="fa fa-fw fa-times-circle"></i> Cancel{{/link-to}}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

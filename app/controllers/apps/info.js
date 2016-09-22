@@ -11,7 +11,14 @@ export default Ember.Controller.extend({
       Ember.$('.ui.' + name + '.modal').modal('show');
     },
     uninstallApp: function() {
-      this.get('model').deleteRecord();
+      var app = this.get('model'),
+          self = this;
+      app.set('operation', 'uninstall');
+      app.set('isReady', false);
+      app.save();
+      Ember.$('.ui.uninstall-app.modal').modal('hide', function() {
+        self.transitionToRoute('apps');
+      });
     }
   }
 });

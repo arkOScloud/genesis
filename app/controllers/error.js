@@ -47,7 +47,7 @@ export default Ember.Controller.extend({
           Ember.$("#reportbtn").addClass("disabled");
         },
         error: function(j) {
-          self.message.danger(j.message);
+          self.message.error(j.message);
         }
       });
     },

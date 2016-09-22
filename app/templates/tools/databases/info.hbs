@@ -1,0 +1,71 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="database icon"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header"><i class="database icon"></i> {{model.id}}</div>
+          <div class="meta">{{model.typeName}}</div>
+        </div>
+        <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-db'}}>
+          <i class="fa fa-minus-circle fa-fw"></i> Delete
+        </div>
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        <div class="ui list">
+          <div class="item">
+            <div class="header">Database name</div>
+            {{model.id}}
+          </div>
+          <div class="item">
+            <div class="header">Database type</div>
+            {{model.typeName}}
+          </div>
+          <div class="item">
+            <div class="header">Database size</div>
+            {{size-to-string model.size}}
+          </div>
+        </div>
+        <form class="ui form">
+          <div class="field">
+            <label>Execute Input</label>
+            {{textarea rows="6" value=execInput placeholder="Input goes here"}}
+            <a href="#" class="ui button" {{action 'execute'}}><i class="fa fa-code"></i> Execute</a>
+          </div>
+          <div class="field">
+            <label>Execute Output</label>
+            {{textarea rows="6" value=execOutput placeholder="Output shown here" wrap="off"}}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#ui-modal name="delete-db" class="basic delete-db" onApprove=(action 'deleteDb')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="database icon"></i>
+    Delete database?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete database <strong>{{model.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

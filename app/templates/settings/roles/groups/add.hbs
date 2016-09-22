@@ -1,0 +1,43 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{newGroup.cardColor}}">
+            <i class="group icon"></i>
+          </div>
+        </div>
+        {{#if newGroup.name}}
+        <div class="content">
+          <div class="header"><i class="group icon"></i> {{newGroup.name}}</div>
+          <div class="meta">{{if newGroup.users newGroup.users.length 'No'}} member(s)</div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Group Name</label>
+            {{input type="text" name="name" value=newGroup.name}}
+          </div>
+          <div class="field">
+            <label>Members</label>
+            {{#ui-dropdown class="fluid multiple selection" name="users" selected=newGroup.users onChange=(action (mut newGroup.users))}}
+              <i class="dropdown icon"></i>
+              <div class="default text">Select users</div>
+              <div class="menu">
+                {{#each users as |user|}}
+                  <div class="item" data-value="{{user.id}}">
+                    {{user.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>

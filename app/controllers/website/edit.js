@@ -42,7 +42,7 @@ export default Ember.ObjectController.extend({
         if (e.status === 500) {
           self.transitionToRoute("error", e);
         }
-        self.message.danger("Action did not complete: "+e.responseJSON.message);
+        self.message.error("Action did not complete: "+e.responseJSON.message);
       });
     }
   }

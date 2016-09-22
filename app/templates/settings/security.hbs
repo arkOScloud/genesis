@@ -1,0 +1,11 @@
+<div class="ui pointing menu">
+  {{#link-to "settings.security.firewall" class="item"}}<i class="fa fa-fw fa-shield"></i> Firewall Rules{{/link-to}}
+  {{#link-to "settings.security.fail2ban" class="item"}}<i class="fa fa-fw fa-dot-circle-o"></i> Defence{{/link-to}}
+  {{#if isFirewallPage}}
+    <div class="right menu">
+      {{#link-to "settings.security.firewall.add" class="item"}}<i class="fa fa-fw fa-plus-circle"></i> Add Firewall Rule{{/link-to}}
+    </div>
+  {{/if}}
+</div>
+
+{{outlet}}

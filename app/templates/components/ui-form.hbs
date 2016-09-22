@@ -1,0 +1,6 @@
+{{yield}}
+
+<button type="submit" class="ui primary button" {{action 'save'}}><i class="fa fa-fw fa-floppy-o"></i> Save</button>
+{{#if onCancel}}
+  <button type="cancel" class="ui button" {{action 'cancel'}}><i class="fa fa-fw fa-times-circle"></i> Cancel</button>
+{{/if}}

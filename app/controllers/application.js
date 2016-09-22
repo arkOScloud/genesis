@@ -12,5 +12,10 @@ export default Ember.Controller.extend({
   }.property("session.isAuthenticated"),
   showBreadCrumbs: function() {
     return ["login", "index"].indexOf(this.get("currentRouteName")) === -1;
-  }.property("currentRouteName")
+  }.property("currentRouteName"),
+  actions: {
+    openModal: function(name) {
+      Ember.$('.ui.' + name + '.modal').modal('show');
+    }
+  }
 });

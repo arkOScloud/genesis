@@ -1,0 +1,100 @@
+<div class="ui pointing menu">
+  <a class="{{if databasesFilter 'active'}} item" {{action 'setFilter' 'databases'}}>Databases</a>
+  <a class="{{if usersFilter 'active'}} item" {{action 'setFilter' 'users'}}>Database Users</a>
+  <div class="right menu">
+    {{#if databasesFilter}}
+      {{#link-to "tools.databases.add" class="item"}}<i class="fa fa-plus-circle fa-fw"></i> New Database{{/link-to}}
+    {{/if}}
+    {{#if usersFilter}}
+      {{#link-to "tools.databases.add-user" class="item"}}<i class="fa fa-plus-circle fa-fw"></i> New Database User{{/link-to}}
+    {{/if}}
+  </div>
+</div>
+
+<div class="ui four cards">
+  {{#if databasesFilter}}
+    {{#each model.dbs as |db|}}
+      <div class="card">
+        {{#link-to "tools.databases.info" db class="image"}}
+          <div class="{{db.cardColor}}">
+            <i class="database icon"></i>
+          </div>
+        {{/link-to}}
+        <div class="content">
+          {{#link-to "tools.databases.info" db class="header"}}<i class="database icon"></i> {{db.id}}{{/link-to}}
+          <div class="meta">{{db.typeName}}</div>
+        </div>
+        <div class="ui bottom attached buttons">
+          <a href={{db.downloadHref}} class="ui button {{if db.isReady '' 'disabled'}}">
+            <i class="fa fa-download fa-fw"></i> Download
+          </a>
+          <div class="ui button red {{if db.isReady '' 'disabled'}}" {{action 'openModal' 'delete-db' db}}>
+            <i class="fa fa-minus-circle fa-fw"></i> Delete
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  {{/if}}
+  {{#if usersFilter}}
+    {{#each model.users as |db|}}
+      <div class="card">
+        {{#link-to "tools.databases.user-edit" db class="image"}}
+          <div class="{{db.cardColor}}">
+            <i class="user icon"></i>
+          </div>
+        {{/link-to}}
+        <div class="content">
+          {{#link-to "tools.databases.user-edit" db class="header"}}<i class="user icon"></i> {{db.id}}{{/link-to}}
+          <div class="meta">{{db.typeName}}</div>
+        </div>
+        <div class="ui bottom attached button red {{if db.isReady '' 'disabled'}}" {{action 'openModal' 'delete-user' db}}>
+          <i class="fa fa-minus-circle fa-fw"></i> Delete
+        </div>
+      </div>
+    {{/each}}
+  {{/if}}
+</div>
+
+{{#ui-modal name="delete-db" class="basic delete-db" onApprove=(action 'deleteDb') onDeny=(action 'clearModal')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="database icon"></i><br /><br />
+    Delete database?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete database <strong>{{selectedDb.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="delete-user" class="basic delete-user" onApprove=(action 'deleteUser') onDeny=(action 'clearModal')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="user icon"></i><br /><br />
+    Delete database user?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete database user <strong>{{selectedUser.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

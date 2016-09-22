@@ -1,0 +1,30 @@
+<div class="ui pointing menu">
+  <div class="header item">Filter by</div>
+  <a class="{{if allFilter 'active'}} item" {{action 'setFilter' 'all'}}>All</a>
+  <a class="{{if wiredFilter 'active'}} item" {{action 'setFilter' 'wired'}}>Wired</a>
+  <a class="{{if wirelessFilter 'active'}} item" {{action 'setFilter' 'wireless'}}>Wireless</a>
+  <div class="right menu">
+    <a href="#" class="item" {{action 'showModal' 'network/add' model}}><i class="fa fa-fw fa-plus-circle"></i> Add Network</a>
+  </div>
+</div>
+
+<div class="ui three cards">
+  {{#each filteredNetworks as |net|}}
+    <div class="card">
+      {{#link-to "settings.networks.info" net class="image"}}
+        <div class="{{net.cardColor}}">
+          <i class="{{net.typeIcon}}"></i>
+        </div>
+      {{/link-to}}
+      <div class="content">
+        {{#link-to "settings.networks.info" net class="header"}}<i class="{{net.typeIcon}}"></i> {{net.id}}{{/link-to}}
+        <div class="meta">{{net.type}}{{#if net.connected}} (Connected){{/if}}</div>
+      </div>
+      <div class="ui bottom attached buttons">
+        <div class="ui bottom attached button {{if net.connected 'red' 'green'}} {{if net.isReady '' 'disabled'}}" {{action 'toggle' net}}><i class="fa fa-fw {{if net.connected 'fa-times' 'fa-check'}}"></i> {{if net.connected 'Disconnect' 'Connect'}}</div>
+        <div class="ui bottom attached button {{if net.enabled 'red' 'green'}} {{if net.isReady '' 'disabled'}}" {{action 'toggleEnabled' net}}><i class="fa fa-fw {{if net.enabled 'fa-thumbs-down' 'fa-thumbs-up'}}"></i> {{if net.enabled 'Disable' 'Enable'}}</div>
+        <div class="ui bottom attached red button {{if net.isReady '' 'disabled'}}" {{action 'showConfirm' 'delete' 'Are you sure you want to delete this network? It will be disconnected in the process.' net}}><i class="fa fa-fw fa-minus-circle"></i> Delete</div>
+      </div>
+    </div>
+  {{/each}}
+</div>

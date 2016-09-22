@@ -1,0 +1,66 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="group icon"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header"><i class="group icon"></i> {{model.name}}</div>
+          <div class="meta">{{if model.users model.users.length 'No'}} member(s)</div>
+        </div>
+        <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-group'}}>
+          <i class="fa fa-minus-circle fa-fw"></i> Delete
+        </div>
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="field">
+            <label>Group name</label>
+            {{input type="text" class="form-control" value=model.name disabled=true}}
+          </div>
+          <div class="field">
+            <label>Members</label>
+            {{#ui-dropdown class="fluid multiple selection" selected=model.users onChange=(action (mut model.users))}}
+              <i class="dropdown icon"></i>
+              <div class="default text">Select users</div>
+              <div class="menu">
+                {{#each users as |user|}}
+                  <div class="item" data-value="{{user.id}}">
+                    {{user.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#ui-modal name="delete-group" class="basic delete-group" onApprove=(action 'deleteGroup')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="group icon"></i>
+    Delete group?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete group <strong>{{model.name}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

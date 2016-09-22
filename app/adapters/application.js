@@ -16,11 +16,11 @@ export default DS.RESTAdapter.extend({
       if (jqXHR && jqXHR.status === 422) {
         var jsonPayload = Ember.$.parseJSON(jqXHR.responseText);
         if (jsonPayload && jsonPayload.message) {
-          self.message.danger(jsonPayload.message);
+          self.message.error(jsonPayload.message);
           delete jsonPayload.message;
         } else if (jsonPayload && jsonPayload.messages) {
           jsonPayload.messages.forEach(function(e) {
-            self.message.danger(e.message);
+            self.message.error(e.message);
           });
           delete jsonPayload.messages;
         }

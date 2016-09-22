@@ -1,6 +1,14 @@
-<div id={{msg.id}} class="alert fade in {{msg.typeClass}} {{if msg.dismissable 'alert-dismissable'}}">
+<div id={{msg.id}} class="ui floating icon genesis message {{msg.type}}">
+  <i class="{{msg.icon}} icon"></i>
   {{#if msg.dismissable}}
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" {{action 'dismiss'}}><i class="fa fa-times"></i></button>
+    <i class="close icon" {{action 'dismiss'}}></i>
   {{/if}}
-  <i class={{msg.icon}} style="line-height:1;"></i> {{#if msg.headline}}<strong>{{msg.headline}}</strong><br /> {{/if}}{{msg.message}}
+  <div class="content">
+    {{#if msg.headline}}
+      <div class="header">
+        {{msg.headline}}
+      </div>
+    {{/if}}
+    <p>{{msg.message}}</p>
+  </div>
 </div>
