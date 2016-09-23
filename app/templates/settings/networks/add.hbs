@@ -1,1 +1,97 @@
-{{outlet}}
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{cardColor}}">
+            <i class="{{if typeIcon typeIcon 'sitemap'}} icon"></i>
+          </div>
+        </div>
+        {{#if name}}
+        <div class="content">
+          <div class="header"><i class="{{if typeIcon typeIcon 'sitemap'}} icon"></i> {{name}}</div>
+          <div class="meta">{{#if isWireless}}Wireless{{else}}Ethernet{{/if}}</div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Connection name</label>
+            {{input type="text" name="name" value=name}}
+          </div>
+          <div class="field">
+            <label>Connection description</label>
+            {{input type="text" name="description" value=description}}
+          </div>
+          <div class="required field">
+            <label>Interface</label>
+            {{#ui-dropdown class="selection" selected=netifaces.firstObject onChange=(action (mut netiface)) as |execute mapper|}}
+              <div class="text"></div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each netifaces as |netiface|}}
+                  <div class="item" data-value="{{map-value mapper netiface}}">
+                    {{netiface.prettyType}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="required field">
+            <label>Addressing</label>
+            {{#ui-dropdown class="selection" selected=ipTypes.firstObject onChange=(action (mut addressing)) as |execute mapper|}}
+              <div class="text"></div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each ipTypes as |ipt|}}
+                  <div class="item" data-value="{{map-value mapper ipt}}">
+                    {{ipt.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          {{#if isStatic}}
+            <div class="required field">
+              <label>Address/Netmask</label>
+              {{input type="text" name="address" value=address}}
+            </div>
+            <div class="required field">
+              <label>Gateway</label>
+              {{input type="text" name="gateway" value=gateway}}
+            </div>
+          {{/if}}
+          {{#if isWireless}}
+            <div class="required field">
+              <label>Network ID (ESSID)</label>
+              {{input type="text" name="essid" value=essid}}
+            </div>
+            <div class="required field">
+              <label>Security Type</label>
+              {{#ui-dropdown class="selection" selected=secTypes.firstObject onChange=(action (mut security)) as |execute mapper|}}
+                <div class="text"></div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                  {{#each secTypes as |sct|}}
+                    <div class="item" data-value="{{map-value mapper sct}}">
+                      {{sct.name}}
+                    </div>
+                  {{/each}}
+                </div>
+              {{/ui-dropdown}}
+            </div>
+            {{#if isSecure}}
+              <div class="required field">
+                <label>Passphrase</label>
+                {{input type="text" name="passphrase" value=key}}
+              </div>
+            {{/if}}
+          {{/if}}
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>

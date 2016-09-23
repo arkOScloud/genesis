@@ -4,7 +4,7 @@
   <a class="{{if wiredFilter 'active'}} item" {{action 'setFilter' 'wired'}}>Wired</a>
   <a class="{{if wirelessFilter 'active'}} item" {{action 'setFilter' 'wireless'}}>Wireless</a>
   <div class="right menu">
-    <a href="#" class="item" {{action 'showModal' 'network/add' model}}><i class="fa fa-fw fa-plus-circle"></i> Add Network</a>
+    {{#link-to "settings.networks.add" class="item"}}<i class="fa fa-fw fa-plus-circle"></i> Add Network{{/link-to}}
   </div>
 </div>
 
@@ -23,8 +23,30 @@
       <div class="ui bottom attached buttons">
         <div class="ui bottom attached button {{if net.connected 'red' 'green'}} {{if net.isReady '' 'disabled'}}" {{action 'toggle' net}}><i class="fa fa-fw {{if net.connected 'fa-times' 'fa-check'}}"></i> {{if net.connected 'Disconnect' 'Connect'}}</div>
         <div class="ui bottom attached button {{if net.isReady '' 'disabled'}}" {{action 'toggleEnabled' net}}><i class="fa fa-fw {{if net.enabled 'fa-thumbs-down' 'fa-thumbs-up'}}"></i> {{if net.enabled 'Disable' 'Enable'}}</div>
-        <div class="ui bottom attached red button {{if net.isReady '' 'disabled'}}" {{action 'showConfirm' 'delete' 'Are you sure you want to delete this network? It will be disconnected in the process.' net}}><i class="fa fa-fw fa-minus-circle"></i> Delete</div>
+        <div class="ui bottom attached red button {{if net.isReady '' 'disabled'}}" {{action 'openModal' 'delete-net' net}}><i class="fa fa-fw fa-minus-circle"></i> Delete</div>
       </div>
     </div>
   {{/each}}
 </div>
+
+{{#ui-modal name="delete-net" class="basic delete-net" onApprove=(action 'deleteNet')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="sitemap icon"></i>
+    Delete network?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete network <strong>{{selectedNet.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

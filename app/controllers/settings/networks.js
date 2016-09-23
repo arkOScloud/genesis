@@ -61,6 +61,17 @@ export default Ember.Controller.extend({
           self.transitionToRoute("error", e);
         }
       });
+    },
+    openModal: function(name, net) {
+      this.set('selectedNet', net);
+      Ember.$('.ui.' + name + '.modal').modal('show');
+    },
+    deleteNet: function() {
+      this.get('selectedNet').destroyRecord();
+      this.set('selectedNet', null);
+    },
+    clearModal: function() {
+      this.set('selectedNet', null);
     }
   }
 });
