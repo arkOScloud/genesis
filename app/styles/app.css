@@ -31,6 +31,22 @@ a:link, a:focus, a:active, a:hover {
 
 /* Widgets */
 
+.ui-fm-selected {
+  color: #2185D0;
+}
+
+.ui-fm-selected p {
+  border-radius: 5px;
+  background-color: #2185D0 !important;
+  border-color: #2185D0 !important;
+  color: #FFFFFF !important;
+}
+
+#file-manager-pushable {
+  height: 500px;
+  overflow: scroll;
+}
+
 .genesis.message {
   margin-top: 25px !important;
 }
@@ -46,11 +62,15 @@ a:link, a:focus, a:active, a:hover {
 }
 
 .text.center {
-  text-align: center;
+  text-align: center !important;
 }
 
 .text.green {
   color: #398439;
+}
+
+.text.blue {
+  color: #285E8E;
 }
 
 .text.red {

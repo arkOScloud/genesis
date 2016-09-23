@@ -1,5 +1,5 @@
 import Ember from "ember";
-import ENV from "../config/environment";
+import ENV from "../../config/environment";
 import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixin';
 
 

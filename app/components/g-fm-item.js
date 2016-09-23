@@ -3,7 +3,7 @@ import ENV from "../config/environment";
 
 
 export default Ember.Component.extend({
-  classNameBindings: [':ui-fm-item', 'item.selected:text-primary:'],
+  classNameBindings: [':ui-fm-item', 'item.selected:ui-fm-selected:'],
   open: 'open',
   menu: 'menu',
   href: function(){
@@ -11,15 +11,13 @@ export default Ember.Component.extend({
   }.property('item'),
   initContextMenu: function() {
     var self = this;
-    Ember.$('#'+this.get('elementId')).contextmenu({
-      target: '#context-menu',
-      before: function() {
-        if (self.get('files.selectedItems.length') && self.get('files.selectedItems').indexOf(self.get("item")) === -1) {
-          self.get('files.currentFolder').setEach('selected', false);
-        }
-        self.set('item.selected', true);
-        return true;
+    Ember.$('#'+this.get('elementId')).bind('contextmenu', function() {
+      if (self.get('files.selectedItems.length') && self.get('files.selectedItems').indexOf(self.get("item")) === -1) {
+        self.get('files.currentFolder').setEach('selected', false);
       }
+      self.set('item.selected', true);
+      Ember.$('#context-sidebar').sidebar('toggle');
+      return false;
     });
   }.on('didInsertElement'),
   click: function() {

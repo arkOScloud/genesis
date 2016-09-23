@@ -6,32 +6,19 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('apps', { path: '/apps' }, function() {
+    this.route('info', { path: '/:app_id' });
+  });
   this.route('websites', function(){
     this.route('website', { path: '/:website_id' }, function(){
       this.route('edit');
     });
   });
-  this.route('packages', function(){
-    this.route('package', { path: '/:package_id' }, function(){
-      this.route('edit');
-    });
-  });
-  this.route('apps', { path: '/apps' }, function() {
-    this.route('info', { path: '/:app_id' });
-  });
-  this.route('backups', function(){
-    this.route('backup', { path: '/:backup_id' }, function(){
-      this.route('edit');
-    });
-  });
-  this.route('networks', function(){
-    this.route('network', { path: '/:network_id' }, function(){
-      this.route('edit');
-    });
-  });
-  this.route('updates');
 
   this.route('settings', function() {
+    this.route('backups', function(){
+      this.route('info', { path: '/:backup_id' });
+    });
     this.route('config');
     this.route('networks', function() {
       this.route('info', { path: '/:network_id' });
@@ -56,7 +43,9 @@ Router.map(function() {
       });
       this.route('fail2ban');
     });
+    this.route('updates');
   });
+
   this.route('tools', function() {
     this.route('certificates', function(){
       this.route('info', { path: '/:certificate_id' });
@@ -68,10 +57,13 @@ Router.map(function() {
       this.route('info', { path: '/:database_id' });
       this.route('user-edit', { path: '/user/:database-user_id' });
     });
-    this.route('files');
+    this.route('files', function() {});
     this.route('filesystems', function(){
       this.route('info', { path: '/:filesystem_id' });
       this.route('add');
+    });
+    this.route('packages', function(){
+      this.route('info', { path: '/:package_id' });
     });
     this.route('services');
     this.route('stats');

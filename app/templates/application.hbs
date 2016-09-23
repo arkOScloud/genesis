@@ -16,7 +16,7 @@
           {{#link-to 'tools.certificates' class='item'}}<i class="fa fa-certificate fa-fw"></i> Certificates{{/link-to}}
           {{#link-to 'tools.databases' class='item'}}<i class="fa fa-database fa-fw"></i> Databases{{/link-to}}
           {{#link-to 'tools.filesystems' class='item'}}<i class="fa fa-hdd-o fa-fw"></i> Filesystems{{/link-to}}
-          {{#link-to 'packages' class='item'}}<i class="fa fa-cube fa-fw"></i> Packages{{/link-to}}
+          {{#link-to 'tools.packages' class='item'}}<i class="fa fa-cube fa-fw"></i> Packages{{/link-to}}
           {{#link-to 'tools.services' class='item'}}<i class="fa fa-spinner fa-fw"></i> Services{{/link-to}}
         </div>
       {{/ui-dropdown-menu}}
@@ -24,8 +24,8 @@
         <i class="fa fa-cogs"></i>
         <div class="menu">
           {{#link-to 'settings.roles.users' class='item'}}<i class="fa fa-group fa-fw"></i> Users, Groups and Domains{{/link-to}}
-          {{#link-to 'updates' class='item'}}<i class="fa fa-star fa-fw"></i> Updates{{/link-to}}
-          {{#link-to 'backups' class='item'}}<i class="fa fa-clock-o fa-fw"></i> Recovery{{/link-to}}
+          {{#link-to 'settings.updates' class='item'}}<i class="fa fa-star fa-fw"></i> Updates{{/link-to}}
+          {{#link-to 'settings.backups' class='item'}}<i class="fa fa-clock-o fa-fw"></i> Recovery{{/link-to}}
           {{#link-to 'settings.networks' class='item'}}<i class="fa fa-sitemap fa-fw"></i> Networking{{/link-to}}
           {{#link-to 'settings.security.firewall' class='item'}}<i class="fa fa-lock fa-fw"></i> Security{{/link-to}}
           {{#link-to 'settings.config' class='item'}}<i class="fa fa-sliders fa-fw"></i> Preferences{{/link-to}}
@@ -50,7 +50,7 @@
 
 <div class="ui container main-container">
   {{#if showBreadCrumbs}}
-  {{bread-crumbs}}
+    {{bread-crumbs}}
   {{/if}}
 
   {{outlet}}

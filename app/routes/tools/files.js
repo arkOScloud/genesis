@@ -15,30 +15,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     controller.set('model', model);
     if (!this.get("currentPath")) {
         this.set('currentPath', "/");
-        Ember.$.getJSON(ENV.APP.krakenHost+'/api/files/Lw**', function(j) {
-          controller.set('currentFolder', j.files);
-        });
-    }
-  },
-  actions: {
-    removeFromClipboard: function(item) {
-      this.get('controller.clipboard').removeObject(item);
-    },
-    clearClipboard: function() {
-      this.get('controller.clipboard').clear();
-    },
-    delete: function() {
-      var selection = this.get('controller.selectedItems'),
-          self = this;
-      selection.forEach(function(i) {
-        Ember.$.ajax({
-          url: ENV.APP.krakenHost+'/api/files/'+i.id,
-          type: "DELETE",
-          success: function(){
-            self.get('controller.currentFolder').removeObject(i);
-          }
-        });
-      });
+        Ember.$.getJSON(`${ENV.APP.krakenHost}/api/files/Lw**`)
+          .done(function(j) {
+            controller.set('currentFolder', j.files);
+          });
     }
   }
 });

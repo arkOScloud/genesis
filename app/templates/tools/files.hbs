@@ -1,72 +1,342 @@
-<div id="file-manager-segment" class="ui basic segment">
-  <div class="ui grid">
-    <div class="eight wide column">
-      <div class="ui fluid five item menu">
-        {{#ui-dropdown-menu}}
-          <i class="fa fa-fw fa-file-o"></i> File <i class="dropdown icon"></i>
-          <div class="menu">
-            <a href="#" class="item" {{action 'showModal' 'file/newfile'}}><i class="fa fa-fw fa-file"></i> New File...</a>
-            <a href="#" class="item" {{action 'showModal' 'file/newfolder'}}><i class="fa fa-fw fa-folder"></i> New Folder...</a>
-            <a href="#" class="item" {{action 'showModal' 'file/open'}}><i class="fa fa-fw fa-folder-open"></i> Open File/Path...</a>
-            <div class="divider"></div>
-            <a href="#" class="item" {{action 'properties'}}><i class="fa fa-fw fa-cogs"></i> Properties...</a>
-          </div>
-        {{/ui-dropdown-menu}}
-        {{#ui-dropdown-menu}}
-          <i class="fa fa-fw fa-pencil"></i> Edit <i class="dropdown icon"></i>
-          <div class="menu">
-            <a href="#" class="item" {{action 'copy'}}><i class="fa fa-fw fa-files-o"></i> Copy</a>
-            <a href="#" class="item" {{action 'paste'}}><i class="fa fa-fw fa-clipboard"></i> Paste</a>
-            <a href="#" class="item" {{action 'showModal' 'file/clipboard'}}><i class="fa fa-fw fa-clipboard"></i> Clipboard...{{#if clipboard}} <span class="badge">{{clipboard.length}}</span>{{/if}}</a>
-            <a href="#" class="item" {{action 'selectAll'}}><i class="fa fa-fw fa-check-square-o"></i> Select All</a>
-            <a href="#" class="item" {{action 'deselectAll'}}><i class="fa fa-fw fa-square-o"></i> Deselect All</a>
-            <div class="divider"></div>
-            <a href="#" class="item" {{action 'showConfirm' 'delete' 'Are you sure you want to delete the selected files?'}}><i class="fa fa-fw fa-times-circle"></i> Delete...</a>
-          </div>
-        {{/ui-dropdown-menu}}
-        {{#ui-dropdown-menu}}
-          <i class="fa fa-fw fa-search"></i> View <i class="dropdown icon"></i>
-          <div class="menu">
-            <a href="#" class="item" {{action 'refresh'}}><i class="fa fa-fw fa-refresh"></i> Refresh</a>
-            <a href="#" class="item" {{action 'toggleHidden'}}><i class="fa fa-fw {{if showHidden 'fa-eye-slash' 'fa-eye'}}"></i> {{if showHidden 'Hide Hidden' 'Show Hidden'}}</a>
-          </div>
-        {{/ui-dropdown-menu}}
-        {{#ui-dropdown-menu}}
-          <i class="fa fa-fw fa-arrow-circle-right"></i> Go <i class="dropdown icon"></i>
-          <div class="menu">
-            {{#each model.POIs as |poi|}}
-              <a href="#" class="item" {{action 'openPath' poi.path}}><i class="fa fa-fw {{poi.icon}}"></i> {{poi.id}}</a>
-            {{else}}
-              <div class="disabled item">None</div>
-            {{/each}}
-          </div>
-        {{/ui-dropdown-menu}}
-        {{#ui-dropdown-menu}}
-          <i class="fa fa-fw fa-wrench"></i> Tools <i class="dropdown icon"></i>
-          <div class="menu">
-            <a href="#" class="item" {{action 'showModal' 'file/upload'}}><i class="fa fa-fw fa-upload"></i> Upload Here...</a>
-            <a href="#" class="item" {{action 'addToDownloads'}}><i class="fa fa-fw fa-download"></i> Download...</a>
-          </div>
-        {{/ui-dropdown-menu}}
+<div class="ui basic segment">
+  <div class="ui top attached menu">
+    {{#ui-dropdown-menu}}
+      <i class="file icon"></i> File <i class="dropdown icon"></i>
+      <div class="menu">
+        <a href="#" class="item" {{action 'openSidebar' 'file-sidebar'}}><i class="file icon"></i> New File...</a>
+        <a href="#" class="item" {{action 'openSidebar' 'folder-sidebar'}}><i class="folder icon"></i> New Folder...</a>
+        <a href="#" class="item" {{action 'focusOpenInput'}}><i class="open folder icon"></i> Open File/Path...</a>
+        <div class="divider"></div>
+        <a href="#" class="item" {{action 'showProperties'}}><i class="cogs icon"></i> Properties...</a>
       </div>
-    </div>
-    <div class="eight wide column">
-      <div class="ui pointing menu">
-        {{#each breadcrumbs as |item|}}
-          {{#if item.active}}
-            <div class="active item">{{item.name}}</div>
-          {{else}}
-            <a href="#" class="item" {{action 'openPath' item.path}}>{{item.name}}</a>
-          {{/if}}
+    {{/ui-dropdown-menu}}
+    {{#ui-dropdown-menu}}
+      <i class="pencil icon"></i> Edit <i class="dropdown icon"></i>
+      <div class="menu">
+        <a href="#" class="item" {{action 'copy'}}><i class="copy icon"></i> Copy</a>
+        <a href="#" class="item" {{action 'paste'}}><i class="clipboard icon"></i> Paste</a>
+        <a href="#" class="item" {{action 'openSidebar' 'copy-sidebar'}}><i class="clipboard icon"></i> Clipboard...{{#if clipboard}} <div class="ui red horizontal mini label">{{clipboard.length}}</div>{{/if}}</a>
+        <a href="#" class="item" {{action 'selectAll'}}><i class="check square icon"></i> Select All</a>
+        <a href="#" class="item" {{action 'deselectAll'}}><i class="square icon"></i> Deselect All</a>
+        <div class="divider"></div>
+        <a href="#" class="item" {{action 'openModal' 'delete-files'}}><i class="remove circle icon"></i> Delete...</a>
+      </div>
+    {{/ui-dropdown-menu}}
+    {{#ui-dropdown-menu}}
+      <i class="search icon"></i> View <i class="dropdown icon"></i>
+      <div class="menu">
+        <a href="#" class="item" {{action 'refresh'}}><i class="refresh icon"></i> Refresh</a>
+        <a href="#" class="item" {{action 'toggleHidden'}}><i class="{{if showHidden 'hide' 'unhide'}} icon"></i> {{if showHidden 'Hide Hidden' 'Show Hidden'}}</a>
+      </div>
+    {{/ui-dropdown-menu}}
+    {{#ui-dropdown-menu}}
+      <i class="right arrow circle icon"></i> Go <i class="dropdown icon"></i>
+      <div class="menu">
+        {{#each model.POIs as |poi|}}
+          <a href="#" class="item" {{action 'openPath' poi.path}}><i class="fa fa-fw {{poi.icon}}"></i> {{poi.id}}</a>
+        {{else}}
+          <div class="disabled item">None</div>
         {{/each}}
+      </div>
+    {{/ui-dropdown-menu}}
+    {{#ui-dropdown-menu}}
+      <i class="wrench icon"></i> Tools <i class="dropdown icon"></i>
+      <div class="menu">
+        <a href="#" class="item" {{action 'openModal' 'upload-file'}}><i class="upload icon"></i> Upload Here...</a>
+        <a href="#" class="item" {{action 'addToDownloads'}}><i class="download icon"></i> Download...</a>
+      </div>
+    {{/ui-dropdown-menu}}
+    <div class="right menu">
+      <div class="ui right aligned category search item">
+        <div class="ui transparent icon input">
+          {{input type="text" class="prompt" value=pathToOpen insert-newline="openPath" placeholder="Go to folder..."}}
+          <i class="remove circle link icon" {{action 'clearOpenInput'}}></i>
+        </div>
       </div>
     </div>
   </div>
-  <div class="ui eight column grid">
-    {{#each sortedFolder as |item|}}
-      <div class="column">
-        {{g-fm-item item=item files=this}}
+  <div id="file-manager-pushable" class="ui pushable attached segment component context">
+    {{#ui-sidebar class="inverted menu left inline vertical" context=".component.context" id="context-sidebar"}}
+      <div class="item"><em>{{selectedItems.length}} item(s) selected</em></div>
+      <a class="item" href="#" {{action 'copy'}}><i class="copy icon"></i> Copy</a>
+      <a class="item" href="#" {{action 'paste'}}><i class="clipboard icon"></i> Paste</a>
+      <a class="item" href="#" {{action 'addToDownloads'}}><i class="download icon"></i> Download...</a>
+      <a class="item" href="#" {{action 'openModal' 'delete-files'}}><i class="trash icon"></i> Delete...</a>
+      <a class="item" href="#" {{action 'showProperties'}}><i class="cogs icon"></i> Properties...</a>
+    {{/ui-sidebar}}
+    {{#ui-sidebar class="menu right inline vertical" context=".component.context" id="copy-sidebar"}}
+      <div class="item"><i class="clipboard icon"></i> <strong>Clipboard</strong> <i class="red link icon right floated minus circle" {{action 'clearClipboard'}}></i></div>
+      {{#each clipboard as |item|}}
+        <div class="item"><i class="fa fa-fw {{item.icon}}"></i> {{item.name}} <i class="red link icon right floated minus circle" {{action 'removeFromClipboard' item}}></i></div>
+      {{else}}
+        <div class="item"><em>Clipboard empty</em></div>
+      {{/each}}
+    {{/ui-sidebar}}
+    {{#ui-sidebar class="one item menu bottom inline horizontal" context=".component.context" id="file-sidebar"}}
+      <div class="item">
+        <div class="ui action input">
+          {{input type="text" value=newItemName insert-newline="newItem" placeholder="Enter path to file to create"}}
+          <button class="ui button" {{action 'newItem' newItemName}}><i class="file icon"></i> Create File</button>
+        </div>
       </div>
+    {{/ui-sidebar}}
+    {{#ui-sidebar class="one item menu bottom inline horizontal" context=".component.context" id="folder-sidebar"}}
+      <div class="item">
+        <div class="ui action input">
+          {{input type="text" value=newItemName insert-newline=(action 'newItem' newItemName true) placeholder="Enter path to folder to create"}}
+          <button class="ui button" {{action 'newItem' newItemName true}}><i class="folder icon"></i> Create Folder</button>
+        </div>
+      </div>
+    {{/ui-sidebar}}
+    <div id="file-manager" class="pusher">
+      <div id="file-manager-segment" class="ui basic segment">
+        <div class="ui grid">
+          {{#each sortedFolder as |item|}}
+            <div class="two wide column">
+              {{g-fm-item item=item files=this}}
+            </div>
+          {{else}}
+            <div class="ui four column centered row">
+              <div class="column text center">
+                <i class="fa fa-4x fa-fw fa-folder"></i>
+                <p class="text lead">Folder empty</p>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui bottom attached menu">
+    {{#each breadcrumbs as |item|}}
+      {{#if item.active}}
+        <div class="active item">{{item.name}}</div>
+      {{else}}
+        <a href="#" class="item" {{action 'openPath' item.path}}>{{item.name}}</a>
+      {{/if}}
     {{/each}}
   </div>
 </div>
+
+{{#ui-modal name="delete-files" class="basic delete-files" onApprove=(action 'deleteFiles')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="user icon"></i>
+    Delete {{selectedItems.length}} file(s)?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete these files or folders?</p>
+      {{#each selectedItems as |file|}}
+        <p>{{file.path}}</p>
+      {{/each}}
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="file-info" class="file-info" onApprove=(action 'saveProperties')}}
+  <i class="close icon"></i>
+  <div class="ui header">
+    <i class="fa {{selectedItem.icon}}"></i> {{selectedItem.name}} Properties
+  </div>
+  <div class="content">
+    <div class="ui grid">
+      <div class="eight wide column">
+        <div class="ui list">
+          <div class="item">
+            <div class="header">Name</div>
+            {{selectedItem.name}}
+          </div>
+          <div class="item">
+            <div class="header">Full Path</div>
+            {{selectedItem.path}}
+          </div>
+          <div class="item">
+            <div class="header">File Size</div>
+            {{size-to-string selectedItem.size}}
+          </div>
+          <div class="item">
+            <div class="header">Mimetype</div>
+            {{if selectedItem.mimetype selectedItem.mimetype 'Unknown'}}
+          </div>
+          <div class="item">
+            <div class="header">Permissions</div>
+            <code>{{selectedItem.user}}:{{selectedItem.group}} {{selectedItem.perms.oct}} {{selectedItem.perms.str}}</code>
+          </div>
+        </div>
+      </div>
+      <div class="eight wide column">
+        <h5>Edit Permissions</h5>
+        <div class="ui form">
+          <div class="field">
+            <div class="two fields">
+              <div class="field">
+                <label>User</label>
+                {{input type="text" value=selectedItem.user}}
+              </div>
+              <div class="field">
+                <label>Group</label>
+                {{input type="text" value=selectedItem.group}}
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>User</label>
+            <div class="three fields">
+              <div class="field">
+                {{ui-checkbox label="Read" checked=selectedItem.perms.user.read onChange=(action (mut selectedItem.perms.user.read))}}
+              </div>
+              <div class="field">
+                {{ui-checkbox label="Write" checked=selectedItem.perms.user.write onChange=(action (mut selectedItem.perms.user.write))}}
+              </div>
+              <div class="field">
+                {{ui-checkbox label="Execute" checked=selectedItem.perms.user.execute onChange=(action (mut selectedItem.perms.user.execute))}}
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Group</label>
+            <div class="three fields">
+              <div class="field">
+                {{ui-checkbox label="Read" checked=selectedItem.perms.group.read onChange=(action (mut selectedItem.perms.group.read))}}
+              </div>
+              <div class="field">
+                {{ui-checkbox label="Write" checked=selectedItem.perms.group.write onChange=(action (mut selectedItem.perms.group.write))}}
+              </div>
+              <div class="field">
+                {{ui-checkbox label="Execute" checked=selectedItem.perms.group.execute onChange=(action (mut selectedItem.perms.group.execute))}}
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>All</label>
+            <div class="three fields">
+              <div class="field">
+                {{ui-checkbox label="Read" checked=selectedItem.perms.all.read onChange=(action (mut selectedItem.perms.all.read))}}
+              </div>
+              <div class="field">
+                {{ui-checkbox label="Write" checked=selectedItem.perms.all.write onChange=(action (mut selectedItem.perms.all.write))}}
+              </div>
+              <div class="field">
+                {{ui-checkbox label="Execute" checked=selectedItem.perms.all.execute onChange=(action (mut selectedItem.perms.all.execute))}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel button">
+      Cancel
+    </div>
+    <div class="ui ok green right labeled icon button">
+      OK
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="download-files" class="download-files"}}
+  <i class="close icon"></i>
+  <div class="ui header">
+    <i class="download icon"></i>
+    Downloads
+  </div>
+  <div class="content">
+    <table class="ui fixed table">
+      <thead>
+        <tr>
+          <th class="three wide">File</th>
+          <th class="six wide">Share URL</th>
+          <th class="two wide">Downloads</th>
+          <th class="two wide">Expires</th>
+          <th class="three wide"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each model.shares as |share|}}
+          <tr>
+            <td>{{share.name}}</td>
+            <td><div class="ui fluid input">{{input type="text" value=share.url}}</div></td>
+            <td>{{share.fetchCount}}</td>
+            <td>{{#if share.expires}}{{from-now share.expiresAt}}{{else}}Immediately{{/if}}</td>
+            <td>
+              <div class="ui fluid tiny buttons">
+                <a class="ui tiny primary icon button" href={{share.url}}><i class="download icon"></i></a>
+                {{#copy-button class="ui tiny green icon button" clipboardText=share.url}}<i class="copy icon"></i>{{/copy-button}}
+                <a href="#" class="ui tiny red icon button" {{action "removeDownload" share}}><i class="broken chain icon"></i></a>
+              </div>
+            </td>
+          </tr>
+        {{else}}
+          <tr><td colspan=5><em>No files available for download</em></td></tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="ui ok right labeled icon button">
+      OK
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="edit-file" class="edit-file" onApprove=(action 'saveEditingFile')}}
+  <i class="close icon"></i>
+  <div class="ui header">
+    <i class="fa {{editingFile.icon}}"></i>
+    Editing {{editingFile.name}}
+  </div>
+  <div class="content">
+    <div class="ui form">
+      <div class="ui fluid field">
+        {{textarea rows=25 id="editArea" value=editingFile.content}}
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel button">
+      Cancel
+    </div>
+    <div class="ui ok blue right labeled icon button">
+      Save
+      <i class="save icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="upload-file" class="upload-file" onApprove=(action 'saveUploadedFile')}}
+  <i class="close icon"></i>
+  <div class="ui header">
+    <i class="upload icon"></i>
+    Upload File
+  </div>
+  <div class="content">
+    <div class="ui form">
+      <div class="field">
+        <label>Files to upload</label>
+        {{input type="file" name="file" class="required" multiple="true"}}
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel button">
+      Cancel
+    </div>
+    <div class="ui ok green right labeled icon button">
+      Upload
+      <i class="upload icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
