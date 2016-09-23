@@ -56,8 +56,8 @@ export default Ember.Controller.extend({
     },
     deleteUser: function() {
       var self = this;
-      this.get('model').destroyRecord();
       Ember.$('.ui.delete-user.modal').modal('hide', function() {
+        self.get('model').destroyRecord();
         self.transitionToRoute('settings.roles.users');
       });
     }

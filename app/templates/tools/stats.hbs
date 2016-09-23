@@ -14,7 +14,7 @@
         <h2><i class="fa fa-cube fa-fw"></i> Memory</h2>
         <div id="memory" class="ui green progress">
           <div class="bar" style="width: {{memoryPct}}%">
-            <div class="progress"></div>
+            <div class="progress">{{memoryPct}}%</div>
           </div>
           <div class="label">{{size-to-string memory}} of {{size-to-string memoryTotal}} used</div>
         </div>
@@ -23,18 +23,9 @@
         <h2><i class="fa fa-random fa-fw"></i> Swap</h2>
         <div id="swap" class="ui orange progress">
           <div class="bar" style="width: {{swapPct}}%">
-            <div class="progress"></div>
+            <div class="progress">{{swapPct}}%</div>
           </div>
           <div class="label">{{size-to-string swap}} of {{size-to-string swapTotal}} used</div>
-        </div>
-      </div>
-    </div>
-    <div class="two wide column">
-      <h2><i class="fa fa-sun-o fa-fw"></i> Temp</h2>
-      <div class="ui statistics">
-        <div id="temp" class="ui statistic">
-          <div class="value">{{temp}}</div>
-          <div class="label">degrees</div>
         </div>
       </div>
     </div>
@@ -76,5 +67,30 @@
         </div>
       </div>
     </div>
+    <div class="two wide column">
+      <h2><i class="fa fa-sun-o fa-fw"></i> Temp</h2>
+      <div class="ui statistics">
+        <div id="temp" class="ui statistic">
+          <div class="value">{{temp}}</div>
+          <div class="label">degrees</div>
+        </div>
+      </div>
+    </div>
   </div>
+  {{#if allDisks}}
+  <div class="ui divider"></div>
+  <div class="ui equal width grid">
+    {{#each allDisks as |disk|}}
+    <div class="column">
+      <h2><i class="fa fa-hdd-o fa-fw"></i> {{disk.id}}</h2>
+      <div id="swap" class="ui teal progress">
+        <div class="bar" style="width: {{disk.percent}}%">
+          <div class="progress">{{disk.percent}}%</div>
+        </div>
+        <div class="label">{{size-to-string disk.used}} of {{size-to-string disk.total}} used</div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
 </div>

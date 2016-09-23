@@ -22,7 +22,7 @@
       </div>
       <div class="ui bottom attached buttons">
         <div class="ui bottom attached button {{if net.connected 'red' 'green'}} {{if net.isReady '' 'disabled'}}" {{action 'toggle' net}}><i class="fa fa-fw {{if net.connected 'fa-times' 'fa-check'}}"></i> {{if net.connected 'Disconnect' 'Connect'}}</div>
-        <div class="ui bottom attached button {{if net.enabled 'red' 'green'}} {{if net.isReady '' 'disabled'}}" {{action 'toggleEnabled' net}}><i class="fa fa-fw {{if net.enabled 'fa-thumbs-down' 'fa-thumbs-up'}}"></i> {{if net.enabled 'Disable' 'Enable'}}</div>
+        <div class="ui bottom attached button {{if net.isReady '' 'disabled'}}" {{action 'toggleEnabled' net}}><i class="fa fa-fw {{if net.enabled 'fa-thumbs-down' 'fa-thumbs-up'}}"></i> {{if net.enabled 'Disable' 'Enable'}}</div>
         <div class="ui bottom attached red button {{if net.isReady '' 'disabled'}}" {{action 'showConfirm' 'delete' 'Are you sure you want to delete this network? It will be disconnected in the process.' net}}><i class="fa fa-fw fa-minus-circle"></i> Delete</div>
       </div>
     </div>

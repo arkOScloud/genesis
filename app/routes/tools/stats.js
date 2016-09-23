@@ -22,6 +22,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
       self.set('uptimeHours', j.uptime[2]);
       self.set('uptimeMinutes', j.uptime[1]);
       self.set('uptimeSeconds', j.uptime[0]);
+      self.set('allDisks', j.disks);
     });
   },
   setupController: function() {

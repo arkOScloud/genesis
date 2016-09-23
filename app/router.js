@@ -29,10 +29,10 @@ Router.map(function() {
       this.route('edit');
     });
   });
-  this.route('config');
   this.route('updates');
 
   this.route('settings', function() {
+    this.route('config');
     this.route('networks', function() {
       this.route('info', { path: '/:network_id' });
       this.route('add');

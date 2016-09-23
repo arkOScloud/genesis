@@ -35,8 +35,8 @@ export default Ember.Controller.extend({
     },
     deleteDb: function() {
       var self = this;
-      this.get('model').destroyRecord();
       Ember.$('.ui.delete-db.modal').modal('hide', function() {
+        self.get('model').destroyRecord();
         self.transitionToRoute('tools.databases');
       });
     }

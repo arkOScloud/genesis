@@ -1,0 +1,118 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="six wide column">
+      <div class="ui fluid card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="disk outline icon"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header"><i class="disk outline icon"></i> {{model.id}}</div>
+          <div class="meta">{{if model.isVirtual 'Virtual' 'Physical'}} Disk{{if model.crypt ' (Encrypted)'}}</div>
+        </div>
+        <div class="ui bottom attached buttons">
+          {{#if model.mounted}}
+            <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'umount' model}}>
+              <i class="fa fa-hdd-o fa-fw"></i> Unmount
+            </div>
+          {{else if model.crypt}}
+            <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'openModal' 'mount-encrypted'}}>
+              <i class="fa fa-hdd-o fa-fw"></i> Mount
+            </div>
+          {{else}}
+            <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'mount' model}}>
+              <i class="fa fa-hdd-o fa-fw"></i> Mount
+            </div>
+          {{/if}}
+          {{#unless model.crypt}}
+            {{#if model.enabled}}
+              <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'disable' model}}>
+                <i class="fa fa-hdd-o fa-fw"></i> Disable
+              </div>
+            {{else}}
+              <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'enable' model}}>
+                <i class="fa fa-hdd-o fa-fw"></i> Enable
+              </div>
+            {{/if}}
+          {{/unless}}
+          {{#if model.isVirtual}}
+            <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-fs'}}>
+              <i class="fa fa-minus-circle fa-fw"></i> Delete
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    <div class="ten wide column">
+      <div class="ui segment">
+        <div class="ui list">
+          <div class="item">
+            <div class="header">Device Path</div>
+            {{model.path}}
+          </div>
+          <div class="item">
+            <div class="header">Size</div>
+            {{size-to-string model.size}}
+          </div>
+          <div class="item">
+            <div class="header">Mountpoint</div>
+            {{if model.mounted model.mountpoint 'Not Mounted'}}
+          </div>
+          <div class="item">
+            <div class="header">Filesystem</div>
+            {{model.fstype}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#ui-modal name="delete-fs" class="basic delete-fs" onApprove=(action 'deleteFs')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="disk outline icon"></i>
+    Delete virtual disk?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete virtual disk <strong>{{model.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="mount-encrypted" class="mount-encrypted" onApprove=(action 'mountEnc') onDeny=(action 'clearModal')}}
+<i class="close icon"></i>
+<div class="header">
+  Mount Encrypted Disk
+</div>
+<div class="content">
+  <div class="description">
+    <p>Please enter your password to decrypt and mount <strong>{{model.id}}</strong>.</p>
+  </div>
+  <div class="ui form">
+    <div class="field">
+      {{input type="password" value=passwd}}
+    </div>
+  </div>
+</div>
+<div class="actions">
+  <div class="ui black cancel button">
+    Cancel
+  </div>
+  <div class="ui positive right labeled icon button">
+    Mount
+    <i class="checkmark icon"></i>
+  </div>
+</div>
+{{/ui-modal}}

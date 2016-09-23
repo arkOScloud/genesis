@@ -16,5 +16,6 @@ export default Ember.Controller.extend({
   uptimeDays: 0,
   uptimeHours: 0,
   uptimeMinutes:0,
-  uptimeSeconds: 0
+  uptimeSeconds: 0,
+  disks: Ember.A()
 });

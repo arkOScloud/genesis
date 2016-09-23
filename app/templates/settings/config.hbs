@@ -1,0 +1,163 @@
+<h3 class="ui dividing header">SSH Keys</h3>
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th width="1"></th>
+      <th>User</th>
+      <th>Key ID</th>
+      <th width="150">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each model.ssh as |key|}}
+      <tr>
+        <td><i class="fa fa-fw fa-key"></i></td>
+        <td>{{key.user}}</td>
+        <td>{{key.keyId}}</td>
+        <td><a href="#" class="ui tiny button danger" {{action 'delete' key}}><i class="fa fa-minus-circle"></i> Delete</a></td>
+      </tr>
+    {{else}}
+    <tr><td colspan=4><em>No keys</em></td></tr>
+    {{/each}}
+  </tbody>
+  <tfoot class="full-width">
+    <tr>
+      <th colspan="4">
+        <div class="ui right floated small primary labeled icon button" {{action 'openModal' 'add-ssh-key'}}>
+          <i class="upload icon"></i> Add Public Key
+        </div>
+      </th>
+    </tr>
+  </tfoot>
+</table>
+
+<h3 class="ui dividing header">Preferences</h3>
+{{#ui-form fields=fields onSubmit='save'}}
+  <div class="required field">
+    <label>Hostname</label>
+    {{input type="text" value=hostname}}
+    <p>The internal name of your arkOS device. To change addresses that your services can respond on, {{#link-to 'settings.roles.domains'}}go to Domains{{/link-to}}.</p>
+  </div>
+  <div class="required field">
+    <label>Timezone</label>
+    <div class="two fields">
+      <div class="field">
+        {{#ui-dropdown class="selection" selected=tzRegion onChange=(action (mut tzRegion)) as |execute mapper|}}
+          <div class="text"></div>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            {{#each tzRegions as |zone|}}
+              <div class="item" data-value="{{map-value mapper zone}}">
+                {{zone}}
+              </div>
+            {{/each}}
+          </div>
+        {{/ui-dropdown}}
+      </div>
+      <div class="field">
+        {{#ui-dropdown class="selection" selected=tzZone onChange=(action (mut tzZone)) as |execute mapper|}}
+          <div class="text"></div>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            {{#each tzZones as |zone|}}
+              <div class="item" data-value="{{map-value mapper zone}}">
+                {{zone}}
+              </div>
+            {{/each}}
+          </div>
+        {{/ui-dropdown}}
+      </div>
+    </div>
+  </div>
+  <div class="required field">
+    <label>Date and Time Formats</label>
+    <div class="two fields">
+      <div class="required field">
+        {{input type="text" value=config.general.date_format}}
+      </div>
+      <div class="required field">
+        {{input type="text" value=config.general.time_format}}
+      </div>
+    </div>
+  </div>
+  <div class="required field">
+    <label>Web Management: Host and Port</label>
+    <div class="two fields">
+      <div class="field">
+        {{input type="text" value=config.genesis.host}}
+      </div>
+      <div class="field">
+        {{input type="text" value=config.genesis.port}}
+      </div>
+    </div>
+    <p>By default, Genesis and the REST APIs bind to 0.0.0.0:8000. Only change the host if you absolutely have to and you know what you are doing. Restricted access should be managed via {{#link-to 'settings.security'}}the Security pane{{/link-to}}.</p>
+  </div>
+  <div class="required field">
+    <label>Websites: Cipher String</label>
+    {{input type="text" value=config.certificates.ciphers}}
+    <p>Cipher string to use for websites hosted with arkOS.</p>
+  </div>
+  <div class="required field">
+    <label>Filesystems: Cipher and Keysize</label>
+    <div class="two fields">
+      <div class="field">
+        {{input type="text" value=config.filesystems.cipher}}
+      </div>
+      <div class="field">
+        {{input type="text" value=config.filesystems.keysize}}
+      </div>
+    </div>
+    <p>Cipher and keysize used to create encrypted filesystems (<a target="_blank" href="https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption#Encryption_options_for_plain_mode">click here</a> for more info)</p>
+  </div>
+  <div class="required field">
+    <label for="cipher">Backup: Archive Directory</label>
+    {{input type="text" value=config.backups.location}}
+    <p>Directory where backup archives and metadata are stored.</p>
+  </div>
+  <div class="field">
+    {{ui-checkbox label="Check for Updates" checked=config.updates.check_updates onChange=(action (mut config.updates.check_updates))}}
+    <p>If checked, arkOS will check for updates on startup, and once every day thereafter.</p>
+  </div>
+  <div class="field">
+    {{ui-checkbox label="Purge apps on removal" checked=config.apps.purge onChange=(action (mut config.apps.purge))}}
+    <p>If checked, removing an application will also remove all saved preferences and configurations for that application.</p>
+  </div>
+  <div class="field">
+    <label for="datetime">Current Time (on server)</label>
+    <p>{{format-date-time model.datetime.datetime.datetime}}{{#if offset}}, offset is {{offset}} seconds{{/if}}</p>
+  </div>
+  <a href="#" class="ui button" {{action 'updateTime'}}><i class="fa fa-clock-o"></i> Update Time</a>
+  <div class="ui divider"></div>
+{{/ui-form}}
+
+{{#ui-modal name="add-ssh-key" class="add-ssh-key" onApprove=(action 'addSSH') onDeny=(action 'clearModal')}}
+<i class="close icon"></i>
+<div class="header">
+  Add SSH Public Key
+</div>
+<div class="content">
+  <div class="ui form">
+    <div class="required field">
+      <label>For user</label>
+      <div class="field">
+        {{input type="text" value=sshKeyUser}}
+      </div>
+    </div>
+    <div class="required field">
+      <label>Paste public key here</label>
+      <div class="field">
+        {{textarea type="text" value=sshKeyData}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="actions">
+  <div class="ui black cancel button">
+    Cancel
+  </div>
+  <div class="ui positive right labeled icon button">
+    Upload
+    <i class="checkmark icon"></i>
+  </div>
+</div>
+{{/ui-modal}}

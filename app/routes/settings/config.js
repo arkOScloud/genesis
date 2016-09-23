@@ -1,6 +1,5 @@
 import Ember from "ember";
-import ENV from "../config/environment";
-import timezones from "../utils/timezones";
+import ENV from "../../config/environment";
 import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixin';
 
 
@@ -17,8 +16,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     controller.set('model', model);
     controller.set('config', model.config.config);
     controller.set('hostname', model.config.hostname);
-    controller.set('tzRegion', timezones.filter(function (o){return o.region === model.config.timezone.region;}));
-    controller.set('tzRegionName', model.config.timezone.region);
+    controller.set('tzRegion', model.config.timezone.region);
     controller.set('tzZone', model.config.timezone.zone);
   },
   actions: {
