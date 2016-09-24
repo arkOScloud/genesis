@@ -6,7 +6,7 @@ export default Ember.ObjectController.extend({
   queryParams: ['filter'],
   filter: null,
   filteredServices: Ember.computed.filter('model', function(i) {
-    return this.get('filter') ? i.get('id').indexOf(this.get('filter')) >= 0 : true;
+    return this.get('filter') ? i.get('id').toLowerCase().indexOf(this.get('filter').toLowerCase()) >= 0 : true;
   }).property('model', 'filter'),
   actions: {
     clearFilter: function() {

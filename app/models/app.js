@@ -54,21 +54,18 @@ export default DS.Model.extend({
       return shots;
     }.property('assets'),
     services: DS.attr(),
-    database_engines: DS.attr(),
+    databaseEngines: DS.attr(),
     databaseMultiuser: DS.attr('boolean', {defaultValue: false}),
-    database_service: DS.attr('string'),
-    download_url: DS.attr('string'),
-    uses_php: DS.attr('boolean', {defaultValue: false}),
-    uses_ssl: DS.attr('boolean', {defaultValue: false}),
-    selected_dbengine: DS.attr('string'),
-    website_datapaths: DS.attr('boolean', {defaultValue: false}),
-    website_default_data_subdir: DS.attr('string'),
-    website_options: DS.attr(),
-    website_has_options: function() {
-      return (this.get("website_options") !== false && Object.keys(this.get("website_options")).length > 0);
-    }.property('website_options'),
-    website_extra_actions: DS.attr('boolean', {defaultValue: false}),
-    website_updates: DS.attr('boolean', {defaultValue: false}),
+    databaseService: DS.attr('string'),
+    downloadUrl: DS.attr('string'),
+    usesPhp: DS.attr('boolean', {defaultValue: false}),
+    usesSsl: DS.attr('boolean', {defaultValue: false}),
+    selectedDbengine: DS.attr('string'),
+    websiteDefaultDataSubdir: DS.attr('string'),
+    websiteActions: DS.attr(),
+    websiteOptions: DS.attr(),
+    websiteDatapaths: DS.attr('boolean', {defaultValue: false}),
+    websiteUpdates: DS.attr('boolean', {defaultValue: false}),
     installed: DS.attr('boolean', {defaultValue: false}),
     upgradable: DS.attr('string'),
     isUpgradable: function() {
@@ -80,13 +77,6 @@ export default DS.Model.extend({
           loadable  = this.get('loadable');
       return (goodType && loadable && installed);
     }.property('type', 'loadable', 'installed'),
-    displayHref: function() {
-      if (this.get('type') === "website") {
-        return 'websites';
-      } else {
-        return this.get('id');
-      }
-    }.property('id', 'type'),
     operation: DS.attr('string'),
     isReady: DS.attr('boolean', {defaultValue: false})
 });

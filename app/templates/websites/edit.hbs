@@ -1,0 +1,83 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="fa {{model.siteIcon}}"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header"><i class="fa-fw {{model.siteIcon}}"></i> {{newName}}</div>
+          <div class="meta">{{model.siteName}}</div>
+        </div>
+        <div class="ui bottom attached buttons">
+          <div class="ui bottom attached button {{if model.isReady '' 'disabled'}}" {{action 'toggleStatus'}}>
+          {{#if model.enabled}}<i class="minus circle icon"></i> Disable{{else}}<i class="plus circle icon"></i> Enable{{/if}}
+          </div>
+          <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-site'}}>
+            <i class="trash icon"></i> Delete
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="twelve wide column">
+      {{#if model.siteType.websiteActions}}
+        <div class="ui menu">
+          <div class="header item">{{model.siteType.name}} Actions</div>
+          {{#each model.siteType.websiteActions as |sAct|}}
+            <a class="item" {{action 'siteAction' sAct.id}}><i class="{{sAct.icon}} icon"></i> {{sAct.name}}</a>
+          {{/each}}
+        </div>
+      {{/if}}
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="field">
+            <label>Site Name</label>
+            {{input type="text" name="name" value=newName}}
+          </div>
+          <div class="field">
+            <label>Address</label>
+            {{#ui-dropdown class="selection" selected=model.domain onChange=(action (mut model.domain)) as |execute mapper|}}
+              <div class="default text">Select a domain</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each domains as |domain|}}
+                  <div class="item" data-value="{{map-value mapper domain}}">
+                    {{domain.id}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="field">
+            <label>Port Number</label>
+            {{input type="text" name="port" value=model.port}}
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#ui-modal name="delete-site" class="basic delete-site" onApprove=(action 'deleteSite')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="{{selectedSite.siteIcon}} fa-4x"></i><br /><br />
+    Delete website?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete the website <strong>{{model.siteName}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

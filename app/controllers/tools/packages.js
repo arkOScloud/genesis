@@ -10,15 +10,14 @@ export default Ember.ObjectController.extend({
   sortBy: ['id'],
   sortedPackages: Ember.computed.sort('model', 'sortBy'),
   filteredPackages: Ember.computed('filter', 'sortedPackages', function() {
-    var self = this;
     var filter = this.get('filter');
-    if (["", null].indexOf(this.get('filter')) !== -1) {
+    if (["", null].indexOf(filter) !== -1) {
       return this.get('sortedPackages').filterBy('installed', true);
     } else if (filter === 'upgradable') {
       return this.get('sortedPackages').filterBy('isUpgradable', true);
     } else {
       return this.get('sortedPackages').filter(function(i) {
-        return i.get('id').indexOf(self.get('filter')) >= 0;
+        return i.get('id').toLowerCase().indexOf(filter.toLowerCase()) >= 0;
       });
     }
   }),

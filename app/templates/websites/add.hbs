@@ -1,0 +1,242 @@
+<div class="ui basic segment">
+  <div class="ui three steps">
+    <div class="{{if selectedSiteType 'completed' 'active'}} step">
+      <i class="globe icon"></i>
+      <div class="content">
+        <div class="title">Browse Apps</div>
+        <div class="description">Find a website type</div>
+      </div>
+    </div>
+    <div class="{{if confirmedSiteType 'completed' (if selectedSiteType 'active')}} step">
+      <i class="checkmark circle icon"></i>
+      <div class="content">
+        <div class="title">Confirm Type</div>
+        <div class="description">Select a type of website to create</div>
+      </div>
+    </div>
+    <div class="{{if confirmedSiteType 'active'}} step">
+      <i class="wrench icon"></i>
+      <div class="content">
+        <div class="title">Configure</div>
+        <div class="description">Enter website details</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#unless selectedSiteType}}
+    <div class="ui four cards">
+      {{#each siteTypes as |siteType|}}
+        <div class="card {{if siteType.error 'red'}}">
+          <div class="image">
+            <div class="{{siteType.cardColor}}">
+              <i class="{{siteType.icon}}"></i>
+            </div>
+          </div>
+          <div class="content">
+            <div class="header"><i class="fa-fw {{siteType.icon}}"></i> {{siteType.name}}</div>
+            <div class="meta">{{siteType.description.short}}</div>
+          </div>
+          <div class="ui bottom attached button green {{if siteType.isReady '' 'disabled'}}" {{action 'selectSiteType' siteType}}>
+            <i class="checkmark circle icon"></i> Select
+          </div>
+        </div>
+      {{/each}}
+    </div>
+{{else}}
+  {{#unless confirmedSiteType}}
+    <div class="ui grid">
+      <div class="four wide column">
+        <div class="ui card">
+          <div class="image">
+            <div class="{{selectedSiteType.cardColor}}">
+              <i class="{{selectedSiteType.icon}}"></i>
+            </div>
+          </div>
+          <div class="content">
+            <div class="header"><i class="fa-fw {{selectedSiteType.icon}}"></i> {{selectedSiteType.name}}</div>
+            <div class="meta">{{selectedSiteType.description.short}}</div>
+          </div>
+          <div class="ui bottom attached buttons">
+            <div class="ui labeled icon button {{if selectedSiteType.isReady '' 'disabled'}}" {{action 'resetSiteType'}}>
+              <i class="left arrow circle icon"></i> Back
+            </div>
+            <div class="or"></div>
+            <div class="ui right labeled icon button green {{if selectedSiteType.isReady '' 'disabled'}}" {{action 'confirmSiteType'}}>
+              <i class="right arrow circle icon"></i> Next
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="twelve wide column">
+        <div class="ui center aligned segment">
+          {{#if selectedSiteType.logoURL}}
+            <img class="img-responsive ui-app-logo" src={{selectedSiteType.logoURL}} />
+          {{else}}
+          <div class="card-image-unique card-image-center {{selectedSiteType.cardColor}}">
+            <i class="{{selectedSiteType.icon}}"></i>
+          </div>
+          <h1>{{selectedSiteType.name}}</h1>
+          {{/if}}
+          <p class="text lead">{{selectedSiteType.description.short}}</p>
+          <div class="ui list">
+            <div class="item">
+              <div class="header">Version</div>
+              {{selectedSiteType.version}}
+            </div>
+            <div class="item">
+              <div class="header">Categories</div>
+              {{selectedSiteType.categoryString}}
+            </div>
+            {{#if selectedSiteType.description.long}}
+            <div class="item">
+              <div class="header">Description</div>
+              {{selectedSiteType.description.long}}
+            </div>
+            {{/if}}
+            <div class="item">
+              <div class="header">Application by</div>
+              {{selectedSiteType.appAuthor}} &mdash; <a target="_blank" href={{selectedSiteType.appHomepage}}>{{selectedSiteType.appHomepage}}</a>
+            </div>
+            <div class="item">
+              <div class="header">Created for arkOS by</div>
+              {{selectedSiteType.author}} &mdash; <a target="_blank" href={{selectedSiteType.homepage}}>{{selectedSiteType.homepage}}</a>
+            </div>
+            {{#if selectedSiteType.screenshotUrls}}
+            <div class="ui divider"></div>
+            {{/if}}
+            {{#each selectedSiteType.screenshotUrls as |shot|}}
+            <div class="ui small image">
+              <a href={{shot}} data-lightbox="screenshots">
+                  <img class="app-screenshot" src={{shot}} />
+              </a>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="ui grid">
+      <div class="four wide column">
+        <div class="ui card">
+          <div class="image">
+            <div class="{{confirmedSiteType.cardColor}}">
+              <i class="{{confirmedSiteType.icon}}"></i>
+            </div>
+          </div>
+          <div class="content">
+            <div class="header"><i class="fa-fw {{confirmedSiteType.icon}}"></i> {{confirmedSiteType.name}}</div>
+            <div class="meta">{{confirmedSiteType.description.short}}</div>
+          </div>
+          <div class="ui bottom attached buttons">
+            <div class="ui labeled icon button {{if confirmedSiteType.isReady '' 'disabled'}}" {{action 'resetSiteType'}}>
+              <i class="left arrow circle icon"></i> Back
+            </div>
+            <div class="or"></div>
+            <div class="ui right labeled icon button green {{if confirmedSiteType.isReady '' 'disabled'}}" {{action 'createWebsite'}}>
+              <i class="checkmark circle icon"></i> Finish
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="twelve wide column">
+        <div class="ui segment">
+          <div id="new-website-form" class="ui form">
+            <div class="required field">
+              <label>Site Name</label>
+              {{input type="text" name="name" value=newSiteName}}
+            </div>
+            <div class="required field">
+              <label>Domain</label>
+              {{#ui-dropdown class="selection" selected=domains.firstObject onChange=(action (mut newSiteDomain)) as |execute mapper|}}
+                <div class="default text">Select a domain</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                  {{#each domains as |domain|}}
+                    <div class="item" data-value="{{map-value mapper domain}}">
+                      {{domain.id}}
+                    </div>
+                  {{/each}}
+                </div>
+              {{/ui-dropdown}}
+            </div>
+            <div class="required field">
+              <label>Port Number</label>
+              {{input type="text" name="port" value=newSitePort}}
+            </div>
+            {{#if confirmedSiteType.websiteDatapaths}}
+              <div class="field">
+                <label>Data Directory</label>
+                {{input type="text" name="datadir" value=newSiteDataDir}}
+                <p>This application supports storage of data in a designated folder. Enter the full path to the folder you wish to use for this. If you leave it blank, the application's default location will be used.</p>
+              </div>
+            {{/if}}
+            {{#if canChooseDBType}}
+              <div class="required field">
+                <label>Database Type</label>
+                {{#ui-dropdown class="selection" selected=dbtypes.firstObject onChange=(action (mut newSiteDBEngine)) as |execute mapper|}}
+                  <div class="default text">Select a database type</div>
+                  <i class="dropdown icon"></i>
+                  <div class="menu">
+                    {{#each dbtypes as |dbtype|}}
+                      <div class="item" data-value="{{map-value mapper dbtype}}">
+                        {{dbtype.name}}
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/ui-dropdown}}
+                <p>This application supports multiple types of databases. Choose the one you would like to use as the backend for this website.</p>
+              </div>
+            {{/if}}
+            {{#each websiteOptions.text as |opt|}}
+              <div class="{{if opt.required 'required'}} field">
+                <label>{{opt.label}}</label>
+                {{input type="text" name=opt.id value=opt.value}}
+                {{#if opt.help}}
+                  <p>{{opt.help}}</p>
+                {{/if}}
+              </div>
+            {{/each}}
+            {{#each websiteOptions.password as |opt|}}
+              <div class="{{if opt.required 'required'}} field">
+                <label>{{opt.label}}</label>
+                {{input type="password" name=opt.id value=opt.value}}
+                {{#if opt.help}}
+                  <p>{{opt.help}}</p>
+                {{/if}}
+              </div>
+            {{/each}}
+            {{#each websiteOptions.users as |opt|}}
+              <div class="{{if opt.required 'required'}} field">
+                <label>{{opt.label}}</label>
+                {{#ui-dropdown class="selection" selected=users.firstObject onChange=(action (mut opt.value)) as |execute mapper|}}
+                  <div class="default text">Select a database type</div>
+                  <i class="dropdown icon"></i>
+                  <div class="menu">
+                    {{#each users as |user|}}
+                      <div class="item" data-value="{{map-value mapper user}}">
+                        {{user.name}}
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/ui-dropdown}}
+                {{#if opt.help}}
+                  <p>{{opt.help}}</p>
+                {{/if}}
+              </div>
+            {{/each}}
+            {{#each websiteOptions.boolean as |opt|}}
+              <div class="field">
+                {{ui-checkbox label=opt.label name=opt.id checked=opt.value onChange=(action (mut opt.value))}}
+                {{#if opt.help}}
+                  <p>{{opt.help}}</p>
+                {{/if}}
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/unless}}
+{{/unless}}

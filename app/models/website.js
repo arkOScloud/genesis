@@ -1,4 +1,5 @@
 import DS from "ember-data";
+import cardColor from "../utils/card-color";
 
 
 export default DS.Model.extend({
@@ -11,9 +12,9 @@ export default DS.Model.extend({
       }
     }.property('id', 'name', 'siteType'),
     path: DS.attr('string'),
-    addr: DS.attr('string'),
+    domain: DS.belongsTo('domain', {async: true}),
     port: DS.attr('number'),
-    siteType: DS.attr('string'),
+    siteType: DS.belongsTo('app', {async: true}),
     siteName: DS.attr('string'),
     siteIcon: DS.attr('string'),
     version: DS.attr('string'),
@@ -24,12 +25,14 @@ export default DS.Model.extend({
     extraData: DS.attr(),
     operation: DS.attr('string'),
     newName: DS.attr('string'),
-    hasActions: DS.attr('boolean', {defaultValue: false}),
     isReady: DS.attr('boolean', {defaultValue: false}),
     address: function() {
       var proto = this.get('certificate')?"https://":"http://",
-          addr  = this.get('addr'),
+          addr  = this.get('domain.id'),
           port  = [80, 443].indexOf(this.get('port'))>=0?"":":"+String(this.get('port'));
       return proto+addr+port;
-    }.property('certificate', 'addr', 'port')
+    }.property('certificate', 'addr', 'port'),
+    cardColor: function() {
+      return cardColor();
+    }.property()
 });

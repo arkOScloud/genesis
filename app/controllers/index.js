@@ -7,7 +7,13 @@ export default Ember.Controller.extend({
   filteredApps: Ember.computed.filterBy('sortedApps', 'displayInMenu', true),
   actions: {
     openApplication: function(app) {
-      this.transitionToRoute(app.get('displayHref'));
+      if (app.get('type') === 'website') {
+        this.transitionToRoute('websites', {
+          queryParams: {filter: app.get('name')}
+        });
+      } else {
+        this.transitionToRoute(app.get('id'));
+      }
     }
   }
 });

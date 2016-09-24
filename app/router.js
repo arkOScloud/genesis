@@ -10,9 +10,8 @@ Router.map(function() {
     this.route('info', { path: '/:app_id' });
   });
   this.route('websites', function(){
-    this.route('website', { path: '/:website_id' }, function(){
-      this.route('edit');
-    });
+    this.route('edit', { path: '/:website_id' });
+    this.route('add');
   });
 
   this.route('settings', function() {
