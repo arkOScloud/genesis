@@ -31,6 +31,11 @@ a:link, a:focus, a:active, a:hover {
 
 /* Widgets */
 
+#package-ops-table {
+  max-height: 450px;
+  overflow: scroll;
+}
+
 .ui-fm-selected {
   color: #2185D0;
 }

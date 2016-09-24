@@ -4,6 +4,6 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   renderTemplate: function() {
-    this.render('tools.filesystems.add', { into: 'application' });
+    this.render('settings.backups.info', { into: 'application' });
   }
 });

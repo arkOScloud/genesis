@@ -1,0 +1,95 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="fa {{model.icon}}"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header">
+            <i class="fa fa-user fa-fw"></i> {{model.pid}}
+          </div>
+          <div class="meta">
+            {{format-date-time model.time}}
+          </div>
+        </div>
+        <div class="ui bottom attached buttons">
+          <div class="ui bottom attached button {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'restore-backup' backup}}>
+            <i class="clock icon"></i> Restore
+          </div>
+          <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-backup' backup}}>
+            <i class="trash icon"></i> Delete
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        <div class="ui list">
+          <div class="item">
+            <div class="header">Backup for</div>
+            {{model.pid}}
+          </div>
+          <div class="item">
+            <div class="header">Made at</div>
+            {{format-date-time model.time}}
+          </div>
+          <div class="item">
+            <div class="header">Version</div>
+            {{model.version}}
+          </div>
+          <div class="item">
+            <div class="header">Size</div>
+            {{size-to-string model.size}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#ui-modal name="delete-backup" class="basic delete-backup" onApprove=(action 'deleteBackup')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="clock icon"></i>
+    Delete backup?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete the backup of <strong>{{selectedBackup.pid}}</strong> made at <strong>{{format-date-time backup.time}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="restore-backup" class="basic restore-backup" onApprove=(action 'restoreBackup')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="clock icon"></i>
+    Restore backup?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to restore the backup of <strong>{{selectedBackup.pid}}</strong> made at <strong>{{format-date-time backup.time}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok green basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

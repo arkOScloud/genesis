@@ -1,47 +1,46 @@
 import Ember from "ember";
+import ENV from "../../config/environment";
 
 
 export default Ember.ObjectController.extend({
+  breadCrumb: {name: 'Packages', icon: 'fa-cube'},
+  queryParams: ['filter'],
+  filter: null,
+  search: "",
   sortBy: ['id'],
-  installedQuery: '',
-  availableQuery: '',
   sortedPackages: Ember.computed.sort('model', 'sortBy'),
-  installed: function() {
-    return this.get('sortedPackages').filterBy('installed', true);
-  }.property('sortedPackages'),
-  upgradable: function() {
-    return this.get('sortedPackages').filterBy('isUpgradable', true);
-  }.property('sortedPackages'),
-  filteredInstalled: Ember.computed.filter('installed', function(i) {
-    return i.get('id').indexOf(this.get('installedQuery'))>=0;
-  }).property('installed', 'installedQuery'),
-  filteredAvailable: [],
+  filteredPackages: Ember.computed('filter', 'sortedPackages', function() {
+    var self = this;
+    var filter = this.get('filter');
+    if (["", null].indexOf(this.get('filter')) !== -1) {
+      return this.get('sortedPackages').filterBy('installed', true);
+    } else if (filter === 'upgradable') {
+      return this.get('sortedPackages').filterBy('isUpgradable', true);
+    } else {
+      return this.get('sortedPackages').filter(function(i) {
+        return i.get('id').indexOf(self.get('filter')) >= 0;
+      });
+    }
+  }),
+  installedFilter: function() {
+    return ["", null].indexOf(this.get('filter')) !== -1;
+  }.property('filter'),
+  upgradableFilter: function() {
+    return this.get('filter') === 'upgradable';
+  }.property('filter'),
+  searchFilter: function() {
+    return ["", null, 'upgradable'].indexOf(this.get('filter')) === -1;
+  }.property('filter'),
   pendingOperations: function() {
     return this.get('model').filter(function(i) {
       return i.get('operation') !== "";
     });
   }.property('model.@each.operation'),
+
   actions: {
-    showInfo: function(pkg) {
+    getInfo: function(pkg) {
       pkg.reload();
-      this.send('showModal', 'package/edit', pkg);
-    },
-    clearInstalledFilter: function() {
-      this.set('installedQuery', '');
-    },
-    clearAvailableFilter: function() {
-      this.set('availableQuery', '');
-      this.set('filteredAvailable', []);
-    },
-    filterAvailable: function() {
-      if (this.get('availableQuery') === '') {
-        this.set('filteredAvailable', []);
-        return false;
-      }
-      var self = this;
-      this.set('filteredAvailable', this.get('sortedPackages').filter(function(i){
-        return (i.get('installed') === false && i.get('id').indexOf(self.get('availableQuery'))>=0);
-      }));
+      this.send('openModal', 'package-info', pkg);
     },
     install: function(pkg) {
       if (pkg.get('operation') !== 'install') {
@@ -60,10 +59,50 @@ export default Ember.ObjectController.extend({
       }
     },
     upgradeAll: function() {
-      this.get('upgradable').forEach(function(i) {
-        i.set('operation', 'install');
-      });
+      this.get('model').filterBy('isUpgradable', true).setEach('operation', 'install');
       this.message.success('Packages marked for upgrade. Click Apply Changes to complete.');
+    },
+    beginOperations: function() {
+      var self = this;
+      var toSend = Ember.A();
+      this.get('pendingOperations').forEach(function(i) {
+        toSend.pushObject({id: i.get('id'), operation: i.get('operation')});
+        i.set('operation', '');
+      });
+      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/packages`, {
+        data: JSON.stringify({packages: toSend}),
+        type: 'POST',
+        contentType: 'application/json'
+      })
+        .error(function(e) {
+          if (e.status === 500) {
+            self.transitionToRoute("error", e);
+          }
+        });
+    },
+    search: function(term) {
+      this.set('filter', term);
+    },
+    clearOperations: function() {
+      var self = this;
+      Ember.$('.ui.package-ops.modal').modal('hide', function() {
+        self.get('model').setEach('operation', '');
+      });
+    },
+    clearSearch: function() {
+      this.set('search', "");
+      this.set('filter', null);
+    },
+    setFilter: function(filt) {
+      if (filt === 'upgradable') {
+        this.set('filter', 'upgradable');
+      } else {
+        this.set('filter', null);
+      }
+    },
+    openModal: function(name, pack) {
+      this.set('selectedPackage', pack);
+      Ember.$('.ui.' + name + '.modal').modal('show');
     }
   }
 });

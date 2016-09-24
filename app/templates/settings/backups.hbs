@@ -1,40 +1,93 @@
-{{#if selectedBackupType}}
-  <a href="#" class="btn btn-default pull-right" {{action 'backup' selectedBackupType}}><i class="fa fa-plus-circle"></i> New Backup</a>
-{{/if}}
-<h1 class="page-header">My Backups</h1>
-
-<div class="row">
-  <div class="col-sm-3">
-    <ul class="nav nav-pills nav-stacked ui-navlist">
-      <li class="{{if selectedBackupType '' 'active'}}"><a href="#" {{action 'selectType' 'all'}}><i class="fa fa-fw fa-clock-o"></i> All Backups</a></li>
-      {{#each model.types as |type|}}
-        <li id={{type.id}}><a href="#" {{action 'selectType' type.id}}><i class="fa fa-fw {{type.icon}}"></i> {{type.id}}</a></li>
-      {{/each}}
-    </ul>
-  </div>
-  <div class="col-sm-9">
-    <div class="ui-items-3">
-      {{#each selectedBackups as |backup|}}
-        <div class="ui-item {{if backup.isReady '' 'is-pending'}}">
-          <div class="ui-item-icon">
-            <i class="fa-fw fa-5x {{backup.icon}}"></i>
-          </div>
-          <div class="ui-item-content">
-            <h2>{{backup.pid}}</h2>
-            <p class="lead">{{format-date-time backup.time}}</p>
-            <div class="ui-item-buttons">
-              <a href="#" class="ui-item-button {{if backup.isReady '' 'disabled'}}" {{action 'showModal' 'backup/info' backup}}><i class="fa fa-info-circle fa-fw fa-lg"></i><br />Info</a>
-              <a href="#" class="ui-item-button {{if backup.isReady '' 'disabled'}}" {{action 'showConfirm' 'restore' 'Are you sure you want to restore this backup? Any existing application data with this name will be overwritten.' backup}}><i class="fa fa-clock-o fa-fw fa-lg"></i><br />Restore</a>
-              <a href="#" class="ui-item-button text-danger {{if backup.isReady '' 'disabled'}}" {{action 'showConfirm' 'delete' 'Are you sure you want to delete this backup?' backup}}><i class="fa fa-minus-circle fa-fw fa-lg"></i><br />Delete</a>
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div id="backup-menu" class="ui vertical fluid tabular menu">
+        <a class="item {{if selectedBackupType '' 'active'}}" {{action 'selectType' 'all'}}><i class="clock icon"></i> All Backups</a>
+        {{#each model.types as |type|}}
+          <a class="item" id={{type.id}} href="#" {{action 'selectType' type.id}}><i class="fa fa-fw {{type.icon}}"></i> {{type.id}}</a>
+        {{/each}}
+        {{#if selectedBackupType}}
+          <div class="item"><a class="ui fluid primary button" {{action 'backup' selectedBackupType}}><i class="plus circle icon"></i> New Backup</a></div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide stretched column">
+      <div class="ui three cards">
+        {{#each selectedBackups as |backup|}}
+          <div class="card">
+            {{#link-to 'settings.backups.info' backup class="image {{if backup.isReady '' 'disabled'}}"}}
+              <div class="{{backup.cardColor}}">
+                <i class="fa {{backup.icon}}"></i>
+              </div>
+            {{/link-to}}
+            <div class="content">
+              {{#link-to 'settings.backups.info' backup class="header"}}
+                <i class="fa fa-user fa-fw"></i> {{backup.pid}}
+              {{/link-to}}
+              <div class="meta">
+                {{format-date-time backup.time}}
+              </div>
+            </div>
+            <div class="ui bottom attached buttons">
+              <div class="ui bottom attached button {{if backup.isReady '' 'disabled'}}" {{action 'openModal' 'restore-backup' backup}}>
+                <i class="clock icon"></i> Restore
+              </div>
+              <div class="ui bottom attached button red {{if backup.isReady '' 'disabled'}}" {{action 'openModal' 'delete-backup' backup}}>
+                <i class="trash icon"></i> Delete
+              </div>
             </div>
           </div>
-        </div>
-      {{else}}
-        <div class="text-center">
-          <h1 class="fa fa-clock-o fa-5x"></h1>
-          <p class="lead">No backups found.</p>
-        </div>
-      {{/each}}
+        {{else}}
+          <div class="text center">
+            <i class="massive clock icon"></i>
+            <p class="text lead">No backups found.</p>
+          </div>
+        {{/each}}
+      </div>
     </div>
   </div>
 </div>
+
+{{#ui-modal name="delete-backup" class="basic delete-backup" onApprove=(action 'deleteBackup') onDeny=(action 'clearModal')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="clock icon"></i>
+    Delete backup?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete the backup of <strong>{{selectedBackup.pid}}</strong> made at <strong>{{format-date-time backup.time}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="restore-backup" class="basic restore-backup" onApprove=(action 'restoreBackup') onDeny=(action 'clearModal')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="clock icon"></i>
+    Restore backup?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to restore the backup of <strong>{{selectedBackup.pid}}</strong> made at <strong>{{format-date-time backup.time}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok green basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

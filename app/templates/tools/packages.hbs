@@ -1,91 +1,217 @@
-<div class="btn-group pull-right">
-  <a href="#" class="btn btn-default" {{action 'refresh'}}><i class="fa fa-refresh"></i> Refresh</a>
-  <a href="#" class="btn btn-default" {{action 'upgradeAll'}}><i class="fa fa-arrow-circle-up"></i> Upgrade All</a>
-  <a href="#" class="btn btn-default" {{action 'showModal' 'package/ops' model}}><i class="fa fa-check"></i> Apply Changes{{#if pendingOperations}} <span class="badge">{{pendingOperations.length}}</span>{{/if}}</a>
+<div class="ui pointing menu">
+  <div class="header item">Filter by</div>
+  <a class="{{if installedFilter 'active'}} item" {{action 'setFilter' 'installed'}}>Installed</a>
+  <a class="{{if upgradableFilter 'active'}} item" {{action 'setFilter' 'upgradable'}}>Upgradable</a>
+  {{#if searchFilter}}<div class="item active">Search</div>{{/if}}
+  <div class="right menu">
+    <a href="#" class="item" {{action 'refresh'}}><i class="refresh icon"></i> Refresh</a>
+    <a href="#" class="item" {{action 'upgradeAll'}}><i class="up arrow circle icon"></i> Upgrade All</a>
+    <a href="#" class="item" {{action 'openModal' 'package-ops'}}><i class="checkmark icon"></i> Apply Changes{{#if pendingOperations}} <span class="ui red label">{{pendingOperations.length}}</span>{{/if}}</a>
+    <div class="ui right aligned category search item">
+      <div class="ui transparent icon input">
+        {{input type="text" class="prompt" value=search insert-newline="search" placeholder="Filter results"}}
+        <i class="remove circle link icon" {{action 'clearSearch'}}></i>
+      </div>
+    </div>
+  </div>
 </div>
 
-<ul class="nav nav-tabs" role="tablist">
-  <li role="presentation" class="active"><a href="#installed" aria-controls="installed" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Installed Packages</a></li>
-  <li role="presentation"><a href="#available" aria-controls="available" role="tab" data-toggle="tab"><i class="fa fa-cube"></i> Available Packages</a></li>
-</ul>
+<div class="ui top attached segment">
+  <h4><i class="cube icon"></i> {{filteredPackages.length}}{{#if searchFilter}} result(s) in current search.{{else if installedFilter}} packages installed.{{else}} upgradable packages.{{/if}}</h4>
+</div>
 
-<div class="tab-content">
-  <div role="tabpanel" class="tab-pane active" id="installed">
-    <div class="well">
-      <h4><i class="fa fa-cube"></i> {{installed.length}} packages installed, {{upgradable.length}} can be upgraded.</h4>
-    </div>
+<table class="ui celled bottom attached table">
+  <thead>
+    <tr>
+      <th class="collapsing"></th>
+      <th>Package Name</th>
+      <th>Version</th>
+      <th class="collapsing">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each filteredPackages as |pkg|}}
+      <tr class="{{if pkg.toInstall 'positive'}} {{if pkg.toRemove 'negative'}}">
+        <td><i class="{{if pkg.isUpgradable 'up arrow circle' 'cube'}} icon"></i></td>
+        <td>{{pkg.id}}</td>
+        <td>{{pkg.version}}{{#if pkg.isUpgradable}}<span class="text green"> ({{pkg.upgradable}} available)</span>{{/if}}</td>
+        <td class="collapsing">
+          <div class="ui three tiny fluid buttons">
+            <a href="#" class="ui tiny button" {{action 'getInfo' pkg}}><i class="info circle icon"></i> Info</a>
+            <a href="#" class="ui tiny green button {{if pkg.installed (if pkg.isUpgradable '' 'disabled')}}" {{action 'install' pkg}}><i class="up arrow circle icon"></i> {{#if pkg.isUpgradable}}Upgrade{{else}}Install{{/if}}</a>
+            <a href="#" class="ui tiny red button {{if pkg.installed (if pkg.toInstall 'disabled') 'disabled'}}" {{action 'remove' pkg}}><i class="trash icon"></i> Uninstall</a>
+          </div>
+        </td>
+      </tr>
+    {{else}}
+      <tr><td class="text center" colspan="4"><em>None</em></td></tr>
+    {{/each}}
+  </tbody>
+</table>
 
-    <div class="input-group">
-      {{input type="text" class="form-control" value=installedQuery placeholder="Filter results"}}
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" {{action 'clearInstalledFilter'}}><i class="fa fa-fw fa-times-circle"></i> Clear</button>
-      </span>
+{{#ui-modal name="package-info" class="package-info"}}
+<i class="close icon"></i>
+<div class="icon header">
+  <i class="cube icon"></i> Package Info
+</div>
+<div class="content">
+  <div class="description">
+    <div class="ui list">
+      <div class="item">
+        <div class="header">Name</div>
+        {{selectedPackage.id}}
+      </div>
+      <div class="item">
+        <div class="header">Version</div>
+        {{selectedPackage.version}}
+      </div>
+      <div class="item">
+        <div class="header">Description</div>
+        {{selectedPackage.description}}
+      </div>
+      <div class="item">
+        <div class="header">Architecture</div>
+        {{selectedPackage.architecture}}
+      </div>
+      <div class="item">
+        <div class="header">URL</div>
+        <a target="_blank" href={{selectedPackage.url}}>{{selectedPackage.url}}</a>
+      </div>
+      <div class="item">
+        <div class="header">Licenses</div>
+        {{selectedPackage.licenses}}
+      </div>
+      <div class="item">
+        <div class="header">Groups</div>
+        {{selectedPackage.groups}}
+      </div>
+      <div class="item">
+        <div class="header">Provides</div>
+        {{selectedPackage.provides}}
+      </div>
+      <div class="item">
+        <div class="header">Depends On</div>
+        {{selectedPackage.dependsOn}}
+      </div>
+      <div class="item">
+        <div class="header">Optional Dependencies</div>
+        {{selectedPackage.optionalDeps}}
+      </div>
+      {{#if selectedPackage.requiredBy}}
+        <div class="item">
+          <div class="header">Required By</div>
+          {{selectedPackage.requiredBy}}
+        </div>
+      {{/if}}
+      {{#if selectedPackage.optionalFor}}
+        <div class="item">
+          <div class="header">Optional For</div>
+          {{selectedPackage.optionalFor}}
+        </div>
+      {{/if}}
+      <div class="item">
+        <div class="header">Conflicts With</div>
+        {{selectedPackage.conflictsWith}}
+      </div>
+      <div class="item">
+        <div class="header">Replaces</div>
+        {{selectedPackage.replaces}}
+      </div>
+      <div class="item">
+        <div class="header">Installed Size</div>
+        {{selectedPackage.installedSize}}
+      </div>
+      <div class="item">
+        <div class="header">Packager</div>
+        {{selectedPackage.packager}}
+      </div>
+      <div class="item">
+        <div class="header">Build Date</div>
+        {{selectedPackage.buildDate}}
+      </div>
+      {{#if selectedPackage.installDate}}
+        <div class="item">
+          <div class="header">Install Date</div>
+          {{selectedPackage.installDate}}
+        </div>
+      {{/if}}
+      {{#if selectedPackage.installReason}}
+        <div class="item">
+          <div class="header">Install Reason</div>
+          {{selectedPackage.installReason}}
+        </div>
+      {{/if}}
+      {{#if selectedPackage.installScript}}
+        <div class="item">
+          <div class="header">Install Script</div>
+          {{selectedPackage.installScript}}
+        </div>
+      {{/if}}
+      <div class="item">
+        <div class="header">Validated By</div>
+        {{selectedPackage.validatedBy}}
+      </div>
     </div>
-    <table class="table">
-      <tbody>
-        <tr>
-          <th width="1"></th>
-          <th>Package Name</th>
-          <th>Version</th>
-          <th width="275">Actions</th>
-        </tr>
-        {{#each filteredInstalled as |pkg|}}
-          <tr class="{{if pkg.toInstall 'success'}} {{if pkg.toRemove 'danger'}}">
-            <td><i class="fa {{if pkg.isUpgradable 'fa-arrow-circle-up' 'fa-cube'}}"></i></td>
-            <td>{{pkg.id}}</td>
-            <td>{{pkg.version}}{{#if pkg.isUpgradable}}<span class="text-success"> ({{pkg.upgradable}} available)</span>{{/if}}</td>
-            <td>
-              <div class="btn-group btn-group-sm">
-                <a href="#" class="btn btn-default" {{action 'showInfo' pkg}}><i class="fa fa-info-circle fa-fw"></i> Info</a>
-                <a href="#" class="btn btn-success {{if pkg.isUpgradable (if pkg.toRemove 'disabled')}}" {{action 'install' pkg}}><i class="fa fa-arrow-circle-up fa-fw"></i> Upgrade</a>
-                <a href="#" class="btn btn-danger {{if pkg.toInstall 'disabled'}}" {{action 'remove' pkg}}><i class="fa fa-times-circle fa-fw"></i> Uninstall</a>
-              </div>
-            </td>
-          </tr>
-        {{else}}
-          <tr><td class="text-center" colspan="4">None</td></tr>
-        {{/each}}
-      </tbody>
-    </table>
   </div>
-  <div role="tabpanel" class="tab-pane" id="available">
-    <div class="well">
-      <h4><i class="fa fa-cube"></i> {{model.length}} packages available. {{filteredAvailable.length}} result(s) in current search.</h4>
-    </div>
-    <div class="input-group">
-      {{input type="text" class="form-control" value=availableQuery placeholder="Search available packages"}}
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" {{action 'filterAvailable'}}><i class="fa fa-fw fa-search"></i> Search</button>
-        <button class="btn btn-default" type="button" {{action 'clearAvailableFilter'}}><i class="fa fa-fw fa-times-circle"></i> Clear</button>
-      </span>
-    </div>
+</div>
+<div class="actions">
+  <div class="ui ok right labeled icon button">
+    OK
+    <i class="checkmark icon"></i>
+  </div>
+</div>
+{{/ui-modal}}
 
-    <table class="table">
-      <tbody>
-        <tr>
-          <th width="1"></th>
-          <th>Package Name</th>
-          <th>Version</th>
-          <th width="175">Actions</th>
-        </tr>
-        {{#each filteredAvailable as |pkg|}}
-          <tr class="{{if pkg.toInstall 'success'}} {{if pkg.toRemove 'danger'}}">
-            <td><i class="fa {{if pkg.isUpgradable 'fa-arrow-circle-up' 'fa-cube'}}"></i></td>
-            <td>{{pkg.id}}</td>
-            <td>{{pkg.version}}{{#if pkg.isUpgradable}}<span class="text-success"> ({{pkg.upgradable}} available)</span>{{/if}}</td>
-            <td>
-              <div class="btn-group btn-group-sm">
-                <a href="#" class="btn btn-default" {{action 'showInfo' pkg}}><i class="fa fa-info-circle fa-fw"></i> Info</a>
-                <a href="#" class="btn btn-success" {{action 'install' pkg}}><i class="fa fa-check fa-fw"></i> Install</a>
-              </div>
-            </td>
-          </tr>
-        {{else}}
+{{#ui-modal name="package-ops" class="package-ops" onApprove=(action 'beginOperations')}}
+<i class="close icon"></i>
+<div class="header">
+  <i class="cube icon"></i> Package Operations
+</div>
+<div class="content">
+  <div class="description">
+    <div class="header">The following operations will be completed. Click OK to confirm.</div>
+    <div id="package-ops-table" class="ui basic segment">
+      <table class="ui celled table">
+        <thead>
           <tr>
-            <td class="text-center" colspan="4">No packages found. Use the Search bar above to find by name.</td>
+            <th width="1"></th>
+            <th>Package Name</th>
+            <th>Version</th>
+            <th>Action</th>
           </tr>
-        {{/each}}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {{#each pendingOperations as |pkg|}}
+            <tr>
+              <td><i class="cube icon"></i></td>
+              <td>{{pkg.id}}</td>
+              <td>{{pkg.version}}</td>
+              <td class="{{if pkg.toInstall 'positive' 'negative'}}">{{#if pkg.toInstall}}{{#if pkg.isUpgradable}}Upgrade to {{pkg.upgradable}}{{else}}Install{{/if}}{{else}}Remove{{/if}}</td>
+            </tr>
+          {{else}}
+            <tr>
+              <td class="text-center" colspan="4">None</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    {{#if pendingOperations}}
+      <div class="divider"></div>
+      <p class="text-muted">Certain packages that may be required by the above will also be installed. Packages that depend on any packages selected for removal here may be removed as necessary. Take care when removing important system packages with this utility.</p>
+    {{/if}}
   </div>
 </div>
+<div class="actions">
+  <div class="ui cancel button">
+    Cancel
+  </div>
+  <div class="ui labeled icon button" {{action 'clearOperations'}}>
+    <i class="remove circle icon"></i> Clear Pending
+  </div>
+  <div class="ui ok green right labeled icon button">
+    OK
+    <i class="checkmark icon"></i>
+  </div>
+</div>
+{{/ui-modal}}
