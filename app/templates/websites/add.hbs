@@ -198,6 +198,15 @@
                 {{/if}}
               </div>
             {{/each}}
+            {{#each websiteOptions.textarea as |opt|}}
+              <div class="{{if opt.required 'required'}} field">
+                <label>{{opt.label}}</label>
+                {{textarea rows=5 name=opt.id value=opt.value}}
+                {{#if opt.help}}
+                  <p>{{opt.help}}</p>
+                {{/if}}
+              </div>
+            {{/each}}
             {{#each websiteOptions.password as |opt|}}
               <div class="{{if opt.required 'required'}} field">
                 <label>{{opt.label}}</label>

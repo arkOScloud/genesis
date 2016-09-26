@@ -44,7 +44,7 @@ export default Ember.Controller.extend({
         keyboardShortcuts: false,
         onSuccess: function() {
           self.transitionToRoute("websites");
-          ["text", "password", "users", "boolean"].forEach(function(t) {
+          ["text", "textarea", "password", "users", "boolean"].forEach(function(t) {
             if (!!self.get('websiteOptions.' + t)) {
               self.get('websiteOptions.' + t).forEach(function(i) {
                 extraData[i.id] = extraData[i.value];
