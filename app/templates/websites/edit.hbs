@@ -4,12 +4,12 @@
       <div class="ui card">
         <div class="image">
           <div class="{{model.cardColor}}">
-            <i class="fa {{model.siteIcon}}"></i>
+            <i class="fa {{model.icon}}"></i>
           </div>
         </div>
         <div class="content">
-          <div class="header"><i class="fa-fw {{model.siteIcon}}"></i> {{newName}}</div>
-          <div class="meta">{{model.siteName}}</div>
+          <div class="header"><i class="fa-fw {{model.icon}}"></i> {{newName}}</div>
+          <div class="meta">{{model.appName}}</div>
         </div>
         <div class="ui bottom attached buttons">
           <div class="ui bottom attached button {{if model.isReady '' 'disabled'}}" {{action 'toggleStatus'}}>
@@ -22,10 +22,10 @@
       </div>
     </div>
     <div class="twelve wide column">
-      {{#if model.siteType.websiteActions}}
+      {{#if model.app.websiteActions}}
         <div class="ui menu">
-          <div class="header item">{{model.siteType.name}} Actions</div>
-          {{#each model.siteType.websiteActions as |sAct|}}
+          <div class="header item">{{model.app.name}} Actions</div>
+          {{#each model.app.websiteActions as |sAct|}}
             <a class="item" {{action 'siteAction' sAct.id}}><i class="{{sAct.icon}} icon"></i> {{sAct.name}}</a>
           {{/each}}
         </div>
@@ -63,12 +63,12 @@
 {{#ui-modal name="delete-site" class="basic delete-site" onApprove=(action 'deleteSite')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <i class="{{selectedSite.siteIcon}} fa-4x"></i><br /><br />
+    <i class="{{selectedSite.icon}} fa-4x"></i><br /><br />
     Delete website?
   </div>
   <div class="text center content">
     <div class="description">
-      <p>Are you sure you want to delete the website <strong>{{model.siteName}}</strong>?</p>
+      <p>Are you sure you want to delete the website <strong>{{model.properName}}</strong>?</p>
     </div>
   </div>
   <div class="actions">

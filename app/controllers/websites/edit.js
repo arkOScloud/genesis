@@ -3,9 +3,9 @@ import ENV from '../../config/environment';
 
 
 export default Ember.Controller.extend({
-  breadCrumb: Ember.computed("model.properName", "model.siteIcon", {
+  breadCrumb: Ember.computed("model.properName", "model.icon", {
     get() {
-      return {name: this.get("model.properName"), icon: this.get("model.siteIcon")};
+      return {name: this.get("model.properName"), icon: this.get("model.icon")};
     }
   }),
   newName: function() {

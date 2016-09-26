@@ -3,20 +3,18 @@ import cardColor from "../utils/card-color";
 
 
 export default DS.Model.extend({
-    name: DS.attr('string'),
+    icon: DS.attr('string'),
+    app: DS.belongsTo('app', {async: true}),
+    appName: DS.attr('string'),
     properName: function() {
-      if (this.get('siteType') === "internal") {
-        return this.get("name");
-      } else {
-        return this.get("id");
+      if (this.get('app.type') !== 'website') {
+        return this.get("appName");
       }
-    }.property('id', 'name', 'siteType'),
+      return this.get("id");
+    }.property('id', 'app', 'appName'),
     path: DS.attr('string'),
     domain: DS.belongsTo('domain', {async: true}),
     port: DS.attr('number'),
-    siteType: DS.belongsTo('app', {async: true}),
-    siteName: DS.attr('string'),
-    siteIcon: DS.attr('string'),
     version: DS.attr('string'),
     certificate: DS.attr('string'),
     database: DS.attr('string'),

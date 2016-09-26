@@ -43,6 +43,7 @@ export default Ember.Controller.extend({
         inline: true,
         keyboardShortcuts: false,
         onSuccess: function() {
+          self.transitionToRoute("websites");
           ["text", "password", "users", "boolean"].forEach(function(t) {
             if (!!self.get('websiteOptions.' + t)) {
               self.get('websiteOptions.' + t).forEach(function(i) {
@@ -52,17 +53,15 @@ export default Ember.Controller.extend({
           });
           var site = self.store.createRecord('website', {
             id: self.get('newSiteName'),
-            siteType: self.get('confirmedSiteType'),
-            siteName: self.get('confirmedSiteType.name'),
-            siteIcon: self.get('confirmedSiteType.icon'),
+            app: self.get('confirmedSiteType'),
+            appName: self.get('confirmedSiteType.name'),
+            icon: self.get('confirmedSiteType.icon'),
             domain: self.get('newSiteDomain') || self.get('domains.firstObject'),
             port: self.get('newSitePort'),
             extraData: extraData
           });
           var promise = site.save();
-          promise.then(function(){
-            self.transitionToRoute("websites");
-          }, function(e){
+          promise.then(function(){}, function(e){
             if (e.status === 500) {
               self.transitionToRoute("error", e);
             }

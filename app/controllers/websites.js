@@ -11,8 +11,8 @@ export default Ember.ObjectController.extend({
   sortedSites: Ember.computed.sort('model', 'sortBy'),
   filteredSites: Ember.computed.filter('sortedSites', function(site) {
     if (this.get('filter')) {
-      return (site.get('siteName').toLowerCase().indexOf(this.get('filter').toLowerCase()) >= 0 ||
-              site.get('siteType.id').toLowerCase().indexOf(this.get('filter').toLowerCase()) >= 0);
+      return (site.get('id').toLowerCase().indexOf(this.get('filter').toLowerCase()) >= 0 ||
+              site.get('appName').toLowerCase().indexOf(this.get('filter').toLowerCase()) >= 0);
     }
     return true;
   }).property('filter', 'sortedSites'),

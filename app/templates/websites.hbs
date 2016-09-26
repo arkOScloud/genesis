@@ -16,12 +16,12 @@
     <div class="card">
       {{#link-to "websites.edit" site class="image"}}
         <div class="{{site.cardColor}}">
-          <i class="fa {{site.siteIcon}}"></i>
+          <i class="fa {{site.icon}}"></i>
         </div>
       {{/link-to}}
       <div class="content">
-        <a target="_blank" href={{site.address}} class="header"><i class="fa-fw {{site.siteIcon}}"></i> {{site.properName}}</a>
-        <div class="meta">{{site.siteName}}</div>
+        <a target="_blank" href={{site.address}} class="header"><i class="external icon"></i> {{site.properName}}</a>
+        <div class="meta">{{site.appName}}</div>
       </div>
       <div class="ui bottom attached buttons">
         <div class="ui bottom attached button {{if site.isReady '' 'disabled'}}" {{action 'toggleStatus' site}}>
@@ -44,12 +44,12 @@
 {{#ui-modal name="delete-site" class="basic delete-site" onApprove=(action 'deleteSite')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <i class="{{selectedSite.siteIcon}} fa-4x"></i><br /><br />
+    <i class="{{selectedSite.icon}} fa-4x"></i><br /><br />
     Delete website?
   </div>
   <div class="text center content">
     <div class="description">
-      <p>Are you sure you want to delete the website <strong>{{selectedSite.siteName}}</strong>?</p>
+      <p>Are you sure you want to delete the website <strong>{{selectedSite.properName}}</strong>?</p>
     </div>
   </div>
   <div class="actions">
