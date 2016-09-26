@@ -5,7 +5,7 @@ import ENV from "../../../config/environment";
 export default Ember.Controller.extend({
   breadCrumb: Ember.computed("model.id", {
     get() {
-      return {name: this.get("model.id"), icon: 'fa-user'};
+      return {name: this.get("model.id"), icon: 'user'};
     }
   }),
   action: "No action",
@@ -25,8 +25,7 @@ export default Ember.Controller.extend({
         this.transitionToRoute('tools.databases');
         return false;
       }
-      Ember.$.ajax({
-        url: ENV.APP.krakenHost+'/api/database_users/'+this.get('model').get('id'),
+      Ember.$.ajax(`${ENV.APP.krakenHost}/api/database_users/${this.get('model').get('id')}`, {
         data: JSON.stringify({
           database_user: {
             operation: actionToTake,
@@ -35,7 +34,6 @@ export default Ember.Controller.extend({
         }),
         type: 'PUT',
         contentType: 'application/json',
-        processData: false,
         error: function(e) {
           if (e.status === 500) {
             self.transitionToRoute("error", e);

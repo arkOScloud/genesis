@@ -3,7 +3,7 @@
   <a class="{{if certificatesFilter 'active'}} item" {{action 'setFilter' 'certificates'}}>Certificates</a>
   <a class="{{if authoritiesFilter 'active'}} item" {{action 'setFilter' 'authorities'}}>Authorities</a>
   <div class="right menu">
-    {{#link-to "tools.certificates.add" class="item"}}<i class="fa fa-plus-circle fa-fw"></i> New Certificate{{/link-to}}
+    {{#link-to "tools.certificates.add" class="item"}}<i class="plus circle icon"></i> New Certificate{{/link-to}}
   </div>
 </div>
 
@@ -20,7 +20,7 @@
         <div class="meta">{{cert.typeString}}</div>
       </div>
       <div class="ui bottom attached button red {{if cert.isReady '' 'disabled'}}" {{action 'openModal' 'delete-cert' cert}}>
-        <i class="fa fa-minus-circle fa-fw"></i> Delete
+        <i class="trash icon"></i> Delete
       </div>
     </div>
   {{/each}}

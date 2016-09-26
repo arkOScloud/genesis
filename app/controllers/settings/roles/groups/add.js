@@ -3,7 +3,7 @@ import cardColor from '../../../../utils/card-color';
 
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'New group', icon: 'fa-group'},
+  breadCrumb: {name: 'New group', icon: 'group'},
   newGroup: {cardColor: cardColor()},
   fields: {
     name: ['minLength[4]', 'empty']

@@ -25,10 +25,9 @@ export default DS.Model.extend({
     newName: DS.attr('string'),
     isReady: DS.attr('boolean', {defaultValue: false}),
     address: function() {
-      var proto = this.get('certificate')?"https://":"http://",
-          addr  = this.get('domain.id'),
-          port  = [80, 443].indexOf(this.get('port'))>=0?"":":"+String(this.get('port'));
-      return proto+addr+port;
+      var isHTTPS = !!this.get('certificate'),
+          port  = [80, 443].indexOf(this.get('port'))>=0?"":`:${this.get('port')}`;
+      return `http${isHTTPS ? 's' : ''}://${this.get('domain.id')}${port}`;
     }.property('certificate', 'addr', 'port'),
     cardColor: function() {
       return cardColor();

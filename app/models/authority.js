@@ -16,10 +16,10 @@ export default DS.Model.extend({
       return this.get('certType') === 'authority';
     }.property('certType'),
     typeString: function() {
-      return this.get('keylength')+'-bit '+this.get('keytype')+' Authority';
+      return `${this.get('keylength')}-bit ${this.get('keytype')} Authority`;
     }.property('keylength', 'keytype'),
     downloadHref: function() {
-      return ENV.APP.krakenHost+'/api/authorities/'+this.get('id')+'?download=true';
+      return `${ENV.APP.krakenHost}/api/authorities/${this.get('id')}?download=true`;
     }.property('id'),
     cardColor: function() {
       return cardColor();

@@ -19,11 +19,11 @@ export default Ember.Controller.extend({
   navIcon: function() {
     switch(this.get('currentRouteName')) {
       case 'settings.roles.users.index':
-        return 'fa-user';
+        return 'user';
       case 'settings.roles.groups.index':
-        return 'fa-group';
+        return 'group';
       case 'settings.roles.domains.index':
-        return 'fa-code';
+        return 'code';
       default:
         return '';
     }

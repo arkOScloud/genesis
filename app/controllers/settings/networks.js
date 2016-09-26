@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'Networking', icon: 'fa-sitemap'},
+  breadCrumb: {name: 'Networking', icon: 'sitemap'},
   queryParams: ['filter'],
   sortBy: ['id'],
   filter: null,

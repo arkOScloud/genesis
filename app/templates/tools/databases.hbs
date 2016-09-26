@@ -3,10 +3,10 @@
   <a class="{{if usersFilter 'active'}} item" {{action 'setFilter' 'users'}}>Database Users</a>
   <div class="right menu">
     {{#if databasesFilter}}
-      {{#link-to "tools.databases.add" class="item"}}<i class="fa fa-plus-circle fa-fw"></i> New Database{{/link-to}}
+      {{#link-to "tools.databases.add" class="item"}}<i class="plus circle icon"></i> New Database{{/link-to}}
     {{/if}}
     {{#if usersFilter}}
-      {{#link-to "tools.databases.add-user" class="item"}}<i class="fa fa-plus-circle fa-fw"></i> New Database User{{/link-to}}
+      {{#link-to "tools.databases.add-user" class="item"}}<i class="plus circle icon"></i> New Database User{{/link-to}}
     {{/if}}
   </div>
 </div>
@@ -26,10 +26,10 @@
         </div>
         <div class="ui bottom attached buttons">
           <a href={{db.downloadHref}} class="ui button {{if db.isReady '' 'disabled'}}">
-            <i class="fa fa-download fa-fw"></i> Download
+            <i class="download icon"></i> Download
           </a>
           <div class="ui button red {{if db.isReady '' 'disabled'}}" {{action 'openModal' 'delete-db' db}}>
-            <i class="fa fa-minus-circle fa-fw"></i> Delete
+            <i class="trash icon"></i> Delete
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@
           <div class="meta">{{db.databaseType.name}}</div>
         </div>
         <div class="ui bottom attached button red {{if db.isReady '' 'disabled'}}" {{action 'openModal' 'delete-user' db}}>
-          <i class="fa fa-minus-circle fa-fw"></i> Delete
+          <i class="trash icon"></i> Delete
         </div>
       </div>
     {{/each}}

@@ -6,7 +6,7 @@ export default Ember.ObjectController.extend({
   queryParams: ['filter'],
   filter: null,
   selectedApp: null,
-  breadCrumb: {name: 'App Store', icon: 'fa-cubes'},
+  breadCrumb: {name: 'App Store', icon: 'cubes'},
   sortedApps: Ember.computed.sort('model', 'sortBy'),
 
   filteredApps: Ember.computed('filter', 'sortedApps', function() {

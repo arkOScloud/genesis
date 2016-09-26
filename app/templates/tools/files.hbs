@@ -19,7 +19,7 @@
         <a href="#" class="item" {{action 'selectAll'}}><i class="check square icon"></i> Select All</a>
         <a href="#" class="item" {{action 'deselectAll'}}><i class="square icon"></i> Deselect All</a>
         <div class="divider"></div>
-        <a href="#" class="item" {{action 'openModal' 'delete-files'}}><i class="remove circle icon"></i> Delete...</a>
+        <a href="#" class="item" {{action 'openModal' 'delete-files'}}><i class="trash icon"></i> Delete...</a>
       </div>
     {{/ui-dropdown-menu}}
     {{#ui-dropdown-menu}}
@@ -33,7 +33,7 @@
       <i class="right arrow circle icon"></i> Go <i class="dropdown icon"></i>
       <div class="menu">
         {{#each model.POIs as |poi|}}
-          <a href="#" class="item" {{action 'openPath' poi.path}}><i class="fa fa-fw {{poi.icon}}"></i> {{poi.id}}</a>
+          <a href="#" class="item" {{action 'openPath' poi.path}}><i class="{{poi.icon}} icon"></i> {{poi.id}}</a>
         {{else}}
           <div class="disabled item">None</div>
         {{/each}}
@@ -67,7 +67,7 @@
     {{#ui-sidebar class="menu right inline vertical" context=".component.context" id="copy-sidebar"}}
       <div class="item"><i class="clipboard icon"></i> <strong>Clipboard</strong> <i class="red link icon right floated minus circle" {{action 'clearClipboard'}}></i></div>
       {{#each clipboard as |item|}}
-        <div class="item"><i class="fa fa-fw {{item.icon}}"></i> {{item.name}} <i class="red link icon right floated minus circle" {{action 'removeFromClipboard' item}}></i></div>
+        <div class="item"><i class="{{item.icon}} icon"></i> {{item.name}} <i class="red link icon right floated minus circle" {{action 'removeFromClipboard' item}}></i></div>
       {{else}}
         <div class="item"><em>Clipboard empty</em></div>
       {{/each}}
@@ -98,7 +98,7 @@
           {{else}}
             <div class="ui four column centered row">
               <div class="column text center">
-                <i class="fa fa-4x fa-fw fa-folder"></i>
+                <i class="massive folder icon"></i>
                 <p class="text lead">Folder empty</p>
               </div>
             </div>
@@ -146,7 +146,7 @@
 {{#ui-modal name="file-info" class="file-info" onApprove=(action 'saveProperties')}}
   <i class="close icon"></i>
   <div class="ui header">
-    <i class="fa {{selectedItem.icon}}"></i> {{selectedItem.name}} Properties
+    <i class="{{selectedItem.icon}} icon"></i> {{selectedItem.name}} Properties
   </div>
   <div class="content">
     <div class="ui grid">
@@ -295,7 +295,7 @@
 {{#ui-modal name="edit-file" class="edit-file" onApprove=(action 'saveEditingFile')}}
   <i class="close icon"></i>
   <div class="ui header">
-    <i class="fa {{editingFile.icon}}"></i>
+    <i class="{{editingFile.icon}} icon"></i>
     Editing {{editingFile.name}}
   </div>
   <div class="content">

@@ -4,11 +4,11 @@
       <div class="ui card">
         <div class="image">
           <div class="{{model.cardColor}}">
-            <i class="fa {{model.icon}}"></i>
+            <i class="{{model.icon}} icon"></i>
           </div>
         </div>
         <div class="content">
-          <div class="header"><i class="fa-fw {{model.icon}}"></i> {{newName}}</div>
+          <div class="header"><i class="{{model.icon}} icon"></i> {{newName}}</div>
           <div class="meta">{{model.appName}}</div>
         </div>
         <div class="ui bottom attached buttons">
@@ -63,7 +63,7 @@
 {{#ui-modal name="delete-site" class="basic delete-site" onApprove=(action 'deleteSite')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <i class="{{selectedSite.icon}} fa-4x"></i><br /><br />
+    <i class="{{selectedSite.icon}} icon"></i>
     Delete website?
   </div>
   <div class="text center content">

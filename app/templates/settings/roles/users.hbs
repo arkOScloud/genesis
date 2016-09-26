@@ -3,19 +3,19 @@
     <div class="card">
       {{#link-to 'settings.roles.users.edit' user class="image {{if user.isReady '' 'disabled'}}"}}
         <div class="{{user.cardColor}}">
-          <i class="fa fa-user"></i>
+          <i class="user icon"></i>
         </div>
       {{/link-to}}
       <div class="content">
         {{#link-to 'settings.roles.users.edit' user class="header"}}
-          <i class="fa fa-user fa-fw"></i> {{user.fullName}}
+          <i class="user icon"></i> {{user.fullName}}
         {{/link-to}}
         <div class="meta">
           {{user.name}}
         </div>
       </div>
       <div class="ui bottom attached button red {{if user.isReady '' 'disabled'}}" {{action 'openModal' 'delete-user' user}}>
-        <i class="fa fa-minus-circle fa-fw"></i> Delete
+        <i class="trash icon"></i> Delete
       </div>
     </div>
   {{/each}}

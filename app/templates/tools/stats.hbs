@@ -2,7 +2,7 @@
   <div class="ui grid">
     <div class="three column row">
       <div id="cpu" class="column">
-        <h2><i class="fa fa-bolt fa-fw"></i> CPU</h2>
+        <h2><i class="lightning icon"></i> CPU</h2>
         <div id="cpu" class="ui blue progress">
           <div class="bar" style="width: {{cpuPct}}%">
             <div class="progress"></div>
@@ -11,7 +11,7 @@
         </div>
       </div>
       <div id="memory" class="column">
-        <h2><i class="fa fa-cube fa-fw"></i> Memory</h2>
+        <h2><i class="cube icon"></i> Memory</h2>
         <div id="memory" class="ui green progress">
           <div class="bar" style="width: {{memoryPct}}%">
             <div class="progress">{{memoryPct}}%</div>
@@ -20,7 +20,7 @@
         </div>
       </div>
       <div id="swap" class="column">
-        <h2><i class="fa fa-random fa-fw"></i> Swap</h2>
+        <h2><i class="random icon"></i> Swap</h2>
         <div id="swap" class="ui orange progress">
           <div class="bar" style="width: {{swapPct}}%">
             <div class="progress">{{swapPct}}%</div>
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div id="load" class="seven wide column">
-      <h2><i class="fa fa-cogs fa-fw"></i> Load</h2>
+      <h2><i class="cogs icon"></i> Load</h2>
       <div class="ui statistics">
         <div id="load-1min" class="statistic">
           <div class="value">{{load1min}}</div>
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div id="uptime" class="seven wide column">
-      <h2><i class="fa fa-clock-o fa-fw"></i> Uptime</h2>
+      <h2><i class="clock icon"></i> Uptime</h2>
       <div class="ui statistics">
         <div id="uptime-days" class="ui statistic">
           <div class="value">{{uptimeDays}}</div>
@@ -68,7 +68,7 @@
       </div>
     </div>
     <div class="two wide column">
-      <h2><i class="fa fa-sun-o fa-fw"></i> Temp</h2>
+      <h2><i class="sun icon"></i> Temp</h2>
       <div class="ui statistics">
         <div id="temp" class="ui statistic">
           <div class="value">{{temp}}</div>
@@ -82,7 +82,7 @@
   <div class="ui equal width grid">
     {{#each allDisks as |disk|}}
     <div class="column">
-      <h2><i class="fa fa-hdd-o fa-fw"></i> {{disk.id}}</h2>
+      <h2><i class="disk outline icon"></i> {{disk.id}}</h2>
       <div id="swap" class="ui teal progress">
         <div class="bar" style="width: {{disk.percent}}%">
           <div class="progress">{{disk.percent}}%</div>

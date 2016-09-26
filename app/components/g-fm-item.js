@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   open: 'open',
   menu: 'menu',
   href: function(){
-    return ENV.APP.krakenHost+"/api/files/"+this.get('item.id')+"?download=true";
+    return `${ENV.APP.krakenHost}/api/files/${this.get('item.id')}?download=true`;
   }.property('item'),
   initContextMenu: function() {
     var self = this;

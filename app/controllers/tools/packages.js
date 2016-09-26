@@ -3,7 +3,7 @@ import ENV from "../../config/environment";
 
 
 export default Ember.ObjectController.extend({
-  breadCrumb: {name: 'Packages', icon: 'fa-cube'},
+  breadCrumb: {name: 'Packages', icon: 'cube'},
   queryParams: ['filter'],
   filter: null,
   search: "",

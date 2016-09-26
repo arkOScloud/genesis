@@ -3,7 +3,7 @@ import cardColor from '../../../../utils/card-color';
 
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'New user', icon: 'fa-user'},
+  breadCrumb: {name: 'New user', icon: 'user'},
   cardColor: function() {
     return cardColor();
   }.property(),

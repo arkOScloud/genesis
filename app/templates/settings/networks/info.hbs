@@ -12,9 +12,9 @@
           <div class="meta">{{model.type}} {{if net.connected '(Connected)'}}</div>
         </div>
         <div class="ui bottom attached buttons">
-          <div class="ui bottom attached button {{if model.connected 'red' 'green'}} {{if model.isReady '' 'disabled'}}" {{action 'toggle' model}}><i class="fa fa-fw {{if model.connected 'fa-times' 'fa-check'}}"></i> {{if model.connected 'Disconnect' 'Connect'}}</div>
-          <div class="ui bottom attached button {{if model.isReady '' 'disabled'}}" {{action 'toggleEnabled' model}}><i class="fa fa-fw {{if model.enabled 'fa-thumbs-down' 'fa-thumbs-up'}}"></i> {{if model.enabled 'Disable' 'Enable'}}</div>
-          <div class="ui bottom attached red button {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-net'}}><i class="fa fa-fw fa-minus-circle"></i> Delete</div>
+          <div class="ui bottom attached button {{if model.connected 'red' 'green'}} {{if model.isReady '' 'disabled'}}" {{action 'toggle' model}}><i class="{{if model.connected 'remove' 'checkmark'}} icon"></i> {{if model.connected 'Disconnect' 'Connect'}}</div>
+          <div class="ui bottom attached button {{if model.isReady '' 'disabled'}}" {{action 'toggleEnabled' model}}><i class="{{if model.enabled 'thumbs down' 'thumbs up'}}"></i> {{if model.enabled 'Disable' 'Enable'}}</div>
+          <div class="ui bottom attached red button {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-net'}}><i class="trash icon"></i> Delete</div>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
           {{/if}}
           <div class="item">
             <div class="header">Interface</div>
-            <p><i class="{{model.typeIcon}}"></i> {{model.type}} ({{model.config.interface}})</p>
+            <p><i class="{{model.typeIcon}} icon"></i> {{model.type}} ({{model.config.interface}})</p>
           </div>
           <div class="item">
             <div class="header">Addressing</div>
@@ -37,11 +37,11 @@
           </div>
           <div class="item">
             <div class="header">Connected</div>
-            <i class="fa {{if model.connected 'fa-check-circle' 'fa-times-circle'}}"></i> {{if model.connected 'Yes' 'No'}}
+            <i class="{{if model.connected 'check circle' 'remove circle'}}"></i> {{if model.connected 'Yes' 'No'}}
           </div>
           <div class="item">
             <div class="header">Enabled</div>
-            <i class="fa {{if model.enabled 'fa-check-circle' 'fa-times-circle'}}"></i> {{if model.enabled 'Yes' 'No'}}
+            <i class="{{if model.enabled 'check circle' 'remove circle'}}"></i> {{if model.enabled 'Yes' 'No'}}
           </div>
           {{#if model.connected}}
           <div class="item">

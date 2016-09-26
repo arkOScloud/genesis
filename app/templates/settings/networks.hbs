@@ -4,7 +4,7 @@
   <a class="{{if wiredFilter 'active'}} item" {{action 'setFilter' 'wired'}}>Wired</a>
   <a class="{{if wirelessFilter 'active'}} item" {{action 'setFilter' 'wireless'}}>Wireless</a>
   <div class="right menu">
-    {{#link-to "settings.networks.add" class="item"}}<i class="fa fa-fw fa-plus-circle"></i> Add Network{{/link-to}}
+    {{#link-to "settings.networks.add" class="item"}}<i class="plus circle icon"></i> Add Network{{/link-to}}
   </div>
 </div>
 
@@ -13,17 +13,17 @@
     <div class="card">
       {{#link-to "settings.networks.info" net class="image"}}
         <div class="{{net.cardColor}}">
-          <i class="{{net.typeIcon}}"></i>
+          <i class="{{net.typeIcon}} icon"></i>
         </div>
       {{/link-to}}
       <div class="content">
-        {{#link-to "settings.networks.info" net class="header"}}<i class="{{net.typeIcon}}"></i> {{net.id}}{{/link-to}}
+        {{#link-to "settings.networks.info" net class="header"}}<i class="{{net.typeIcon}} icon"></i> {{net.id}}{{/link-to}}
         <div class="meta">{{net.type}}{{#if net.connected}} (Connected){{/if}}</div>
       </div>
       <div class="ui bottom attached buttons">
-        <div class="ui bottom attached button {{if net.connected 'red' 'green'}} {{if net.isReady '' 'disabled'}}" {{action 'toggle' net}}><i class="fa fa-fw {{if net.connected 'fa-times' 'fa-check'}}"></i> {{if net.connected 'Disconnect' 'Connect'}}</div>
-        <div class="ui bottom attached button {{if net.isReady '' 'disabled'}}" {{action 'toggleEnabled' net}}><i class="fa fa-fw {{if net.enabled 'fa-thumbs-down' 'fa-thumbs-up'}}"></i> {{if net.enabled 'Disable' 'Enable'}}</div>
-        <div class="ui bottom attached red button {{if net.isReady '' 'disabled'}}" {{action 'openModal' 'delete-net' net}}><i class="fa fa-fw fa-minus-circle"></i> Delete</div>
+        <div class="ui bottom attached button {{if net.connected 'red' 'green'}} {{if net.isReady '' 'disabled'}}" {{action 'toggle' net}}><i class="{{if net.connected 'remove' 'checkmark'}} icon"></i> {{if net.connected 'Disconnect' 'Connect'}}</div>
+        <div class="ui bottom attached button {{if net.isReady '' 'disabled'}}" {{action 'toggleEnabled' net}}><i class="{{if net.enabled 'thumbs down' 'thumbs up'}} icon"></i> {{if net.enabled 'Disable' 'Enable'}}</div>
+        <div class="ui bottom attached red button {{if net.isReady '' 'disabled'}}" {{action 'openModal' 'delete-net' net}}><i class="trash icon"></i> Delete</div>
       </div>
     </div>
   {{/each}}

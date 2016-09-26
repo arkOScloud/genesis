@@ -3,7 +3,7 @@ import ENV from "../../config/environment";
 
 
 export default Ember.ObjectController.extend({
-  breadCrumb: {name: 'Recovery', icon: 'fa-clock-o'},
+  breadCrumb: {name: 'Recovery', icon: 'history'},
   selectedBackupType: "",
   selectedBackups: Ember.computed.filter('model.backups', function(i) {
     if (this.get('selectedBackupType') === "") {

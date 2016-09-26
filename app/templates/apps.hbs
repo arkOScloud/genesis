@@ -4,7 +4,7 @@
   <a class="{{if installedFilter 'active'}} item" {{action 'setFilter' 'installed'}}>Installed</a>
   <a class="{{if notInstalledFilter 'active'}} item" {{action 'setFilter' 'notinstalled'}}>Not Installed</a>
   <div class="right menu">
-    <a href="#" class="item" {{action 'refresh'}}><i class="fa fa-fw fa-refresh"></i> Refresh</a>
+    <a href="#" class="item" {{action 'refresh'}}><i class="refresh icon"></i> Refresh</a>
   </div>
 </div>
 
@@ -13,11 +13,11 @@
     <div class="card {{if app.error 'red'}}">
       {{#link-to "apps.info" app class="image"}}
         <div class="{{app.cardColor}}">
-          <i class="{{app.icon}}"></i>
+          <i class="{{app.icon}} icon"></i>
         </div>
       {{/link-to}}
       <div class="content">
-        {{#link-to "apps.info" app class="header"}}<i class="fa-fw {{app.icon}}"></i> {{app.name}}{{/link-to}}
+        {{#link-to "apps.info" app class="header"}}<i class="{{app.icon}} icon"></i> {{app.name}}{{/link-to}}
         <div class="meta">{{app.description.short}}</div>
       </div>
 
@@ -25,20 +25,20 @@
         {{#if app.isUpgradable}}
           <div class="ui bottom attached buttons">
             <div class="ui bottom attached button green {{if app.isReady '' 'disabled'}}" {{action 'install' app}}>
-              <i class="fa fa-plus-circle fa-fw"></i> Upgrade
+              <i class="plus circle icon"></i> Upgrade
             </div>
             <div class="ui bottom attached button red {{if app.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app' app}}>
-              <i class="fa fa-minus-circle fa-fw"></i> Uninstall
+              <i class="remove circle icon"></i> Uninstall
             </div>
           </div>
         {{else}}
           <div class="ui bottom attached button red {{if app.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app' app}}>
-            <i class="fa fa-minus-circle fa-fw"></i> Uninstall
+            <i class="remove circle icon"></i> Uninstall
           </div>
         {{/if}}
       {{else}}
         <div class="ui bottom attached button green {{if app.isReady '' 'disabled'}}" {{action 'install' app}}>
-          <i class="fa fa-plus-circle fa-fw"></i> Install
+          <i class="plus circle icon"></i> Install
         </div>
       {{/if}}
     </div>
@@ -48,7 +48,7 @@
 {{#ui-modal name="uninstall-app" class="basic uninstall-app" onApprove=(action 'uninstallApp') onDeny=(action 'clearModal')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <i class="{{selectedApp.icon}} fa-4x"></i><br /><br />
+    <i class="{{selectedApp.icon}} icon"></i>
     Uninstall app?
   </div>
   <div class="text center content">

@@ -2,7 +2,7 @@ import Ember from "ember";
 
 
 export default Ember.ObjectController.extend({
-  breadCrumb: {name: 'Services', icon: 'fa-spinner'},
+  breadCrumb: {name: 'Services', icon: 'tasks'},
   queryParams: ['filter'],
   filter: null,
   filteredServices: Ember.computed.filter('model', function(i) {

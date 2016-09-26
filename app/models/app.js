@@ -32,9 +32,9 @@ export default DS.Model.extend({
     assets: DS.attr(),
     logoURL: function() {
       if (this.get('installed') && this.get('logo')) {
-        return ENV.APP.krakenHost+'/api/apps/assets/'+this.get('id')+'/logo.png';
+        return `${ENV.APP.krakenHost}/api/apps/assets/${this.get('id')}/logo.png`;
       } else if (!this.get('installed') && this.get('assets').logo) {
-        return ENV.APP.GRMHost+'/api/v1/assets/'+this.get('assets').logo;
+        return `${ENV.APP.GRMHost}/api/v1/assets/${this.get('assets').logo}`;
       } else {
         return null;
       }
@@ -48,7 +48,7 @@ export default DS.Model.extend({
       var shots = [];
       if (this.get('assets') && this.get('assets').screens) {
         this.get('assets').screens.forEach(function(i) {
-          shots.push(ENV.APP.GRMHost+'/api/v1/assets/'+i);
+          shots.push(`${ENV.APP.GRMHost}/api/v1/assets/${i}`);
         });
       }
       return shots;

@@ -3,7 +3,7 @@ import cardColor from '../../../utils/card-color';
 
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'New network', icon: 'fa-sitemap'},
+  breadCrumb: {name: 'New network', icon: 'sitemap'},
   cardColor: cardColor(),
   ipTypes: [{id: "dhcp", name: "Automatic (DHCP)"}, {id: "static", name: "Static"}],
   secTypes: [{id: "none", name: "None"}, {id: "wep", name: "WEP"}, {id: "wpa", name: "WPA (or WPA2)"}],

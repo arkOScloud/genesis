@@ -3,19 +3,19 @@
     <div class="card">
       {{#link-to 'settings.roles.groups.edit' group class="image {{if user.isReady '' 'disabled'}}"}}
         <div class="{{group.cardColor}}">
-          <i class="fa fa-group"></i>
+          <i class="group icon"></i>
         </div>
       {{/link-to}}
       <div class="content">
         {{#link-to 'settings.roles.groups.edit' group class="header"}}
-          <i class="fa fa-group fa-fw"></i> {{group.name}}
+          <i class="group icon"></i> {{group.name}}
         {{/link-to}}
         <div class="meta">
           {{if group.users group.users.length 'No'}} member(s)
         </div>
       </div>
       <div class="ui bottom attached button red {{if group.isReady '' 'disabled'}}" {{action 'openModal' 'delete-group' group}}>
-        <i class="fa fa-minus-circle fa-fw"></i> Delete
+        <i class="trash icon"></i> Delete
       </div>
     </div>
   {{/each}}

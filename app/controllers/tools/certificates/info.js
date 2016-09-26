@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   breadCrumb: Ember.computed("model.id", {
     get() {
-      return {name: this.get("model.id"), icon: 'fa-certificate'};
+      return {name: this.get("model.id"), icon: 'certificate'};
     }
   }),
   actions: {

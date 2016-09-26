@@ -30,11 +30,11 @@
         <div class="card {{if siteType.error 'red'}}">
           <div class="image">
             <div class="{{siteType.cardColor}}">
-              <i class="{{siteType.icon}}"></i>
+              <i class="{{siteType.icon}} icon"></i>
             </div>
           </div>
           <div class="content">
-            <div class="header"><i class="fa-fw {{siteType.icon}}"></i> {{siteType.name}}</div>
+            <div class="header"><i class="{{siteType.icon}} icon"></i> {{siteType.name}}</div>
             <div class="meta">{{siteType.description.short}}</div>
           </div>
           <div class="ui bottom attached button green {{if siteType.isReady '' 'disabled'}}" {{action 'selectSiteType' siteType}}>
@@ -50,11 +50,11 @@
         <div class="ui card">
           <div class="image">
             <div class="{{selectedSiteType.cardColor}}">
-              <i class="{{selectedSiteType.icon}}"></i>
+              <i class="{{selectedSiteType.icon}} icon"></i>
             </div>
           </div>
           <div class="content">
-            <div class="header"><i class="fa-fw {{selectedSiteType.icon}}"></i> {{selectedSiteType.name}}</div>
+            <div class="header"><i class="{{selectedSiteType.icon}} icon"></i> {{selectedSiteType.name}}</div>
             <div class="meta">{{selectedSiteType.description.short}}</div>
           </div>
           <div class="ui bottom attached buttons">
@@ -74,7 +74,7 @@
             <img class="img-responsive ui-app-logo" src={{selectedSiteType.logoURL}} />
           {{else}}
           <div class="card-image-unique card-image-center {{selectedSiteType.cardColor}}">
-            <i class="{{selectedSiteType.icon}}"></i>
+            <i class="{{selectedSiteType.icon}} icon"></i>
           </div>
           <h1>{{selectedSiteType.name}}</h1>
           {{/if}}
@@ -122,11 +122,11 @@
         <div class="ui card">
           <div class="image">
             <div class="{{confirmedSiteType.cardColor}}">
-              <i class="{{confirmedSiteType.icon}}"></i>
+              <i class="{{confirmedSiteType.icon}} icon"></i>
             </div>
           </div>
           <div class="content">
-            <div class="header"><i class="fa-fw {{confirmedSiteType.icon}}"></i> {{confirmedSiteType.name}}</div>
+            <div class="header"><i class="{{confirmedSiteType.icon}} icon"></i> {{confirmedSiteType.name}}</div>
             <div class="meta">{{confirmedSiteType.description.short}}</div>
           </div>
           <div class="ui bottom attached buttons">

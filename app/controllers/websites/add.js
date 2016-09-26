@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'New website', icon: 'fa-globe'},
+  breadCrumb: {name: 'New website', icon: 'globe'},
   queryParams: ['siteType'],
   siteType: null,
   confirmedSiteType: null,

@@ -14,31 +14,31 @@
         <div class="ui bottom attached buttons">
           {{#if model.mounted}}
             <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'umount' model}}>
-              <i class="fa fa-hdd-o fa-fw"></i> Unmount
+              <i class="disk outline icon"></i> Unmount
             </div>
           {{else if model.crypt}}
             <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'openModal' 'mount-encrypted'}}>
-              <i class="fa fa-hdd-o fa-fw"></i> Mount
+              <i class="disk outline icon"></i> Mount
             </div>
           {{else}}
             <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'mount' model}}>
-              <i class="fa fa-hdd-o fa-fw"></i> Mount
+              <i class="disk outline icon"></i> Mount
             </div>
           {{/if}}
           {{#unless model.crypt}}
             {{#if model.enabled}}
               <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'disable' model}}>
-                <i class="fa fa-hdd-o fa-fw"></i> Disable
+                <i class="disk outline icon"></i> Disable
               </div>
             {{else}}
               <div class="ui bottom attached button {{if model.isReady '' 'disabled'}} {{if model.isTooImportant 'disabled'}}" {{action 'enable' model}}>
-                <i class="fa fa-hdd-o fa-fw"></i> Enable
+                <i class="disk outline icon"></i> Enable
               </div>
             {{/if}}
           {{/unless}}
           {{#if model.isVirtual}}
             <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-fs'}}>
-              <i class="fa fa-minus-circle fa-fw"></i> Delete
+              <i class="trash icon"></i> Delete
             </div>
           {{/if}}
         </div>

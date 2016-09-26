@@ -6,7 +6,7 @@ import toB64 from "../../utils/to-b64";
 
 
 export default Ember.ObjectController.extend({
-  breadCrumb: {name: 'File Manager', icon: 'fa-files-o'},
+  breadCrumb: {name: 'File Manager', icon: 'open folder outline'},
   sortBy: ['folder:desc', 'name'],
 
   // Default values

@@ -3,19 +3,19 @@
     <div class="card">
       <div class="image">
         <div class="{{domain.cardColor}}">
-          <i class="fa fa-code"></i>
+          <i class="code icon"></i>
         </div>
       </div>
       <div class="content">
         <div class="header">
-          <i class="fa fa-code fa-fw"></i> {{domain.id}}
+          <i class="code icon"></i> {{domain.id}}
         </div>
         <div class="meta">
           Domain
         </div>
       </div>
       <div class="ui bottom attached button red {{if domain.isReady '' 'disabled'}}" {{action 'openModal' 'delete-domain' domain}}>
-        <i class="fa fa-minus-circle fa-fw"></i> Delete
+        <i class="trash icon"></i> Delete
       </div>
     </div>
   {{/each}}

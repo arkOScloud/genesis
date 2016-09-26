@@ -3,7 +3,7 @@ import ENV from "../config/environment";
 
 
 export default Ember.ObjectController.extend({
-  breadCrumb: {name: 'Websites', icon: 'fa-globe'},
+  breadCrumb: {name: 'Websites', icon: 'globe'},
   queryParams: ['filter'],
   filter: null,
   sortBy: ['id'],

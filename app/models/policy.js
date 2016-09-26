@@ -21,11 +21,11 @@ export default DS.Model.extend({
     policyDisplayIcon: function() {
       var policy = this.get('policy');
       if (policy === 0) {
-        return "fa-minus-circle";
+        return "minus circle";
       } else if (policy === 1) {
-        return "fa-home";
+        return "home";
       } else if (policy === 2) {
-        return "fa-check-circle";
+        return "check circle";
       } else {
         return "";
       }

@@ -23,15 +23,15 @@
   <tbody>
     {{#each filteredServices as |svc|}}
       <tr class="{{if svc.isReady '' 'disabled'}}">
-        <td><i class="fa fa-spinner"></i></td>
+        <td><i class="spinner icon"></i></td>
         <td>{{svc.id}}</td>
-        <td class="{{if svc.running 'positive' 'negative'}}"><i class="fa fa-fw {{if svc.running 'fa-play' 'fa-stop'}}"></i> {{if svc.running 'Running' 'Stopped'}}</td>
-        <td class="{{if svc.enabled 'positive' 'negative'}}"><i class="fa fa-fw {{if svc.running 'fa-thumbs-up' 'fa-thumbs-o-down'}}"></i> {{if svc.enabled 'Enabled' 'Disabled'}}</td>
+        <td class="{{if svc.running 'positive' 'negative'}}"><i class="{{if svc.running 'play' 'stop'}} icon"></i> {{if svc.running 'Running' 'Stopped'}}</td>
+        <td class="{{if svc.enabled 'positive' 'negative'}}"><i class="{{if svc.running 'thumbs up' 'thumbs down'}} icon"></i> {{if svc.enabled 'Enabled' 'Disabled'}}</td>
         <td>{{svc.displayType}}</td>
         <td>
-          <div class="ui mini buttons">
-            <a href="#" class="ui mini button {{if svc.isReady '' 'disabled'}} {{if svc.canManage '' 'disabled'}}" {{action 'toggleState' svc}}><i class="fa fa-fw {{if svc.running 'fa-stop' 'fa-play'}}"></i> {{if svc.running 'Stop' 'Start'}}</a>
-            <a href="#" class="ui mini button {{if svc.isReady '' 'disabled'}} {{if svc.canManage '' 'disabled'}}" {{action 'toggleFileState' svc}}><i class="fa fa-fw {{if svc.enabled 'fa-thumbs-down' 'fa-thumbs-up'}}"></i> {{if svc.enabled 'Disable' 'Enable'}}</a>
+          <div class="ui mini labeled icon buttons">
+            <a href="#" class="ui mini button {{if svc.isReady '' 'disabled'}} {{if svc.canManage '' 'disabled'}}" {{action 'toggleState' svc}}><i class="{{if svc.running 'stop' 'play'}} icon"></i> {{if svc.running 'Stop' 'Start'}}</a>
+            <a href="#" class="ui mini button {{if svc.isReady '' 'disabled'}} {{if svc.canManage '' 'disabled'}}" {{action 'toggleFileState' svc}}><i class="{{if svc.enabled 'thumbs down' 'thumbs up'}} icon"></i> {{if svc.enabled 'Disable' 'Enable'}}</a>
           </div>
         </td>
       </tr>

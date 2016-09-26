@@ -192,7 +192,7 @@ input.form-control {
 .ui-fm-item {
   display: inline-block;
   margin: 5px 15px;
-  text-align: center;
+  text-align: center !important;
   max-width: 90px;
 }
 

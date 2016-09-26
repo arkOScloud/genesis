@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'Users, Groups and Domains', icon: 'fa-group'},
+  breadCrumb: {name: 'Users, Groups and Domains', icon: 'group'},
   selectedGroup: null,
   actions: {
     openModal: function(name, group) {

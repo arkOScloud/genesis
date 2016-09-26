@@ -4,12 +4,12 @@
       <div class="ui card">
         <div class="image">
           <div class="{{model.cardColor}}">
-            <i class="fa {{model.icon}}"></i>
+            <i class="{{model.icon}} icon"></i>
           </div>
         </div>
         <div class="content">
           <div class="header">
-            <i class="fa fa-user fa-fw"></i> {{model.pid}}
+            <i class="{{model.icon}} icon"></i> {{model.pid}}
           </div>
           <div class="meta">
             {{format-date-time model.time}}
@@ -17,7 +17,7 @@
         </div>
         <div class="ui bottom attached buttons">
           <div class="ui bottom attached button {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'restore-backup' backup}}>
-            <i class="clock icon"></i> Restore
+            <i class="history icon"></i> Restore
           </div>
           <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-backup' backup}}>
             <i class="trash icon"></i> Delete
@@ -53,7 +53,7 @@
 {{#ui-modal name="delete-backup" class="basic delete-backup" onApprove=(action 'deleteBackup')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <i class="clock icon"></i>
+    <i class="history icon"></i>
     Delete backup?
   </div>
   <div class="text center content">
@@ -75,7 +75,7 @@
 {{#ui-modal name="restore-backup" class="basic restore-backup" onApprove=(action 'restoreBackup')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <i class="clock icon"></i>
+    <i class="history icon"></i>
     Restore backup?
   </div>
   <div class="text center content">

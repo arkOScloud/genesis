@@ -4,31 +4,31 @@
       <div class="ui card {{if model.error 'red'}}">
         <div class="image">
           <div class="{{model.cardColor}}">
-            <i class="{{model.icon}}"></i>
+            <i class="{{model.icon}} icon"></i>
           </div>
         </div>
         <div class="content">
-          <div class="header"><i class="fa-fw {{model.icon}}"></i> {{model.name}}</div>
+          <div class="header"><i class="{{model.icon}} icon"></i> {{model.name}}</div>
           <div class="meta">{{model.description.short}}</div>
         </div>
         {{#if model.installed}}
           {{#if model.isUpgradable}}
             <div class="ui bottom attached buttons">
               <div class="ui bottom attached button green {{if model.isReady '' 'disabled'}}" {{action 'install' model}}>
-                <i class="fa fa-plus-circle fa-fw"></i> Upgrade
+                <i class="plus circle icon"></i> Upgrade
               </div>
               <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app' model}}>
-                <i class="fa fa-minus-circle fa-fw"></i> Uninstall
+                <i class="remove circle icon"></i> Uninstall
               </div>
             </div>
           {{else}}
             <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app' model}}>
-              <i class="fa fa-minus-circle fa-fw"></i> Uninstall
+              <i class="remove circle icon"></i> Uninstall
             </div>
           {{/if}}
         {{else}}
           <div class="ui bottom attached button green {{if model.isReady '' 'disabled'}}" {{action 'install' model}}>
-            <i class="fa fa-plus-circle fa-fw"></i> Install
+            <i class="plus circle icon"></i> Install
           </div>
         {{/if}}
       </div>
@@ -39,7 +39,7 @@
           <img class="img-responsive ui-app-logo" src={{model.logoURL}} />
         {{else}}
         <div class="card-image-unique card-image-center {{model.cardColor}}">
-          <i class="{{model.icon}}"></i>
+          <i class="{{model.icon}} icon"></i>
         </div>
         <h1>{{model.name}}</h1>
         {{/if}}
@@ -89,7 +89,7 @@
 {{#ui-modal name="uninstall-app" class="basic uninstall-app" onApprove=(action 'uninstallApp')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <i class="{{model.icon}} fa-4x"></i><br /><br />
+    <i class="{{model.icon}} icon"></i>
     Uninstall app?
   </div>
   <div class="text center content">

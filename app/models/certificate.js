@@ -18,7 +18,7 @@ export default DS.Model.extend({
       return this.get('certType') === 'authority';
     }.property('certType'),
     typeString: function() {
-      return this.get('keylength')+'-bit '+this.get('keytype');
+      return `${this.get('keylength')}-bit ${this.get('keytype')}`;
     }.property('keylength', 'keytype'),
     cardColor: function() {
       return cardColor();

@@ -1,5 +1,5 @@
 <div class="ui pointing menu">
-  {{#link-to 'index' class="item"}}<i class="fa fa-fw fa-home"></i> Home{{/link-to}}
+  {{#link-to 'index' class="item"}}<i class="home icon"></i> Home{{/link-to}}
   {{#each breadCrumbs as |crumb|}}
     {{#if crumb.linkable}}
       {{#if crumb.model}}
@@ -16,14 +16,14 @@
         {{#if crumb.isCurrent}}
           <div class="active item">
             {{#if crumb.label.icon}}
-            <i class="fa fa-fw {{crumb.label.icon}}"></i>
+            <i class="{{crumb.label.icon}} icon"></i>
             {{/if}}
             {{crumb.label.name}}
           </div>
         {{else}}
           {{#link-to crumb.path class="item" activeClass=""}}
             {{#if crumb.label.icon}}
-            <i class="fa fa-fw {{crumb.label.icon}}"></i>
+            <i class="{{crumb.label.icon}} icon"></i>
             {{/if}}
             {{crumb.label.name}}
           {{/link-to}}
@@ -32,7 +32,7 @@
     {{else}}
       <div class="item">
         {{#if crumb.label.icon}}
-        <i class="fa fa-fw {{crumb.label.icon}}"></i>
+        <i class="{{crumb.label.icon}} icon"></i>
         {{/if}}
         {{crumb.label.name}}
       </div>

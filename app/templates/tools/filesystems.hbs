@@ -4,7 +4,7 @@
   <a class="{{if virtualFilter 'active'}} item" {{action 'setFilter' 'virtual'}}>Virtual</a>
   <a class="{{if physicalFilter 'active'}} item" {{action 'setFilter' 'physical'}}>Physical</a>
   <div class="right menu">
-    {{#link-to "tools.filesystems.add" class="item"}}<i class="fa fa-plus-circle fa-fw"></i> Add Virtual Disk{{/link-to}}
+    {{#link-to "tools.filesystems.add" class="item"}}<i class="plus circle icon"></i> Add Virtual Disk{{/link-to}}
   </div>
 </div>
 
@@ -23,31 +23,31 @@
       <div class="ui bottom attached buttons">
         {{#if fs.mounted}}
           <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'umount' fs}}>
-            <i class="fa fa-hdd-o fa-fw"></i> Unmount
+            <i class="disk outline icon"></i> Unmount
           </div>
         {{else if fs.crypt}}
           <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'openModal' 'mount-encrypted' fs}}>
-            <i class="fa fa-hdd-o fa-fw"></i> Mount
+            <i class="disk outline icon"></i> Mount
           </div>
         {{else}}
           <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'mount' fs}}>
-            <i class="fa fa-hdd-o fa-fw"></i> Mount
+            <i class="disk outline icon"></i> Mount
           </div>
         {{/if}}
         {{#unless fs.crypt}}
           {{#if fs.enabled}}
             <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'disable' fs}}>
-              <i class="fa fa-hdd-o fa-fw"></i> Disable
+              <i class="thumbs down icon"></i> Disable
             </div>
           {{else}}
             <div class="ui bottom attached button {{if fs.isReady '' 'disabled'}} {{if fs.isTooImportant 'disabled'}}" {{action 'enable' fs}}>
-              <i class="fa fa-hdd-o fa-fw"></i> Enable
+              <i class="thumbs up icon"></i> Enable
             </div>
           {{/if}}
         {{/unless}}
         {{#if fs.isVirtual}}
           <div class="ui bottom attached button red {{if fs.isReady '' 'disabled'}}" {{action 'openModal' 'delete-fs' fs}}>
-            <i class="fa fa-minus-circle fa-fw"></i> Delete
+            <i class="trash icon"></i> Delete
           </div>
         {{/if}}
       </div>

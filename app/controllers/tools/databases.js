@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'Databases', icon: 'fa-database'},
+  breadCrumb: {name: 'Databases', icon: 'database'},
   queryParams: ['filter'],
   filter: null,
 

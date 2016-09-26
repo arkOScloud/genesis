@@ -3,7 +3,7 @@ import cardColor from '../../../utils/card-color';
 
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'New virtual disk', icon: 'fa-disk-o'},
+  breadCrumb: {name: 'New virtual disk', icon: 'disk outline'},
   cardColor: function() {
     return cardColor();
   }.property(),

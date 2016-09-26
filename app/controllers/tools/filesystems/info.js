@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   breadCrumb: Ember.computed("model.id", {
     get() {
-      return {name: this.get("model.id"), icon: 'fa-hdd-o'};
+      return {name: this.get("model.id"), icon: 'disk outline'};
     }
   }),
   actions: {

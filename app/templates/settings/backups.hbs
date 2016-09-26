@@ -2,9 +2,9 @@
   <div class="ui grid">
     <div class="four wide column">
       <div id="backup-menu" class="ui vertical fluid tabular menu">
-        <a class="item {{if selectedBackupType '' 'active'}}" {{action 'selectType' 'all'}}><i class="clock icon"></i> All Backups</a>
+        <a class="item {{if selectedBackupType '' 'active'}}" {{action 'selectType' 'all'}}><i class="history icon"></i> All Backups</a>
         {{#each model.types as |type|}}
-          <a class="item" id={{type.id}} href="#" {{action 'selectType' type.id}}><i class="fa fa-fw {{type.icon}}"></i> {{type.id}}</a>
+          <a class="item" id={{type.id}} href="#" {{action 'selectType' type.id}}><i class="{{type.icon}} icon"></i> {{type.id}}</a>
         {{/each}}
         {{#if selectedBackupType}}
           <div class="item"><a class="ui fluid primary button" {{action 'backup' selectedBackupType}}><i class="plus circle icon"></i> New Backup</a></div>
@@ -17,12 +17,12 @@
           <div class="card">
             {{#link-to 'settings.backups.info' backup class="image {{if backup.isReady '' 'disabled'}}"}}
               <div class="{{backup.cardColor}}">
-                <i class="fa {{backup.icon}}"></i>
+                <i class="{{backup.icon}} icon"></i>
               </div>
             {{/link-to}}
             <div class="content">
               {{#link-to 'settings.backups.info' backup class="header"}}
-                <i class="fa fa-user fa-fw"></i> {{backup.pid}}
+                <i class="{{backup.icon}} icon"></i> {{backup.pid}}
               {{/link-to}}
               <div class="meta">
                 {{format-date-time backup.time}}
@@ -30,7 +30,7 @@
             </div>
             <div class="ui bottom attached buttons">
               <div class="ui bottom attached button {{if backup.isReady '' 'disabled'}}" {{action 'openModal' 'restore-backup' backup}}>
-                <i class="clock icon"></i> Restore
+                <i class="history icon"></i> Restore
               </div>
               <div class="ui bottom attached button red {{if backup.isReady '' 'disabled'}}" {{action 'openModal' 'delete-backup' backup}}>
                 <i class="trash icon"></i> Delete
@@ -39,7 +39,7 @@
           </div>
         {{else}}
           <div class="text center">
-            <i class="massive clock icon"></i>
+            <i class="massive history icon"></i>
             <p class="text lead">No backups found.</p>
           </div>
         {{/each}}
@@ -51,7 +51,7 @@
 {{#ui-modal name="delete-backup" class="basic delete-backup" onApprove=(action 'deleteBackup') onDeny=(action 'clearModal')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <i class="clock icon"></i>
+    <i class="history icon"></i>
     Delete backup?
   </div>
   <div class="text center content">
@@ -73,7 +73,7 @@
 {{#ui-modal name="restore-backup" class="basic restore-backup" onApprove=(action 'restoreBackup') onDeny=(action 'clearModal')}}
   <i class="close icon"></i>
   <div class="ui icon header">
-    <i class="clock icon"></i>
+    <i class="history icon"></i>
     Restore backup?
   </div>
   <div class="text center content">

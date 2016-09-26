@@ -2,7 +2,7 @@ import Ember from "ember";
 
 
 export default Ember.ObjectController.extend({
-  breadCrumb: {name: 'Filesystems', icon: 'fa-hdd-o'},
+  breadCrumb: {name: 'Filesystems', icon: 'disk outline'},
   queryParams: ['filter'],
   filter: null,
 

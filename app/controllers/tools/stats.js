@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'Statistics', icon: 'fa-area-chart'},
+  breadCrumb: {name: 'Statistics', icon: 'line chart'},
   cpuPct: 0,
   memory: 0,
   memoryPct: 0,

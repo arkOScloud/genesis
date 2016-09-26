@@ -11,10 +11,10 @@
   <tbody>
     {{#each model.ssh as |key|}}
       <tr>
-        <td><i class="fa fa-fw fa-key"></i></td>
+        <td><i class="key icon"></i></td>
         <td>{{key.user}}</td>
         <td>{{key.keyId}}</td>
-        <td><a href="#" class="ui tiny button danger" {{action 'delete' key}}><i class="fa fa-minus-circle"></i> Delete</a></td>
+        <td><a href="#" class="ui tiny button danger" {{action 'delete' key}}><i class="trash icon"></i> Delete</a></td>
       </tr>
     {{else}}
     <tr><td colspan=4><em>No keys</em></td></tr>
@@ -126,7 +126,7 @@
     <label for="datetime">Current Time (on server)</label>
     <p>{{format-date-time model.datetime.datetime.datetime}}{{#if offset}}, offset is {{offset}} seconds{{/if}}</p>
   </div>
-  <a href="#" class="ui button" {{action 'updateTime'}}><i class="fa fa-clock-o"></i> Update Time</a>
+  <a href="#" class="ui labeled icon button" {{action 'updateTime'}}><i class="clock icon"></i> Update Time</a>
   <div class="ui divider"></div>
 {{/ui-form}}
 

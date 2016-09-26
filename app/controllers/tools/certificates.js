@@ -4,7 +4,7 @@ export default Ember.Controller.extend({
   queryParams: ['filter'],
   sortBy: ['id'],
   filter: 'certificates',
-  breadCrumb: {name: 'Certificates', icon: 'fa-certificate'},
+  breadCrumb: {name: 'Certificates', icon: 'certificate'},
   certificates: Ember.computed.sort('model.certs', 'sortBy'),
   authorities: Ember.computed.sort('model.auths', 'sortBy'),
 

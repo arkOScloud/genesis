@@ -8,6 +8,6 @@ export default DS.Model.extend({
     up: DS.attr('boolean'),
     type: DS.attr('string'),
     prettyType: function() {
-      return this.get('type').capitalize() + " ("+this.get('id')+")";
+      return `${this.get('type').capitalize()} (${this.get('id')})`;
     }.property('id', 'type')
 });
