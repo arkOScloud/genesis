@@ -43,11 +43,11 @@ export default Ember.Controller.extend({
         contentType: 'application/json',
         processData: false,
         success: function(j) {
-          self.message.success(j.message);
+          self.notifications.new("success", j.message);
           Ember.$("#reportbtn").addClass("disabled");
         },
         error: function(j) {
-          self.message.error(j.message);
+          self.notifications.new("error", j.message);
         }
       });
     },

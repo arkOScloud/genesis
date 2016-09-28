@@ -2,9 +2,9 @@ import Ember from "ember";
 
 
 export default Ember.ObjectController.extend({
-  needs: ['application'],
+  applicationController: Ember.inject.controller('application'),
   breadCrumb: {name: 'Security', icon: 'shield'},
   isFirewallPage: function() {
-    return this.get('controllers.application.currentRouteName') === 'settings.security.firewall.index';
-  }.property('controllers.application.currentRouteName')
+    return this.get('applicationController.currentRouteName') === 'settings.security.firewall.index';
+  }.property('applicationController.currentRouteName')
 });

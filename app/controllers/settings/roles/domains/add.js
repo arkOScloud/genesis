@@ -8,10 +8,6 @@ export default Ember.Controller.extend({
   actions: {
     save: function(){
       var self = this;
-      if (this.store.hasRecordForId('domain', this.get('name'))) {
-        this.message.error('This domain already exists');
-        return false;
-      }
       var domain = this.store.createRecord('domain', {
         id: this.get('name'),
         cardColor: this.get('cardColor')
@@ -22,6 +18,10 @@ export default Ember.Controller.extend({
       }, function(e) {
         if (e.status === 500) {
           self.transitionToRoute("error", e);
+        } else if (e.errors) {
+          e.errors.forEach(function(err) {
+            self.notifications.new('error', err.detail);
+          });
         }
         domain.deleteRecord();
       });

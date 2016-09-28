@@ -434,6 +434,7 @@ i:not(.fa) {
   position: fixed;
   right: 0;
   bottom: 0;
+  width: 450px;
   padding: 20px 10px;
   z-index: 1000002;
 }

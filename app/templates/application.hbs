@@ -1,59 +1,93 @@
-<div class="ui container">
-  <div class="ui secondary icon menu">
-    <div class="genesis-logo item">
-      {{#link-to 'index'}}<img src="/img/logo-round.png" />{{/link-to}}
-    </div>
-    {{#if session.isAuthenticated}}
-    <div class="right menu">
-      <div class="item">
-        <i class="user icon"></i> {{#link-to 'settings.roles.users' class='item'}}{{ userId }}{{/link-to}}
-      </div>
-      {{#ui-dropdown-menu}}
-        <i class="configure icon"></i>
-        <div class="menu">
-          {{#link-to 'tools.stats' class='item'}}<i class="line chart icon"></i> Statistics{{/link-to}}
-          {{#link-to 'tools.files' class='item'}}<i class="folder open outline icon"></i> File Manager{{/link-to}}
-          {{#link-to 'tools.certificates' class='item'}}<i class="certificate icon"></i> Certificates{{/link-to}}
-          {{#link-to 'tools.databases' class='item'}}<i class="database icon"></i> Databases{{/link-to}}
-          {{#link-to 'tools.filesystems' class='item'}}<i class="disk outline icon"></i> Filesystems{{/link-to}}
-          {{#link-to 'tools.packages' class='item'}}<i class="cube icon"></i> Packages{{/link-to}}
-          {{#link-to 'tools.services' class='item'}}<i class="tasks icon"></i> Services{{/link-to}}
-        </div>
-      {{/ui-dropdown-menu}}
-      {{#ui-dropdown-menu}}
-        <i class="cogs icon"></i>
-        <div class="menu">
-          {{#link-to 'settings.roles.users' class='item'}}<i class="group icon"></i> Users, Groups and Domains{{/link-to}}
-          {{#link-to 'settings.updates' class='item'}}<i class="star icon"></i> Updates{{/link-to}}
-          {{#link-to 'settings.backups' class='item'}}<i class="clock icon"></i> Recovery{{/link-to}}
-          {{#link-to 'settings.networks' class='item'}}<i class="sitemap icon"></i> Networking{{/link-to}}
-          {{#link-to 'settings.security.firewall' class='item'}}<i class="shield icon"></i> Security{{/link-to}}
-          {{#link-to 'settings.config' class='item'}}<i class="options icon"></i> Preferences{{/link-to}}
-          <div class="divider"></div>
-          <a href="#" class='item' {{action 'openModal' 'about-genesis'}}><i class="question circle icon"></i> About</a>
-        </div>
-      {{/ui-dropdown-menu}}
-      {{#ui-dropdown-menu}}
-        <i class="power off icon"></i>
-        <div class="menu">
-          <a href="#" class='item' {{action 'invalidateSession'}}><i class="sign out icon"></i> Logout</a>
-          <div class="divider"></div>
-          <a href="#" class='item' {{action 'showConfirm' 'shutdown' 'Are you sure you want to shutdown your arkOS device?'}}><i class="power off icon"></i> Shutdown</a>
-          <a href="#" class='item' {{action 'showConfirm' 'reload' 'Are you sure you want to reload the arkOS service?'}}><i class="undo icon"></i> Reload</a>
-          <a href="#" class='item' {{action 'showConfirm' 'reboot' 'Are you sure you want to reboot your arkOS device?'}}><i class="refresh icon"></i> Restart</a>
-        </div>
-      {{/ui-dropdown-menu}}
-    </div>
-    {{/if}}
+<div id="notifications-sidebar" class="ui wide sidebar inverted right vertical menu">
+  <div class="item">
+    <i class="comments icon"></i> <strong>Notifications</strong>
+    <i class="red link icon right floated minus circle" {{action 'clearNotifications'}}></i>
   </div>
+  {{#each notifications.items as |msg|}}
+    <div class="item">
+      <div id="notification-{{msg.id}}" class="ui icon message {{msg.level}}">
+        <i class="{{msg.icon}} icon"></i>
+        {{#if msg.complete}}
+          <i class="close icon" {{action 'deleteNotification' msg}}></i>
+        {{/if}}
+        <div class="content">
+          {{#if msg.title}}
+            <div class="header">
+              {{msg.title}}
+            </div>
+          {{/if}}
+          <p>{{msg.message}}</p>
+          <small>{{format-date-time msg.time}}</small>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="item">
+      No new notifications
+    </div>
+  {{/each}}
 </div>
+<div class="pusher">
+  <div class="ui container">
+    <div class="ui secondary icon menu">
+      <div class="genesis-logo item">
+        {{#link-to 'index'}}<img src="/img/logo-round.png" />{{/link-to}}
+      </div>
+      {{#if session.isAuthenticated}}
+      <div class="right menu">
+        <div class="item">
+          <i class="user icon"></i> {{#link-to 'settings.roles.users' class='item'}}{{ userId }}{{/link-to}}
+        </div>
+        <a class="{{if hasNotifications 'red active'}} item" {{action 'openSidebar' 'notifications-sidebar'}}>
+          <i class="comments icon"></i>
+        </a>
+        {{#ui-dropdown-menu}}
+          <i class="configure icon"></i>
+          <div class="menu">
+            {{#link-to 'tools.stats' class='item'}}<i class="line chart icon"></i> Statistics{{/link-to}}
+            {{#link-to 'tools.files' class='item'}}<i class="folder open outline icon"></i> File Manager{{/link-to}}
+            {{#link-to 'tools.certificates' class='item'}}<i class="certificate icon"></i> Certificates{{/link-to}}
+            {{#link-to 'tools.databases' class='item'}}<i class="database icon"></i> Databases{{/link-to}}
+            {{#link-to 'tools.filesystems' class='item'}}<i class="disk outline icon"></i> Filesystems{{/link-to}}
+            {{#link-to 'tools.packages' class='item'}}<i class="cube icon"></i> Packages{{/link-to}}
+            {{#link-to 'tools.services' class='item'}}<i class="tasks icon"></i> Services{{/link-to}}
+          </div>
+        {{/ui-dropdown-menu}}
+        {{#ui-dropdown-menu}}
+          <i class="cogs icon"></i>
+          <div class="menu">
+            {{#link-to 'settings.roles.users' class='item'}}<i class="group icon"></i> Users, Groups and Domains{{/link-to}}
+            {{#link-to 'settings.updates' class='item'}}<i class="star icon"></i> Updates{{/link-to}}
+            {{#link-to 'settings.backups' class='item'}}<i class="clock icon"></i> Recovery{{/link-to}}
+            {{#link-to 'settings.networks' class='item'}}<i class="sitemap icon"></i> Networking{{/link-to}}
+            {{#link-to 'settings.security.firewall' class='item'}}<i class="shield icon"></i> Security{{/link-to}}
+            {{#link-to 'settings.config' class='item'}}<i class="options icon"></i> Preferences{{/link-to}}
+            <div class="divider"></div>
+            <a href="#" class='item' {{action 'openModal' 'about-genesis'}}><i class="question circle icon"></i> About</a>
+          </div>
+        {{/ui-dropdown-menu}}
+        {{#ui-dropdown-menu}}
+          <i class="power off icon"></i>
+          <div class="menu">
+            <a href="#" class='item' {{action 'invalidateSession'}}><i class="sign out icon"></i> Logout</a>
+            <div class="divider"></div>
+            <a href="#" class='item' {{action 'showConfirm' 'shutdown' 'Are you sure you want to shutdown your arkOS device?'}}><i class="power off icon"></i> Shutdown</a>
+            <a href="#" class='item' {{action 'showConfirm' 'reload' 'Are you sure you want to reload the arkOS service?'}}><i class="undo icon"></i> Reload</a>
+            <a href="#" class='item' {{action 'showConfirm' 'reboot' 'Are you sure you want to reboot your arkOS device?'}}><i class="refresh icon"></i> Restart</a>
+          </div>
+        {{/ui-dropdown-menu}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
 
-<div class="ui container main-container">
-  {{#if showBreadCrumbs}}
-    {{bread-crumbs}}
-  {{/if}}
+  <div class="ui container main-container">
+    {{#if showBreadCrumbs}}
+      {{bread-crumbs}}
+    {{/if}}
 
-  {{outlet}}
+    {{outlet}}
+  </div>
 </div>
 
 {{g-messages}}

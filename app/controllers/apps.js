@@ -41,6 +41,10 @@ export default Ember.ObjectController.extend({
       promise.then(function(){}, function(e){
         if (e.status === 500) {
           self.transitionToRoute("error", e);
+        } else if (e.errors) {
+          e.errors.forEach(function(err) {
+            self.notifications.new('error', err.detail);
+          });
         }
       });
     },

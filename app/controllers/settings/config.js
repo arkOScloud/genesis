@@ -30,7 +30,6 @@ export default Ember.ObjectController.extend({
     if (this.get('tzZones').indexOf(this.get('tzZone')) === -1) {
       this.set("tzZone", this.get('tzZones')[0]);
     }
-    console.log(this.get("tzZone"));
   }.observes('tzZones'),
   offset: function() {
     if (this.get('model').datetime.datetime.offset !== "UNKNOWN") {
@@ -50,6 +49,10 @@ export default Ember.ObjectController.extend({
         error: function(e) {
           if (e.status === 500) {
             self.transitionToRoute("error", e);
+          } else if (e.errors) {
+            e.errors.forEach(function(err) {
+              self.notifications.new('error', err.detail);
+            });
           }
         }
       });
@@ -69,6 +72,10 @@ export default Ember.ObjectController.extend({
       }, function(e){
         if (e.status === 500) {
           self.transitionToRoute("error", e);
+        } else if (e.errors) {
+          e.errors.forEach(function(err) {
+            self.notifications.new('error', err.detail);
+          });
         }
         key.deleteRecord();
       });

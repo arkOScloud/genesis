@@ -1,12 +1,12 @@
-<div id={{msg.id}} class="ui floating icon genesis message {{msg.type}}">
+<div id="notification-box-{{msg.id}}" class="ui floating fluid icon genesis message {{msg.level}}">
   <i class="{{msg.icon}} icon"></i>
-  {{#if msg.dismissable}}
+  {{#if msg.complete}}
     <i class="close icon" {{action 'dismiss'}}></i>
   {{/if}}
   <div class="content">
-    {{#if msg.headline}}
+    {{#if msg.title}}
       <div class="header">
-        {{msg.headline}}
+        {{msg.title}}
       </div>
     {{/if}}
     <p>{{msg.message}}</p>

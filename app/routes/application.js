@@ -1,68 +1,12 @@
 import Ember from "ember";
-import Router from "../router";
 import ENV from "../config/environment";
-import Pollster from "../objects/pollster";
 import ApplicationRouteMixin from 'simple-auth/mixins/application-route-mixin';
 
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
-  setupController: function() {
-    if (this.get("session.isAuthenticated")) {
-      this.setupParallelCalls();
-    }
-  },
-  setupParallelCalls: function() {
-    var self = this;
-    Ember.$.getJSON(ENV.APP.krakenHost+'/api/apps', function(m){
-      m.apps.forEach(function(i){
-        if (i.type === 'app' && i.installed) {
-          Router.map(function(){
-            this.route(i.id);
-          });
-        }
-      });
-    });
-    if (Ember.isNone(this.get('pollster'))) {
-      this.set('pollster', Pollster.create({
-        onPoll: function() {
-          Ember.$.getJSON(ENV.APP.krakenHost+'/api/genesis').then(function(j) {
-            if (j && j.messages) {
-              j.messages.forEach(function(m) {
-                if (m.class === "success" && !ENV.APP.needsFirstRun) {
-                  self.message.success(m.message, m.id, m.complete, m.headline);
-                } else if (m.class === "warn" || m.class === "warning") {
-                  self.message.warning(m.message, m.id, m.complete, m.headline);
-                } else if (m.class === "error") {
-                  self.message.error(m.message, m.id, m.complete, m.headline);
-                } else if (!ENV.APP.needsFirstRun) {
-                  self.message.info(m.message, m.id, m.complete, m.headline);
-                }
-              });
-            }
-            if (j && j.purges && !Ember.$.isEmptyObject(j.purges)) {
-              j.purges.forEach(function(e) {
-                var record = self.store.getById(e.model, e.id);
-                if (record) {
-                  self.store.unloadRecord(record);
-                }
-              });
-            }
-            if (j && j.pushes && !Ember.$.isEmptyObject(j.pushes)) {
-              self.store.pushPayload(j.pushes);
-            }
-          });
-        }
-      }));
-      this.get('pollster').start();
-    }
-  },
-  deactivate: function() {
-    this.get('pollster').stop();
-  },
   actions: {
     sessionAuthenticationSucceeded: function() {
       this.controllerFor("login").set("isLoading", false);
-      this.setupParallelCalls();
       this._super();
     },
     sessionAuthenticationFailed: function(err) {
@@ -77,12 +21,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       this.controllerFor("login").set("loginMessage", msg);
       this.controllerFor("login").set("isLoading", false);
     },
-    authorizationFailed: function() {
-      if (this.get('pollster')) {
-        this.get('pollster').stop();
-      }
-      this._super();
-    },
     willTransition: function(transition) {
       if (transition.targetName !== "firstrun" && ENV.APP.needsFirstRun) {
         transition.abort();
@@ -92,52 +30,14 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     error: function() {
       return true;
     },
-    showModal: function(name, model, extra) {
-      if (extra) {
-        model.set('extra', extra);
-      }
-      this.render(name, {
-        into: 'application',
-        outlet: 'modal',
-        model: model
-      });
-    },
-    showConfirm: function(action, text, model) {
-      if (model) {
-        model.set('confirmAction', action);
-        model.set('confirmText', text);
-      } else {
-        model = {confirmAction: action, confirmText: text};
-      }
-      this.render('components/g-confirm', {
-        into: 'application',
-        outlet: 'modal',
-        model: model
-      });
-    },
-    removeModal: function() {
-      this.disconnectOutlet({
-        outlet: 'modal',
-        parentView: 'application'
-      });
-    },
     shutdown: function() {
-      Ember.$.ajax({
-        url: ENV.APP.krakenHost+'/api/system/shutdown',
-        type: 'POST'
-      });
+      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/shutdown`, {type: 'POST'});
     },
     reload: function() {
-      Ember.$.ajax({
-        url: ENV.APP.krakenHost+'/api/system/reload',
-        type: 'POST'
-      });
+      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/reload`, {type: 'POST'});
     },
     reboot: function() {
-      Ember.$.ajax({
-        url: ENV.APP.krakenHost+'/api/system/reboot',
-        type: 'POST'
-      });
+      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/reboot`, {type: 'POST'});
     }
   }
 });

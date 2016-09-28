@@ -42,6 +42,10 @@ export default Ember.Controller.extend({
       }, function(e){
         if (e.status === 500) {
           self.transitionToRoute("error", e);
+        } else if (e.errors) {
+          e.errors.forEach(function(err) {
+            self.notifications.new('error', err.detail);
+          });
         }
       });
     },
@@ -61,13 +65,16 @@ export default Ember.Controller.extend({
       var self = this;
       Ember.$.ajax(`${ENV.APP.krakenHost}/api/websites/actions/${this.get("model.id")}/${action}`, {type: "POST"})
         .done(function() {
-          self.message.success("Action completed successfully");
+          self.notifications.add("success", action+" action completed successfully");
         })
         .fail(function(e) {
           if (e.status === 500) {
             self.transitionToRoute("error", e);
+          } else if (e.errors) {
+            e.errors.forEach(function(err) {
+              self.notifications.new('error', err.detail);
+            });
           }
-          self.message.error(`Action did not complete: ${e.responseJSON.message}`);
         });
     }
   }

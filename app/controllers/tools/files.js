@@ -80,6 +80,10 @@ export default Ember.ObjectController.extend({
         .fail(function(e) {
           if (e.status === 500) {
             self.transitionToRoute("error", e);
+          } else if (e.errors) {
+            e.errors.forEach(function(err) {
+              self.notifications.new('error', err.detail);
+            });
           }
         });
     },
@@ -89,7 +93,7 @@ export default Ember.ObjectController.extend({
         this.send('previewFile', f);
         return false;
       } else if (f.folder === false) {
-        this.message.error("File cannot be opened.");
+        this.notifications.new("error", "File cannot be opened.");
         return false;
       }
       Ember.$('#file-manager-segment').addClass('loading');
@@ -100,11 +104,11 @@ export default Ember.ObjectController.extend({
           } else if (j.file && !!j.file.folder && !!j.file.binary) {
             self.send('previewFile', f);
           } else {
-            self.message.error("File cannot be opened.");
+            self.notifications.new("error", "File cannot be opened.");
           }
         })
         .fail(function() {
-          self.message.error("Could not load folder.");
+          self.notifications.new("error", "Could not load folder.");
         })
         .always(function() {
           Ember.run.next(function() {
@@ -126,7 +130,7 @@ export default Ember.ObjectController.extend({
           self.send('openEditingFileModal');
         })
         .fail(function(){
-          self.message.error("Could not load file.");
+          self.notifications.new("error", "Could not load file.");
         })
         .always(function() {
           Ember.run.next(function() {
@@ -151,7 +155,7 @@ export default Ember.ObjectController.extend({
         console.log(this.get("selectedItem"));
         this.send('openModal', 'file-info');
       } else {
-        this.message.error("Can only check on properties of one item at a time");
+        this.notifications.new("error", "Can only check on properties of one item at a time");
       }
     },
 
@@ -159,7 +163,7 @@ export default Ember.ObjectController.extend({
     copy: function() {
       Ember.$('.ui.sidebar').sidebar('hide');
       this.get('clipboard').clear().pushObjects(this.get('selectedItems'));
-      this.message.success(`${this.get('selectedItems').get('length')} item(s) added to clipboard`);
+      this.notifications.new("success", `${this.get('selectedItems').get('length')} item(s) added to clipboard`);
       this.get('currentFolder').setEach('selected', false);
     },
     paste: function() {
@@ -179,6 +183,10 @@ export default Ember.ObjectController.extend({
           .fail(function(e) {
             if (e.status === 500) {
               self.transitionToRoute("error", e);
+            } else if (e.errors) {
+              e.errors.forEach(function(err) {
+                self.notifications.new('error', err.detail);
+              });
             }
           });
       });
@@ -218,6 +226,10 @@ export default Ember.ObjectController.extend({
         promise.then(function(){}, function(e){
           if (e.status === 500) {
             self.transitionToRoute("error", e);
+          } else if (e.errors) {
+            e.errors.forEach(function(err) {
+              self.notifications.new('error', err.detail);
+            });
           }
           newShare.deleteRecord();
         });
@@ -244,13 +256,17 @@ export default Ember.ObjectController.extend({
         contentType: 'application/json'
       })
         .done(function() {
-          self.message.success("Permissions changed successfully");
+          self.notifications.new("success", "Permissions changed successfully");
         })
         .fail(function(e) {
           if (e.status === 500) {
             self.transitionToRoute("error", e);
+          } else if (e.errors) {
+            e.errors.forEach(function(err) {
+              self.notifications.new('error', err.detail);
+            });
           }
-          self.message.error(e.responseJSON.message);
+          self.notifications.new("error", e.responseJSON.message);
         });
     },
     openEditingFileModal: function() {
@@ -279,11 +295,15 @@ export default Ember.ObjectController.extend({
         contentType: 'application/json'
       })
         .done(function() {
-          self.message.success("File saved successfully");
+          self.notifications.new("success", "File saved successfully");
         })
         .fail(function(e) {
           if (e.status === 500) {
             self.transitionToRoute("error", e);
+          } else if (e.errors) {
+            e.errors.forEach(function(err) {
+              self.notifications.new('error', err.detail);
+            });
           }
         });
     },
@@ -301,6 +321,10 @@ export default Ember.ObjectController.extend({
       }, function(e){
         if (e.status === 500) {
           self.transitionToRoute("error", e);
+        } else if (e.errors) {
+          e.errors.forEach(function(err) {
+            self.notifications.new('error', err.detail);
+          });
         }
       });
     },

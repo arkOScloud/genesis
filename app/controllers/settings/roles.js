@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  needs: ['application'],
-  currentRouteName: Ember.computed.alias('controllers.application.currentRouteName'),
+  applicationController: Ember.inject.controller('application'),
+  currentRouteName: Ember.computed.alias('applicationController.currentRouteName'),
 
   navName: function() {
     switch(this.get('currentRouteName')) {

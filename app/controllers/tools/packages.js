@@ -44,7 +44,7 @@ export default Ember.ObjectController.extend({
     install: function(pkg) {
       if (pkg.get('operation') !== 'install') {
         pkg.set('operation', 'install');
-        this.message.success(pkg.get('id')+' marked for install. Click Apply Changes to complete.');
+        this.notifications.new("success", pkg.get('id')+' marked for install. Click Apply Changes to complete.');
       } else {
         pkg.rollback();
       }
@@ -52,14 +52,14 @@ export default Ember.ObjectController.extend({
     remove: function(pkg) {
       if (pkg.get('operation') !== 'remove') {
         pkg.set('operation', 'remove');
-        this.message.success(pkg.get('id')+' marked for removal. Click Apply Changes to complete.');
+        this.notifications.new("success", pkg.get('id')+' marked for removal. Click Apply Changes to complete.');
       } else {
         pkg.rollback();
       }
     },
     upgradeAll: function() {
       this.get('model').filterBy('isUpgradable', true).setEach('operation', 'install');
-      this.message.success('Packages marked for upgrade. Click Apply Changes to complete.');
+      this.notifications.new("success", 'Packages marked for upgrade. Click Apply Changes to complete.');
     },
     beginOperations: function() {
       var self = this;
@@ -76,6 +76,10 @@ export default Ember.ObjectController.extend({
         .error(function(e) {
           if (e.status === 500) {
             self.transitionToRoute("error", e);
+          } else if (e.errors) {
+            e.errors.forEach(function(err) {
+              self.notifications.new('error', err.detail);
+            });
           }
         });
     },
