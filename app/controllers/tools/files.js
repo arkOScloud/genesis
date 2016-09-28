@@ -1,5 +1,6 @@
 import Ember from "ember";
 import EmberUploader from 'ember-uploader';
+import handleModelError from '../../utils/handle-model-error';
 import ENV from "../../config/environment";
 import toB64 from "../../utils/to-b64";
 /* global CodeMirror */
@@ -78,13 +79,7 @@ export default Ember.ObjectController.extend({
           self.send('refresh');
         })
         .fail(function(e) {
-          if (e.status === 500) {
-            self.transitionToRoute("error", e);
-          } else if (e.errors) {
-            e.errors.forEach(function(err) {
-              self.notifications.new('error', err.detail);
-            });
-          }
+          handleModelError(self, e);
         });
     },
     open: function(f) {
@@ -152,7 +147,6 @@ export default Ember.ObjectController.extend({
     showProperties: function() {
       Ember.$('.ui.sidebar').sidebar('hide');
       if (this.get("selectedItems.length") === 1) {
-        console.log(this.get("selectedItem"));
         this.send('openModal', 'file-info');
       } else {
         this.notifications.new("error", "Can only check on properties of one item at a time");
@@ -181,13 +175,7 @@ export default Ember.ObjectController.extend({
             self.get('currentFolder').pushObject(j.file);
           })
           .fail(function(e) {
-            if (e.status === 500) {
-              self.transitionToRoute("error", e);
-            } else if (e.errors) {
-              e.errors.forEach(function(err) {
-                self.notifications.new('error', err.detail);
-              });
-            }
+            handleModelError(self, e);
           });
       });
     },
@@ -224,13 +212,7 @@ export default Ember.ObjectController.extend({
         });
         var promise = newShare.save();
         promise.then(function(){}, function(e){
-          if (e.status === 500) {
-            self.transitionToRoute("error", e);
-          } else if (e.errors) {
-            e.errors.forEach(function(err) {
-              self.notifications.new('error', err.detail);
-            });
-          }
+          handleModelError(self, e);
           newShare.deleteRecord();
         });
       });
@@ -259,13 +241,7 @@ export default Ember.ObjectController.extend({
           self.notifications.new("success", "Permissions changed successfully");
         })
         .fail(function(e) {
-          if (e.status === 500) {
-            self.transitionToRoute("error", e);
-          } else if (e.errors) {
-            e.errors.forEach(function(err) {
-              self.notifications.new('error', err.detail);
-            });
-          }
+          handleModelError(self, e);
           self.notifications.new("error", e.responseJSON.message);
         });
     },
@@ -298,13 +274,7 @@ export default Ember.ObjectController.extend({
           self.notifications.new("success", "File saved successfully");
         })
         .fail(function(e) {
-          if (e.status === 500) {
-            self.transitionToRoute("error", e);
-          } else if (e.errors) {
-            e.errors.forEach(function(err) {
-              self.notifications.new('error', err.detail);
-            });
-          }
+          handleModelError(self, e);
         });
     },
     saveUploadedFile: function(){
@@ -319,13 +289,7 @@ export default Ember.ObjectController.extend({
           self.get("currentFolder").pushObject(i);
         });
       }, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     removeDownload: function(dl) {

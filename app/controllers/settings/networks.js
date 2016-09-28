@@ -1,4 +1,6 @@
 import Ember from 'ember';
+import handleModelError from '../../utils/handle-model-error';
+
 
 export default Ember.Controller.extend({
   breadCrumb: {name: 'Networking', icon: 'sitemap'},
@@ -46,13 +48,7 @@ export default Ember.Controller.extend({
       net.set('isReady', false);
       var promise = net.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     toggleEnabled: function(net) {
@@ -61,13 +57,7 @@ export default Ember.Controller.extend({
       net.set('isReady', false);
       var promise = net.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     openModal: function(name, net) {

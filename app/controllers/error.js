@@ -10,18 +10,18 @@ export default Ember.Controller.extend({
     return false;
   }.property("model"),
   networkError: function() {
-    return (this.get("model.responseJSON") === undefined);
+    return typeof this.get("model.report") === "undefined";
   }.property("model"),
   stackTrace: function() {
     if (!this.get("networkError")) {
-      return this.get("model.responseJSON.stacktrace");
+      return this.get("model.stack");
     } else {
       return null;
     }
   }.property("networkError", "model"),
   crashReport: function() {
     if (!this.get("networkError")) {
-      return this.get("model.responseJSON.report");
+      return this.get("model.report");
     } else {
       return null;
     }
@@ -29,19 +29,17 @@ export default Ember.Controller.extend({
   actions: {
     submitCrashReport: function() {
       var self = this,
-          data = this.get("model.responseJSON");
-      Ember.$.ajax({
-        url: ENV.APP.GRMHost+'/api/v1/error',
+          data = this.get("model");
+      Ember.$.ajax(`${ENV.APP.GRMHost}/api/v1/error`, {
         type: "POST",
         data: JSON.stringify({
           summary: data.message,
-          trace: data.stacktrace,
+          trace: data.stack,
           version: data.version,
           arch: data.arch,
           report: data.report
         }),
         contentType: 'application/json',
-        processData: false,
         success: function(j) {
           self.notifications.new("success", j.message);
           Ember.$("#reportbtn").addClass("disabled");

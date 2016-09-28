@@ -1,4 +1,6 @@
 import Ember from 'ember';
+import handleModelError from '../../utils/handle-model-error';
+
 
 export default Ember.Controller.extend({
   queryParams: ['filter'],
@@ -34,13 +36,7 @@ export default Ember.Controller.extend({
       app.set('isReady', false);
       var promise = app.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     setFilter: function(filt) {

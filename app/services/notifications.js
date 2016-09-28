@@ -36,7 +36,6 @@ export default Ember.Service.extend({
     });
   },
   addItem: function(object) {
-    console.log(object);
     if (!object.noFlash) {
       Ember.run.later(function() {
         var box = Ember.$(`#notification-box-${object.id}`);

@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import handleModelError from '../../../../utils/handle-model-error';
 import cardColor from '../../../../utils/card-color';
 
 
@@ -67,13 +68,7 @@ export default Ember.Controller.extend({
         });
         self.transitionToRoute("settings.roles.users");
       }, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
         user.deleteRecord();
       });
     },

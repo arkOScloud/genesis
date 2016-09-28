@@ -1,4 +1,6 @@
 import Ember from 'ember';
+import handleModelError from '../../../../utils/handle-model-error';
+
 
 export default Ember.Controller.extend({
   breadCrumb: Ember.computed("model.name", {
@@ -42,9 +44,7 @@ export default Ember.Controller.extend({
       promise.then(function(){
         self.transitionToRoute("settings.roles.users");
       }, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        }
+        handleModelError(self, e);
       });
     },
     redirect: function() {

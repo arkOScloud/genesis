@@ -1,4 +1,6 @@
 import Ember from 'ember';
+import handleModelError from '../../../utils/handle-model-error';
+
 
 export default Ember.Controller.extend({
   actions: {
@@ -8,13 +10,7 @@ export default Ember.Controller.extend({
       policy.set('isReady', false);
       var promise = policy.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     local: function(policy) {
@@ -23,13 +19,7 @@ export default Ember.Controller.extend({
       policy.set('isReady', false);
       var promise = policy.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     deny: function(policy) {
@@ -38,13 +28,7 @@ export default Ember.Controller.extend({
       policy.set('isReady', false);
       var promise = policy.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     }
   }

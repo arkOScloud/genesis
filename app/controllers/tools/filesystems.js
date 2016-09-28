@@ -1,4 +1,5 @@
 import Ember from "ember";
+import handleModelError from '../../utils/handle-model-error';
 
 
 export default Ember.ObjectController.extend({
@@ -44,13 +45,7 @@ export default Ember.ObjectController.extend({
       fs.set('isReady', false);
       var promise = fs.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     umount: function(fs){
@@ -59,13 +54,7 @@ export default Ember.ObjectController.extend({
       fs.set('isReady', false);
       var promise = fs.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     enable: function(fs) {
@@ -74,13 +63,7 @@ export default Ember.ObjectController.extend({
       fs.set('isReady', false);
       var promise = fs.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     disable: function(fs) {
@@ -89,13 +72,7 @@ export default Ember.ObjectController.extend({
       fs.set('isReady', false);
       var promise = fs.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
     },
     openModal: function(name, fs) {
@@ -110,13 +87,7 @@ export default Ember.ObjectController.extend({
       fs.set('isReady', false);
       var promise = fs.save();
       promise.then(function(){}, function(e){
-        if (e.status === 500) {
-          self.transitionToRoute("error", e);
-        } else if (e.errors) {
-          e.errors.forEach(function(err) {
-            self.notifications.new('error', err.detail);
-          });
-        }
+        handleModelError(self, e);
       });
       this.setProperties({selectedFS: null, passwd: null});
     },
