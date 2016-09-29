@@ -36,7 +36,7 @@
       {{#if session.isAuthenticated}}
       <div class="right menu">
         <div class="item">
-          <i class="user icon"></i> {{#link-to 'settings.roles.users' class='item'}}{{ userId }}{{/link-to}}
+          <i class="user icon"></i> {{#link-to 'system.roles.users' class='item'}}{{ userId }}{{/link-to}}
         </div>
         <a class="{{if hasNotifications 'red active'}} item" {{action 'openSidebar' 'notifications-sidebar'}}>
           <i class="comments icon"></i>
@@ -49,19 +49,19 @@
             {{#link-to 'tools.certificates' class='item'}}<i class="certificate icon"></i> Certificates{{/link-to}}
             {{#link-to 'tools.databases' class='item'}}<i class="database icon"></i> Databases{{/link-to}}
             {{#link-to 'tools.filesystems' class='item'}}<i class="disk outline icon"></i> Filesystems{{/link-to}}
-            {{#link-to 'tools.packages' class='item'}}<i class="cube icon"></i> Packages{{/link-to}}
-            {{#link-to 'tools.services' class='item'}}<i class="tasks icon"></i> Services{{/link-to}}
           </div>
         {{/ui-dropdown-menu}}
         {{#ui-dropdown-menu}}
           <i class="cogs icon"></i>
           <div class="menu">
-            {{#link-to 'settings.roles.users' class='item'}}<i class="group icon"></i> Users, Groups and Domains{{/link-to}}
-            {{#link-to 'settings.updates' class='item'}}<i class="star icon"></i> Updates{{/link-to}}
-            {{#link-to 'settings.backups' class='item'}}<i class="clock icon"></i> Recovery{{/link-to}}
-            {{#link-to 'settings.networks' class='item'}}<i class="sitemap icon"></i> Networking{{/link-to}}
-            {{#link-to 'settings.security.firewall' class='item'}}<i class="shield icon"></i> Security{{/link-to}}
-            {{#link-to 'settings.config' class='item'}}<i class="options icon"></i> Preferences{{/link-to}}
+            {{#link-to 'system.roles.users' class='item'}}<i class="group icon"></i> Users, Groups and Domains{{/link-to}}
+            {{#link-to 'system.packages' class='item'}}<i class="cube icon"></i> Packages{{/link-to}}
+            {{#link-to 'system.services' class='item'}}<i class="tasks icon"></i> Services{{/link-to}}
+            {{#link-to 'system.updates' class='item'}}<i class="star icon"></i> Updates{{/link-to}}
+            {{#link-to 'system.backups' class='item'}}<i class="clock icon"></i> Recovery{{/link-to}}
+            {{#link-to 'system.networks' class='item'}}<i class="sitemap icon"></i> Networking{{/link-to}}
+            {{#link-to 'system.security.firewall' class='item'}}<i class="shield icon"></i> Security{{/link-to}}
+            {{#link-to 'system.config' class='item'}}<i class="options icon"></i> Preferences{{/link-to}}
             <div class="divider"></div>
             <a href="#" class='item' {{action 'openModal' 'about-genesis'}}><i class="question circle icon"></i> About</a>
           </div>

@@ -27,7 +27,7 @@ export default Ember.Service.extend({
     var self = this;
     Ember.$.getJSON(`${ENV.APP.krakenHost}/api/notifications`, function(n) {
       n.notifications.forEach(function(m) {
-        m = setIcon(m);
+        m.icon = setIcon(m);
         m.noFlash = true;
         if (!ENV.APP.needsFirstRun) {
           self.addItem(m);
@@ -36,10 +36,10 @@ export default Ember.Service.extend({
     });
   },
   addItem: function(object) {
-    if (!object.noFlash) {
+    if (!object.noFlash && object.complete) {
       Ember.run.later(function() {
         var box = Ember.$(`#notification-box-${object.id}`);
-        if (object.complete && box.is(':visible')) {
+        if (box.is(':visible')) {
           box.transition('fade');
         }
       }, this.get('timeout'));
@@ -66,7 +66,7 @@ export default Ember.Service.extend({
       message: message,
       title: title,
       time: time,
-      complete: complete || true,
+      complete: complete === false ? false : true,
       internal: internal || false
     });
   },

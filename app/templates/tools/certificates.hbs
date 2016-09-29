@@ -7,24 +7,47 @@
   </div>
 </div>
 
-<div class="ui four cards">
-  {{#each filteredCerts as |cert|}}
-    <div class="card">
-      {{#link-to "tools.certificates.info" cert class="image"}}
-        <div class="{{cert.cardColor}}">
-          <i class="certificate icon"></i>
+{{#if filteredCerts}}
+  <div class="ui four cards">
+    {{#each filteredCerts as |cert|}}
+      <div class="card">
+        {{#link-to "tools.certificates.info" cert class="image"}}
+          <div class="{{cert.cardColor}}">
+            <i class="certificate icon"></i>
+          </div>
+        {{/link-to}}
+        <div class="content">
+          {{#link-to "tools.certificates.info" cert class="header"}}<i class="certificate icon"></i> {{cert.id}}{{/link-to}}
+          <div class="meta">{{cert.typeString}}</div>
         </div>
-      {{/link-to}}
-      <div class="content">
-        {{#link-to "tools.certificates.info" cert class="header"}}<i class="certificate icon"></i> {{cert.id}}{{/link-to}}
-        <div class="meta">{{cert.typeString}}</div>
+        {{#if cert.isAuthority}}
+          <div class="ui bottom attached buttons">
+            <a class="ui button {{if cert.isReady '' 'disabled'}}" href={{cert.downloadHref}}>
+              <i class="download icon"></i> Download
+            </a>
+            <div class="ui red button {{if cert.isReady '' 'disabled'}}" {{action 'openModal' 'delete-cert' cert}}>
+              <i class="trash icon"></i> Delete
+            </div>
+          </div>
+        {{else}}
+          <div class="ui red bottom attached button {{if cert.isReady '' 'disabled'}}" {{action 'openModal' 'delete-cert' cert}}>
+            <i class="trash icon"></i> Delete
+          </div>
+        {{/if}}
       </div>
-      <div class="ui bottom attached button red {{if cert.isReady '' 'disabled'}}" {{action 'openModal' 'delete-cert' cert}}>
-        <i class="trash icon"></i> Delete
+    {{/each}}
+  </div>
+{{else}}
+  <h2 class="ui center aligned icon header">
+    <i class="certificate icon"></i>
+    <div class="content">
+      No certificates
+      <div class="sub header">
+        Click {{#link-to "tools.certificates.add"}}New Certificate{{/link-to}} to get started.
       </div>
     </div>
-  {{/each}}
-</div>
+  </h2>
+{{/if}}
 
 {{#ui-modal name="delete-cert" class="basic delete-cert" onApprove=(action 'deleteCert') onDeny=(action 'clearModal')}}
   <i class="close icon"></i>

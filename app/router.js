@@ -14,7 +14,7 @@ Router.map(function() {
     this.route('add');
   });
 
-  this.route('settings', function() {
+  this.route('system', function() {
     this.route('backups', function(){
       this.route('info', { path: '/:backup_id' });
     });
@@ -22,6 +22,9 @@ Router.map(function() {
     this.route('networks', function() {
       this.route('info', { path: '/:network_id' });
       this.route('add');
+    });
+    this.route('packages', function(){
+      this.route('info', { path: '/:package_id' });
     });
     this.route('roles', function() {
       this.route('users', function() {
@@ -42,6 +45,7 @@ Router.map(function() {
       });
       this.route('fail2ban');
     });
+    this.route('services');
     this.route('updates');
   });
 
@@ -61,10 +65,6 @@ Router.map(function() {
       this.route('info', { path: '/:filesystem_id' });
       this.route('add');
     });
-    this.route('packages', function(){
-      this.route('info', { path: '/:package_id' });
-    });
-    this.route('services');
     this.route('stats');
   });
 

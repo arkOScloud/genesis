@@ -1,1 +1,155 @@
-{{outlet}}
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui vertical fluid tabular menu">
+        <a class="{{if isACMESelected 'active'}} item" {{action 'selectType' 'ACME'}}>
+          <i class="star icon"></i>
+          ACME Certificate
+        </a>
+        <a class="{{if isSSCSelected 'active'}} item" {{action 'selectType' 'SSC'}}>
+          <i class="certificate icon"></i>
+          Self-Signed Certificate
+        </a>
+        <a class="{{if isUploadSelected 'active'}} item" {{action 'selectType' 'Upload'}}>
+          <i class="upload icon"></i>
+          Upload Certificate
+        </a>
+      </div>
+    </div>
+    <div class="twelve wide stretched column">
+      {{#if isACMESelected}}
+        <h3 class="ui header">ACME Certificate
+          <div class="sub header">Request a free and automatically-renewable TLS certificate using ACME protocol and the Let's Encrypt certificate authority.</div>
+        </h3>
+        {{#ui-form fields=fields onSubmit='saveACME' onCancel='redirect'}}
+          <div class="required field">
+            <label>For domain</label>
+            {{#ui-dropdown class="selection" selected=domains.firstObject onChange=(action (mut domain)) as |execute mapper|}}
+              <div class="text"></div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each domains as |domain|}}
+                  <div class="item" data-value="{{map-value mapper domain}}">
+                    {{domain.id}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+        {{/ui-form}}
+        <div class="ui warning icon message">
+          <i class="exclamation triangle icon"></i>
+          <div class="content">
+            <div class="header">
+              Please note
+            </div>
+            Creating an ACME certificate indicates approval of the latest <a target="_blank" href="https://letsencrypt.org/repository/">Let's Encrypt Subscriber Agreement</a> and any applicable terms required for using that service.
+          </div>
+        </div>
+      {{else if isSSCSelected}}
+        <h3 class="ui header">Self-Signed Certificate
+          <div class="sub header">Generate a self-signed TLS certificate for testing or internal use.</div>
+        </h3>
+        {{#ui-form fields=fields onSubmit='saveSSC' onCancel='redirect'}}
+          <div class="required field">
+            <label>Name</label>
+            {{input type="text" name="name" value=name}}
+          </div>
+          <div class="required field">
+            <label>For domain</label>
+            {{#ui-dropdown class="selection" selected=domains.firstObject onChange=(action (mut domain)) as |execute mapper|}}
+              <div class="text"></div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each domains as |domain|}}
+                  <div class="item" data-value="{{map-value mapper domain}}">
+                    {{domain.id}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="three fields">
+            <div class="required field">
+              <label>Two-letter Country Code</label>
+              {{input type="text" name="country" value=country}}
+              <p>ex. 'US' for United States</p>
+            </div>
+            <div class="required field">
+              <label>State or Province</label>
+              {{input type="text" name="state" value=state}}
+            </div>
+            <div class="required field">
+              <label>City, Town or Locality</label>
+              {{input type="text" name="city" value=city}}
+            </div>
+          </div>
+          <div class="required field">
+            <label>Email Address</label>
+            {{input type="text" name="email" value=email}}
+          </div>
+          <h4 class="ui dividing header">Advanced</h4>
+          <div class="field">
+            <label>Key Type</label>
+            {{#ui-dropdown class="selection" selected=keyTypes.firstObject onChange=(action (mut keytype)) as |execute mapper|}}
+              <div class="text"></div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each keyTypes as |keytype|}}
+                  <div class="item" data-value="{{map-value mapper keytype}}">
+                    {{keytype}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="field">
+            <label>Keylength</label>
+            {{input type="text" name="keylength" value=keylength}}
+          </div>
+        {{/ui-form}}
+        <div class="ui warning icon message">
+          <i class="exclamation triangle icon"></i>
+          <div class="content">
+            <div class="header">
+              Please note
+            </div>
+            A self-signed TLS certificate will give you trust warnings in most browsers before visiting the page, because it's issued by your own server and not a recognized authority. For this reason you may wish to only use these certificates for testing and personal use.
+          </div>
+        </div>
+      {{else if isUploadSelected}}
+        <h3 class="ui header">Upload Certificate
+          <div class="sub header">Upload a TLS certificate purchased from a certificate authority.</div>
+        </h3>
+        {{#ui-form fields=fields onSubmit='saveUpload' onCancel='redirect'}}
+          <div class="required field">
+            <label>Name</label>
+            {{input type="text" name="name" value=name}}
+          </div>
+          <div class="required field">
+            <label>Certificate File</label>
+            {{input type="file" name="cert"}}
+          </div>
+          <div class="required field">
+            <label>Key File</label>
+            {{input type="file" name="key"}}
+          </div>
+          <div class="field">
+            <label>Chain File</label>
+            {{input type="file" name="chain"}}
+            <p>This is optional; only set it if you've been given a chain file or told you need one by your provider.</p>
+          </div>
+        {{/ui-form}}
+        <div class="ui warning icon message">
+          <i class="exclamation triangle icon"></i>
+          <div class="content">
+            <div class="header">
+              Please note
+            </div>
+            Ensure that you've {{#link-to "system.roles.domains"}}created a domain{{/link-to}} that corresponds to the address that this certificate was created to serve.
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</div>

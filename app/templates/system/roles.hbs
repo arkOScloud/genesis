@@ -1,0 +1,11 @@
+<div class="ui pointing menu">
+  <div class="header item">Filter by</div>
+  {{#link-to 'system.roles.users' class="item"}}<i class="user icon"></i> Users{{/link-to}}
+  {{#link-to 'system.roles.groups' class="item"}}<i class="group icon"></i> Groups{{/link-to}}
+  {{#link-to 'system.roles.domains' class="item"}}<i class="code icon"></i> Domains{{/link-to}}
+  <div class="right menu">
+    {{#link-to navLink class="item"}}<i class="{{navIcon}} icon"></i> Add {{navName}}{{/link-to}}
+  </div>
+</div>
+
+{{outlet}}

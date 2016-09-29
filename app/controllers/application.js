@@ -1,4 +1,5 @@
 import Ember from "ember";
+import ENV from "../config/environment";
 
 
 export default Ember.Controller.extend({
@@ -6,7 +7,7 @@ export default Ember.Controller.extend({
   hasNotifications: Ember.computed.notEmpty('notifications.items'),
   init: function() {
     this._super.apply(this, arguments);
-    var socket = this.get('socketIOService').socketFor('http://localhost:8000/');
+    var socket = this.get('socketIOService').socketFor(ENV.APP.krakenHost);
     socket.on('connect', function() {
       socket.on('sendNotification', this.onNotification, this);
       socket.on('modelPush', this.onModelPush, this);
@@ -27,7 +28,7 @@ export default Ember.Controller.extend({
     }
   },
   onSocketClose: function() {
-    var socket = this.get('socketIOService').socketFor('http://localhost:8000/');
+    var socket = this.get('socketIOService').socketFor(ENV.APP.krakenHost);
     socket.reconnect();
   },
   userId: function() {

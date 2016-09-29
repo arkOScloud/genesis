@@ -11,9 +11,20 @@
           <div class="header"><i class="certificate icon"></i> {{model.id}}</div>
           <div class="meta">{{model.typeString}}</div>
         </div>
-        <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-cert'}}>
-          <i class="trash icon"></i> Delete
-        </div>
+        {{#if model.isAuthority}}
+          <div class="ui bottom attached buttons">
+            <a class="ui button {{if model.isReady '' 'disabled'}}" href={{model.downloadHref}}>
+              <i class="download icon"></i> Download
+            </a>
+            <div class="ui red button {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-cert'}}>
+              <i class="trash icon"></i> Delete
+            </div>
+          </div>
+        {{else}}
+          <div class="ui red bottom attached button {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-cert'}}>
+            <i class="trash icon"></i> Delete
+          </div>
+        {{/if}}
       </div>
     </div>
     <div class="twelve wide column">
@@ -25,7 +36,7 @@
           </div>
           <div class="item">
             <div class="header">Serves</div>
-            {{#if model.isAuthority}}{{model.id}}{{else}}{{model.domain}}{{/if}}
+            {{#if model.isAuthority}}{{model.id}}{{else}}{{model.domain.id}}{{/if}}
           </div>
           <div class="item">
             <div class="header">Expiry</div>

@@ -4,16 +4,16 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   renderTemplate: function() {
-    this.render('tools.certificates.add', { into: 'application' });
+    this.render('system.roles.groups.edit', { into: 'application' });
   },
   afterModel: function() {
     var me = this;
-    var domainsPromise = this.store.findAll('domain');
+    var usersPromise = this.store.findAll('user');
 
-    domainsPromise.then(function(domains) {
-      me.controllerFor('tools.certificates.add').set('domains', domains);
+    usersPromise.then(function(users) {
+      me.controllerFor('system.roles.groups.edit').set('users', users);
     });
 
-    return domainsPromise;
+    return usersPromise;
   }
 });

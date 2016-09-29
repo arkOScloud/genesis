@@ -62,7 +62,7 @@ export default Ember.Controller.extend({
       this.setProperties({
         id: '', passwd: '', passwdb: '', dbType: this.get('userTypes.firstObject')
       });
-      this.transitionToRoute('settings.roles.users');
+      this.transitionToRoute('tools.databases');
     }
   }
 });
