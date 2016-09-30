@@ -40,7 +40,22 @@ export default Ember.Controller.extend({
       }
     },
     saveACME: function() {
-
+      var self = this,
+          domain = this.get('domain') || this.get('domains.firstObject');
+      var cert = this.store.createRecord('certificate', {
+        id: domain.get('id'),
+        domain: domain,
+        keytype: "RSA",
+        keylength: 2048,
+        isAcme: true
+      });
+      var promise = cert.save();
+      promise.then(function(){
+        self.transitionToRoute('tools.certificates');
+      }, function(e){
+        handleModelError(self, e);
+        cert.deleteRecord();
+      });
     },
     saveSSC: function() {
       var self = this,

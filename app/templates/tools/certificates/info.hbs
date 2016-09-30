@@ -9,7 +9,7 @@
         </div>
         <div class="content">
           <div class="header"><i class="certificate icon"></i> {{model.id}}</div>
-          <div class="meta">{{model.typeString}}</div>
+          <div class="meta">{{model.typeString}}{{#if model.isAcme}} (ACME){{/if}}</div>
         </div>
         {{#if model.isAuthority}}
           <div class="ui bottom attached buttons">

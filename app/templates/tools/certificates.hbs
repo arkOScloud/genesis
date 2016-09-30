@@ -18,7 +18,7 @@
         {{/link-to}}
         <div class="content">
           {{#link-to "tools.certificates.info" cert class="header"}}<i class="certificate icon"></i> {{cert.id}}{{/link-to}}
-          <div class="meta">{{cert.typeString}}</div>
+          <div class="meta">{{cert.typeString}}{{#if cert.isAcme}} (ACME){{/if}}</div>
         </div>
         {{#if cert.isAuthority}}
           <div class="ui bottom attached buttons">

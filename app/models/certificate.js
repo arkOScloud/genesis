@@ -13,6 +13,7 @@ export default DS.Model.extend({
     state: DS.attr('string'),
     locale: DS.attr('string'),
     email: DS.attr('string'),
+    isAcme: DS.attr('boolean'),
     assigns: DS.attr(),
     isReady: DS.attr('boolean', {defaultValue: false}),
     certType: function() {
