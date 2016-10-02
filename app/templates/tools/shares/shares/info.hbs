@@ -1,0 +1,86 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="external share icon"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header"><i class="external share icon"></i> {{model.id}}</div>
+          <div class="meta">{{model.shareType.name}} Share</div>
+        </div>
+        <div class="ui button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-share'}}>
+          <i class="trash icon"></i> Delete
+        </div>
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        <div class="ui list">
+          <div class="item">
+            <div class="header">Name</div>
+            {{model.id}}
+          </div>
+          <div class="item">
+            <div class="header">Share type</div>
+            {{model.shareType.name}}
+          </div>
+          {{#if model.comment}}
+          <div class="item">
+            <div class="header">Comment</div>
+            {{model.comment}}
+          </div>
+          {{/if}}
+          <div class="item">
+            <div class="header">Path to share</div>
+            {{model.path}}
+          </div>
+          {{#if model.validUsers}}
+          <div class="item">
+            <div class="header">Valid users</div>
+            {{#each model.validUsers as |item index|}}
+                {{if index ", "}}{{item.name}} {{item.status}}
+            {{/each}}
+          </div>
+          {{/if}}
+          {{#if model.public}}
+          <div class="item">
+            <div class="header">Public</div>
+            Yes
+          </div>
+          {{/if}}
+          {{#if model.readOnly}}
+          <div class="item">
+            <div class="header">Read Only</div>
+            Yes
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#ui-modal name="delete-share" class="basic delete-share" onApprove=(action 'deleteShare')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="external share icon"></i>
+    Delete share?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete share <strong>{{model.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

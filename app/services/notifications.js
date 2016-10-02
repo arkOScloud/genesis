@@ -27,7 +27,7 @@ export default Ember.Service.extend({
     var self = this;
     Ember.$.getJSON(`${ENV.APP.krakenHost}/api/notifications`, function(n) {
       n.notifications.forEach(function(m) {
-        m.icon = setIcon(m);
+        m.icon = setIcon(m.level);
         m.noFlash = true;
         if (!ENV.APP.needsFirstRun) {
           self.addItem(m);

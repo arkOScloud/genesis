@@ -72,7 +72,7 @@ export default DS.Model.extend({
       return !!this.get('upgradable');
     }.property('upgradable'),
     displayInMenu: function() {
-      var goodType  = ["app", "website"].indexOf(this.get('type'))>=0,
+      var goodType  = ["app", "website", "fileshare"].indexOf(this.get('type'))>=0,
           installed = this.get('installed'),
           loadable  = this.get('loadable');
       return (goodType && loadable && installed);

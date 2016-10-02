@@ -1,0 +1,54 @@
+{{#if model.mounts}}
+  <div class="ui four cards">
+    {{#each model.mounts as |mount|}}
+      <div class="card">
+        <div class="image">
+          <div class="{{mount.cardColor}}">
+            <i class="folder icon"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header"><i class="external share icon"></i> {{mount.id}}</div>
+          <div class="meta">{{mount.shareType.name}} Share</div>
+        </div>
+        <div class="ui button red {{if mount.isReady '' 'disabled'}}" {{action 'openModal' 'delete-mount' mount}}>
+          <i class="remove circle icon"></i> Unmount
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="ui centered basic segment">
+    <h2 class="ui center aligned icon header">
+      <i class="folder icon"></i>
+      <div class="content">
+        No mounts
+        <div class="sub header">
+          Click {{#link-to "tools.shares.mounts.add"}}Add Mount{{/link-to}} to get started.
+        </div>
+      </div>
+    </h2>
+  </div>
+{{/if}}
+
+{{#ui-modal name="delete-mount" class="basic delete-mount" onApprove=(action 'deleteMount')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="folder icon"></i>
+    Unmount?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to unmount <strong>{{selectedMount.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

@@ -1,0 +1,54 @@
+{{#if model.shares}}
+  <div class="ui four cards">
+    {{#each model.shares as |share|}}
+      <div class="card">
+        {{#link-to "tools.shares.shares.info" share class="image"}}
+          <div class="{{share.cardColor}}">
+            <i class="external share icon"></i>
+          </div>
+        {{/link-to}}
+        <div class="content">
+          {{#link-to "tools.shares.shares.info" share class="header"}}<i class="external share icon"></i> {{share.id}}{{/link-to}}
+          <div class="meta">{{share.shareType.name}} Share</div>
+        </div>
+        <div class="ui button red {{if share.isReady '' 'disabled'}}" {{action 'openModal' 'delete-share' share}}>
+          <i class="trash icon"></i> Delete
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="ui centered basic segment">
+    <h2 class="ui center aligned icon header">
+      <i class="external share icon"></i>
+      <div class="content">
+        No fileshares
+        <div class="sub header">
+          Click {{#link-to "tools.shares.shares.add"}}Add Share{{/link-to}} to get started.
+        </div>
+      </div>
+    </h2>
+  </div>
+{{/if}}
+
+{{#ui-modal name="delete-share" class="basic delete-share" onApprove=(action 'deleteShare')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="external share icon"></i>
+    Delete share?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete share <strong>{{selectedShare.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

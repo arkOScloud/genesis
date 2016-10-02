@@ -20,6 +20,11 @@
         {{#link-to "apps.info" app class="header"}}<i class="{{app.icon}} icon"></i> {{app.name}}{{/link-to}}
         <div class="meta">{{app.description.short}}</div>
       </div>
+      {{#if app.error}}
+        <div class="extra content">
+          <strong class="text red"><i class="remove circle icon"></i> {{app.error}}</strong>
+        </div>
+      {{/if}}
 
       {{#if app.installed}}
         {{#if app.isUpgradable}}

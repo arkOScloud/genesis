@@ -34,7 +34,7 @@ export default Ember.Controller.extend({
       var self = this;
       var extraData = {
         datadir: this.get("newSiteDataDir") || null,
-        dbengine: this.get("canChooseDBType") ? (this.get("newSiteDBEngine") || this.get("availableDBTypes.firstObject")) : null
+        dbengine: this.get("canChooseDBType") ? (this.get("newSiteDBEngine.id") || this.get("availableDBTypes.firstObject.id")) : null
       };
       Ember.$('#new-website-form').form({
         fields: {

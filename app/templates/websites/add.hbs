@@ -243,6 +243,19 @@
                 {{/if}}
               </div>
             {{/each}}
+            {{#each websiteOptions.messages as |opt|}}
+              <div id={{opt.id}} class="ui {{opt.level}} {{if opt.icon 'icon' }} message">
+                {{#if opt.icon}}
+                  <i class="{{opt.icon}} icon"></i>
+                {{/if}}
+                <div class="content">
+                  <div class="header">
+                    {{if opt.title opt.title 'Please note'}}
+                  </div>
+                  {{opt.message}}
+                </div>
+              </div>
+            {{/each}}
           </div>
         </div>
       </div>

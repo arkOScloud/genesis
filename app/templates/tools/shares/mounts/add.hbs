@@ -1,0 +1,59 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{cardColor}}">
+            <i class="folder icon"></i>
+          </div>
+        </div>
+        {{#if networkPath}}
+        <div class="content">
+          <div class="header"><i class="folder icon"></i> {{networkPath}}</div>
+          <div class="meta">{{#if shareType}}{{shareType.name}}{{else}}{{validShareTypes.firstObject.name}}{{/if}} Share</div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Network path</label>
+            {{input type="text" name="networkPath" value=networkPath}}
+          </div>
+          <div class="required field">
+            <label>Share type</label>
+            {{#ui-dropdown class="selection" selected=validShareTypes.firstObject onChange=(action (mut shareType)) as |execute mapper|}}
+              <div class="default text">Select a share type</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each validShareTypes as |ty|}}
+                  <div class="item" data-value="{{map-value mapper ty}}">
+                    {{ty.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="required field">
+            <label>Path to mountpoint</label>
+            {{input type="text" name="path" value=path}}
+          </div>
+          <div class="required field">
+            <label>Username</label>
+            {{input type="text" name="username" value=username}}
+            <p>If left blank, an anonymous/guest mount will be attempted.</p>
+          </div>
+          <div class="required field">
+            <label>Password</label>
+            {{input type="password" name="password" value=password}}
+          </div>
+          <div class="field">
+            {{ui-checkbox label="Read Only" checked=readOnly onChange=(action (mut readOnly))}}
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>

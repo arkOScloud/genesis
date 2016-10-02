@@ -1,0 +1,99 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{cardColor}}">
+            <i class="external share icon"></i>
+          </div>
+        </div>
+        {{#if name}}
+        <div class="content">
+          <div class="header"><i class="external share icon"></i> {{name}}</div>
+          <div class="meta">{{#if shareType}}{{shareType.name}}{{else}}{{model.shareTypes.firstObject.name}}{{/if}} Share</div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Share name</label>
+            {{input type="text" name="name" value=name}}
+          </div>
+          <div class="required field">
+            <label>Share type</label>
+            {{#ui-dropdown class="selection" selected=model.shareTypes.firstObject onChange=(action (mut shareType)) as |execute mapper|}}
+              <div class="default text">Select a share type</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each model.shareTypes as |ty|}}
+                  <div class="item" data-value="{{map-value mapper ty}}">
+                    {{ty.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="required field">
+            <label>Path to folder</label>
+            {{input type="text" name="path" value=path}}
+          </div>
+          {{#if shareType}}
+          {{#if shareType.supportsComments}}
+          <div class="field">
+            <label>Comment</label>
+            {{input type="text" name="comment" value=comment}}
+          </div>
+          {{/if}}
+          {{#if shareType.supportsValidUsers}}
+          <div class="field">
+            <label>Valid users</label>
+            {{#ui-dropdown class="fluid multiple selection" onChange=(action (mut validUsers))}}
+              <div class="default text">Select a user</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each model.users as |user|}}
+                  <div class="item" data-value="{{user.name}}">
+                    {{user.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+            <p>Leave empty to make this a public share on your local network.</p>
+          </div>
+          {{/if}}
+          {{else}}
+          {{#if model.shareTypes.firstObject.supportsComments}}
+          <div class="field">
+            <label>Comment</label>
+            {{input type="text" name="comment" value=comment}}
+          </div>
+          {{/if}}
+          {{#if model.shareTypes.firstObject.supportsValidUsers}}
+          <div class="field">
+            <label>Valid users</label>
+            {{#ui-dropdown class="fluid multiple selection" onChange=(action (mut validUsers))}}
+              <div class="default text">Select a user</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each model.users as |user|}}
+                  <div class="item" data-value="{{user.name}}">
+                    {{user.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+            <p>Leave empty to make this a public share on your local network.</p>
+          </div>
+          {{/if}}
+          {{/if}}
+          <div class="field">
+            {{ui-checkbox label="Read Only" checked=readOnly onChange=(action (mut readOnly))}}
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>

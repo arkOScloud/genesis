@@ -11,6 +11,8 @@ export default Ember.Controller.extend({
         this.transitionToRoute('websites', {
           queryParams: {filter: app.get('name')}
         });
+      } else if (app.get('type') === 'fileshare') {
+        this.transitionToRoute('tools.shares.shares');
       } else {
         this.transitionToRoute(app.get('id'));
       }

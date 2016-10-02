@@ -60,7 +60,7 @@ export default Ember.Controller.extend({
       var self = this;
       Ember.$.ajax(`${ENV.APP.krakenHost}/api/websites/actions/${this.get("model.id")}/${action}`, {type: "POST"})
         .done(function() {
-          self.notifications.add("success", action+" action completed successfully");
+          self.notifications.new("success", action+" action completed successfully");
         })
         .fail(function(e) {
           handleModelError(self, e);

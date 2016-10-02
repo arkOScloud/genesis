@@ -27,7 +27,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
         type: 'PUT',
         success: function() {
           self.refresh();
-          self.message.success("Time updated successfully");
+          self.notifications.new("success", "Time updated successfully");
         },
         error: function(e) {
           if (e.status === 500) {

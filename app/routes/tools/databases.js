@@ -11,7 +11,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
     var self = this;
     model.types.forEach(function(i) {
       if (!i.get('state')) {
-        self.message.error(i.get('name')+' is not running. Start it via the Services pane to see its databases and perform tasks.');
+        self.notifications.new("warning", i.get('name')+' is not running. Start it via the Services pane to see its databases and perform tasks.');
       }
     });
   },

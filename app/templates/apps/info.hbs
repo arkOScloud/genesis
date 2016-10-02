@@ -11,6 +11,11 @@
           <div class="header"><i class="{{model.icon}} icon"></i> {{model.name}}</div>
           <div class="meta">{{model.description.short}}</div>
         </div>
+        {{#if model.error}}
+          <div class="extra content">
+            <strong class="text red"><i class="remove circle icon"></i> {{model.error}}</strong>
+          </div>
+        {{/if}}
         {{#if model.installed}}
           {{#if model.isUpgradable}}
             <div class="ui bottom attached buttons">
@@ -45,7 +50,9 @@
         {{/if}}
         <p class="text lead">{{model.description.short}}</p>
         {{#if model.error}}
-        <p class="text lead">App failed to load &mdash; {{model.error}}</p>
+          <div class="extra content">
+            <strong class="text red"><i class="remove circle icon"></i> {{model.error}}</strong>
+          </div>
         {{/if}}
         <div class="ui list">
           <div class="item">

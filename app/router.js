@@ -66,6 +66,15 @@ Router.map(function() {
       this.route('add');
     });
     this.route('stats');
+    this.route('shares', function() {
+      this.route('shares', function() {
+        this.route('info', { path: '/:share_id' });
+        this.route('add');
+      });
+      this.route('mounts', function() {
+        this.route('add');
+      });
+    });
   });
 
   this.route('firstrun');
