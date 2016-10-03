@@ -1,1 +1,57 @@
-{{outlet}}
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{cardColor}}">
+            <i class="shield icon"></i>
+          </div>
+        </div>
+        {{#if name}}
+        <div class="content">
+          <div class="header"><i class="shield icon"></i> {{name}}</div>
+          <div class="meta">{{computedPortsString}}</div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Identifier</label>
+            {{input type="text" name="identifier" value=identifier}}
+          </div>
+          <div class="required field">
+            <label>Display name</label>
+            {{input type="text" name="name" value=name}}
+          </div>
+          <div class="required field">
+            <label>Ports (TCP)</label>
+            {{input type="text" name="tcp" value=tcp}}
+            <p>A comma-separated list of ports. If none, leave blank.</p>
+          </div>
+          <div class="required field">
+            <label>Ports (UDP)</label>
+            {{input type="text" name="udp" value=udp}}
+            <p>A comma-separated list of ports. If none, leave blank.</p>
+          </div>
+          <div class="required field">
+            <label>Policy</label>
+            {{#ui-dropdown class="selection" selected=policyList.firstObject onChange=(action (mut policy)) as |execute mapper|}}
+              <div class="text"></div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each policyList as |policy|}}
+                  <div class="item" data-value="{{map-value mapper policy}}">
+                    {{policy.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>

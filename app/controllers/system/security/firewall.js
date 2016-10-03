@@ -30,6 +30,13 @@ export default Ember.Controller.extend({
       promise.then(function(){}, function(e){
         handleModelError(self, e);
       });
+    },
+    openModal: function(name, policy) {
+      this.set('selectedPolicy', policy);
+      Ember.$('.ui.' + name + '.modal').modal('show');
+    },
+    deletePolicy: function() {
+      this.get('selectedPolicy').destroyRecord();
     }
   }
 });

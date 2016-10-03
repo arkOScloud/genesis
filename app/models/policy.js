@@ -64,5 +64,8 @@ export default DS.Model.extend({
     canDeny: function() {
       return this.get('type') !== "arkos";
     }.property('type'),
+    isCustomPolicy: function() {
+      return this.get('type') === "custom";
+    }.property('type'),
     isReady: DS.attr('boolean', {defaultValue: false})
 });

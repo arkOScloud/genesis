@@ -3,4 +3,7 @@ import AuthenticatedRouteMixin from 'simple-auth/mixins/authenticated-route-mixi
 
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
+  renderTemplate: function() {
+    this.render('system.security.firewall.add', { into: 'application' });
+  }
 });

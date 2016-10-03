@@ -9,6 +9,12 @@
       <div class="content">
         <div class="header"><i class="{{policy.icon}} icon"></i> {{policy.name}}</div>
         <div class="meta">{{policy.displayPorts}}</div>
+        {{#if policy.isCustomPolicy}}
+          <br />
+          <div class="ui fluid red basic button" {{action 'openModal' 'delete-policy' policy}}>
+            <i class="remove circle icon"></i> Delete Rule
+          </div>
+        {{/if}}
       </div>
       <div class="extra content">
         Current Policy:
@@ -35,3 +41,25 @@
     </div>
   {{/each}}
 </div>
+
+{{#ui-modal name="delete-policy" class="basic delete-policy" onApprove=(action 'deletePolicy')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="shield icon"></i>
+    Delete firewall rule?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete firewall rule <strong>{{selectedUser.name}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
