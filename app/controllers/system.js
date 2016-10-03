@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  breadCrumb: {name: 'Settings', icon: 'settings'},
+  breadCrumb: {name: 'System', icon: 'settings'},
   breadCrumbPath: false
 });

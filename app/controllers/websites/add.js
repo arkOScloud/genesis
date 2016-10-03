@@ -9,6 +9,9 @@ export default Ember.Controller.extend({
   confirmedSiteType: null,
   websiteOptions: {},
   selectedSiteType: function() {
+    if (!this.get('siteTypes')) {
+      return Ember.A();
+    }
     return this.get('siteTypes').filterBy('id', this.get('siteType')).get('firstObject');
   }.property('siteType'),
   bumpWebsiteOptions: function() {

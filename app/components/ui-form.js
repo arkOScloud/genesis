@@ -22,6 +22,7 @@ export default Ember.Component.extend({
           inline: true,
           keyboardShortcuts: false,
           onSuccess: function() {
+            self.set('isSubmitting', true);
             self.sendAction('onSubmit');
           }
         });

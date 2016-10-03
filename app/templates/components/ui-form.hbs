@@ -1,6 +1,6 @@
 {{yield}}
 
-<button type="submit" class="ui primary labeled icon button" {{action 'save'}}><i class="save icon"></i> Save</button>
+<button type="submit" class="ui primary labeled icon button {{if isSubmitting 'loading'}}" {{action 'save'}}><i class="save icon"></i> Save</button>
 {{#if onCancel}}
-  <button type="cancel" class="ui labeled icon button" {{action 'cancel'}}><i class="remove circle icon"></i> Cancel</button>
+  <button type="cancel" class="ui labeled icon button {{if isSubmitting 'disabled'}}" {{action 'cancel'}}><i class="remove circle icon"></i> Cancel</button>
 {{/if}}

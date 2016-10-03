@@ -57,7 +57,14 @@ export default Ember.ObjectController.extend({
       Ember.$('.ui.' + name + '.modal').modal('show');
     },
     uninstallApp: function() {
-      this.get('selectedApp').deleteRecord();
+      var self = this,
+           app = this.get('selectedApp');
+      app.set('operation', 'uninstall');
+      app.set('isReady', false);
+      var promise = app.save();
+      promise.then(function(){}, function(e){
+        handleModelError(self, e);
+      });
       this.set('selectedApp', null);
     },
     clearModal: function() {

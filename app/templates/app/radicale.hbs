@@ -1,0 +1,132 @@
+{{#if model.status.installed}}
+<div class="ui menu">
+	<a class="heading item" target="_blank" href={{model.status.url}}>
+    <i class="calendar icon {{if model.status.running 'green' 'red'}}"></i>
+    {{#if model.status.running}}
+      Your Calendar/Contacts server is running and available at {{model.status.url}}
+    {{else}}
+      Your Calendar/Contacts server is installed but not running. Please start it via {{#link-to 'tools.services' (query-params filter="radicale")}}the Services pane{{/link-to}}.
+    {{/if}}
+  </a>
+  <div class="right menu">
+    {{#link-to 'app.radicale.new-cldr' class="item"}}<i class="calendar icon"></i> New Calendar{{/link-to}}
+    {{#link-to 'app.radicale.new-book' class="item"}}<i class="book icon"></i> New Address Book{{/link-to}}
+  </div>
+</div>
+<div class="ui four cards">
+  {{#each cal in model.calendars}}
+    <div class="card">
+      <div class="image {{if cal.isReady '' 'disabled'}}">
+        <div class="{{cal.cardColor}}">
+          <i class="calendar icon"></i>
+        </div>
+      </div>
+      <div class="content">
+        <div class="header">
+          <i class="calendar icon"></i> {{cal.name}}
+        </div>
+        <div class="meta">
+          Calendar ({{cal.user}})
+        </div>
+      </div>
+      <div class="ui bottom attached buttons">
+        {{#copy-button class="ui button" clipboardText=cal.url}}<i class="copy icon"></i> Copy URL{{/copy-button}}
+        <div class="ui button red {{if cal.isReady '' 'disabled'}}" {{action 'openModal' 'delete-cal' cal}}>
+          <i class="trash icon"></i> Delete
+        </div>
+      </div>
+    </div>
+  {{/each}}
+  {{#each book in model.addressBooks}}
+    <div class="card">
+      <div class="image {{if book.isReady '' 'disabled'}}">
+        <div class="{{book.cardColor}}">
+          <i class="book icon"></i>
+        </div>
+      </div>
+      <div class="content">
+        <div class="header">
+          <i class="book icon"></i> {{book.name}}
+        </div>
+        <div class="meta">
+          Address Book ({{book.user}})
+        </div>
+      </div>
+      <div class="ui bottom attached buttons">
+        {{#copy-button class="ui button" clipboardText=book.url}}<i class="copy icon"></i> Copy URL{{/copy-button}}
+        <div class="ui button red {{if book.isReady '' 'disabled'}}" {{action 'openModal' 'delete-book' book}}>
+          <i class="trash icon"></i> Delete
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>
+{{else}}
+  <div class="ui segment">
+    <h1 class="ui dividing header">Calendar/Contacts Setup</h1>
+    {{#ui-form fields=fields onSubmit='setup' onCancel='redirect'}}
+      <div class="required field">
+          <label>Domain</label>
+          {{#ui-dropdown class="selection" selected=model.domains.firstObject onChange=(action (mut setupDomain)) as |execute mapper|}}
+            <div class="text"></div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              {{#each model.domains as |domain|}}
+                <div class="item" data-value="{{map-value mapper domain}}">
+                  {{domain.id}}
+                </div>
+              {{/each}}
+            </div>
+          {{/ui-dropdown}}
+      </div>
+      <div class="required field">
+          <label>Port</label>
+          {{input type="text" name="port" value=setupPort}}
+      </div>
+    {{/ui-form}}
+  </div>
+{{/if}}
+
+{{#ui-modal name="delete-cal" class="basic delete-cal" onApprove=(action 'deleteItem')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="calendar icon"></i>
+    Delete calendar?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete <strong>{{selectedItem.name}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="delete-book" class="basic delete-book" onApprove=(action 'deleteItem')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="book icon"></i>
+    Delete address book?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete <strong>{{selectedItem.name}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

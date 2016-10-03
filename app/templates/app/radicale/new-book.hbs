@@ -1,0 +1,43 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{cardColor}}">
+            <i class="book icon"></i>
+          </div>
+        </div>
+        {{#if name}}
+        <div class="content">
+          <div class="header"><i class="book icon"></i> {{name}}</div>
+          <div class="meta">Address Book {{#if user}}({{user.name}}){{else}}({{model.firstObject.name}}){{/if}}</div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Book Name</label>
+            {{input type="text" name="name" value=name}}
+          </div>
+          <div class="required field">
+            <label>For User</label>
+            {{#ui-dropdown class="selection" selected=model.firstObject onChange=(action (mut user)) as |execute mapper|}}
+              <div class="default text">Select a user</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each model as |user|}}
+                  <div class="item" data-value="{{map-value mapper user}}">
+                    {{user.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>

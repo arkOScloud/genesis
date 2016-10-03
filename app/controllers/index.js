@@ -14,7 +14,7 @@ export default Ember.Controller.extend({
       } else if (app.get('type') === 'fileshare') {
         this.transitionToRoute('tools.shares.shares');
       } else {
-        this.transitionToRoute(app.get('id'));
+        this.transitionToRoute('app.' + app.get('id'));
       }
     }
   }

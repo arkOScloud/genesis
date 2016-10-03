@@ -6,6 +6,12 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('app', { path: '/app' }, function() {
+    this.route('radicale', function() {
+      this.route('new-book');
+      this.route('new-cldr');
+    });
+  });
   this.route('apps', { path: '/apps' }, function() {
     this.route('info', { path: '/:app_id' });
   });
