@@ -1,0 +1,37 @@
+<div class="ui segment">
+  {{#ui-form fields=fields onSubmit='saveSettings'}}
+    <div class="required field">
+      <label>Sync Protocol Listen Addresses</label>
+      {{input type="text" value=model.config.options.listenAddress}}
+    </div>
+    <div class="required field">
+      <label>Outgoing Rate Limits (KiB/s)</label>
+      {{input type="text" value=model.config.options.maxSendKbps}}
+      <p>Enter <code>0</code> for no limit.</p>
+    </div>
+    <div class="required field">
+      <label>Reconnect Interval (s)</label>
+      {{input type="text" value=model.config.options.reconnectionIntervalS}}
+    </div>
+    <div class="field">
+      <label>Authentication User (GUI)</label>
+      {{input type="text" value=model.config.gui.user}}
+    </div>
+    <div class="field">
+      <label>Authentication Password (GUI)</label>
+      {{input type="password" value=model.config.gui.password}}
+    </div>
+    <div class="field">
+      {{ui-checkbox label="Local Discovery" checked=model.config.options.localAnnounceEnabled onChange=(action (mut model.config.options.localAnnounceEnabled))}}
+    </div>
+    <div class="field">
+      {{ui-checkbox label="Global Discovery" checked=model.config.options.globalAnnounceEnabled onChange=(action (mut model.config.options.globalAnnounceEnabled))}}
+    </div>
+    <div class="field">
+      {{ui-checkbox label="Enable uPnP" checked=model.config.options.upnpEnabled onChange=(action (mut model.config.options.upnpEnabled))}}
+    </div>
+    <div class="field">
+      {{ui-checkbox label="Enable Anonymous Usage Reporting" checked=model.config.options.urAccepted onChange=(action (mut model.config.options.urAccepted))}}
+    </div>
+  {{/ui-form}}
+</div>

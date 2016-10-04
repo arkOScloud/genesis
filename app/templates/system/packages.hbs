@@ -36,9 +36,9 @@
         <td>{{pkg.id}}</td>
         <td>{{pkg.version}}{{#if pkg.isUpgradable}}<span class="text green"> ({{pkg.upgradable}} available)</span>{{/if}}</td>
         <td class="collapsing">
-          <div class="ui three tiny fluid buttons">
+          <div class="ui three tiny fluid labeled icon buttons">
             <a href="#" class="ui tiny button" {{action 'getInfo' pkg}}><i class="info circle icon"></i> Info</a>
-            <a href="#" class="ui tiny green button {{if pkg.installed (if pkg.isUpgradable '' 'disabled')}}" {{action 'install' pkg}}><i class="up arrow circle icon"></i> {{#if pkg.isUpgradable}}Upgrade{{else}}Install{{/if}}</a>
+            <a href="#" class="ui tiny button {{if pkg.installed (if pkg.isUpgradable 'green' 'disabled') 'green'}}" {{action 'install' pkg}}><i class="up arrow circle icon"></i> {{#if pkg.isUpgradable}}Upgrade{{else}}Install{{/if}}</a>
             <a href="#" class="ui tiny red button {{if pkg.installed (if pkg.toInstall 'disabled') 'disabled'}}" {{action 'remove' pkg}}><i class="trash icon"></i> Uninstall</a>
           </div>
         </td>

@@ -1,0 +1,96 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="folder icon"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header"><i class="folder icon"></i> {{model.label}}</div>
+          <div class="meta">Sync Folder</div>
+        </div>
+        <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'delete-folder'}}>
+          <i class="trash icon"></i> Delete
+        </div>
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Folder Label</label>
+            {{input type="text" name="name" value=model.label}}
+            <p>Short identifier for the folder. Must be the same on all devices.</p>
+          </div>
+          <div class="required field">
+            <label>Path to Folder</label>
+            {{input type="text" name="path" value=model.path}}
+            <p>Path to the folder on your arkOS server to sync. Will be created if it does not exist.</p>
+          </div>
+          <div class="field">
+            {{ui-checkbox label="Read Only?" checked=model.isReadOnly onChange=(action (mut model.isReadOnly))}}
+            <p>Files on your arkOS server are protected from changes made on other devices, but changes made on <strong>this</strong> device will be sent to all others.</p>
+          </div>
+          <div class="field">
+            {{ui-checkbox label="Ignore Permissions?" checked=model.ignorePerms onChange=(action (mut model.ignorePerms))}}
+            <p>File permission bits are ignored when looking for changes. Use this when syncing to FAT filesystems.</p>
+          </div>
+          <div class="field">
+            {{ui-checkbox label="Enable File Versioning" checked=model.hasVersioning onChange=(action (mut model.hasVersioning))}}
+            <p>Files are moved to date-stamped versions in a <code>.stversions</code> folder when replaced or deleted by File Sync.</p>
+          </div>
+          {{#if model.hasVersioning}}
+          <div class="field">
+            <label>Keep Versions</label>
+            {{input type="text" name="keepVersions" value=model.versioning.params.keep}}
+            <p>The number of old versions to keep, per file.</p>
+          </div>
+          {{/if}}
+          <div class="required field">
+            <label>Rescan Interval</label>
+            {{input type="text" name="rescanIntervalS" value=model.rescanIntervalS}}
+            <p>The number of seconds to wait between each scan for modification of the local folder.</p>
+          </div>
+          <div class="required field">
+            <label>Share with Devices</label>
+            {{#ui-dropdown class="multiple selection" selected=devicesSelected onChange=(action (mut devicesSelected)) as |execute mapper|}}
+              <div class="text"></div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each devicesAvailable as |device|}}
+                  <div class="item" data-value="{{map-value mapper device}}">
+                    {{device.name}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#ui-modal name="delete-folder" class="basic delete-folder" onApprove=(action 'deleteFolder')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="folder icon"></i>
+    Delete folder?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete <strong>{{model.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

@@ -1,0 +1,31 @@
+<div class="ui segment {{if model.service.running 'green' 'red'}}">
+  <i class="comments icon"></i>
+  {{#if model.service.running}}
+    Your XMPP chat server is running and available.
+  {{else}}
+    Your XMPP chat server is installed but not running. Please start it via {{#link-to 'system.services' (query-params filter="prosody")}}the Services pane{{/link-to}}.
+  {{/if}}
+</div>
+
+<div class="ui segment">
+<h4>The following domains are enabled for use with your XMPP chat server. All users belonging to these domains can use the server. To add new domains to your server, {{#link-to 'system.roles.domains'}}go to Domains{{/link-to}}.</h4>
+  <div class="ui four cards">
+    {{#each domain in model.domains}}
+      <div class="card">
+        <div class="image {{if domain.isReady '' 'disabled'}}">
+          <div class="{{domain.cardColor}}">
+            <i class="comments icon"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header">
+            <i class="comments icon"></i> {{domain.id}}
+          </div>
+          <div class="meta">
+            XMPP Domain
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>

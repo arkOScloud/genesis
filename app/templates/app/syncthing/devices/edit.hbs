@@ -1,0 +1,63 @@
+<div class="ui basic segment">
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="image">
+          <div class="{{model.cardColor}}">
+            <i class="disk outline icon"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header"><i class="disk outline icon"></i> {{model.name}}</div>
+          <div class="meta">Sync Device</div>
+        </div>
+        <div class="ui bottom attached button red {{if model.isReady (if model.isMainDevice 'disabled') 'disabled'}}" {{action 'openModal' 'delete-device'}}>
+          <i class="trash icon"></i> Delete
+        </div>
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui segment">
+        {{#ui-form fields=fields onSubmit='save' onCancel='redirect'}}
+          <div class="required field">
+            <label>Device Name</label>
+            {{input type="text" name="name" value=model.name}}
+            <p>Short identifier for the device, as shown in the interface.</p>
+          </div>
+          <div class="required field">
+            <label>Device ID</label>
+            {{input type="text" name="deviceID" value=model.deviceID disabled="true"}}
+            <p>The device ID to enter here can be found in the <code>Edit > Show ID</code> dialog on the other device. Spaces and dashes are optional (ignored). When adding a new device, keep in mind that this device must be added on the other side too.</p>
+          </div>
+          <div class="required field">
+            <label>Share With Devices</label>
+            {{input type="text" name="addresses" value=model.addresses}}
+            <p>Enter comma separated <code>ip:port</code> addresses or <code>dynamic</code> to perform automatic discovery of the device's address.</p>
+          </div>
+        {{/ui-form}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#ui-modal name="delete-device" class="basic delete-device" onApprove=(action 'deleteDevice')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="disk outline icon"></i>
+    Delete device?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete <strong>{{model.id}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

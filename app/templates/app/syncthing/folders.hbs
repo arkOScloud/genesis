@@ -1,0 +1,44 @@
+<div class="ui four cards">
+  {{#each model as |folder|}}
+    <div class="card">
+      {{#link-to 'app.syncthing.folders.edit' folder class="image {{if folder.isReady '' 'disabled'}}"}}
+        <div class="{{folder.cardColor}}">
+          <i class="folder icon"></i>
+        </div>
+      {{/link-to}}
+      <div class="content">
+        {{#link-to 'app.syncthing.folders.edit' folder class="header"}}
+          <i class="folder icon"></i> {{folder.label}}
+        {{/link-to}}
+        <div class="meta">
+          Sync Folder
+        </div>
+      </div>
+      <div class="ui bottom attached button red {{if folder.isReady '' 'disabled'}}" {{action 'openModal' 'delete-folder' folder}}>
+        <i class="trash icon"></i> Delete
+      </div>
+    </div>
+  {{/each}}
+</div>
+
+{{#ui-modal name="delete-folder" class="basic delete-folder" onApprove=(action 'deleteFolder')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="folder icon"></i>
+    Delete folder?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to delete <strong>{{selectedFolder.label}}</strong>?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}

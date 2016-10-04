@@ -1,0 +1,12 @@
+<div class="ui pointing menu">
+  {{#link-to 'app.syncthing.folders' class="item"}}<i class="folder icon"></i> Folders{{/link-to}}
+  {{#link-to 'app.syncthing.devices' class="item"}}<i class="disk outline icon"></i> Devices{{/link-to}}
+  {{#link-to 'app.syncthing.settings' class="item"}}<i class="settings icon"></i> Settings{{/link-to}}
+  <div class="right menu">
+    {{#link-to 'app.syncthing.folders.add' class="item"}}<i class="folder icon"></i> New Folder{{/link-to}}
+    {{#link-to 'app.syncthing.devices.add' class="item"}}<i class="disk outline icon"></i> New Device{{/link-to}}
+    {{#copy-button class="item" tagName="a" clipboardText=model.myid}}<i class="copy icon"></i> Copy Device ID{{/copy-button}}
+  </div>
+</div>
+
+{{outlet}}

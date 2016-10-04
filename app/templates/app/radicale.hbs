@@ -5,7 +5,7 @@
     {{#if model.status.running}}
       Your Calendar/Contacts server is running and available at {{model.status.url}}
     {{else}}
-      Your Calendar/Contacts server is installed but not running. Please start it via {{#link-to 'tools.services' (query-params filter="radicale")}}the Services pane{{/link-to}}.
+      Your Calendar/Contacts server is installed but not running. Please start it via {{#link-to 'system.services' (query-params filter="radicale")}}the Services pane{{/link-to}}.
     {{/if}}
   </a>
   <div class="right menu">

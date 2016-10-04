@@ -28,5 +28,8 @@ export default Ember.Controller.extend({
         cldr.deleteRecord();
       });
     }
+  },
+  redirect: function() {
+    this.transitionToRoute('app.radicale');
   }
 });

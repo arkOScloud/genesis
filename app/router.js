@@ -11,6 +11,18 @@ Router.map(function() {
       this.route('new-book');
       this.route('new-cldr');
     });
+    this.route('syncthing', function() {
+      this.route('settings');
+      this.route('folders', function() {
+        this.route('edit', { path: '/:folder_id' });
+        this.route('add');
+      });
+      this.route('devices', function() {
+        this.route('edit', { path: '/:device_id' });
+        this.route('add');
+      });
+    });
+    this.route('xmpp');
   });
   this.route('apps', { path: '/apps' }, function() {
     this.route('info', { path: '/:app_id' });
