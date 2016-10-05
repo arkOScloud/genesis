@@ -6,6 +6,9 @@ import cardColor from '../../../../utils/card-color';
 export default Ember.Controller.extend({
   breadCrumb: {name: 'New domain', icon: 'code'},
   cardColor: cardColor(),
+  fields: {
+    domain: ['regExp[/^[a-zA-Z0-9-_\.]+$/]']
+  },
   actions: {
     save: function(){
       var self = this;

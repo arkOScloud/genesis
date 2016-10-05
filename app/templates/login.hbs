@@ -1,7 +1,7 @@
 <div class="ui center aligned grid">
   <div class="login column">
     <div class="ui large form">
-      <h1 class="text center lead">Login</h1>
+      <img src="/img/logo-round.png" />
       <form {{action 'authenticate' on='submit'}}>
         <div class="ui stacked segment">
           <div class="field">
@@ -27,3 +27,11 @@
     {{/if}}
   </div>
 </div>
+
+{{#if currentlyLoading}}
+<div class="ui center">
+  <div class="ui active inverted dimmer">
+    <div class="ui text loader">Loading</div>
+  </div>
+</div>
+{{/if}}

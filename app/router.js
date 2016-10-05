@@ -95,7 +95,14 @@ Router.map(function() {
     });
   });
 
-  this.route('firstrun');
+  this.route('firstrun', function() {
+    this.route('finish');
+    this.route('start');
+    this.route('user');
+    this.route('settings');
+    this.route('apps');
+    this.route('confirm');
+  });
   this.route('login');
 });
 

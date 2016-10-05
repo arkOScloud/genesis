@@ -40,8 +40,11 @@ export default Ember.Controller.extend({
     }
   }.property("session.isAuthenticated"),
   showBreadCrumbs: function() {
-    return ["login", "index", "error", "firstrun"].indexOf(this.get("currentRouteName")) === -1;
+    return ["login", "index", "error"].indexOf(this.get("currentRouteName")) === -1 && !this.get("currentRouteName").startsWith("firstrun");
   }.property("currentRouteName"),
+  showMenubar: function() {
+    return this.get("session.isAuthenticated") && !this.get("currentRouteName").startsWith("firstrun");
+  }.property("session.isAuthenticated", "currentRouteName"),
   actions: {
     openModal: function(name) {
       Ember.$('.ui.' + name + '.modal').modal('show');

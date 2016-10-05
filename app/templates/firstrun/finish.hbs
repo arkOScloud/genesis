@@ -1,0 +1,102 @@
+<div class="ui basic center aligned segment">
+  <h1 class="ui header text thin">
+    <img src="/img/logo-round.png" />
+    <div class="content">
+      Welcome to arkOS
+    </div>
+  </h1>
+</div>
+<div class="ui basic segment">
+  <div class="ui top attached segment">
+    <h2 class="ui center aligned icon header">
+      <i class="settings icon"></i>
+      <div class="content">
+        Configuring arkOS
+        <div class="sub header">The following actions are underway. Please do not turn off power to your server or close this browser window.</div>
+      </div>
+    </h2>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+        	<th width="1" />
+            <th>Operation</th>
+            <th>Item</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="{{if operations.user 'positive'}}">
+          <td><i class="{{if operations.user 'green checkmark' 'loading spinner'}} icon"></i></td>
+          <td>Add User</td>
+          <td>{{user.newUser.firstName}}{{#if user.newUser.lastName}} {{user.newUser.lastName}}{{/if}} ({{user.newUser.name}})</td>
+        </tr>
+        {{#if user.newDomain}}
+          <tr class="{{if operations.domain 'positive'}}">
+            <td><i class="{{if operations.domain 'green checkmark' 'loading spinner'}} icon"></i></td>
+            <td>Assign Domain</td>
+            <td>{{user.newDomain}}</td>
+          </tr>
+        {{/if}}
+        <tr class="{{if operations.timezone 'positive'}}">
+          <td><i class="fa fa-fw {{if operations.timezone 'green checkmark' 'loading spinner'}} icon"></i></td>
+          <td>Set Timezone</td>
+          <td>{{settings.tzRegion}} ({{settings.tzZone}})</td>
+        </tr>
+        {{#if settings.resizeSDCard}}
+          <tr class="{{if operations.resizeSDCard 'positive'}}">
+            <td><i class="{{if operations.resizeSDCard 'green checkmark' 'loading spinner'}} icon"></i></td>
+            <td>Resize SD Card</td>
+            <td>Yes</td>
+          </tr>
+        {{/if}}
+        {{#if settings.useGPUMem}}
+          <tr class="{{if operations.useGPUMem 'positive'}}">
+            <td><i class="{{if operations.useGPUMem 'green checkmark' 'loading spinner'}} icon"></i></td>
+            <td>Reassign GPU Memory</td>
+            <td>Yes</td>
+          </tr>
+        {{/if}}
+        {{#if settings.cubieMAC}}
+          <tr class="{{if operations.cubieMAC 'positive'}}">
+            <td><i class="{{if operations.cubieMAC 'green checkmark' 'loading spinner'}} icon"></i></td>
+            <td>Set MAC Address</td>
+            <td>{{settings.cubieMAC}}</td>
+          </tr>
+        {{/if}}
+        {{#if settings.protectRoot}}
+          <tr class="{{if operations.protectRoot 'positive'}}">
+            <td><i class="{{if operations.cubieMAC 'green checkmark' 'loading spinner'}} icon"></i></td>
+            <td>Protect Root User</td>
+            <td>Yes</td>
+          </tr>
+        {{/if}}
+        {{#each apps.selectedApps as |app|}}
+          {{#if app.firstrunSelected}}
+            <tr class="{{if app.installed 'positive'}}">
+              <td><i class="{{if app.installed 'green checkmark' 'loading spinner'}} icon"></i></td>
+              <td>Install</td>
+              <td><i class="{{app.icon}} icon"></i> {{app.name}}</td>
+            </tr>
+          {{/if}}
+        {{/each}}
+      </tbody>
+    </table>
+    {{#if settings.protectRoot}}
+      <div class="ui raised center aligned segment">
+        <p class="text lead">Your recovery password is:</p>
+        <h1 style="font-family: monospace">{{rootPwd}}</h1>
+        <p>Please make note of this password and keep it in a safe place. Use it for administrator (root) access in case it becomes necessary.</p>
+      </div>
+    {{/if}}
+    {{#if canFinish}}
+      <p>You may begin to use arkOS while your applications install in the background.</p>
+      {{#if needsRestart}}
+        <p>Some of the options you chose require a restart to the device before they will take effect. Please wait until your applications have installed and show up before attempting to restart.</p>
+      {{/if}}
+    {{/if}}
+  </div>
+  {{#if canFinish}}
+    <div class="ui bottom attached clearing segment">
+       <a href="#" class="ui large right floated right labeled primary icon button" {{action 'finish'}}><i class="check circle icon"></i> OK</a>
+    </div>
+  {{/if}}
+</div>

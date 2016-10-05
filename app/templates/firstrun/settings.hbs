@@ -1,0 +1,103 @@
+<div class="ui basic center aligned segment">
+  <h1 class="ui header text thin">
+    <img src="/img/logo-round.png" />
+    <div class="content">
+      Welcome to arkOS
+    </div>
+  </h1>
+</div>
+<div class="ui basic segment">
+  <div class="ui top attached ordered steps">
+    <div class="completed step">
+      <div class="content">
+        <div class="title">User Account</div>
+        <div class="description">Create your first user</div>
+      </div>
+    </div>
+    <div class="active step">
+      <div class="content">
+        <div class="title">System Settings</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="content">
+        <div class="title">Install Apps</div>
+        <div class="description">Choose applications to install</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="content">
+        <div class="title">Confirm</div>
+        <div class="description">Finish your setup process</div>
+      </div>
+    </div>
+  </div>
+  <div class="ui attached segment">
+    <h2 class="ui center aligned icon header">
+      <i class="settings icon"></i>
+      <div class="content">
+        System Settings
+        <div class="sub header">You can change the settings below if you wish. It's fine to leave them as they are, though.</div>
+      </div>
+    </h2>
+    <div class="ui form">
+      <div class="field">
+        <label>Choose your timezone</label>
+        <div class="two fields">
+          <div class="field">
+            {{#ui-dropdown class="selection" selected=tzRegion onChange=(action (mut tzRegion))}}
+              <div class="text"></div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each timezones as |tz|}}
+                  <div class="item" data-value="{{tz.region}}">
+                    {{tz.region}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+          <div class="field">
+            {{#ui-dropdown class="selection" selected=tzZone onChange=(action (mut tzZone))}}
+              <div class="text"></div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                {{#each tzZones as |tz|}}
+                  <div class="item" data-value="{{tz}}">
+                    {{tz}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/ui-dropdown}}
+          </div>
+        </div>
+      </div>
+      {{#if usesSDCard}}
+        <div class="field">
+          {{ui-checkbox label="Let arkOS use your whole SD card" checked=resizeSDCard onChange=(action (mut resizeSDCard))}}
+          <p>If you have an SD card larger than 2GB and are not using a split boot configuration, select this option. This expands arkOS so it can use the entire SD card. You will need to restart the system before the changes take effect.</p>
+        </div>
+      {{/if}}
+      {{#if isRPi}}
+        <div class="field">
+          {{ui-checkbox label="Let arkOS use some of your graphics memory for other things" checked=useGPUMem onChange=(action (mut useGPUMem))}}
+          <p>Because you won't be using your Raspberry Pi with a monitor or keyboard, you can use some of that memory to make arkOS run better elsewhere. (Sets GPU memory to the minimum 16MB)</p>
+        </div>
+      {{else if isCubie}}
+        <div class="field">
+          <label>Set MAC Address</label>
+          {{input type="text" value=cubieMAC}}
+          <p>Your device needs a MAC address to keep a constant connection (via DHCP). If you leave this blank, one will be generated for you. You will need to restart the system before it will take effect.</p>
+        </div>
+      {{/if}}
+      <div class="field">
+        {{ui-checkbox label="Protect root (recommended)" checked=protectRoot onChange=(action (mut protectRoot))}}
+        <p>If checked, SSH access will be disabled for the root user and its password will be changed to a recovery key.</p>
+      </div>
+    </div>
+  </div>
+  <div class="ui bottom attached clearing segment">
+    {{#link-to "firstrun.user" class="ui large left floated labeled icon button"}}<i class="left chevron icon"></i> Previous{{/link-to}}
+    {{#link-to "firstrun.apps" class="ui large right floated right labeled primary icon button"}}<i class="right chevron icon"></i> Next{{/link-to}}
+  </div>
+</div>

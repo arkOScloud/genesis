@@ -4,6 +4,27 @@ import ApplicationRouteMixin from 'simple-auth/mixins/application-route-mixin';
 
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
+  afterModel: function() {
+    this.autoFirstRun();
+  },
+  autoFirstRun: function() {
+    var self = this;
+    self.controllerFor('login').set('currentlyLoading', true);
+    Ember.run.next(self, function() {
+      if (typeof ENV.APP.needsFirstRun === 'undefined') {
+        self.autoFirstRun();
+      } else if (ENV.APP.needsFirstRun && !this.get('session.isAuthenticated')) {
+        var authenticator = 'simple-auth-authenticator:jwt';
+        this.get('session').authenticate(
+          authenticator, {identification: "", password: ""}
+        );
+      } else if (ENV.APP.needsFirstRun && !this.get('routeName').startsWith('firstrun')) {
+        self.transitionTo('firstrun.start');
+      } else if (!ENV.APP.needsFirstRun) {
+        self.controllerFor('login').set('currentlyLoading', false);
+      }
+    });
+  },
   actions: {
     sessionAuthenticationSucceeded: function() {
       this.controllerFor("login").set("isLoading", false);
@@ -22,9 +43,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       this.controllerFor("login").set("isLoading", false);
     },
     willTransition: function(transition) {
-      if (transition.targetName !== "firstrun" && ENV.APP.needsFirstRun) {
+      if (!transition.targetName.startsWith("firstrun") && ENV.APP.needsFirstRun) {
         transition.abort();
-        this.transitionTo('firstrun');
+        this.transitionTo('firstrun.start');
       }
     },
     error: function() {

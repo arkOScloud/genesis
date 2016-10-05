@@ -1,0 +1,85 @@
+<div class="ui basic center aligned segment">
+  <h1 class="ui header text thin">
+    <img src="/img/logo-round.png" />
+    <div class="content">
+      Welcome to arkOS
+    </div>
+  </h1>
+</div>
+<div class="ui basic segment">
+  <div class="ui top attached ordered steps">
+    <div class="completed step">
+      <div class="content">
+        <div class="title">User Account</div>
+        <div class="description">Create your first user</div>
+      </div>
+    </div>
+    <div class="completed step">
+      <div class="content">
+        <div class="title">System Settings</div>
+        <div class="description">Configure your arkOS server</div>
+      </div>
+    </div>
+    <div class="active step">
+      <div class="content">
+        <div class="title">Install Apps</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="content">
+        <div class="title">Confirm</div>
+        <div class="description">Finish your setup process</div>
+      </div>
+    </div>
+  </div>
+  <div class="ui attached segment">
+    <h2 class="ui center aligned icon header">
+      <i class="cubes icon"></i>
+      <div class="content">
+        Install Applications
+        <div class="sub header">Select the apps you would like to install. You can always add or remove any of them later, whenever you want. You will need a working Internet connection to complete this step.</div>
+      </div>
+    </h2>
+    <div class="ui menu">
+      <a href="#" class="item" {{action "selectAll"}}><i class="plus circle icon"></i> Select All</a>
+      <div class="right menu">
+        <a href="#" class="item" {{action "deselectAll"}}><i class="remove circle icon"></i> Clear</a>
+      </div>
+    </div>
+    <div class="ui form">
+      <div class="ui four cards">
+        {{#each model as |app|}}
+          <div class="ui link card {{if app.firstrunSelected 'raised'}}" {{action 'selectApp' app}}>
+            <div class="image">
+              <div class="{{app.cardColor}}">
+                <i class="{{app.icon}} icon"></i>
+              </div>
+            </div>
+            <div class="content">
+              <div class="header"><i class="{{app.icon}} icon"></i> {{app.name}}</div>
+              <div class="meta">{{app.description.short}}</div>
+            </div>
+            {{#if app.error}}
+              <div class="extra content">
+                <strong class="text red"><i class="remove circle icon"></i> {{app.error}}</strong>
+              </div>
+            {{/if}}
+            {{#if app.installed}}
+              <div class="ui bottom attached green disabled button">
+                <i class="checkmark icon"></i> Installed
+              </div>
+            {{else}}
+              <div class="ui bottom attached button {{if app.firstrunSelected 'green'}}">
+                <i class="checkmark icon"></i> Select{{#if app.firstrunSelected}}ed{{/if}}
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+  <div class="ui bottom attached clearing segment">
+    {{#link-to "firstrun.settings" class="ui large left floated labeled icon button"}}<i class="left chevron icon"></i> Previous{{/link-to}}
+    {{#link-to "firstrun.confirm" class="ui large right floated right labeled primary icon button"}}<i class="right chevron icon"></i> Next{{/link-to}}
+  </div>
+</div>

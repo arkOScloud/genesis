@@ -1,0 +1,83 @@
+<div class="ui basic center aligned segment">
+  <h1 class="ui header text thin">
+    <img src="/img/logo-round.png" />
+    <div class="content">
+      Welcome to arkOS
+    </div>
+  </h1>
+</div>
+<div class="ui basic segment">
+  <div class="ui top attached ordered steps">
+    <div class="active step">
+      <div class="content">
+        <div class="title">User Account</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="content">
+        <div class="title">System Settings</div>
+        <div class="description">Configure your arkOS server</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="content">
+        <div class="title">Install Apps</div>
+        <div class="description">Choose applications to install</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="content">
+        <div class="title">Confirm</div>
+        <div class="description">Finish your setup process</div>
+      </div>
+    </div>
+  </div>
+  <div class="ui attached segment">
+    <h2 class="ui center aligned icon header">
+      <i class="user icon"></i>
+      <div class="content">
+        User Account
+        <div class="sub header">Create a new user account for managing your device and accessing your services. You will be able to create additional accounts for others later.</div>
+      </div>
+    </h2>
+    <div id="user-form" class="ui form">
+      <div class="required field">
+        <label>New Username</label>
+        {{input type="text" name="username" value=newUser.name}}
+        <p>Username must be lowercase letters or numbers, and less than 30 characters</p>
+      </div>
+      <div class="two fields">
+        <div class="required field">
+          <label>New Password</label>
+          {{input type="password" name="password" value=newUser.passwd}}
+          <p>Your password must be at least six characters long.</p>
+        </div>
+        <div class="required field">
+          <label>Confirm New Password</label>
+          {{input type="password" name="passwordConf" value=newUser.passwdb}}
+        </div>
+      </div>
+      <div class="two fields">
+        <div class="required field">
+          <label>First Name</label>
+          {{input type="text" name="firstName" value=newUser.firstName}}
+          <p>For internal purposes only. Feel free to use a pseudonym.</p>
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          {{input type="text" value=newUser.lastName}}
+        </div>
+      </div>
+      <div class="required field">
+        <label>Add a domain name</label>
+        {{input type="text" name="domain" value=newDomain}}
+        <p>If you have a domain name registered and pointing at your server, enter it here.</p>
+      </div>
+      <div class="ui error message"></div>
+    </div>
+  </div>
+  <div class="ui bottom attached clearing segment">
+    {{#link-to "firstrun.start" class="ui large left floated labeled icon button"}}<i class="left chevron icon"></i> Previous{{/link-to}}
+    <button class="ui large right floated right labeled primary icon button" {{action 'nextStep'}}><i class="right chevron icon"></i> Next</button>
+  </div>
+</div>

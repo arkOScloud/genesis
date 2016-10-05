@@ -23,11 +23,11 @@
         <a target="_blank" href={{site.address}} class="header"><i class="external icon"></i> {{site.properName}}</a>
         <div class="meta">{{site.appName}}</div>
       </div>
-      <div class="ui bottom attached buttons">
-        <div class="ui bottom attached button {{if site.isReady '' 'disabled'}}" {{action 'toggleStatus' site}}>
+      <div class="ui two bottom attached buttons">
+        <div class="ui button {{if site.isReady '' 'disabled'}}" {{action 'toggleStatus' site}}>
         {{#if site.enabled}}<i class="minus circle icon"></i> Disable{{else}}<i class="plus circle icon"></i> Enable{{/if}}
         </div>
-        <div class="ui bottom attached button red {{if site.isReady '' 'disabled'}}" {{action 'openModal' 'delete-site' site}}>
+        <div class="ui button red {{if site.isReady '' 'disabled'}}" {{action 'openModal' 'delete-site' site}}>
           <i class="trash icon"></i> Delete
         </div>
       </div>

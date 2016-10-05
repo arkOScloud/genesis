@@ -1,0 +1,113 @@
+<div class="ui basic center aligned segment">
+  <h1 class="ui header text thin">
+    <img src="/img/logo-round.png" />
+    <div class="content">
+      Welcome to arkOS
+    </div>
+  </h1>
+</div>
+<div class="ui basic segment">
+  <div class="ui top attached ordered steps">
+    <div class="completed step">
+      <div class="content">
+        <div class="title">User Account</div>
+        <div class="description">Create your first user</div>
+      </div>
+    </div>
+    <div class="completed step">
+      <div class="content">
+        <div class="title">System Settings</div>
+        <div class="description">Configure your arkOS server</div>
+      </div>
+    </div>
+    <div class="completed step">
+      <div class="content">
+        <div class="title">Install Apps</div>
+        <div class="description">Choose applications to install</div>
+      </div>
+    </div>
+    <div class="active step">
+      <div class="content">
+        <div class="title">Confirm</div>
+      </div>
+    </div>
+  </div>
+  <div class="ui attached segment">
+    <h2 class="ui center aligned icon header">
+      <i class="check circle icon"></i>
+      <div class="content">
+        Confirm Operations
+        <div class="sub header">Here's what we're about to do. Please carefully check below to make sure everything is right and then click Setup. To go back and change any of these options, click Previous. This may take a few minutes to finish, depending on the speed of your hardware and Internet connection.</div>
+      </div>
+    </h2>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+        	<th width="1" />
+            <th>Operation</th>
+            <th>Item</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><i class="user icon"></i></td>
+          <td>Add User</td>
+          <td>{{user.newUser.firstName}}{{#if user.newUser.lastName}} {{user.newUser.lastName}}{{/if}} ({{user.newUser.name}})</td>
+        </tr>
+        {{#if user.newDomain}}
+          <tr>
+            <td><i class="code icon"></i></td>
+            <td>Assign Domain</td>
+            <td>{{user.newDomain}}</td>
+          </tr>
+        {{/if}}
+          <tr>
+            <td><i class="clock icon"></i></td>
+            <td>Set Timezone</td>
+            <td>{{settings.tzZone}} ({{settings.tzRegion}})</td>
+          </tr>
+        {{#if settings.resizeSDCard}}
+          <tr>
+            <td><i class="code icon"></i></td>
+            <td>Resize SD Card</td>
+            <td>Yes</td>
+          </tr>
+        {{/if}}
+        {{#if settings.useGPUMem}}
+          <tr>
+            <td><i class="code icon"></i></td>
+            <td>Reassign GPU Memory</td>
+            <td>Yes</td>
+          </tr>
+        {{/if}}
+        {{#if settings.cubieMAC}}
+          <tr>
+            <td><i class="code icon"></i></td>
+            <td>Set MAC Address</td>
+            <td>{{settings.cubieMAC}}</td>
+          </tr>
+        {{/if}}
+        {{#if settings.protectRoot}}
+          <tr>
+            <td><i class="shield icon"></i></td>
+            <td>Protect Root User</td>
+            <td>Yes</td>
+          </tr>
+        {{/if}}
+        {{#each apps.selectedApps as |app|}}
+          {{#if app.firstrunSelected}}
+            <tr>
+                <td><i class="download icon"></i></td>
+                <td>Install</td>
+                <td><i class="{{app.icon}} icon"></i> {{app.name}}</td>
+            </tr>
+          {{/if}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <div class="ui bottom attached clearing segment">
+    {{#link-to "firstrun.apps" class="ui large left floated labeled icon button"}}<i class="left chevron icon"></i> Previous{{/link-to}}
+     <a href="#" class="ui large right floated right labeled green icon button" {{action 'startSetup'}}><i class="checkmark icon"></i> Setup</a>
+  </div>
+</div>

@@ -29,11 +29,11 @@
 </div>
 <div class="pusher">
   <div class="ui container">
+    {{#if showMenubar}}
     <div class="ui secondary icon menu">
       <div class="genesis-logo item">
         {{#link-to 'index'}}<img src="/img/logo-round.png" />{{/link-to}}
       </div>
-      {{#if session.isAuthenticated}}
       <div class="right menu">
         <div class="item">
           <i class="user icon"></i> {{#link-to 'system.roles.users' class='item'}}{{ userId }}{{/link-to}}
@@ -78,8 +78,8 @@
           </div>
         {{/ui-dropdown-menu}}
       </div>
-      {{/if}}
     </div>
+    {{/if}}
   </div>
 
   <div class="ui container main-container">
