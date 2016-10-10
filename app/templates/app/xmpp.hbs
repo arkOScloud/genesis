@@ -10,7 +10,7 @@
 <div class="ui segment">
 <h4>The following domains are enabled for use with your XMPP chat server. All users belonging to these domains can use the server. To add new domains to your server, {{#link-to 'system.roles.domains'}}go to Domains{{/link-to}}.</h4>
   <div class="ui four cards">
-    {{#each domain in model.domains}}
+    {{#each model.domains as |domain|}}
       <div class="card">
         <div class="image {{if domain.isReady '' 'disabled'}}">
           <div class="{{domain.cardColor}}">

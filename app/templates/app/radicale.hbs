@@ -14,7 +14,7 @@
   </div>
 </div>
 <div class="ui four cards">
-  {{#each cal in model.calendars}}
+  {{#each model.calendars as |cal|}}
     <div class="card">
       <div class="image {{if cal.isReady '' 'disabled'}}">
         <div class="{{cal.cardColor}}">
@@ -37,7 +37,7 @@
       </div>
     </div>
   {{/each}}
-  {{#each book in model.addressBooks}}
+  {{#each model.addressBooks as |book|}}
     <div class="card">
       <div class="image {{if book.isReady '' 'disabled'}}">
         <div class="{{book.cardColor}}">

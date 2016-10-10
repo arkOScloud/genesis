@@ -9,4 +9,4 @@ before_script:
   - bower install --allow-root
 test:
   script:
-    - ember test
+    - ember build --prod
