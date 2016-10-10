@@ -50,15 +50,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     },
     error: function() {
       return true;
-    },
-    shutdown: function() {
-      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/shutdown`, {type: 'POST'});
-    },
-    reload: function() {
-      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/reload`, {type: 'POST'});
-    },
-    reboot: function() {
-      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/reboot`, {type: 'POST'});
     }
   }
 });

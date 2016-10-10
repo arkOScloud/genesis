@@ -72,9 +72,9 @@
           <div class="menu">
             <a href="#" class='item' {{action 'invalidateSession'}}><i class="sign out icon"></i> Logout</a>
             <div class="divider"></div>
-            <a href="#" class='item' {{action 'showConfirm' 'shutdown' 'Are you sure you want to shutdown your arkOS device?'}}><i class="power off icon"></i> Shutdown</a>
-            <a href="#" class='item' {{action 'showConfirm' 'reload' 'Are you sure you want to reload the arkOS service?'}}><i class="undo icon"></i> Reload</a>
-            <a href="#" class='item' {{action 'showConfirm' 'reboot' 'Are you sure you want to reboot your arkOS device?'}}><i class="refresh icon"></i> Restart</a>
+            <a href="#" class='item' {{action 'openModal' 'shutdown-server'}}><i class="power off icon"></i> Shutdown</a>
+            <a href="#" class='item' {{action 'openModal' 'reload-server'}}><i class="undo icon"></i> Reload</a>
+            <a href="#" class='item' {{action 'openModal' 'reboot-server'}}><i class="refresh icon"></i> Restart</a>
           </div>
         {{/ui-dropdown-menu}}
       </div>
@@ -116,6 +116,72 @@
   <div class="actions">
     <div class="ui ok right labeled icon button">
       OK
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="shutdown-server" class="basic shutdown-server" onApprove=(action 'shutdownServer')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="power off icon"></i>
+    Shutdown server?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to shutdown your server?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="reload-server" class="basic reload-server" onApprove=(action 'reloadServer')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="undo icon"></i>
+    Reload server?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to reload the arkOS server process?</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+{{/ui-modal}}
+
+{{#ui-modal name="restart-server" class="basic restart-server" onApprove=(action 'restartServer')}}
+  <i class="close icon"></i>
+  <div class="ui icon header">
+    <i class="refresh icon"></i>
+    Restart server?
+  </div>
+  <div class="text center content">
+    <div class="description">
+      <p>Are you sure you want to restart your server? This may take a few minutes to complete.</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel basic inverted button">
+      No
+    </div>
+    <div class="ui ok red basic inverted right labeled icon button">
+      Yes
       <i class="checkmark icon"></i>
     </div>
   </div>

@@ -58,6 +58,15 @@ export default Ember.Controller.extend({
     clearNotifications: function() {
       Ember.$('#notifications-sidebar').sidebar('hide');
       this.notifications.empty();
+    },
+    shutdownServer: function() {
+      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/shutdown`, {type: 'POST'});
+    },
+    reloadServer: function() {
+      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/reload`, {type: 'POST'});
+    },
+    restartServer: function() {
+      Ember.$.ajax(`${ENV.APP.krakenHost}/api/system/reboot`, {type: 'POST'});
     }
   }
 });
