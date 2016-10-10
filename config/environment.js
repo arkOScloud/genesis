@@ -23,6 +23,7 @@ module.exports = function(environment) {
   };
 
   if (environment === 'development') {
+    ENV.APP.GRMHost = 'https://grm-test.arkos.io';
     ENV.APP.krakenHost = 'http://localhost:8000';
     ENV.APP.LOG_TRANSITIONS = true;
     ENV.APP.OG_TRANSITIONS_INTERNAL = true;
@@ -37,6 +38,7 @@ module.exports = function(environment) {
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
+    ENV.APP.GRMHost = 'https://grm-test.arkos.io';
     ENV.APP.krakenHost = 'http://localhost:8000';
     ENV.APP.rootElement = '#ember-testing';
   }
