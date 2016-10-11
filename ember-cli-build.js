@@ -3,11 +3,7 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var Funnel = require('broccoli-funnel');
 
 module.exports = function(defaults) {
-  var app = new EmberApp(defaults, {
-    'ember-cli-selectize': {
-      'theme': 'bootstrap3'
-    }
-  });
+  var app = new EmberApp(defaults);
 
   // Use `app.import` to add additional libraries to the generated
   // output files.
