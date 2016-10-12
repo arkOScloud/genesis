@@ -91,7 +91,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
         data: JSON.stringify({config: {genesis: {anonymous: false, firstrun: true}}}),
         contentType: 'application/json',
         success: function() {
-          self.transitionTo("login");
+          self.transitionTo("index");
+          self.send("invalidateSession");
         }
       });
     }
