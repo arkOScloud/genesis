@@ -20,7 +20,7 @@ export default Ember.ObjectController.extend({
         data: JSON.stringify({backup: this.get("selectedBackupType")}),
         contentType: 'application/json',
       })
-        .error(function(e) {
+        .fail(function(e) {
           handleModelError(self, e);
         });
     },
