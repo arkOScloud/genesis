@@ -33,7 +33,7 @@ export default Ember.Controller.extend({
       Ember.$.ajax(`${ENV.APP.GRMHost}/api/v1/error`, {
         type: "POST",
         data: JSON.stringify({
-          summary: data.message,
+          summary: data.msg,
           trace: data.stack,
           version: data.version,
           arch: data.arch,
