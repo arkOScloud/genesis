@@ -206,7 +206,7 @@ export default Ember.ObjectController.extend({
       var self = this;
       Ember.$('.ui.sidebar').sidebar('hide');
       this.get('selectedItems').forEach(function(i){
-        var newShare = self.store.createRecord('share', {
+        var newShare = self.store.createRecord('shared-file', {
           path: i.path,
           expires: false
         });
