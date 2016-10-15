@@ -23,6 +23,11 @@
         <a target="_blank" href={{site.address}} class="header"><i class="external icon"></i> {{site.properName}}</a>
         <div class="meta">{{site.appName}}</div>
       </div>
+      {{#if site.hasUpdate}}
+      <div class="extra content">
+        <a href="#" class="ui green inverted fluid button {{if site.isReady '' 'disabled'}}" {{action 'updateSite' site}}>Update</a>
+      </div>
+      {{/if}}
       <div class="ui two bottom attached buttons">
         <div class="ui button {{if site.isReady '' 'disabled'}}" {{action 'toggleStatus' site}}>
         {{#if site.enabled}}<i class="minus circle icon"></i> Disable{{else}}<i class="plus circle icon"></i> Enable{{/if}}

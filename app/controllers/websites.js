@@ -34,6 +34,17 @@ export default Ember.ObjectController.extend({
       this.set('selectedSite', site);
       Ember.$('.ui.' + name + '.modal').modal('show');
     },
+    updateSite: function(site) {
+      var self = this;
+      site.set('operation', 'update');
+      site.set('isReady', false);
+      var promise = site.save();
+      promise.then(function(){
+        self.transitionToRoute("websites");
+      }, function(e){
+        handleModelError(self, e);
+      });
+    },
     deleteSite: function(){
       var site = this.get('selectedSite');
       site.set('isReady', false);
