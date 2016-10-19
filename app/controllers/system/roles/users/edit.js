@@ -40,6 +40,9 @@ export default Ember.Controller.extend({
       var self = this;
       var user = this.get('model');
       user.set('isReady', false);
+      if (this.get('passwd')) {
+        user.set('passwd', this.get('passwd'));
+      }
       var promise = user.save();
       promise.then(function(){
         self.transitionToRoute("system.roles.users");
