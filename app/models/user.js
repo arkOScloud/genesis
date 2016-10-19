@@ -6,9 +6,7 @@ export default DS.Model.extend({
     name: DS.attr('string'),
     firstName: DS.attr('string'),
     lastName: DS.attr('string'),
-    fullName: function() {
-      return this.get('firstName')+' '+this.get('lastName');
-    }.property('firstName', 'lastName'),
+    fullName: DS.attr('string'),
     admin: DS.attr('boolean', {defaultValue: false}),
     sudo: DS.attr('boolean', {defaultValue: false}),
     domain: DS.belongsTo('domain', {async: true}),
