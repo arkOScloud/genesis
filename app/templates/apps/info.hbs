@@ -19,20 +19,20 @@
         {{#if model.installed}}
           {{#if model.isUpgradable}}
             <div class="ui bottom attached buttons">
-              <div class="ui bottom attached button green {{if model.isReady '' 'disabled'}}" {{action 'install' model}}>
+              <div class="ui bottom attached button green {{if model.isReady '' 'disabled'}}" {{action 'install'}}>
                 <i class="plus circle icon"></i> Upgrade
               </div>
-              <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app' model}}>
+              <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app'}}>
                 <i class="remove circle icon"></i> Uninstall
               </div>
             </div>
           {{else}}
-            <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app' model}}>
+            <div class="ui bottom attached button red {{if model.isReady '' 'disabled'}}" {{action 'openModal' 'uninstall-app'}}>
               <i class="remove circle icon"></i> Uninstall
             </div>
           {{/if}}
         {{else}}
-          <div class="ui bottom attached button green {{if model.isReady '' 'disabled'}}" {{action 'install' model}}>
+          <div class="ui bottom attached button green {{if model.isReady '' 'disabled'}}" {{action 'install'}}>
             <i class="plus circle icon"></i> Install
           </div>
         {{/if}}
