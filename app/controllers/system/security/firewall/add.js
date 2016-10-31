@@ -25,12 +25,12 @@ export default Ember.Controller.extend({
         udpPorts = (this.get('udp') || '').replace(/ /g, '').split(',');
     tcpPorts.forEach(function(p) {
       if (p) {
-        ports.pushObject(['tcp', p]);
+        ports.pushObject(['tcp', parseInt(p)]);
       }
     });
     udpPorts.forEach(function(p) {
       if (p) {
-        ports.pushObject(['udp', p]);
+        ports.pushObject(['udp', parseInt(p)]);
       }
     });
     return ports;
