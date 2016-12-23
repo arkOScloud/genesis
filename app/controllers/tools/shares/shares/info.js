@@ -12,7 +12,7 @@ export default Ember.Controller.extend({
     },
     deleteShare: function() {
       var self = this;
-      Ember.$('.ui.delete-db.modal').modal('hide', function() {
+      Ember.$('.ui.delete-share.modal').modal('hide', function() {
         self.get('model').destroyRecord();
         self.transitionToRoute('tools.shares.shares');
       });
