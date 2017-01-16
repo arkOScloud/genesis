@@ -21,7 +21,7 @@
     "qunit": "~1.20.0",
     "lato": "^0.3.0",
     "semantic-ui": "^2.2.4",
-    "urijs": "^1.18.2",
+    "urijs": "^1.18.4",
     "socket.io-client": "^1.4.8"
   },
   "resolutions": {

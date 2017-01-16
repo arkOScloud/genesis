@@ -26,8 +26,8 @@
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.4",
     "ember-resolver": "",
-    "ember-websockets": "5.0.0",
-    "mock-socket": "5.0.1",
+    "ember-websockets": "6.3.0",
+    "mock-socket": "6.0.4",
     "semantic-ui-ember": "2.0.0-beta.0",
     "websockets": "0.2.0"
   },
@@ -50,5 +50,5 @@
     "start": "ember server",
     "test": "ember test"
   },
-  "version": "0.8.3"
+  "version": "0.8.4"
 }
