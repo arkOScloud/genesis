@@ -1,7 +1,7 @@
 ---
 language: node_js
 node_js:
-  - "4"
+  - "6"
 
 sudo: false
 
@@ -19,4 +19,4 @@ install:
   - bower install
 
 script:
-  - npm test
+  - ember build --prod
