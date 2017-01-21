@@ -1,6 +1,6 @@
 # Genesis
 
-[![build status](https://git.coderouge.co/folatt/genesis/badges/master/build.svg)](https://git.coderouge.co/folatt/genesis/commits/master)
+[![build status](![](https://travis-ci.org/arkOScloud/genesis.svg?branch=master))
 
 Genesis is the interactive server management application for systems running arkOS server software. This project is currently in development. For more information about arkOS, visit [our website](https://arkos.io).
 
@@ -50,4 +50,3 @@ Make use of the many generators for code, try `ember help generate` for more det
 * Development Browser Extensions
   * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
   * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
-
