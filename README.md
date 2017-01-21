@@ -1,6 +1,6 @@
 # Genesis
 
-[![build status](![](https://travis-ci.org/arkOScloud/genesis.svg?branch=master))
+[![build status](https://travis-ci.org/arkOScloud/genesis.svg?branch=master)](https://travis-ci.org/arkOScloud/genesis)
 
 Genesis is the interactive server management application for systems running arkOS server software. This project is currently in development. For more information about arkOS, visit [our website](https://arkos.io).
 
